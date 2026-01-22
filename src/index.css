@@ -18,3 +18,91 @@ body {
   width: 100%;
   height: 100%;
 }
+
+/* High Contrast Mode */
+.high-contrast {
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+}
+
+.high-contrast * {
+  border-color: #000 !important;
+}
+
+.high-contrast .bg-white {
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+.high-contrast .text-slate-600,
+.high-contrast .text-slate-700 {
+  color: #000 !important;
+}
+
+/* Dyslexic Font */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/ttf/OpenDyslexic-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.dyslexic-font * {
+  font-family: 'OpenDyslexic', sans-serif !important;
+}
+
+/* Focus Mode */
+.focus-mode *:not(:focus):not(:hover) {
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.focus-mode *:focus,
+.focus-mode *:hover {
+  opacity: 1;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Custom Animation Duration Variable */
+:root {
+  --animation-duration: 200ms;
+}
+
+* {
+  animation-duration: var(--animation-duration) !important;
+  transition-duration: var(--animation-duration) !important;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

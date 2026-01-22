@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 import { routineService } from '../../services/routineService'
+import { useMode } from '../../contexts/ModeContext'
 import RoutineCard from './RoutineCard'
 import RoutineForm from './RoutineForm'
 import RoutineProgress from './RoutineProgress'
@@ -12,6 +13,7 @@ import TemplateLibrary from '../templates/TemplateLibrary'
 const { FiPlus, FiBookOpen } = FiIcons
 
 const RoutineList = () => {
+  const { currentMode, filterByMode } = useMode()
   const [routines, setRoutines] = useState([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
@@ -22,13 +24,17 @@ const RoutineList = () => {
 
   useEffect(() => {
     loadRoutines()
-  }, [])
+  }, [currentMode])
 
   const loadRoutines = async () => {
     try {
       setLoading(true)
       const data = await routineService.getRoutines()
-      setRoutines(data)
+      
+      // Apply mode filtering
+      const filteredData = filterByMode(data, 'routine')
+      
+      setRoutines(filteredData)
     } catch (error) {
       console.error('Error loading routines:', error)
     } finally {
@@ -38,7 +44,13 @@ const RoutineList = () => {
 
   const handleCreateRoutine = async (routineData) => {
     try {
-      await routineService.createRoutine(routineData)
+      // Auto-tag with current mode
+      const routineWithMode = {
+        ...routineData,
+        mode: currentMode.id !== 'all' ? currentMode.id : null
+      }
+      
+      await routineService.createRoutine(routineWithMode)
       setShowForm(false)
       loadRoutines()
     } catch (error) {
@@ -55,8 +67,10 @@ const RoutineList = () => {
         description: template.description,
         repeat_pattern: template.repeat_pattern,
         is_active: template.is_active,
-        steps: template.steps
+        steps: template.steps,
+        mode: currentMode.id !== 'all' ? currentMode.id : null
       }
+
       await routineService.createRoutine(routineData)
       loadRoutines()
     } catch (error) {
@@ -108,14 +122,38 @@ const RoutineList = () => {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg border border-slate-200 p-8 text-center">
-        <p className="text-slate-600">Loading routines...</p>
+      <div className="p-6">
+        <div className="bg-white rounded-lg border border-slate-200 p-8 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading routines...</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 space-y-6">
+      {/* Mode Context Banner */}
+      {currentMode.id !== 'all' && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`bg-gradient-to-r ${currentMode.gradient} text-white rounded-lg p-4`}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">{currentMode.icon}</span>
+            <div>
+              <div className="font-medium">
+                Viewing {currentMode.label} Routines
+              </div>
+              <div className="text-xs text-white text-opacity-90">
+                Showing only {currentMode.label.toLowerCase()}-related routines
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
       {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-medium text-slate-900">Routines</h1>
@@ -141,7 +179,12 @@ const RoutineList = () => {
       <div className="space-y-4">
         {routines.length === 0 ? (
           <div className="bg-white rounded-lg border border-slate-200 p-8 text-center">
-            <p className="text-slate-600 mb-4">No routines found</p>
+            <p className="text-slate-600 mb-4">
+              {currentMode.id !== 'all'
+                ? `No ${currentMode.label.toLowerCase()} routines found`
+                : 'No routines found'
+              }
+            </p>
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => setShowForm(true)}
@@ -179,38 +222,40 @@ const RoutineList = () => {
       </div>
 
       {/* Modals */}
-      {showForm && (
-        <RoutineForm
-          routine={editingRoutine}
-          onSave={editingRoutine ? handleUpdateRoutine : handleCreateRoutine}
-          onCancel={handleCloseForm}
-        />
-      )}
+      <AnimatePresence>
+        {showForm && (
+          <RoutineForm
+            routine={editingRoutine}
+            onSave={editingRoutine ? handleUpdateRoutine : handleCreateRoutine}
+            onCancel={handleCloseForm}
+          />
+        )}
 
-      {showTemplates && (
-        <TemplateLibrary
-          onApplyTemplate={handleApplyTemplate}
-          onClose={() => setShowTemplates(false)}
-        />
-      )}
+        {showTemplates && (
+          <TemplateLibrary
+            onApplyTemplate={handleApplyTemplate}
+            onClose={() => setShowTemplates(false)}
+          />
+        )}
 
-      {activeRoutine && (
-        <RoutineProgress
-          routine={activeRoutine}
-          onClose={() => setActiveRoutine(null)}
-          onComplete={() => {
-            setActiveRoutine(null)
-            loadRoutines()
-          }}
-        />
-      )}
+        {activeRoutine && (
+          <RoutineProgress
+            routine={activeRoutine}
+            onClose={() => setActiveRoutine(null)}
+            onComplete={() => {
+              setActiveRoutine(null)
+              loadRoutines()
+            }}
+          />
+        )}
 
-      {statsRoutine && (
-        <RoutineStats
-          routine={statsRoutine}
-          onClose={() => setStatsRoutine(null)}
-        />
-      )}
+        {statsRoutine && (
+          <RoutineStats
+            routine={statsRoutine}
+            onClose={() => setStatsRoutine(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

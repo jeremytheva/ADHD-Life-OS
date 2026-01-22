@@ -1,0 +1,134 @@
+import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import * as FiIcons from 'react-icons/fi'
+import SafeIcon from '../../common/SafeIcon'
+import { onboardingService } from '../../services/onboardingService'
+import WelcomeStep from './steps/WelcomeStep'
+import LifeRolesStep from './steps/LifeRolesStep'
+import ModulesStep from './steps/ModulesStep'
+import UIStyleStep from './steps/UIStyleStep'
+import PreferencesStep from './steps/PreferencesStep'
+import CompletionStep from './steps/CompletionStep'
+
+const { FiX, FiChevronLeft, FiChevronRight } = FiIcons
+
+const OnboardingFlow = ({ onComplete, onSkip }) => {
+  const [currentStep, setCurrentStep] = useState(0)
+  const [onboardingData, setOnboardingData] = useState(
+    onboardingService.getDefaultOnboardingData()
+  )
+
+  const steps = [
+    { id: 'welcome', component: WelcomeStep, title: 'Welcome!' },
+    { id: 'roles', component: LifeRolesStep, title: 'Your Life Roles' },
+    { id: 'modules', component: ModulesStep, title: 'Choose Your Tools' },
+    { id: 'style', component: UIStyleStep, title: 'Pick Your Style' },
+    { id: 'preferences', component: PreferencesStep, title: 'Fine-Tune Experience' },
+    { id: 'completion', component: CompletionStep, title: 'You\'re All Set!' }
+  ]
+
+  const totalSteps = steps.length
+  const CurrentStepComponent = steps[currentStep].component
+
+  const handleNext = (stepData) => {
+    const updatedData = {
+      ...onboardingData,
+      ...stepData,
+      progress: {
+        ...onboardingData.progress,
+        currentStep: currentStep + 1,
+        completedSteps: [...onboardingData.progress.completedSteps, steps[currentStep].id]
+      }
+    }
+
+    setOnboardingData(updatedData)
+    onboardingService.saveProgress(updatedData)
+
+    if (currentStep === totalSteps - 1) {
+      // Complete onboarding
+      onboardingService.completeOnboarding(updatedData)
+      if (onComplete) onComplete(updatedData)
+    } else {
+      setCurrentStep(currentStep + 1)
+    }
+  }
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1)
+    }
+  }
+
+  const handleSkipAll = () => {
+    const skippedData = onboardingService.skipOnboarding()
+    if (onSkip) onSkip(skippedData)
+  }
+
+  const progress = ((currentStep + 1) / totalSteps) * 100
+
+  return (
+    <div className="fixed inset-0 bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
+      >
+        {/* Header with Progress */}
+        <div className="p-6 border-b border-slate-200">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">
+                {steps[currentStep].title}
+              </h2>
+              <p className="text-sm text-slate-600 mt-1">
+                Step {currentStep + 1} of {totalSteps}
+              </p>
+            </div>
+            {currentStep === 0 && (
+              <button
+                onClick={handleSkipAll}
+                className="px-4 py-2 text-slate-600 hover:text-slate-900 text-sm transition-colors"
+              >
+                Skip Setup
+              </button>
+            )}
+          </div>
+
+          {/* Progress Bar */}
+          <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.3 }}
+              className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full"
+            />
+          </div>
+        </div>
+
+        {/* Step Content */}
+        <div className="flex-1 overflow-y-auto p-6">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CurrentStepComponent
+                onNext={handleNext}
+                onBack={handleBack}
+                onSkip={currentStep === 0 ? handleSkipAll : undefined}
+                currentData={onboardingData}
+                stepNumber={currentStep + 1}
+                totalSteps={totalSteps}
+              />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
+export default OnboardingFlow

@@ -1,15 +1,15 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useMode } from '../contexts/ModeContext'
-import HomeModeTaskContainer from '../components/housework/HomeModeTaskContainer'
+import BrainInbox from '../components/inbox/BrainInbox'
 
-const Housework = () => {
+const Inbox = () => {
   const { currentMode } = useMode()
 
   return (
     <div className="p-6">
       {/* Mode Context Banner */}
-      {currentMode.id !== 'all' && currentMode.id === 'home' && (
+      {currentMode.id !== 'all' && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -19,10 +19,10 @@ const Housework = () => {
             <span className="text-2xl">{currentMode.icon}</span>
             <div>
               <div className="font-medium">
-                Home Mode Active
+                {currentMode.label} Mode Active
               </div>
               <div className="text-xs text-white text-opacity-90">
-                Perfect time to tackle household chores!
+                Capture {currentMode.label.toLowerCase()}-related thoughts and ideas
               </div>
             </div>
           </div>
@@ -32,12 +32,12 @@ const Housework = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-6xl mx-auto"
+        className="max-w-4xl mx-auto"
       >
-        <HomeModeTaskContainer />
+        <BrainInbox />
       </motion.div>
     </div>
   )
 }
 
-export default Housework
+export default Inbox

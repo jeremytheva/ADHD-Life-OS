@@ -1,18 +1,39 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { ModeProvider } from './contexts/ModeContext'
 import Layout from './components/Layout'
 import ProfileSelector from './components/auth/ProfileSelector'
+import OnboardingFlow from './components/onboarding/OnboardingFlow'
+import { onboardingService } from './services/onboardingService'
+
+// Pages
 import TodayView from './components/today/TodayView'
 import TaskList from './components/tasks/TaskList'
 import RoutineList from './components/routines/RoutineList'
 import Settings from './components/settings/Settings'
 import Housework from './pages/Housework'
+import Inbox from './pages/Inbox'
+import Projects from './pages/Projects'
 
 const AppRoutes = () => {
   const { user, loading } = useAuth()
+  const [checkingOnboarding, setCheckingOnboarding] = useState(true)
+  const [showOnboarding, setShowOnboarding] = useState(false)
 
-  if (loading) {
+  useEffect(() => {
+    if (user) {
+      const completed = onboardingService.hasCompletedOnboarding()
+      setShowOnboarding(!completed)
+    }
+    setCheckingOnboarding(false)
+  }, [user])
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false)
+  }
+
+  if (loading || checkingOnboarding) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
@@ -23,19 +44,28 @@ const AppRoutes = () => {
     )
   }
 
-  // Show profile selector if no user is logged in
   if (!user) {
     return <ProfileSelector />
   }
 
-  // Show main app if user is logged in
+  if (showOnboarding) {
+    return (
+      <OnboardingFlow
+        onComplete={handleOnboardingComplete}
+        onSkip={handleOnboardingComplete}
+      />
+    )
+  }
+
   return (
     <Layout>
       <Routes>
         <Route path="/" element={<TodayView />} />
         <Route path="/tasks" element={<TaskList />} />
         <Route path="/routines" element={<RoutineList />} />
+        <Route path="/projects" element={<Projects />} />
         <Route path="/housework" element={<Housework />} />
+        <Route path="/inbox" element={<Inbox />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
@@ -46,9 +76,11 @@ const AppRoutes = () => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
+      <ModeProvider>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </ModeProvider>
     </AuthProvider>
   )
 }
