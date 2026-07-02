@@ -1,30 +1,19 @@
 import { supabase, isSupabaseEnabled } from '../config/supabase';
+import { getCurrentUserId } from './authStorage';
+import {
+  getUserScopedCollection,
+  setUserScopedCollection
+} from './storageService';
 
 // Mock data storage
 const MOCK_PREFERENCES_KEY = 'adhd_lifeos_preferences';
 
-// Helper to get current user ID
-const getCurrentUserId = () => {
-  try {
-    const user = JSON.parse(localStorage.getItem('adhd_lifeos_current_user'));
-    return user?.id || null;
-  } catch {
-    return null;
-  }
-};
 
 // Mock preferences helpers
-const getMockPreferences = () => {
-  try {
-    const stored = localStorage.getItem(MOCK_PREFERENCES_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
-    return [];
-  }
-};
+const getUserPreferences = (userId) => getUserScopedCollection(MOCK_PREFERENCES_KEY, userId);
 
-const setMockPreferences = (prefs) => {
-  localStorage.setItem(MOCK_PREFERENCES_KEY, JSON.stringify(prefs));
+const setUserPreferences = (userId, prefs) => {
+  setUserScopedCollection(MOCK_PREFERENCES_KEY, userId, prefs);
 };
 
 // Check if Supabase is configured
@@ -39,8 +28,8 @@ export const userService = {
 
     if (!isSupabaseConfigured()) {
       // Use mock data
-      const allPrefs = getMockPreferences();
-      const userPrefs = allPrefs.find(p => p.user_id === userId);
+      const allPrefs = getUserPreferences(userId);
+      const userPrefs = allPrefs[0];
       
       // Return default preferences if none exist
       if (!userPrefs) {
@@ -55,7 +44,7 @@ export const userService = {
           updated_at: new Date().toISOString()
         };
         allPrefs.push(defaultPrefs);
-        setMockPreferences(allPrefs);
+        setUserPreferences(userId, allPrefs);
         return defaultPrefs;
       }
       
@@ -92,7 +81,7 @@ export const userService = {
 
     if (!isSupabaseConfigured()) {
       // Use mock data
-      const allPrefs = getMockPreferences();
+      const allPrefs = getUserPreferences(userId);
       const index = allPrefs.findIndex(p => p.user_id === userId);
       
       if (index === -1) {
@@ -101,7 +90,7 @@ export const userService = {
         allPrefs[index] = { ...allPrefs[index], ...updatedPrefs };
       }
       
-      setMockPreferences(allPrefs);
+      setUserPreferences(userId, allPrefs);
       return allPrefs[index === -1 ? allPrefs.length - 1 : index];
     }
 

@@ -1,44 +1,26 @@
 import { supabase, isSupabaseEnabled } from '../config/supabase'
+import { getCurrentUserId } from './authStorage'
+import {
+  getUserScopedCollection,
+  setUserScopedCollection
+} from './storageService'
 
 // Mock storage keys
 const MOCK_PROGRESS_KEY = 'adhd_lifeos_routine_progress'
 const MOCK_HISTORY_KEY = 'adhd_lifeos_routine_history'
 
-// Helper to get current user ID
-const getCurrentUserId = () => {
-  try {
-    const user = JSON.parse(localStorage.getItem('adhd_lifeos_current_user'))
-    return user?.id || null
-  } catch {
-    return null
-  }
-}
 
 // Mock data helpers
-const getMockProgress = () => {
-  try {
-    const stored = localStorage.getItem(MOCK_PROGRESS_KEY)
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
-  }
+const getUserProgress = (userId) => getUserScopedCollection(MOCK_PROGRESS_KEY, userId)
+
+const setUserProgress = (userId, progress) => {
+  setUserScopedCollection(MOCK_PROGRESS_KEY, userId, progress)
 }
 
-const setMockProgress = (progress) => {
-  localStorage.setItem(MOCK_PROGRESS_KEY, JSON.stringify(progress))
-}
+const getUserHistory = (userId) => getUserScopedCollection(MOCK_HISTORY_KEY, userId)
 
-const getMockHistory = () => {
-  try {
-    const stored = localStorage.getItem(MOCK_HISTORY_KEY)
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
-  }
-}
-
-const setMockHistory = (history) => {
-  localStorage.setItem(MOCK_HISTORY_KEY, JSON.stringify(history))
+const setUserHistory = (userId, history) => {
+  setUserScopedCollection(MOCK_HISTORY_KEY, userId, history)
 }
 
 const isSupabaseConfigured = () => {
@@ -64,9 +46,9 @@ export const routineProgressService = {
     }
 
     if (!isSupabaseConfigured()) {
-      const progress = getMockProgress()
+      const progress = getUserProgress(userId)
       progress.push(session)
-      setMockProgress(progress)
+      setUserProgress(userId, progress)
       return session
     }
 
@@ -80,7 +62,7 @@ export const routineProgressService = {
     if (!userId) return null
 
     if (!isSupabaseConfigured()) {
-      const progress = getMockProgress()
+      const progress = getUserProgress(userId)
       return progress.find(
         p => p.user_id === userId && 
              p.routine_id === routineId && 
@@ -98,7 +80,7 @@ export const routineProgressService = {
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
-      const progress = getMockProgress()
+      const progress = getUserProgress(userId)
       const session = progress.find(
         p => p.id === sessionId && p.user_id === userId
       )
@@ -113,7 +95,7 @@ export const routineProgressService = {
       session.current_step_index = stepIndex + 1
       session.updated_at = new Date().toISOString()
 
-      setMockProgress(progress)
+      setUserProgress(userId, progress)
       return session
     }
 
@@ -127,7 +109,7 @@ export const routineProgressService = {
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
-      const progress = getMockProgress()
+      const progress = getUserProgress(userId)
       const session = progress.find(
         p => p.id === sessionId && p.user_id === userId
       )
@@ -143,7 +125,7 @@ export const routineProgressService = {
       session.current_step_index = stepIndex + 1
       session.updated_at = new Date().toISOString()
 
-      setMockProgress(progress)
+      setUserProgress(userId, progress)
       return session
     }
 
@@ -157,7 +139,7 @@ export const routineProgressService = {
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
-      const progress = getMockProgress()
+      const progress = getUserProgress(userId)
       const sessionIndex = progress.findIndex(
         p => p.id === sessionId && p.user_id === userId
       )
@@ -169,13 +151,13 @@ export const routineProgressService = {
       session.completed_at = new Date().toISOString()
 
       // Move to history
-      const history = getMockHistory()
+      const history = getUserHistory(userId)
       history.push(session)
-      setMockHistory(history)
+      setUserHistory(userId, history)
 
       // Remove from active progress
       progress.splice(sessionIndex, 1)
-      setMockProgress(progress)
+      setUserProgress(userId, progress)
 
       return session
     }
@@ -190,11 +172,11 @@ export const routineProgressService = {
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
-      const progress = getMockProgress()
+      const progress = getUserProgress(userId)
       const filtered = progress.filter(
         p => !(p.id === sessionId && p.user_id === userId)
       )
-      setMockProgress(filtered)
+      setUserProgress(userId, filtered)
       return true
     }
 
@@ -208,7 +190,7 @@ export const routineProgressService = {
     if (!userId) return []
 
     if (!isSupabaseConfigured()) {
-      const history = getMockHistory()
+      const history = getUserHistory(userId)
       return history
         .filter(h => h.user_id === userId && h.routine_id === routineId)
         .sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at))
@@ -225,7 +207,7 @@ export const routineProgressService = {
     if (!userId) return null
 
     if (!isSupabaseConfigured()) {
-      const history = getMockHistory()
+      const history = getUserHistory(userId)
       const cutoffDate = new Date()
       cutoffDate.setDate(cutoffDate.getDate() - days)
 

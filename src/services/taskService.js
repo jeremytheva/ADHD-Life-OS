@@ -1,32 +1,17 @@
 import { isBefore, isValid, parseISO, startOfToday } from 'date-fns'
 import { supabase, isSupabaseEnabled } from '../config/supabase'
+import { getCurrentUserId } from './authStorage'
+import {
+  getUserScopedCollection,
+  setUserScopedCollection
+} from './storageService'
 
 // Mock data storage for testing
 const MOCK_STORAGE_KEY = 'adhd_lifeos_tasks'
 
-// Helper to get current user ID from localStorage
-const getCurrentUserId = () => {
-  try {
-    const user = JSON.parse(localStorage.getItem('adhd_lifeos_current_user'))
-    return user?.id || null
-  } catch {
-    return null
-  }
-}
-
-// Helper to get mock tasks from localStorage
-const getMockTasks = () => {
-  try {
-    const stored = localStorage.getItem(MOCK_STORAGE_KEY)
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
-  }
-}
-
-// Helper to set mock tasks in localStorage
-const setMockTasks = (tasks) => {
-  localStorage.setItem(MOCK_STORAGE_KEY, JSON.stringify(tasks))
+const getUserTasks = (userId) => getUserScopedCollection(MOCK_STORAGE_KEY, userId)
+const setUserTasks = (userId, tasks) => {
+  setUserScopedCollection(MOCK_STORAGE_KEY, userId, tasks)
 }
 
 // Check if Supabase is properly configured
@@ -146,7 +131,7 @@ export const taskService = {
 
     if (!isSupabaseConfigured()) {
       // Use mock data
-      const allTasks = getMockTasks().filter((task) => task.user_id === userId)
+      const allTasks = getUserTasks(userId)
       return filterMockTasks(allTasks, normalizedFilter)
     }
 
@@ -185,9 +170,9 @@ export const taskService = {
 
     if (!isSupabaseConfigured()) {
       // Use mock data
-      const tasks = getMockTasks()
+      const tasks = getUserTasks(userId)
       tasks.push(newTask)
-      setMockTasks(tasks)
+      setUserTasks(userId, tasks)
       return newTask
     }
 
@@ -208,7 +193,7 @@ export const taskService = {
 
     if (!isSupabaseConfigured()) {
       // Use mock data
-      const tasks = getMockTasks()
+      const tasks = getUserTasks(userId)
       const index = tasks.findIndex(
         (t) => t.id === taskId && t.user_id === userId
       )
@@ -219,7 +204,7 @@ export const taskService = {
         ...updates,
         updated_at: new Date().toISOString()
       }
-      setMockTasks(tasks)
+      setUserTasks(userId, tasks)
       return tasks[index]
     }
 
@@ -245,11 +230,11 @@ export const taskService = {
 
     if (!isSupabaseConfigured()) {
       // Use mock data
-      const tasks = getMockTasks()
+      const tasks = getUserTasks(userId)
       const filtered = tasks.filter(
         (t) => !(t.id === taskId && t.user_id === userId)
       )
-      setMockTasks(filtered)
+      setUserTasks(userId, filtered)
       return true
     }
 
