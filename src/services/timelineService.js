@@ -1,6 +1,6 @@
 import { format, parseISO } from 'date-fns'
 import { SchedulingEngine } from './schedulingEngine'
-import { PrioritizationEngine } from './prioritizationEngine'
+import { adhdPriorityService } from './adhdPriorityService'
 import { userService } from './userService'
 import { taskService } from './taskService'
 import { routineService } from './routineService'
@@ -15,8 +15,7 @@ export const timelineService = {
       
       // Get tasks (prioritized)
       const allTasks = await taskService.getTasks()
-      const prioritizer = new PrioritizationEngine(preferences)
-      const prioritizedTasks = prioritizer.prioritizeTasks(allTasks)
+      const prioritizedTasks = adhdPriorityService.prioritizeTasks(allTasks, preferences)
       
       // Get routines
       const routines = await routineService.getRoutines()

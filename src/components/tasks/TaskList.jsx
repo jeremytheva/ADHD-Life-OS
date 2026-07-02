@@ -4,7 +4,7 @@ import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 import { taskService } from '../../services/taskService'
 import { userService } from '../../services/userService'
-import { PrioritizationEngine } from '../../services/prioritizationEngine'
+import { adhdPriorityService } from '../../services/adhdPriorityService'
 import { useMode } from '../../contexts/ModeContext'
 import TaskCard from './TaskCard'
 import TaskForm from './TaskForm'
@@ -61,8 +61,7 @@ const TaskList = () => {
       // Keep display-level mode filtering for cross-entity consistency.
       const filteredData = filterByMode(data, 'task')
       
-      const engine = new PrioritizationEngine(preferences)
-      const prioritizedTasks = engine.prioritizeTasks(filteredData)
+      const prioritizedTasks = adhdPriorityService.prioritizeTasks(filteredData, preferences)
       
       // Apply mode preferences for hiding completed
       let displayTasks = prioritizedTasks
@@ -73,10 +72,10 @@ const TaskList = () => {
       const sorted = sortTasks(displayTasks, modePrefs.sortBy || sortBy)
       setTasks(sorted)
 
-      const taskAnalysis = engine.analyzeTaskLoad(filteredData)
+      const taskAnalysis = adhdPriorityService.analyzeTaskLoad(filteredData, preferences)
       setAnalysis(taskAnalysis)
 
-      const recommended = engine.getRecommendedTasks(filteredData, 3)
+      const recommended = adhdPriorityService.getRecommendedTasks(filteredData, preferences, 3)
       setRecommendedTasks(recommended)
     } catch (error) {
       console.error('Error loading tasks:', error)
