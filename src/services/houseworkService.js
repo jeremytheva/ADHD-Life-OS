@@ -1,45 +1,27 @@
 import { supabase, isSupabaseEnabled } from '../config/supabase'
 import { addDays, addWeeks, addMonths, startOfDay, parseISO } from 'date-fns'
+import { getCurrentUserId } from './authStorage'
+import {
+  getUserScopedCollection,
+  setUserScopedCollection
+} from './storageService'
 
 // Mock storage keys
 const MOCK_HOUSEWORK_KEY = 'adhd_lifeos_housework_tasks'
 const MOCK_COMPLETIONS_KEY = 'adhd_lifeos_housework_completions'
 
-// Helper to get current user ID
-const getCurrentUserId = () => {
-  try {
-    const user = JSON.parse(localStorage.getItem('adhd_lifeos_current_user'))
-    return user?.id || null
-  } catch {
-    return null
-  }
-}
 
 // Mock data helpers
-const getMockHousework = () => {
-  try {
-    const stored = localStorage.getItem(MOCK_HOUSEWORK_KEY)
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
-  }
+const getUserHousework = (userId) => getUserScopedCollection(MOCK_HOUSEWORK_KEY, userId)
+
+const setUserHousework = (userId, tasks) => {
+  setUserScopedCollection(MOCK_HOUSEWORK_KEY, userId, tasks)
 }
 
-const setMockHousework = (tasks) => {
-  localStorage.setItem(MOCK_HOUSEWORK_KEY, JSON.stringify(tasks))
-}
+const getUserCompletions = (userId) => getUserScopedCollection(MOCK_COMPLETIONS_KEY, userId)
 
-const getMockCompletions = () => {
-  try {
-    const stored = localStorage.getItem(MOCK_COMPLETIONS_KEY)
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
-  }
-}
-
-const setMockCompletions = (completions) => {
-  localStorage.setItem(MOCK_COMPLETIONS_KEY, JSON.stringify(completions))
+const setUserCompletions = (userId, completions) => {
+  setUserScopedCollection(MOCK_COMPLETIONS_KEY, userId, completions)
 }
 
 const isSupabaseConfigured = () => {
@@ -119,7 +101,7 @@ export const houseworkService = {
     if (!userId) return []
 
     if (!isSupabaseConfigured()) {
-      let tasks = getMockHousework().filter(t => t.user_id === userId)
+      let tasks = getUserHousework(userId)
       
       // Apply filters
       if (filters.room) {
@@ -174,9 +156,9 @@ export const houseworkService = {
     }
 
     if (!isSupabaseConfigured()) {
-      const tasks = getMockHousework()
+      const tasks = getUserHousework(userId)
       tasks.push(newTask)
-      setMockHousework(tasks)
+      setUserHousework(userId, tasks)
       return newTask
     }
 
@@ -190,7 +172,7 @@ export const houseworkService = {
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
-      const tasks = getMockHousework()
+      const tasks = getUserHousework(userId)
       const taskIndex = tasks.findIndex(
         t => t.id === taskId && t.user_id === userId
       )
@@ -201,7 +183,7 @@ export const houseworkService = {
       const completedAt = new Date().toISOString()
 
       // Record completion
-      const completions = getMockCompletions()
+      const completions = getUserCompletions(userId)
       completions.push({
         id: Date.now().toString(),
         task_id: taskId,
@@ -210,7 +192,7 @@ export const houseworkService = {
         checklist_completed: completedChecklist,
         duration_actual: null // Can be tracked if needed
       })
-      setMockCompletions(completions)
+      setUserCompletions(userId, completions)
 
       // Update task
       task.last_completed = completedAt
@@ -218,7 +200,7 @@ export const houseworkService = {
       task.next_due_date = calculateNextDueDate(completedAt, task.frequency)
       task.updated_at = completedAt
 
-      setMockHousework(tasks)
+      setUserHousework(userId, tasks)
       return task
     }
 
@@ -232,7 +214,7 @@ export const houseworkService = {
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
-      const tasks = getMockHousework()
+      const tasks = getUserHousework(userId)
       const task = tasks.find(t => t.id === taskId && t.user_id === userId)
 
       if (!task) throw new Error('Task not found')
@@ -240,7 +222,7 @@ export const houseworkService = {
       task.next_due_date = addDays(parseISO(task.next_due_date), 1).toISOString()
       task.updated_at = new Date().toISOString()
 
-      setMockHousework(tasks)
+      setUserHousework(userId, tasks)
       return task
     }
 
@@ -254,7 +236,7 @@ export const houseworkService = {
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
-      const tasks = getMockHousework()
+      const tasks = getUserHousework(userId)
       const task = tasks.find(t => t.id === taskId && t.user_id === userId)
 
       if (!task) throw new Error('Task not found')
@@ -262,7 +244,7 @@ export const houseworkService = {
       task.is_active = isActive
       task.updated_at = new Date().toISOString()
 
-      setMockHousework(tasks)
+      setUserHousework(userId, tasks)
       return task
     }
 
@@ -276,7 +258,7 @@ export const houseworkService = {
     if (!userId) return []
 
     if (!isSupabaseConfigured()) {
-      const completions = getMockCompletions()
+      const completions = getUserCompletions(userId)
       return completions
         .filter(c => c.user_id === userId && c.task_id === taskId)
         .sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at))
@@ -293,7 +275,7 @@ export const houseworkService = {
     if (!userId) return null
 
     if (!isSupabaseConfigured()) {
-      const completions = getMockCompletions()
+      const completions = getUserCompletions(userId)
       const cutoffDate = new Date()
       cutoffDate.setDate(cutoffDate.getDate() - days)
 
@@ -301,7 +283,7 @@ export const houseworkService = {
         c => c.user_id === userId && new Date(c.completed_at) >= cutoffDate
       )
 
-      const tasks = getMockHousework().filter(t => t.user_id === userId)
+      const tasks = getUserHousework(userId)
 
       return {
         total_tasks: tasks.length,
@@ -345,15 +327,12 @@ export const houseworkService = {
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
-      const tasks = getMockHousework().filter(
+      const tasks = getUserHousework(userId).filter(
         t => t.user_id === userId && t.is_active
       )
       
       const balanced = balanceWeekLoad(tasks)
-      setMockHousework([
-        ...getMockHousework().filter(t => t.user_id !== userId),
-        ...balanced
-      ])
+      setUserHousework(userId, balanced)
       
       return balanced
     }

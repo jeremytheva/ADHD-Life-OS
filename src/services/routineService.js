@@ -1,44 +1,28 @@
 import { supabase, isSupabaseEnabled } from '../config/supabase'
+import { getCurrentUserId } from './authStorage'
+import {
+  getUserScopedCollection,
+  safeRead,
+  safeWrite,
+  setUserScopedCollection
+} from './storageService'
 
 // Mock data storage for testing
 const MOCK_ROUTINES_KEY = 'adhd_lifeos_routines'
 const MOCK_STEPS_KEY = 'adhd_lifeos_routine_steps'
 
-// Helper to get current user ID from localStorage
-const getCurrentUserId = () => {
-  try {
-    const user = JSON.parse(localStorage.getItem('adhd_lifeos_current_user'))
-    return user?.id || null
-  } catch {
-    return null
-  }
-}
 
 // Helper functions for mock data
-const getMockRoutines = () => {
-  try {
-    const stored = localStorage.getItem(MOCK_ROUTINES_KEY)
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
-  }
+const getUserRoutines = (userId) => getUserScopedCollection(MOCK_ROUTINES_KEY, userId)
+
+const setUserRoutines = (userId, routines) => {
+  setUserScopedCollection(MOCK_ROUTINES_KEY, userId, routines)
 }
 
-const setMockRoutines = (routines) => {
-  localStorage.setItem(MOCK_ROUTINES_KEY, JSON.stringify(routines))
-}
-
-const getMockSteps = () => {
-  try {
-    const stored = localStorage.getItem(MOCK_STEPS_KEY)
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
-  }
-}
+const getMockSteps = () => safeRead(MOCK_STEPS_KEY, [])
 
 const setMockSteps = (steps) => {
-  localStorage.setItem(MOCK_STEPS_KEY, JSON.stringify(steps))
+  safeWrite(MOCK_STEPS_KEY, steps)
 }
 
 // Check if Supabase is properly configured
@@ -53,7 +37,7 @@ export const routineService = {
 
     if (!isSupabaseConfigured()) {
       // Use mock data
-      const routines = getMockRoutines().filter((r) => r.user_id === userId)
+      const routines = getUserRoutines(userId)
       const steps = getMockSteps()
 
       return routines.map((routine) => ({
@@ -100,9 +84,9 @@ export const routineService = {
 
     if (!isSupabaseConfigured()) {
       // Use mock data
-      const routines = getMockRoutines()
+      const routines = getUserRoutines(userId)
       routines.push(newRoutine)
-      setMockRoutines(routines)
+      setUserRoutines(userId, routines)
 
       // Add steps
       if (routineData.steps && routineData.steps.length > 0) {
@@ -166,7 +150,7 @@ export const routineService = {
 
     if (!isSupabaseConfigured()) {
       // Use mock data
-      const routines = getMockRoutines()
+      const routines = getUserRoutines(userId)
       const index = routines.findIndex(
         (r) => r.id === routineId && r.user_id === userId
       )
@@ -177,7 +161,7 @@ export const routineService = {
         ...updates,
         updated_at: new Date().toISOString()
       }
-      setMockRoutines(routines)
+      setUserRoutines(userId, routines)
 
       // Update steps if provided
       if (updates.steps) {
@@ -247,11 +231,11 @@ export const routineService = {
 
     if (!isSupabaseConfigured()) {
       // Use mock data
-      const routines = getMockRoutines()
+      const routines = getUserRoutines(userId)
       const filtered = routines.filter(
         (r) => !(r.id === routineId && r.user_id === userId)
       )
-      setMockRoutines(filtered)
+      setUserRoutines(userId, filtered)
 
       const steps = getMockSteps()
       const filteredSteps = steps.filter((s) => s.routine_id !== routineId)

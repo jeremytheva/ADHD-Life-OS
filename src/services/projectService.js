@@ -1,45 +1,28 @@
 import { supabase, isSupabaseEnabled } from '../config/supabase'
 import { taskService } from './taskService'
+import { getCurrentUserId } from './authStorage'
+import {
+  getUserScopedCollection,
+  safeRead,
+  safeWrite,
+  setUserScopedCollection
+} from './storageService'
 
 // Mock data storage keys
 const MOCK_PROJECTS_KEY = 'adhd_lifeos_projects'
 const MOCK_SUBTASKS_KEY = 'adhd_lifeos_subtasks'
 
-// Helper to get current user ID
-const getCurrentUserId = () => {
-  try {
-    const user = JSON.parse(localStorage.getItem('adhd_lifeos_current_user'))
-    return user?.id || null
-  } catch {
-    return null
-  }
-}
-
 // Mock data helpers
-const getMockProjects = () => {
-  try {
-    const stored = localStorage.getItem(MOCK_PROJECTS_KEY)
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
-  }
+const getUserProjects = (userId) => getUserScopedCollection(MOCK_PROJECTS_KEY, userId)
+
+const setUserProjects = (userId, projects) => {
+  setUserScopedCollection(MOCK_PROJECTS_KEY, userId, projects)
 }
 
-const setMockProjects = (projects) => {
-  localStorage.setItem(MOCK_PROJECTS_KEY, JSON.stringify(projects))
-}
-
-const getMockSubtasks = () => {
-  try {
-    const stored = localStorage.getItem(MOCK_SUBTASKS_KEY)
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
-  }
-}
+const getMockSubtasks = () => safeRead(MOCK_SUBTASKS_KEY, [])
 
 const setMockSubtasks = (subtasks) => {
-  localStorage.setItem(MOCK_SUBTASKS_KEY, JSON.stringify(subtasks))
+  safeWrite(MOCK_SUBTASKS_KEY, subtasks)
 }
 
 const isSupabaseConfigured = () => {
@@ -52,7 +35,7 @@ export const projectService = {
     if (!userId) return []
 
     if (!isSupabaseConfigured()) {
-      const projects = getMockProjects().filter(p => p.user_id === userId)
+      const projects = getUserProjects(userId)
       const subtasks = getMockSubtasks()
       
       return Promise.all(projects.map(async project => {
@@ -123,14 +106,14 @@ export const projectService = {
     }
 
     if (!isSupabaseConfigured()) {
-      const projects = getMockProjects()
+      const projects = getUserProjects(userId)
       // Calculate order
-      const userProjects = projects.filter(p => p.user_id === userId)
+      const userProjects = projects
       const maxOrder = userProjects.length > 0 ? Math.max(...userProjects.map(p => p.order_index || 0)) : -1
       newProject.order_index = maxOrder + 1
 
       projects.push(newProject)
-      setMockProjects(projects)
+      setUserProjects(userId, projects)
       return newProject
     }
 
@@ -149,7 +132,7 @@ export const projectService = {
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
-      const projects = getMockProjects()
+      const projects = getUserProjects(userId)
       const index = projects.findIndex(p => p.id === projectId && p.user_id === userId)
       if (index === -1) throw new Error('Project not found')
 
@@ -158,7 +141,7 @@ export const projectService = {
         ...updates,
         updated_at: new Date().toISOString()
       }
-      setMockProjects(projects)
+      setUserProjects(userId, projects)
       return projects[index]
     }
 
@@ -179,9 +162,9 @@ export const projectService = {
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
-      const projects = getMockProjects()
+      const projects = getUserProjects(userId)
       const filtered = projects.filter(p => !(p.id === projectId && p.user_id === userId))
-      setMockProjects(filtered)
+      setUserProjects(userId, filtered)
       
       // Also delete associated tasks (mock only logic here)
       // In real app, cascading deletes handle this
