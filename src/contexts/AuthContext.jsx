@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check initial auth state (from localStorage)
+    // Check initial auth state from the NoCodeBackend session proxy
     const checkAuth = async () => {
       try {
         const currentUser = await authService.getCurrentUser();
