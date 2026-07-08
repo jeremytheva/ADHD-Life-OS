@@ -1,5 +1,5 @@
 import { supabase, isSupabaseEnabled } from '../config/supabase';
-import { getCurrentUserId } from './authStorage';
+import { getDatabaseUserId } from './authStorage';
 import {
   getUserScopedCollection,
   setUserScopedCollection
@@ -23,7 +23,7 @@ const isSupabaseConfigured = () => {
 
 export const userService = {
   async getPreferences() {
-    const userId = getCurrentUserId();
+    const userId = getDatabaseUserId();
     if (!userId) return null;
 
     if (!isSupabaseConfigured()) {
@@ -70,7 +70,7 @@ export const userService = {
   },
 
   async updatePreferences(preferences) {
-    const userId = getCurrentUserId();
+    const userId = getDatabaseUserId();
     if (!userId) throw new Error('No user logged in');
 
     const updatedPrefs = {

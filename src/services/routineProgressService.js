@@ -1,5 +1,5 @@
 import { supabase, isSupabaseEnabled } from '../config/supabase'
-import { getCurrentUserId } from './authStorage'
+import { getDatabaseUserId } from './authStorage'
 import {
   getUserScopedCollection,
   setUserScopedCollection
@@ -30,7 +30,7 @@ const isSupabaseConfigured = () => {
 export const routineProgressService = {
   // Start a routine session
   async startRoutine(routineId, routine) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     const session = {
@@ -58,7 +58,7 @@ export const routineProgressService = {
 
   // Get active routine session
   async getActiveSession(routineId) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) return null
 
     if (!isSupabaseConfigured()) {
@@ -76,7 +76,7 @@ export const routineProgressService = {
 
   // Complete a step
   async completeStep(sessionId, stepIndex, stepId) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
@@ -105,7 +105,7 @@ export const routineProgressService = {
 
   // Skip a step
   async skipStep(sessionId, stepIndex, stepId) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
@@ -135,7 +135,7 @@ export const routineProgressService = {
 
   // Complete entire routine
   async completeRoutine(sessionId) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
@@ -168,7 +168,7 @@ export const routineProgressService = {
 
   // Cancel routine
   async cancelRoutine(sessionId) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
@@ -186,7 +186,7 @@ export const routineProgressService = {
 
   // Get routine history
   async getRoutineHistory(routineId, limit = 30) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) return []
 
     if (!isSupabaseConfigured()) {
@@ -203,7 +203,7 @@ export const routineProgressService = {
 
   // Get routine statistics
   async getRoutineStats(routineId, days = 30) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) return null
 
     if (!isSupabaseConfigured()) {

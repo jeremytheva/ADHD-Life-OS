@@ -2,7 +2,7 @@ import { taskService } from './taskService'
 import { routineService } from './routineService'
 import { projectService } from './projectService'
 import { houseworkService } from './houseworkService'
-import { getCurrentUserId } from './authStorage'
+import { getDatabaseUserId } from './authStorage'
 import {
   getUserScopedCollection,
   setUserScopedCollection
@@ -64,7 +64,7 @@ const createActivity = (source, overrides = {}) => {
   const timestamp = nowIso()
   const activity = {
     id: overrides.id || `${overrides.type || source.task_type || 'activity'}:${source.id}`,
-    user_id: overrides.user_id ?? source.user_id ?? getCurrentUserId() ?? null,
+    user_id: overrides.user_id ?? source.user_id ?? getDatabaseUserId() ?? null,
     type: overrides.type || source.task_type || 'task',
     title: overrides.title || source.title || source.name || 'Untitled activity',
     status: overrides.status || normalizeStatus(source),
@@ -144,13 +144,13 @@ const uniqueActivities = (activities) => {
 
 export const activityService = {
   getStoredActivities() {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) return []
     return getUserScopedCollection(ACTIVITY_STORAGE_KEY, userId)
   },
 
   saveActivities(activities) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
     setUserScopedCollection(ACTIVITY_STORAGE_KEY, userId, activities)
     return activities

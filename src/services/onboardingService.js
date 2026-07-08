@@ -1,31 +1,18 @@
 // Onboarding Service
 // Manages user onboarding flow and saves preferences
 
+import { getCurrentUserId } from './authStorage'
+import { safeRead, safeWrite } from './storageService'
+
 const ONBOARDING_STORAGE_KEY = 'adhd_lifeos_onboarding'
 
-// Helper to get current user ID
-const getCurrentUserId = () => {
-  try {
-    const user = JSON.parse(localStorage.getItem('adhd_lifeos_current_user'))
-    return user?.id || null
-  } catch {
-    return null
-  }
-}
 
 // Get stored onboarding data
-const getStoredOnboarding = () => {
-  try {
-    const stored = localStorage.getItem(ONBOARDING_STORAGE_KEY)
-    return stored ? JSON.parse(stored) : {}
-  } catch {
-    return {}
-  }
-}
+const getStoredOnboarding = () => safeRead(ONBOARDING_STORAGE_KEY, {})
 
 // Set stored onboarding data
 const setStoredOnboarding = (data) => {
-  localStorage.setItem(ONBOARDING_STORAGE_KEY, JSON.stringify(data))
+  safeWrite(ONBOARDING_STORAGE_KEY, data)
 }
 
 export const onboardingService = {
@@ -119,7 +106,7 @@ export const onboardingService = {
     
     // Store preferences for app-wide use
     const prefsKey = 'adhd_lifeos_app_preferences'
-    const existingPrefs = JSON.parse(localStorage.getItem(prefsKey) || '{}')
+    const existingPrefs = safeRead(prefsKey, {})
     
     existingPrefs[userId] = {
       roles: onboardingData.selectedRoles,
@@ -130,7 +117,7 @@ export const onboardingService = {
       appliedAt: new Date().toISOString()
     }
     
-    localStorage.setItem(prefsKey, JSON.stringify(existingPrefs))
+    safeWrite(prefsKey, existingPrefs)
   },
 
   // Get user's applied preferences
@@ -139,7 +126,7 @@ export const onboardingService = {
     if (!userId) return null
     
     const prefsKey = 'adhd_lifeos_app_preferences'
-    const allPrefs = JSON.parse(localStorage.getItem(prefsKey) || '{}')
+    const allPrefs = safeRead(prefsKey, {})
     
     return allPrefs[userId] || null
   },
