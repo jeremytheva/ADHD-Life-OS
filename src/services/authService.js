@@ -1,5 +1,13 @@
 import { setCurrentUser } from './authStorage';
 
+class AuthProxyError extends Error {
+  constructor(message, status) {
+    super(message);
+    this.name = 'AuthProxyError';
+    this.status = status;
+  }
+}
+
 // Authentication service
 //
 // Browser auth requests go through the same-origin /api/auth proxy so the
@@ -39,7 +47,7 @@ const requestAuthProxy = async (path, options = {}) => {
     const message = typeof payload === 'string'
       ? payload
       : payload?.message ?? payload?.error ?? 'Authentication request failed';
-    throw new Error(message);
+    throw new AuthProxyError(message, response.status);
   }
 
   return payload;
@@ -93,6 +101,14 @@ export const authService = {
     const user = normalizeUser(payload);
     setCurrentUser(user);
     return user;
+  },
+
+  clearCurrentUser() {
+    setCurrentUser(null);
+  },
+
+  isUnauthorizedError(error) {
+    return error?.status === 401 || error?.status === 403;
   },
 
   onAuthStateChange(callback) {
