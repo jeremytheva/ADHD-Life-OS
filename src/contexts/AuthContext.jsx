@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { authService } from '../services/authService';
 
 const AuthContext = createContext();
@@ -13,25 +13,36 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const clearAuthState = useCallback(() => {
+    setUser(null);
+    authService.clearCurrentUser();
+  }, []);
+
+  const refreshSession = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const currentUser = await authService.getCurrentUser();
+      setUser(currentUser);
+      return currentUser;
+    } catch (error) {
+      if (authService.isUnauthorizedError(error)) {
+        clearAuthState();
+        return null;
+      }
+
+      console.error('Error checking auth state:', error);
+      clearAuthState();
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, [clearAuthState]);
 
   useEffect(() => {
-    // Check initial auth state from the NoCodeBackend session proxy
-    const checkAuth = async () => {
-      try {
-        const currentUser = await authService.getCurrentUser();
-        setUser(currentUser);
-      } catch (error) {
-        console.error('Error checking auth state:', error);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-
-    // Listen for auth changes
+    // Listen for auth changes from explicit sign-in/sign-out actions.
     const { data: { subscription } } = authService.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event, session?.user?.email);
@@ -46,6 +57,9 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+    refreshSession,
+    checkSession: refreshSession,
+    clearAuthState,
     signIn: async (email, password) => {
       try {
         const result = await authService.signIn(email, password);
