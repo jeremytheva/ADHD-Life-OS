@@ -1,6 +1,6 @@
 import { isBefore, isValid, parseISO, startOfToday } from 'date-fns'
 import { supabase, isSupabaseEnabled } from '../config/supabase'
-import { getCurrentUserId } from './authStorage'
+import { getDatabaseUserId } from './authStorage'
 import {
   getUserScopedCollection,
   setUserScopedCollection
@@ -124,7 +124,7 @@ const applyTaskFilterQuery = (query, filters) => {
 
 export const taskService = {
   async getTasks(filter = {}) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) return []
 
     const normalizedFilter = normalizeTaskFilter(filter)
@@ -148,7 +148,7 @@ export const taskService = {
   },
 
   async createTask(taskData) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     const newTask = {
@@ -188,7 +188,7 @@ export const taskService = {
   },
 
   async updateTask(taskId, updates) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
@@ -225,7 +225,7 @@ export const taskService = {
   },
 
   async deleteTask(taskId) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {

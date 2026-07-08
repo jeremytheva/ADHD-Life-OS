@@ -26,6 +26,17 @@ export const safeWrite = (key, value) => {
   }
 }
 
+export const safeRemove = (key) => {
+  if (!isStorageAvailable()) return false
+
+  try {
+    localStorage.removeItem(key)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export const getUserScopedCollection = (collectionKey, userId) => {
   if (!userId) return []
 

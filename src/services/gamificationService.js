@@ -1,20 +1,14 @@
 // Enhanced Gamification Service with Currency System
 // Manages points, coins, badges, streaks, and adaptive rewards for ADHD users
 
+import { getCurrentUserId } from './authStorage'
+import { safeRead, safeWrite } from './storageService'
+
 const GAMIFICATION_KEY = 'adhd_lifeos_gamification'
 const ACHIEVEMENTS_KEY = 'adhd_lifeos_achievements'
 const CURRENCY_KEY = 'adhd_lifeos_currency'
 const REWARDS_KEY = 'adhd_lifeos_rewards'
 
-// Helper to get current user ID
-const getCurrentUserId = () => {
-  try {
-    const user = JSON.parse(localStorage.getItem('adhd_lifeos_current_user'))
-    return user?.id || null
-  } catch {
-    return null
-  }
-}
 
 // Get user gamification data
 const getUserData = () => {
@@ -22,7 +16,7 @@ const getUserData = () => {
     const userId = getCurrentUserId()
     if (!userId) return null
 
-    const allData = JSON.parse(localStorage.getItem(GAMIFICATION_KEY) || '{}')
+    const allData = safeRead(GAMIFICATION_KEY, {})
     return allData[userId] || getDefaultUserData()
   } catch {
     return getDefaultUserData()
@@ -34,12 +28,12 @@ const setUserData = (data) => {
   const userId = getCurrentUserId()
   if (!userId) return
 
-  const allData = JSON.parse(localStorage.getItem(GAMIFICATION_KEY) || '{}')
+  const allData = safeRead(GAMIFICATION_KEY, {})
   allData[userId] = {
     ...data,
     updated_at: new Date().toISOString()
   }
-  localStorage.setItem(GAMIFICATION_KEY, JSON.stringify(allData))
+  safeWrite(GAMIFICATION_KEY, allData)
 }
 
 // Get user currency data
@@ -48,7 +42,7 @@ const getCurrencyData = () => {
     const userId = getCurrentUserId()
     if (!userId) return null
 
-    const allData = JSON.parse(localStorage.getItem(CURRENCY_KEY) || '{}')
+    const allData = safeRead(CURRENCY_KEY, {})
     return allData[userId] || getDefaultCurrencyData()
   } catch {
     return getDefaultCurrencyData()
@@ -60,12 +54,12 @@ const setCurrencyData = (data) => {
   const userId = getCurrentUserId()
   if (!userId) return
 
-  const allData = JSON.parse(localStorage.getItem(CURRENCY_KEY) || '{}')
+  const allData = safeRead(CURRENCY_KEY, {})
   allData[userId] = {
     ...data,
     updated_at: new Date().toISOString()
   }
-  localStorage.setItem(CURRENCY_KEY, JSON.stringify(allData))
+  safeWrite(CURRENCY_KEY, allData)
 }
 
 // Get user rewards data
@@ -74,7 +68,7 @@ const getRewardsData = () => {
     const userId = getCurrentUserId()
     if (!userId) return null
 
-    const allData = JSON.parse(localStorage.getItem(REWARDS_KEY) || '{}')
+    const allData = safeRead(REWARDS_KEY, {})
     return allData[userId] || { purchased_rewards: [], unlocked_themes: ['default'] }
   } catch {
     return { purchased_rewards: [], unlocked_themes: ['default'] }
@@ -86,12 +80,12 @@ const setRewardsData = (data) => {
   const userId = getCurrentUserId()
   if (!userId) return
 
-  const allData = JSON.parse(localStorage.getItem(REWARDS_KEY) || '{}')
+  const allData = safeRead(REWARDS_KEY, {})
   allData[userId] = {
     ...data,
     updated_at: new Date().toISOString()
   }
-  localStorage.setItem(REWARDS_KEY, JSON.stringify(allData))
+  safeWrite(REWARDS_KEY, allData)
 }
 
 // Default user data

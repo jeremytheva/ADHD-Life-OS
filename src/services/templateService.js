@@ -1,6 +1,9 @@
 // Template Library Service
 // Manages pre-built templates for tasks and routines
 
+import { getCurrentUserId } from './authStorage'
+import { safeRead, safeWrite } from './storageService'
+
 const TEMPLATES_STORAGE_KEY = 'adhd_lifeos_templates'
 const USER_TEMPLATES_STORAGE_KEY = 'adhd_lifeos_user_templates'
 
@@ -243,29 +246,13 @@ const MASTER_TEMPLATES = {
   ]
 }
 
-// Get current user ID
-const getCurrentUserId = () => {
-  try {
-    const user = JSON.parse(localStorage.getItem('adhd_lifeos_current_user'))
-    return user?.id || null
-  } catch {
-    return null
-  }
-}
 
 // Get user's applied templates
-const getUserTemplates = () => {
-  try {
-    const stored = localStorage.getItem(USER_TEMPLATES_STORAGE_KEY)
-    return stored ? JSON.parse(stored) : {}
-  } catch {
-    return {}
-  }
-}
+const getUserTemplates = () => safeRead(USER_TEMPLATES_STORAGE_KEY, {})
 
 // Set user's applied templates
 const setUserTemplates = (templates) => {
-  localStorage.setItem(USER_TEMPLATES_STORAGE_KEY, JSON.stringify(templates))
+  safeWrite(USER_TEMPLATES_STORAGE_KEY, templates)
 }
 
 export const templateService = {

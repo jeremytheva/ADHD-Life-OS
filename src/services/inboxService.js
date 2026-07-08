@@ -1,28 +1,15 @@
 import { supabase } from '../config/supabase'
+import { getCurrentUserId } from './authStorage'
+import { safeRead, safeWrite } from './storageService'
 
 // Mock Inbox Service
 const MOCK_INBOX_KEY = 'adhd_lifeos_inbox'
 
-const getCurrentUserId = () => {
-  try {
-    const user = JSON.parse(localStorage.getItem('adhd_lifeos_current_user'))
-    return user?.id || null
-  } catch {
-    return null
-  }
-}
 
-const getMockInbox = () => {
-  try {
-    const stored = localStorage.getItem(MOCK_INBOX_KEY)
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
-  }
-}
+const getMockInbox = () => safeRead(MOCK_INBOX_KEY, [])
 
 const setMockInbox = (items) => {
-  localStorage.setItem(MOCK_INBOX_KEY, JSON.stringify(items))
+  safeWrite(MOCK_INBOX_KEY, items)
 }
 
 export const inboxService = {

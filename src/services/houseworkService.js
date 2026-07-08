@@ -1,6 +1,6 @@
 import { supabase, isSupabaseEnabled } from '../config/supabase'
 import { addDays, addWeeks, addMonths, startOfDay, parseISO } from 'date-fns'
-import { getCurrentUserId } from './authStorage'
+import { getDatabaseUserId } from './authStorage'
 import {
   getUserScopedCollection,
   setUserScopedCollection
@@ -97,7 +97,7 @@ const balanceWeekLoad = (tasks, maxDailyMinutes = 90) => {
 export const houseworkService = {
   // Get all housework tasks for user
   async getHouseworkTasks(filters = {}) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) return []
 
     if (!isSupabaseConfigured()) {
@@ -129,7 +129,7 @@ export const houseworkService = {
 
   // Create housework task from template
   async createHouseworkTask(taskData) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     const newTask = {
@@ -168,7 +168,7 @@ export const houseworkService = {
 
   // Complete a housework task
   async completeHouseworkTask(taskId, completedChecklist = []) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
@@ -210,7 +210,7 @@ export const houseworkService = {
 
   // Snooze task to next day
   async snoozeTask(taskId) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
@@ -232,7 +232,7 @@ export const houseworkService = {
 
   // Update task active status
   async updateTaskStatus(taskId, isActive) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
@@ -254,7 +254,7 @@ export const houseworkService = {
 
   // Get completion history
   async getCompletionHistory(taskId, limit = 30) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) return []
 
     if (!isSupabaseConfigured()) {
@@ -271,7 +271,7 @@ export const houseworkService = {
 
   // Get statistics
   async getHouseworkStats(days = 30) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) return null
 
     if (!isSupabaseConfigured()) {
@@ -323,7 +323,7 @@ export const houseworkService = {
 
   // Balance weekly task load
   async balanceWeeklyTasks() {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {

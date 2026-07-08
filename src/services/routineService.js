@@ -1,5 +1,5 @@
 import { supabase, isSupabaseEnabled } from '../config/supabase'
-import { getCurrentUserId } from './authStorage'
+import { getDatabaseUserId } from './authStorage'
 import {
   getUserScopedCollection,
   safeRead,
@@ -32,7 +32,7 @@ const isSupabaseConfigured = () => {
 
 export const routineService = {
   async getRoutines() {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) return []
 
     if (!isSupabaseConfigured()) {
@@ -65,7 +65,7 @@ export const routineService = {
   },
 
   async createRoutine(routineData) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     const newRoutine = {
@@ -145,7 +145,7 @@ export const routineService = {
   },
 
   async updateRoutine(routineId, updates) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
@@ -226,7 +226,7 @@ export const routineService = {
   },
 
   async deleteRoutine(routineId) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {

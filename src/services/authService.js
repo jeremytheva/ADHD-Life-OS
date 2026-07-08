@@ -1,4 +1,4 @@
-import { setCurrentUser } from './authStorage';
+import { clearAuthenticatedUserCache, setCurrentUser } from './authStorage';
 
 class AuthProxyError extends Error {
   constructor(message, status) {
@@ -89,7 +89,7 @@ export const authService = {
     try {
       await requestAuthProxy('sign-out', { method: 'POST' });
     } finally {
-      setCurrentUser(null);
+      clearAuthenticatedUserCache();
       notifyAuthChange('SIGNED_OUT', null);
     }
 
@@ -104,7 +104,7 @@ export const authService = {
   },
 
   clearCurrentUser() {
-    setCurrentUser(null);
+    clearAuthenticatedUserCache();
   },
 
   isUnauthorizedError(error) {

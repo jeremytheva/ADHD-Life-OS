@@ -1,6 +1,6 @@
 import { supabase, isSupabaseEnabled } from '../config/supabase'
 import { taskService } from './taskService'
-import { getCurrentUserId } from './authStorage'
+import { getDatabaseUserId } from './authStorage'
 import {
   getUserScopedCollection,
   safeRead,
@@ -31,7 +31,7 @@ const isSupabaseConfigured = () => {
 
 export const projectService = {
   async getProjects() {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) return []
 
     if (!isSupabaseConfigured()) {
@@ -84,7 +84,7 @@ export const projectService = {
   },
 
   async createProject(projectData) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     const newProject = {
@@ -128,7 +128,7 @@ export const projectService = {
   },
 
   async updateProject(projectId, updates) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
@@ -158,7 +158,7 @@ export const projectService = {
   },
 
   async deleteProject(projectId) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     if (!userId) throw new Error('No user logged in')
 
     if (!isSupabaseConfigured()) {
@@ -240,7 +240,7 @@ export const projectService = {
 
   // Subtask Management
   async createSubtask(taskId, subtaskData) {
-    const userId = getCurrentUserId()
+    const userId = getDatabaseUserId()
     const newSubtask = {
       id: Date.now().toString(),
       task_id: taskId,
