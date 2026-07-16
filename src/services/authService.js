@@ -1,6 +1,8 @@
 import { clearAuthenticatedUserCache, setCurrentUser } from './authStorage';
 import { userSchema } from '../domains/schemas';
+import { credentialsSchema } from '../domains/schemas';
 import { DomainValidationError } from '../infrastructure/nocodebackend/errors';
+import { validateFormSubmission } from '../domains/validation';
 
 class AuthProxyError extends Error {
   constructor(message, status) {
@@ -75,9 +77,10 @@ const buildAuthResult = (payload) => {
 
 export const authService = {
   async signUp(email, password) {
+    const credentials = validateFormSubmission(credentialsSchema, { email, password }, 'Invalid authentication submission.');
     const payload = await requestAuthProxy('sign-up/email', {
       method: 'POST',
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify(credentials)
     });
     const result = buildAuthResult(payload);
     notifyAuthChange('SIGNED_IN', result.user);
@@ -85,9 +88,10 @@ export const authService = {
   },
 
   async signIn(email, password) {
+    const credentials = validateFormSubmission(credentialsSchema, { email, password }, 'Invalid authentication submission.');
     const payload = await requestAuthProxy('sign-in/email', {
       method: 'POST',
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify(credentials)
     });
     const result = buildAuthResult(payload);
     notifyAuthChange('SIGNED_IN', result.user);

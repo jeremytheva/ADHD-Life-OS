@@ -2,6 +2,8 @@ import { repositories } from '../infrastructure/nocodebackend/repositories'
 import { requireAuthenticatedUser } from '../infrastructure/nocodebackend/errors'
 import { getDatabaseUserId } from './authStorage'
 import { taskService } from './taskService'
+import { projectFormSchema, subtaskFormSchema } from '../domains/schemas'
+import { validateFormSubmission } from '../domains/validation'
 const userId = () => requireAuthenticatedUser(getDatabaseUserId())
 
 export const projectService = {
@@ -12,8 +14,9 @@ export const projectService = {
   },
   async getProject(projectId) { return (await this.getProjects()).find((project) => project.id === projectId) ?? null },
   async createProject(projectData) {
+    const data = validateFormSubmission(projectFormSchema, projectData, 'Invalid project submission.')
     const id = userId(); const projects = await repositories.projects.list({ user_id: id })
-    return repositories.projects.create({ user_id: id, title: projectData.title, description: projectData.description || '', color: projectData.color || 'blue', icon: projectData.icon || '📁', status: projectData.status || 'active', goal: projectData.goal || '', target_date: projectData.target_date || null, mode: projectData.mode || null, category: projectData.category || null, tags: projectData.tags || [], order_index: Math.max(-1, ...projects.map((project) => project.order_index ?? 0)) + 1 })
+    return repositories.projects.create({ user_id: id, title: data.title, description: data.description || '', color: data.color || 'blue', icon: data.icon || '📁', status: 'active', goal: data.goal || '', target_date: data.target_date || null, mode: data.mode || null, category: data.category || null, tags: data.tags || [], order_index: Math.max(-1, ...projects.map((project) => project.order_index ?? 0)) + 1 })
   },
   async updateProject(projectId, updates) { return repositories.projects.update(projectId, { ...updates, updated_at: new Date().toISOString() }, { user_id: userId() }) },
   async deleteProject(projectId) { return repositories.projects.remove(projectId, { user_id: userId() }) },
@@ -24,7 +27,7 @@ export const projectService = {
   },
   async createTask(projectId, taskData) { return taskService.createTask({ ...taskData, project_id: projectId }) },
   async updateTask(taskId, updates) { return taskService.updateTask(taskId, updates) }, async deleteTask(taskId) { return taskService.deleteTask(taskId) }, async completeTask(taskId) { return taskService.completeTask(taskId) },
-  async createSubtask(taskId, subtaskData) { return repositories.subtasks.create({ user_id: userId(), task_id: taskId, title: subtaskData.title, description: subtaskData.description || '', estimated_duration: subtaskData.estimated_duration || null, is_completed: false, order_index: subtaskData.order_index ?? 0 }) },
+  async createSubtask(taskId, subtaskData) { const data = validateFormSubmission(subtaskFormSchema, subtaskData, 'Invalid subtask submission.'); return repositories.subtasks.create({ user_id: userId(), task_id: taskId, title: data.title, description: data.description || '', estimated_duration: data.estimated_duration || null, is_completed: false, order_index: data.order_index ?? 0 }) },
   async completeSubtask(subtaskId) { return this.updateSubtask(subtaskId, { is_completed: true, completed_at: new Date().toISOString() }) },
   async uncompleteSubtask(subtaskId) { return this.updateSubtask(subtaskId, { is_completed: false, completed_at: null }) },
   async updateSubtask(subtaskId, updates) { return repositories.subtasks.update(subtaskId, { ...updates, updated_at: new Date().toISOString() }, { user_id: userId() }) },

@@ -6,7 +6,10 @@ const timestampSchema = z.string().datetime().optional()
 const dateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()
 const text = (max = 4000) => z.string().trim().max(max)
 const tagsSchema = z.array(text(64)).max(50)
-const record = (shape) => z.object({ id: idSchema.optional(), ...shape, created_at: timestampSchema, updated_at: timestampSchema }).passthrough()
+// Records from the API are deliberately strict.  Accepting unknown fields here
+// would make a malformed API response indistinguishable from a valid domain
+// record once it reaches React state.
+const record = (shape) => z.object({ id: idSchema.optional(), ...shape, created_at: timestampSchema, updated_at: timestampSchema }).strict()
 const patch = (schema) => schema.omit({ id: true, user_id: true, created_at: true }).partial().strict().refine((value) => Object.keys(value).length > 0, 'At least one field is required.')
 
 export const userSchema = record({ email: z.string().email().max(254), user_metadata: z.record(z.unknown()).optional() })
@@ -14,12 +17,24 @@ export const userProfileSchema = record({ user_id: idSchema, display_name: text(
 export const taskSchema = record({ user_id: idSchema, title: text(200).min(1), description: text().default(''), due_date: dateSchema.nullable(), estimated_duration: z.number().int().min(0).max(1440).default(30), is_essential: z.boolean().default(false), completed: z.boolean().default(false), status: z.enum(['active', 'completed', 'cancelled']).optional(), completed_at: timestampSchema.nullable(), mode: text(64).nullable().optional(), project_id: optionalId, category: text(100).nullable().optional(), tags: tagsSchema.default([]) })
 export const projectSchema = record({ user_id: idSchema, title: text(200).min(1), description: text().default(''), color: text(32).default('blue'), icon: text(16).default('📁'), status: z.enum(['active', 'completed', 'archived']).default('active'), goal: text(2000).default(''), target_date: dateSchema.nullable(), mode: text(64).nullable().optional(), category: text(100).nullable().optional(), tags: tagsSchema.default([]), order_index: z.number().int().min(0).default(0) })
 export const subtaskSchema = record({ user_id: idSchema, task_id: idSchema, title: text(200).min(1), description: text().default(''), estimated_duration: z.number().int().min(0).max(1440).nullable().optional(), is_completed: z.boolean().default(false), completed_at: timestampSchema.nullable(), order_index: z.number().int().min(0).default(0) })
-export const routineSchema = record({ user_id: idSchema, name: text(200).min(1), description: text().default(''), repeat_pattern: z.enum(['daily', 'weekdays', 'weekly', 'custom']).default('daily'), is_active: z.boolean().default(true), mode: text(64).nullable().optional(), category: text(100).nullable().optional(), tags: tagsSchema.default([]) })
+export const routineSchema = record({ user_id: idSchema, name: text(200).min(1), description: text().default(''), repeat_pattern: z.enum(['daily', 'weekdays', 'weekends', 'weekly', 'custom']).default('daily'), is_active: z.boolean().default(true), mode: text(64).nullable().optional(), category: text(100).nullable().optional(), tags: tagsSchema.default([]) })
 export const routineStepSchema = record({ user_id: idSchema, routine_id: idSchema, name: text(200).min(1), description: text().default(''), duration_minutes: z.number().int().min(0).max(1440), order_index: z.number().int().min(0), is_essential: z.boolean().default(false), preferred_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable().optional() })
 export const houseworkTaskSchema = record({ user_id: idSchema, task_type: z.literal('housework'), title: text(200).min(1), description: text().default(''), room: text(100).min(1), frequency: z.enum(['daily', 'every_2_days', 'twice_weekly', 'weekly', 'biweekly', 'monthly', 'quarterly', 'seasonal']), estimated_duration: z.number().int().min(0).max(1440).default(30), prep_time: z.number().int().min(0).max(1440).default(0), cleanup_time: z.number().int().min(0).max(1440).default(0), checklist: z.array(text(300)).max(100).default([]), required_items: z.array(text(300)).max(100).default([]), is_essential: z.boolean().default(false), is_active: z.boolean().default(true), mode: z.literal('home'), next_due_date: z.string().datetime(), last_completed: timestampSchema.nullable(), completion_count: z.number().int().min(0).default(0) })
 export const inboxItemSchema = record({ user_id: idSchema, content: text(4000).min(1), category: text(100).nullable().optional(), status: z.enum(['captured', 'processed', 'archived']).default('captured') })
 export const userPreferencesSchema = record({ user_id: idSchema, wake_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/), sleep_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/), work_start_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable(), work_end_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable(), theme: z.enum(['light', 'dark', 'low-stim']), notifications_enabled: z.boolean() })
 export const modulePreferencesSchema = z.object({ theme: z.enum(['default', 'light', 'dark', 'low-stim']).default('default'), viewMode: z.enum(['detailed', 'compact']).default('detailed'), showAnimations: z.boolean().default(true), showNotifications: z.boolean().default(true), sortBy: z.enum(['priority', 'due_date', 'created_at']).default('priority'), hideCompleted: z.boolean().default(false) }).strict()
+
+// These schemas are the boundary for browser form values.  Services add the
+// authenticated user and server-managed fields only after this validation.
+export const credentialsSchema = z.object({ email: z.string().trim().email().max(254), password: z.string().min(8).max(256) }).strict()
+export const taskFormSchema = taskSchema.pick({ title: true, description: true, due_date: true, estimated_duration: true, is_essential: true, mode: true, project_id: true, category: true, tags: true }).extend({ due_date: dateSchema.nullable().optional() }).strict()
+export const projectFormSchema = projectSchema.pick({ title: true, description: true, color: true, icon: true, goal: true, target_date: true, mode: true, category: true, tags: true }).extend({ target_date: dateSchema.nullable().optional() }).strict()
+export const subtaskFormSchema = subtaskSchema.pick({ title: true, description: true, estimated_duration: true, order_index: true }).strict()
+export const routineStepFormSchema = routineStepSchema.pick({ name: true, description: true, duration_minutes: true, order_index: true, is_essential: true, preferred_time: true }).strict()
+export const routineFormSchema = routineSchema.pick({ name: true, description: true, repeat_pattern: true, is_active: true, mode: true, category: true, tags: true }).extend({ steps: z.array(routineStepFormSchema).max(100).optional() }).strict()
+export const inboxItemFormSchema = inboxItemSchema.pick({ content: true, category: true, status: true }).strict()
+export const houseworkTaskFormSchema = houseworkTaskSchema.pick({ title: true, description: true, room: true, frequency: true, estimated_duration: true, prep_time: true, cleanup_time: true, checklist: true, required_items: true, is_essential: true, next_due_date: true }).strict()
+export const userPreferencesFormSchema = userPreferencesSchema.pick({ wake_time: true, sleep_time: true, work_start_time: true, work_end_time: true, theme: true, notifications_enabled: true }).strict()
 
 export const accessibilityPreferencesSchema = z.object({ fontSize: z.enum(['small', 'medium', 'large', 'xlarge']), contrast: z.enum(['normal', 'high']), reduceMotion: z.boolean(), soundEffects: z.boolean(), focusMode: z.boolean(), dyslexicFont: z.boolean(), lineSpacing: z.enum(['normal', 'relaxed', 'loose']), colorBlindMode: z.enum(['none', 'protanopia', 'deuteranopia', 'tritanopia']) }).strict()
 export const onboardingPreferencesSchema = z.object({ showEncouragement: z.boolean(), enableSoundEffects: z.boolean(), useTimers: z.boolean(), breakReminders: z.boolean(), celebrateSmallWins: z.boolean() }).strict()
@@ -31,4 +46,3 @@ export const domainSchemasByCollection = Object.freeze({ 'user-preferences': use
 export const domainCreateSchemasByCollection = Object.freeze(Object.fromEntries(Object.entries(domainSchemasByCollection).map(([name, schema]) => [name, schema.strict()])))
 export const domainPatchSchemasByCollection = Object.freeze(Object.fromEntries(Object.entries(domainSchemasByCollection).map(([name, schema]) => [name, patch(schema)])))
 export const parseDomain = (schema, value) => schema.parse(value)
-
