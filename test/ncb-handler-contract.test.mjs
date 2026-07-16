@@ -64,7 +64,7 @@ test('forwards only approved request data and preserves upstream cookies', async
   let captured
   globalThis.fetch = async (url, options) => {
     captured = { url: String(url), options }
-    return new Response(JSON.stringify({ data: { id: 'task-1' } }), {
+    return new Response(JSON.stringify({ data: { id: 'task-1', user_id: 'user-1', title: 'Write tests', description: '', due_date: null, estimated_duration: 30, is_essential: false, completed: false, project_id: null, category: null, tags: [] } }), {
       status: 200,
       headers: { 'content-type': 'application/json', 'set-cookie': 'ncb_session=abc; HttpOnly' }
     })
@@ -84,4 +84,23 @@ test('forwards only approved request data and preserves upstream cookies', async
   assert.equal(captured.options.headers.Cookie, 'ncb_session=old')
   assert.equal(captured.options.headers.Origin, undefined)
   assert.equal(response.headers.get('set-cookie')[0], 'ncb_session=abc; HttpOnly')
+})
+
+test('rejects malformed upstream domain records with a structured proxy error', async () => {
+  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
+  process.env.NCB_SECRET_KEY = 'server-secret'
+  globalThis.fetch = async () => new Response(JSON.stringify({ data: { id: 'task-1', title: 42 } }), {
+    status: 200,
+    headers: { 'content-type': 'application/json' }
+  })
+  const response = makeResponse()
+  await createNcbHandler('data')(makeRequest({
+    method: 'GET',
+    path: ['tasks', 'task-1'],
+    headers: { origin: 'https://app.example.test', 'x-forwarded-proto': 'https' }
+  }), response)
+
+  assert.equal(response.statusCode, 502)
+  assert.equal(response.payload.error.code, 'NCB_INVALID_RESPONSE')
+  assert.match(response.payload.error.correlationId, /^[0-9a-f-]{36}$/)
 })

@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
-import { domainCreateSchemasByCollection, domainPatchSchemasByCollection } from '../../src/domains/schemas.js'
+import { domainCreateSchemasByCollection, domainPatchSchemasByCollection, domainSchemasByCollection } from '../../src/domains/schemas.js'
 
 const MAX_BODY_BYTES = 32 * 1024
 const UPSTREAM_TIMEOUT_MS = 10000
@@ -109,6 +109,19 @@ const requestSchema = (scope, route, path, method) => {
   return method === 'POST' ? domainCreateSchemasByCollection[path[0]] : domainPatchSchemasByCollection[path[0]]
 }
 
+// The proxy is also a trust boundary for responses.  Do not relay a record the
+// browser would later reject into component state; return a stable API error
+// with the request correlation id instead.
+const hasValidDataResponse = (path, method, responseBody) => {
+  if (method === 'DELETE') return true
+  const schema = domainSchemasByCollection[path[0]]
+  if (!schema) return false
+  let parsed
+  try { parsed = JSON.parse(responseBody.toString('utf8')) } catch { return false }
+  const data = parsed?.data ?? parsed
+  return (path.length === 1 && method === 'GET' ? z.array(schema) : schema).safeParse(data).success
+}
+
 const getUpstreamUrl = (scope, path, query) => {
   if (!process.env.NCB_API_BASE_URL || !process.env.NCB_SECRET_KEY) return null
   try {
@@ -167,6 +180,7 @@ export const createNcbHandler = (scope) => async (req, res) => {
     const responseBody = Buffer.from(await upstream.arrayBuffer())
     forwardSetCookies(upstream, res)
     if (!upstream.ok) return apiError(res, SAFE_UPSTREAM_STATUSES.has(upstream.status) ? upstream.status : 502, 'NCB_UPSTREAM_REQUEST_FAILED', correlationId)
+    if (scope === 'data' && !hasValidDataResponse(path, method, responseBody)) return apiError(res, 502, 'NCB_INVALID_RESPONSE', correlationId)
     upstream.headers.forEach((value, key) => { if (FORWARDED_RESPONSE_HEADERS.has(key.toLowerCase())) res.setHeader(key, value) })
     res.setHeader('X-Correlation-Id', correlationId)
     return res.status(upstream.status).send(responseBody)
