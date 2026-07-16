@@ -28,6 +28,16 @@ export default defineConfig(({ mode }) => {
               }
             });
           }
+        },
+        '/api/data': {
+          target: authProxyTarget,
+          changeOrigin: true,
+          rewrite: (proxyPath) => `/data${proxyPath.replace(/^\/api\/data/, '')}`,
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq) => {
+              if (env.NCB_SECRET_KEY) proxyReq.setHeader('Authorization', `Bearer ${env.NCB_SECRET_KEY}`)
+            })
+          }
         }
       } : undefined
     },

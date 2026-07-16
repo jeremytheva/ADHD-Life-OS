@@ -1,255 +1,33 @@
 import { isBefore, isValid, parseISO, startOfToday } from 'date-fns'
-import { supabase, isSupabaseEnabled } from '../config/supabase'
+import { repositories } from '../infrastructure/nocodebackend/repositories'
+import { requireAuthenticatedUser } from '../infrastructure/nocodebackend/errors'
 import { getDatabaseUserId } from './authStorage'
-import {
-  getUserScopedCollection,
-  setUserScopedCollection
-} from './storageService'
 
-// Mock data storage for testing
-const MOCK_STORAGE_KEY = 'adhd_lifeos_tasks'
-
-const getUserTasks = (userId) => getUserScopedCollection(MOCK_STORAGE_KEY, userId)
-const setUserTasks = (userId, tasks) => {
-  setUserScopedCollection(MOCK_STORAGE_KEY, userId, tasks)
-}
-
-// Check if Supabase is properly configured
-const isSupabaseConfigured = () => {
-  return isSupabaseEnabled
-}
-
-const toLocalDateString = (date = new Date()) => {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
-
-const normalizeDateString = (dateValue) => {
-  if (!dateValue) return null
-
-  if (dateValue instanceof Date) {
-    return toLocalDateString(dateValue)
-  }
-
-  return String(dateValue).split('T')[0]
-}
-
-const normalizeTaskFilter = (filters = {}) => {
-  if (typeof filters === 'string') {
-    return {
-      status: filters === 'completed' ? 'completed' : 'active',
-      timeframe: filters
-    }
-  }
-
-  return {
-    status: filters.status || 'active',
-    timeframe: filters.timeframe || 'all',
-    mode: filters.mode || null,
-    project_id: filters.project_id || null
-  }
-}
-
-const isTaskCompleted = (task) => task.completed || task.status === 'completed'
-
-const isTaskOverdue = (task) => {
-  if (!task.due_date || isTaskCompleted(task)) return false
-
-  const dueDate = parseISO(normalizeDateString(task.due_date))
-  return isValid(dueDate) && isBefore(dueDate, startOfToday())
-}
-
-const filterMockTasks = (tasks, filters) => {
-  const today = toLocalDateString()
-
-  return tasks.filter((task) => {
-    const dueDate = normalizeDateString(task.due_date)
-    const completed = isTaskCompleted(task)
-
-    if (filters.status === 'active' && completed) return false
-    if (filters.status === 'completed' && !completed) return false
-    if (filters.mode && task.mode !== filters.mode) return false
-    if (filters.project_id && task.project_id !== filters.project_id) return false
-
-    switch (filters.timeframe) {
-      case 'today':
-        return dueDate === today
-      case 'upcoming':
-        return dueDate > today
-      case 'completed':
-        return completed
-      case 'overdue':
-        return isTaskOverdue(task)
-      case 'all':
-      default:
-        return true
-    }
-  })
-}
-
-const applyTaskFilterQuery = (query, filters) => {
-  const today = toLocalDateString()
-  let filteredQuery = query
-
-  if (filters.status === 'active') {
-    filteredQuery = filteredQuery.eq('completed', false)
-  } else if (filters.status === 'completed') {
-    filteredQuery = filteredQuery.eq('completed', true)
-  }
-
-  if (filters.mode) {
-    filteredQuery = filteredQuery.eq('mode', filters.mode)
-  }
-
-  if (filters.project_id) {
-    filteredQuery = filteredQuery.eq('project_id', filters.project_id)
-  }
-
-  switch (filters.timeframe) {
-    case 'today':
-      return filteredQuery.eq('due_date', today)
-    case 'upcoming':
-      return filteredQuery.gt('due_date', today)
-    case 'completed':
-      return filteredQuery
-    case 'overdue':
-      return filteredQuery.lt('due_date', today)
-    case 'all':
-    default:
-      return filteredQuery
-  }
+const userId = () => requireAuthenticatedUser(getDatabaseUserId())
+const today = () => new Date().toISOString().slice(0, 10)
+const completed = (task) => task.completed || task.status === 'completed'
+const matches = (task, filters) => {
+  const due = task.due_date?.slice(0, 10)
+  if (filters.status === 'active' && completed(task)) return false
+  if (filters.status === 'completed' && !completed(task)) return false
+  if (filters.mode && task.mode !== filters.mode) return false
+  if (filters.project_id && task.project_id !== filters.project_id) return false
+  if (filters.timeframe === 'today') return due === today()
+  if (filters.timeframe === 'upcoming') return due > today()
+  if (filters.timeframe === 'completed') return completed(task)
+  return filters.timeframe !== 'overdue' || (due && isValid(parseISO(due)) && isBefore(parseISO(due), startOfToday()) && !completed(task))
 }
 
 export const taskService = {
   async getTasks(filter = {}) {
-    const userId = getDatabaseUserId()
-    if (!userId) return []
-
-    const normalizedFilter = normalizeTaskFilter(filter)
-
-    if (!isSupabaseConfigured()) {
-      // Use mock data
-      const allTasks = getUserTasks(userId)
-      return filterMockTasks(allTasks, normalizedFilter)
-    }
-
-    // Use Supabase
-    const query = applyTaskFilterQuery(
-      supabase.from('tasks').select('*').eq('user_id', userId),
-      normalizedFilter
-    )
-
-    const { data, error } = await query.order('due_date', { ascending: true })
-
-    if (error) throw error
-    return data || []
+    const filters = typeof filter === 'string' ? { timeframe: filter, status: filter === 'completed' ? 'completed' : 'active' } : { status: 'active', timeframe: 'all', ...filter }
+    const tasks = await repositories.tasks.list({ user_id: userId() })
+    return tasks.filter((task) => matches(task, filters)).sort((a, b) => String(a.due_date ?? '').localeCompare(String(b.due_date ?? '')))
   },
-
   async createTask(taskData) {
-    const userId = getDatabaseUserId()
-    if (!userId) throw new Error('No user logged in')
-
-    const newTask = {
-      id: Date.now().toString(),
-      user_id: userId,
-      title: taskData.title,
-      description: taskData.description || '',
-      due_date: taskData.due_date,
-      estimated_duration: taskData.estimated_duration || 30,
-      is_essential: taskData.is_essential || false,
-      completed: false,
-      mode: taskData.mode || null,
-      project_id: taskData.project_id || null,
-      category: taskData.category || null,
-      tags: taskData.tags || [],
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-
-    if (!isSupabaseConfigured()) {
-      // Use mock data
-      const tasks = getUserTasks(userId)
-      tasks.push(newTask)
-      setUserTasks(userId, tasks)
-      return newTask
-    }
-
-    // Use Supabase
-    const { data, error } = await supabase
-      .from('tasks')
-      .insert([newTask])
-      .select()
-      .single()
-
-    if (error) throw error
-    return data
+    return repositories.tasks.create({ user_id: userId(), title: taskData.title, description: taskData.description || '', due_date: taskData.due_date, estimated_duration: taskData.estimated_duration || 30, is_essential: taskData.is_essential || false, completed: false, mode: taskData.mode || null, project_id: taskData.project_id || null, category: taskData.category || null, tags: taskData.tags || [] })
   },
-
-  async updateTask(taskId, updates) {
-    const userId = getDatabaseUserId()
-    if (!userId) throw new Error('No user logged in')
-
-    if (!isSupabaseConfigured()) {
-      // Use mock data
-      const tasks = getUserTasks(userId)
-      const index = tasks.findIndex(
-        (t) => t.id === taskId && t.user_id === userId
-      )
-      if (index === -1) throw new Error('Task not found')
-
-      tasks[index] = {
-        ...tasks[index],
-        ...updates,
-        updated_at: new Date().toISOString()
-      }
-      setUserTasks(userId, tasks)
-      return tasks[index]
-    }
-
-    // Use Supabase
-    const { data, error } = await supabase
-      .from('tasks')
-      .update({
-        ...updates,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', taskId)
-      .eq('user_id', userId)
-      .select()
-      .single()
-
-    if (error) throw error
-    return data
-  },
-
-  async deleteTask(taskId) {
-    const userId = getDatabaseUserId()
-    if (!userId) throw new Error('No user logged in')
-
-    if (!isSupabaseConfigured()) {
-      // Use mock data
-      const tasks = getUserTasks(userId)
-      const filtered = tasks.filter(
-        (t) => !(t.id === taskId && t.user_id === userId)
-      )
-      setUserTasks(userId, filtered)
-      return true
-    }
-
-    // Use Supabase
-    const { error } = await supabase
-      .from('tasks')
-      .delete()
-      .eq('id', taskId)
-      .eq('user_id', userId)
-
-    if (error) throw error
-    return true
-  },
-
-  async completeTask(taskId) {
-    return this.updateTask(taskId, { completed: true })
-  }
+  async updateTask(taskId, updates) { return repositories.tasks.update(taskId, { ...updates, updated_at: new Date().toISOString() }, { user_id: userId() }) },
+  async deleteTask(taskId) { return repositories.tasks.remove(taskId, { user_id: userId() }) },
+  async completeTask(taskId) { return this.updateTask(taskId, { completed: true, status: 'completed', completed_at: new Date().toISOString() }) }
 }

@@ -169,8 +169,8 @@ const ProfileSelector = () => {
             <p>✅ <strong>No backend required</strong> - Works entirely in your browser</p>
             <p>• Each profile has a unique user ID for testing</p>
             <p>• Switch between profiles instantly</p>
-            <p>• Authentication state persists using localStorage</p>
-            <p>• Data will be stored when Supabase is configured</p>
+            <p>• Authentication is backed by the secure NoCodeBackend session</p>
+            <p>• Domain data is stored through NoCodeBackend endpoints</p>
           </div>
         </motion.div>
 
