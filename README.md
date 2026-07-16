@@ -106,11 +106,10 @@ When creating or editing tasks, you can optionally add:
 - **React Router** for navigation
 - **React Icons** for consistent iconography
 
-### Backend (Supabase)
-- **PostgreSQL** database with Row Level Security (RLS)
-- **Real-time subscriptions** for live updates
-- **Authentication** built-in
-- **RESTful API** for data operations
+### Backend (NoCodeBackend)
+- **NoCodeBackend data endpoints** behind same-origin proxies
+- **Server-only credentials** for authentication and data transport
+- **Structured transport errors**; domain data never falls back to browser storage
 
 ### Priority System Architecture
 
@@ -132,7 +131,7 @@ src/
 
 ### Prerequisites
 - Node.js 18+ and npm
-- A Supabase account and project
+- A NoCodeBackend environment with data collections for `user-preferences`, `tasks`, `projects`, `subtasks`, `routines`, `routine-steps`, `routine-sessions`, `housework-tasks`, `housework-completions`, and `inbox-items`
 
 ### Installation
 
@@ -143,34 +142,14 @@ cd adhd-life-os-mvp
 npm install
 ```
 
-2. **Set up Supabase**
-- Create a new project at [supabase.com](https://supabase.com)
-- Run the SQL migration from `src/supabase/migrations/001_adhd_life_os_schema.sql`
-- Copy your project URL and anon key
-
-3. **Configure environment variables**
+2. **Configure NoCodeBackend**
 ```bash
 cp .env.example .env.local
 ```
 
-Edit `.env.local` and add your Supabase credentials:
-```env
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
-```
+`VITE_AUTH_PROXY_URL` and `VITE_DATA_PROXY_URL` default to same-origin endpoints. Configure `NCB_API_BASE_URL` and `NCB_SECRET_KEY` only in the server/runtime environment. Never expose `NCB_SECRET_KEY` through a `VITE_*` variable.
 
-### Optional NoCodeBackend auth proxy
-
-This project remains on Vite. Vite does not serve Next.js `app/api` routes, so NoCodeBackend auth requests should go through the same-origin `/api/auth` proxy instead of calling NoCodeBackend directly from browser code.
-
-For local development, `vite.config.js` proxies `/api/auth/*` to `NCB_API_BASE_URL` and injects `NCB_SECRET_KEY` from the server-side Vite runtime environment. For production on Vercel, `api/auth/[...path].js` provides the same `/api/auth/*` endpoint. Keep `NCB_SECRET_KEY` only in server/runtime environment variables; do not create a `VITE_NCB_SECRET_KEY`.
-
-```env
-VITE_AUTH_PROVIDER=nocodebackend
-VITE_AUTH_PROXY_URL=/api/auth
-NCB_API_BASE_URL=https://your-nocodebackend-api.example.com
-NCB_SECRET_KEY=your-server-only-secret-key
-```
+The Vite development server proxies `/api/auth/*` and `/api/data/*`; Vercel deploys matching proxy handlers. Both forward authenticated browser requests to NoCodeBackend while keeping the secret server-side. Data endpoint failures are returned to callers as structured `NoCodeBackendError` values and are not replaced with local data.
 
 4. **Start development server**
 ```bash
