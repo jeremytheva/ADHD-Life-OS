@@ -12,7 +12,7 @@ class AuthProxyError extends Error {
 
 // Authentication service
 //
-// Browser auth requests go through the same-origin /api/auth proxy so the
+// Browser auth requests go through the same-origin /api/ncb/auth endpoint so the
 // server/runtime can attach the NoCodeBackend secret key without exposing it to
 // client code. NoCodeBackend session cookies are included on every request.
 
@@ -46,10 +46,14 @@ const requestAuthProxy = async (path, options = {}) => {
     : await response.text();
 
   if (!response.ok) {
+    const apiError = payload?.error;
     const message = typeof payload === 'string'
       ? payload
-      : payload?.message ?? payload?.error ?? 'Authentication request failed';
-    throw new AuthProxyError(message, response.status);
+      : payload?.message ?? 'Authentication request failed';
+    const error = new AuthProxyError(message, response.status);
+    error.code = apiError?.code ?? payload?.code;
+    error.correlationId = apiError?.correlationId;
+    throw error;
   }
 
   return payload;

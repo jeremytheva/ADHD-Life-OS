@@ -1,16 +1,19 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import { createNcbHandler } from './api/ncb/handler.js'
 
 const ncbApiPlugin = () => ({
   name: 'ncb-api-contracts',
   configureServer(server) {
     for (const scope of ['auth', 'data']) {
+      const handler = createNcbHandler(scope)
       server.middlewares.use(`/api/ncb/${scope}`, async (req, res) => {
-        const { createNcbHandler } = await new Function('modulePath', 'return import(modulePath)')('./api/ncb/proxy.js')
-        const handler = createNcbHandler(scope)
         const url = new URL(req.url, 'http://vite.local')
-        req.query = Object.fromEntries(url.searchParams)
+        req.query = {}
+        url.searchParams.forEach((value, key) => {
+          req.query[key] = req.query[key] === undefined ? value : [].concat(req.query[key], value)
+        })
         req.query.path = url.pathname.split('/').filter(Boolean)
         return handler(req, res)
       })

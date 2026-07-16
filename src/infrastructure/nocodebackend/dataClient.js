@@ -26,9 +26,10 @@ export const requestDataEndpoint = async (path, { method = 'GET', body } = {}) =
 
   const payload = await parsePayload(response)
   if (!response.ok) {
+    const apiError = payload?.error
     throw new NoCodeBackendError(
-      typeof payload === 'string' ? payload : payload?.message ?? payload?.error ?? 'NoCodeBackend data request failed.',
-      { code: payload?.code ?? 'NCB_REQUEST_FAILED', status: response.status, details: payload }
+      typeof payload === 'string' ? payload : payload?.message ?? 'NoCodeBackend data request failed.',
+      { code: apiError?.code ?? payload?.code ?? 'NCB_REQUEST_FAILED', status: response.status, details: apiError?.correlationId ? { correlationId: apiError.correlationId } : null }
     )
   }
 
