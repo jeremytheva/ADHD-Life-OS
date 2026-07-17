@@ -7,6 +7,7 @@ import NCBAuth from './components/auth/NCBAuth'
 import ProfileSelector from './components/auth/ProfileSelector'
 import OnboardingFlow from './components/onboarding/OnboardingFlow'
 import { onboardingService } from './services/onboardingService'
+import { getUserPreferences } from './domain/preferences/repository'
 
 // Pages
 import TodayView from './components/today/TodayView'
@@ -27,6 +28,17 @@ const LoadingScreen = () => (
 )
 
 const ProtectedAppShell = ({ showOnboarding, onOnboardingComplete }) => {
+  const { user } = useAuth()
+  const [enabledModules, setEnabledModules] = useState(['tasks', 'routines'])
+
+  useEffect(() => {
+    let active = true
+    getUserPreferences(user)
+      .then((preferences) => active && setEnabledModules(preferences.enabled_modules))
+      .catch((error) => console.error('Error loading enabled modules:', error))
+    return () => { active = false }
+  }, [user])
+
   if (showOnboarding) {
     return (
       <OnboardingFlow
@@ -37,7 +49,7 @@ const ProtectedAppShell = ({ showOnboarding, onOnboardingComplete }) => {
   }
 
   return (
-    <Layout>
+    <Layout enabledModules={enabledModules}>
       <Outlet />
     </Layout>
   )

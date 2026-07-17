@@ -27,7 +27,7 @@ const {
   FiEye
 } = FiIcons
 
-const Layout = ({ children }) => {
+const Layout = ({ children, enabledModules = ['tasks', 'routines'] }) => {
   const { user, signOut } = useAuth()
   const { currentMode, filterByMode } = useMode()
   const [showGamification, setShowGamification] = useState(false)
@@ -47,17 +47,18 @@ const Layout = ({ children }) => {
 
   const navItems = [
     { path: '/', icon: FiCalendar, label: 'Today', modes: ['all'] },
-    { path: '/tasks', icon: FiCheckSquare, label: 'Tasks', modes: ['all', 'work', 'home', 'family', 'health', 'creative'] },
-    { path: '/routines', icon: FiRepeat, label: 'Routines', modes: ['all', 'home', 'health'] },
+    { path: '/tasks', icon: FiCheckSquare, label: 'Tasks', modes: ['all', 'work', 'home', 'family', 'health', 'creative'], module: 'tasks' },
+    { path: '/routines', icon: FiRepeat, label: 'Routines', modes: ['all', 'home', 'health'], module: 'routines' },
     { path: '/projects', icon: FiGrid, label: 'Projects', modes: ['all', 'work', 'creative'] },
-    { path: '/housework', icon: FiHome, label: 'Housework', modes: ['all', 'home'] },
-    { path: '/inbox', icon: FiInbox, label: 'Brain Inbox', modes: ['all'] },
+    { path: '/housework', icon: FiHome, label: 'Housework', modes: ['all', 'home'], module: 'housework' },
+    { path: '/inbox', icon: FiInbox, label: 'Brain Inbox', modes: ['all'], module: 'inbox' },
     { path: '/settings', icon: FiSettings, label: 'Settings', modes: ['all'] }
   ]
 
   // Filter nav items based on current mode
-  const visibleNavItems = navItems.filter(item => 
-    item.modes.includes('all') || item.modes.includes(currentMode.id)
+  const visibleNavItems = navItems.filter(item =>
+    (!item.module || enabledModules.includes(item.module)) &&
+    (item.modes.includes('all') || item.modes.includes(currentMode.id))
   )
 
   return (

@@ -1,166 +1,127 @@
-// Onboarding Service
-// Manages user onboarding flow and saves preferences
-
-import { getCurrentUserId } from './authStorage'
+// Onboarding progress is a per-user draft. User configuration is persisted in
+// the canonical preferences repository once onboarding is completed.
+import { getCurrentUser, getCurrentUserId } from './authStorage'
 import { safeRead, safeWrite } from './storageService'
 import { onboardingDataSchema } from '../domains/schemas'
+import { getUserPreferences, updateUserPreferences } from '../domain/preferences/repository'
 
 const ONBOARDING_STORAGE_KEY = 'adhd_lifeos_onboarding'
+export const ONBOARDING_TOTAL_STEPS = 6
 
+const defaultOnboardingData = () => ({
+  selectedRoles: [],
+  customRoles: [],
+  enabledModules: ['tasks', 'routines'],
+  uiStyle: 'visual',
+  preferences: {
+    showEncouragement: true,
+    enableSoundEffects: false,
+    useTimers: true,
+    breakReminders: true,
+    celebrateSmallWins: true
+  },
+  progress: { currentStep: 0, totalSteps: ONBOARDING_TOTAL_STEPS, completedSteps: [], isComplete: false }
+})
 
-// Get stored onboarding data
+export const normalizeOnboardingData = (data = {}) => {
+  const defaults = defaultOnboardingData()
+  const candidate = { ...defaults, ...data, progress: { ...defaults.progress, ...data.progress } }
+  const maximumStep = candidate.progress.isComplete ? ONBOARDING_TOTAL_STEPS : ONBOARDING_TOTAL_STEPS - 1
+  const requestedStep = Number(candidate.progress.currentStep)
+  return {
+    ...candidate,
+    progress: {
+      ...candidate.progress,
+      currentStep: Number.isFinite(requestedStep) ? Math.min(maximumStep, Math.max(0, Math.trunc(requestedStep))) : 0,
+      totalSteps: ONBOARDING_TOTAL_STEPS,
+      completedSteps: [...new Set(Array.isArray(candidate.progress.completedSteps) ? candidate.progress.completedSteps : [])]
+    }
+  }
+}
+
 const getStoredOnboarding = () => {
   const stored = safeRead(ONBOARDING_STORAGE_KEY, {})
   if (!stored || typeof stored !== 'object' || Array.isArray(stored)) return {}
-  return Object.fromEntries(Object.entries(stored).filter(([, value]) => onboardingDataSchema.safeParse(value).success))
+  return Object.fromEntries(Object.entries(stored)
+    .map(([userId, data]) => [userId, normalizeOnboardingData(data)])
+    .filter(([, data]) => onboardingDataSchema.safeParse(data).success))
 }
 
-// Set stored onboarding data
 const setStoredOnboarding = (data) => {
-  const valid = Object.fromEntries(Object.entries(data).filter(([, value]) => onboardingDataSchema.safeParse(value).success))
+  const valid = Object.fromEntries(Object.entries(data)
+    .map(([userId, value]) => [userId, normalizeOnboardingData(value)])
+    .filter(([, value]) => onboardingDataSchema.safeParse(value).success))
   safeWrite(ONBOARDING_STORAGE_KEY, valid)
 }
 
+const toPreferenceUpdates = (data) => ({
+  enabled_modules: data.enabledModules,
+  onboarding_configuration: {
+    selected_roles: data.selectedRoles,
+    custom_roles: data.customRoles,
+    ui_style: data.uiStyle,
+    adhd_preferences: data.preferences
+  }
+})
+
 export const onboardingService = {
-  // Check if user has completed onboarding
   hasCompletedOnboarding() {
     const userId = getCurrentUserId()
-    if (!userId) return false
-    
-    const allOnboarding = getStoredOnboarding()
-    const userOnboarding = allOnboarding[userId]
-    
-    return userOnboarding?.progress?.isComplete || false
+    return userId ? getStoredOnboarding()[userId]?.progress?.isComplete || false : false
   },
 
-  // Get user's onboarding data
   getOnboardingData() {
     const userId = getCurrentUserId()
-    if (!userId) return null
-    
-    const allOnboarding = getStoredOnboarding()
-    return allOnboarding[userId] || this.getDefaultOnboardingData()
+    return userId ? (getStoredOnboarding()[userId] || this.getDefaultOnboardingData()) : this.getDefaultOnboardingData()
   },
 
-  // Get default onboarding data
   getDefaultOnboardingData() {
-    return {
-      selectedRoles: [],
-      customRoles: [],
-      enabledModules: ['tasks', 'routines'], // Default enabled
-      uiStyle: 'visual',
-      preferences: {
-        showEncouragement: true,
-        enableSoundEffects: false,
-        useTimers: true,
-        breakReminders: true,
-        celebrateSmallWins: true
-      },
-      progress: {
-        currentStep: 1,
-        totalSteps: 4,
-        completedSteps: [],
-        isComplete: false
-      }
-    }
+    return defaultOnboardingData()
   },
 
-  // Save onboarding progress
   saveProgress(data) {
     const userId = getCurrentUserId()
     if (!userId) throw new Error('No user logged in')
-    
     const allOnboarding = getStoredOnboarding()
-    allOnboarding[userId] = {
-      ...allOnboarding[userId],
-      ...data,
-      updatedAt: new Date().toISOString()
-    }
-    
-    const parsed = onboardingDataSchema.safeParse(allOnboarding[userId])
+    const record = normalizeOnboardingData({ ...allOnboarding[userId], ...data, updatedAt: new Date().toISOString() })
+    const parsed = onboardingDataSchema.safeParse(record)
     if (!parsed.success) throw new Error('Invalid onboarding preferences.')
     allOnboarding[userId] = parsed.data
     setStoredOnboarding(allOnboarding)
-    return allOnboarding[userId]
+    return parsed.data
   },
 
-  // Complete onboarding
-  completeOnboarding(finalData) {
-    const userId = getCurrentUserId()
-    if (!userId) throw new Error('No user logged in')
-    
-    const allOnboarding = getStoredOnboarding()
-    allOnboarding[userId] = {
-      ...allOnboarding[userId],
+  async completeOnboarding(finalData) {
+    const record = this.saveProgress({
       ...finalData,
-      progress: {
-        ...finalData.progress,
-        isComplete: true
-      },
+      progress: { ...finalData.progress, currentStep: ONBOARDING_TOTAL_STEPS, isComplete: true },
       completedAt: new Date().toISOString()
-    }
-    
-    const parsed = onboardingDataSchema.safeParse(allOnboarding[userId])
-    if (!parsed.success) throw new Error('Invalid onboarding preferences.')
-    allOnboarding[userId] = parsed.data
-    setStoredOnboarding(allOnboarding)
-    
-    // Apply preferences to user account
-    this.applyPreferences(allOnboarding[userId])
-    
-    return allOnboarding[userId]
+    })
+    await this.applyPreferences(record)
+    return record
   },
 
-  // Apply onboarding preferences to user account
-  applyPreferences(onboardingData) {
-    const userId = getCurrentUserId()
-    if (!userId) return
-    
-    // Store preferences for app-wide use
-    const prefsKey = 'adhd_lifeos_app_preferences'
-    const existingPrefs = safeRead(prefsKey, {})
-    
-    existingPrefs[userId] = {
-      roles: onboardingData.selectedRoles,
-      customRoles: onboardingData.customRoles,
-      enabledModules: onboardingData.enabledModules,
-      uiStyle: onboardingData.uiStyle,
-      adhdPreferences: onboardingData.preferences,
-      appliedAt: new Date().toISOString()
-    }
-    
-    safeWrite(prefsKey, existingPrefs)
+  async applyPreferences(onboardingData) {
+    const user = getCurrentUser()
+    if (!user) throw new Error('No user logged in')
+    return updateUserPreferences(user, toPreferenceUpdates(onboardingData))
   },
 
-  // This is the locally stored onboarding snapshot, not the canonical domain
-  // preferences record. Domain preferences must be read from
-  // domain/preferences/repository.
-  getAppliedOnboardingPreferences() {
-    const userId = getCurrentUserId()
-    if (!userId) return null
-    
-    const prefsKey = 'adhd_lifeos_app_preferences'
-    const allPrefs = safeRead(prefsKey, {})
-    
-    return allPrefs[userId] || null
+  async getAppliedOnboardingPreferences() {
+    const user = getCurrentUser()
+    if (!user) return null
+    return getUserPreferences(user)
   },
 
-  // Reset onboarding (for re-running)
   resetOnboarding() {
     const userId = getCurrentUserId()
     if (!userId) return
-    
     const allOnboarding = getStoredOnboarding()
     delete allOnboarding[userId]
     setStoredOnboarding(allOnboarding)
   },
 
-  // Skip onboarding (use defaults)
-  skipOnboarding() {
-    const defaultData = this.getDefaultOnboardingData()
-    return this.completeOnboarding({
-      ...defaultData,
-      skippedSteps: ['all']
-    })
+  async skipOnboarding() {
+    return this.completeOnboarding({ ...this.getDefaultOnboardingData(), skippedSteps: ['all'] })
   }
 }

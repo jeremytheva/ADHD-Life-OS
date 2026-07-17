@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
-import { onboardingService } from '../../services/onboardingService'
+import { onboardingService, ONBOARDING_TOTAL_STEPS } from '../../services/onboardingService'
 import WelcomeStep from './steps/WelcomeStep'
 import LifeRolesStep from './steps/LifeRolesStep'
 import ModulesStep from './steps/ModulesStep'
@@ -13,11 +13,6 @@ import CompletionStep from './steps/CompletionStep'
 const { FiX, FiChevronLeft, FiChevronRight } = FiIcons
 
 const OnboardingFlow = ({ onComplete, onSkip }) => {
-  const [currentStep, setCurrentStep] = useState(0)
-  const [onboardingData, setOnboardingData] = useState(
-    onboardingService.getDefaultOnboardingData()
-  )
-
   const steps = [
     { id: 'welcome', component: WelcomeStep, title: 'Welcome!' },
     { id: 'roles', component: LifeRolesStep, title: 'Your Life Roles' },
@@ -28,16 +23,21 @@ const OnboardingFlow = ({ onComplete, onSkip }) => {
   ]
 
   const totalSteps = steps.length
+  const [onboardingData, setOnboardingData] = useState(() => onboardingService.getOnboardingData())
+  const [currentStep, setCurrentStep] = useState(() =>
+    Math.min(totalSteps - 1, Math.max(0, onboardingData.progress.currentStep))
+  )
   const CurrentStepComponent = steps[currentStep].component
 
-  const handleNext = (stepData) => {
+  const handleNext = async (stepData) => {
     const updatedData = {
       ...onboardingData,
       ...stepData,
       progress: {
         ...onboardingData.progress,
-        currentStep: currentStep + 1,
-        completedSteps: [...onboardingData.progress.completedSteps, steps[currentStep].id]
+        currentStep: Math.min(currentStep + 1, ONBOARDING_TOTAL_STEPS),
+        totalSteps,
+        completedSteps: [...new Set([...onboardingData.progress.completedSteps, steps[currentStep].id])]
       }
     }
 
@@ -46,7 +46,7 @@ const OnboardingFlow = ({ onComplete, onSkip }) => {
 
     if (currentStep === totalSteps - 1) {
       // Complete onboarding
-      onboardingService.completeOnboarding(updatedData)
+      await onboardingService.completeOnboarding(updatedData)
       if (onComplete) onComplete(updatedData)
     } else {
       setCurrentStep(currentStep + 1)
@@ -59,8 +59,8 @@ const OnboardingFlow = ({ onComplete, onSkip }) => {
     }
   }
 
-  const handleSkipAll = () => {
-    const skippedData = onboardingService.skipOnboarding()
+  const handleSkipAll = async () => {
+    const skippedData = await onboardingService.skipOnboarding()
     if (onSkip) onSkip(skippedData)
   }
 
