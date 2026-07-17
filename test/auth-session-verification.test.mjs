@@ -3,14 +3,14 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const authContext = await readFile('src/contexts/AuthContext.jsx', 'utf8');
+const authSessionController = await readFile('src/contexts/authSessionController.js', 'utf8');
 const app = await readFile('src/App.jsx', 'utf8');
 
 test('AuthProvider starts one guarded initial session verification', () => {
-  assert.equal((authContext.match(/authService\.getCurrentUser\(\)/g) ?? []).length, 1);
-  assert.match(authContext, /if \(verificationStarted\.current\) return;/);
-  assert.match(authContext, /verificationStarted\.current = true;\s*verifySession\(\);/);
-  assert.match(authContext, /const currentVerificationId = \+\+verificationId\.current;/);
-  assert.match(authContext, /currentVerificationId !== verificationId\.current/);
+  assert.match(authContext, /controller\.current\.startVerification\(\);/);
+  assert.match(authSessionController, /if \(verificationStarted\) return/);
+  assert.match(authSessionController, /const currentVerificationId = \+\+verificationId/);
+  assert.match(authSessionController, /currentVerificationId !== verificationId/);
 });
 
 test('route changes consume auth status without requesting another session verification', () => {
@@ -25,6 +25,7 @@ test('route changes consume auth status without requesting another session verif
 });
 
 test('auth events take precedence over an in-flight session verification', () => {
-  assert.match(authContext, /verificationId\.current \+= 1;/);
-  assert.match(authContext, /setStatus\(nextUser \? AUTH_STATUS\.AUTHENTICATED : AUTH_STATUS\.ANONYMOUS\);/);
+  assert.match(authContext, /controller\.current\.handleAuthStateChange\(event, session\);/);
+  assert.match(authSessionController, /verificationId \+= 1/);
+  assert.match(authSessionController, /status: user \? 'authenticated' : 'anonymous'/);
 });

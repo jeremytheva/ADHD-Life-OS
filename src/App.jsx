@@ -7,6 +7,7 @@ import NCBAuth from './components/auth/NCBAuth'
 import ProfileSelector from './components/auth/ProfileSelector'
 import OnboardingFlow from './components/onboarding/OnboardingFlow'
 import { onboardingService } from './services/onboardingService'
+import { loadOnboardingState } from './services/onboardingState'
 
 // Pages
 import TodayView from './components/today/TodayView'
@@ -70,11 +71,11 @@ const AppRoutes = () => {
     }
 
     let active = true
-    onboardingService.getOnboardingData()
-      .then((onboardingData) => {
+    loadOnboardingState(onboardingService.getOnboardingData)
+      .then(({ enabledModules: savedModules, showOnboarding: shouldShowOnboarding }) => {
         if (!active) return
-        setEnabledModules(onboardingData?.enabledModules ?? [])
-        setShowOnboarding(!onboardingData?.progress.isComplete)
+        setEnabledModules(savedModules)
+        setShowOnboarding(shouldShowOnboarding)
       })
       .catch((error) => {
         console.error('Error checking onboarding status:', error)

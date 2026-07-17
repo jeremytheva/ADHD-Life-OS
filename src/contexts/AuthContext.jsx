@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { authService } from '../services/authService';
+import { createAuthSessionController } from './authSessionController';
 
 const AuthContext = createContext();
 
@@ -22,8 +23,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [status, setStatus] = useState(AUTH_STATUS.INITIALIZING);
   const [error, setError] = useState(null);
-  const verificationStarted = useRef(false);
-  const verificationId = useRef(0);
   const mounted = useRef(false);
 
   const clearAuthState = useCallback(() => {
@@ -31,33 +30,21 @@ export const AuthProvider = ({ children }) => {
     authService.clearCurrentUser();
   }, []);
 
-  const verifySession = useCallback(async () => {
-    const currentVerificationId = ++verificationId.current;
-    setStatus(AUTH_STATUS.INITIALIZING);
-    setError(null);
+  const controller = useRef(null);
+  if (!controller.current) {
+    controller.current = createAuthSessionController({
+      auth: authService,
+      isActive: () => mounted.current,
+      updateState: ({ user: nextUser, status: nextStatus, error: nextError }) => {
+        if (nextUser !== undefined) setUser(nextUser);
+        if (nextStatus !== undefined) setStatus(nextStatus);
+        if (nextError !== undefined) setError(nextError);
+      },
+      clearAuthState
+    });
+  }
 
-    try {
-      const currentUser = await authService.getCurrentUser();
-      if (!mounted.current || currentVerificationId !== verificationId.current) return null;
-
-      setUser(currentUser);
-      setStatus(currentUser ? AUTH_STATUS.AUTHENTICATED : AUTH_STATUS.ANONYMOUS);
-      return currentUser;
-    } catch (verificationError) {
-      if (!mounted.current || currentVerificationId !== verificationId.current) return null;
-
-      clearAuthState();
-      if (authService.isUnauthorizedError(verificationError)) {
-        setStatus(AUTH_STATUS.ANONYMOUS);
-        return null;
-      }
-
-      console.error('Error checking auth state:', verificationError);
-      setError(verificationError);
-      setStatus(AUTH_STATUS.ERROR);
-      return null;
-    }
-  }, [clearAuthState]);
+  const verifySession = controller.current.verifySession;
 
   useEffect(() => {
     mounted.current = true;
@@ -67,13 +54,10 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (verificationStarted.current) return;
-
     // This guard also prevents React Strict Mode's development effect replay
     // from sending a second get-session request.
-    verificationStarted.current = true;
-    verifySession();
-  }, [verifySession]);
+    controller.current.startVerification();
+  }, []);
 
   useEffect(() => {
     const { data: { subscription } } = authService.onAuthStateChange((event, session) => {
@@ -81,11 +65,7 @@ export const AuthProvider = ({ children }) => {
       // An auth event is newer than a pending startup or retry verification.
       // Ignore that stale request when it eventually settles so explicit
       // sign-in/sign-out state cannot be overwritten by an older response.
-      verificationId.current += 1;
-      const nextUser = session?.user ?? null;
-      setUser(nextUser);
-      setError(null);
-      setStatus(nextUser ? AUTH_STATUS.AUTHENTICATED : AUTH_STATUS.ANONYMOUS);
+      controller.current.handleAuthStateChange(event, session);
     });
 
     return () => subscription.unsubscribe();
