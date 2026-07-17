@@ -74,10 +74,30 @@ const readJsonBody = (req) => new Promise((resolve, reject) => {
   }
   if (req.body !== undefined) {
     if (typeof req.body === 'string') {
+      if (Buffer.byteLength(req.body, 'utf8') > MAX_BODY_BYTES) {
+        reject({ code: 'NCB_BODY_TOO_LARGE' })
+        return
+      }
       try { resolve(JSON.parse(req.body)) } catch { reject({ code: 'NCB_INVALID_JSON' }) }
     } else if (Buffer.isBuffer(req.body)) {
+      if (req.body.length > MAX_BODY_BYTES) {
+        reject({ code: 'NCB_BODY_TOO_LARGE' })
+        return
+      }
       try { resolve(JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(req.body))) } catch { reject({ code: 'NCB_INVALID_JSON' }) }
-    } else resolve(req.body)
+    } else {
+      let serializedBody
+      try { serializedBody = JSON.stringify(req.body) } catch { reject({ code: 'NCB_INVALID_JSON' }); return }
+      if (serializedBody === undefined) {
+        reject({ code: 'NCB_INVALID_JSON' })
+        return
+      }
+      if (Buffer.byteLength(serializedBody, 'utf8') > MAX_BODY_BYTES) {
+        reject({ code: 'NCB_BODY_TOO_LARGE' })
+        return
+      }
+      resolve(req.body)
+    }
     return
   }
   let size = 0
