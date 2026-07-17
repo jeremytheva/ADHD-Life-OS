@@ -9,12 +9,13 @@ const originalFetch = globalThis.fetch
 const originalBaseUrl = process.env.NCB_API_BASE_URL
 const originalSecret = process.env.NCB_SECRET_KEY
 
-const makeRequest = ({ method = 'GET', path = [], query = {}, headers = {}, body } = {}) => {
+const makeRequest = ({ method = 'GET', path = [], query = {}, headers = {}, body, parsedBody } = {}) => {
   const request = Readable.from(body === undefined ? [] : [Buffer.from(body)])
   request.method = method
   request.query = { path, ...query }
   request.headers = { host: 'app.example.test', ...headers }
   request.socket = {}
+  if (parsedBody !== undefined) request.body = parsedBody
   return request
 }
 
@@ -54,6 +55,28 @@ test('rejects routes, methods, CSRF failures, and malformed bodies before fetch'
     assert.ok([400, 403, 404, 405].includes(response.statusCode))
     assert.match(response.payload.error.code, /^NCB_/)
     assert.match(response.payload.error.correlationId, /^[0-9a-f-]{36}$/)
+  }
+  assert.equal(calls, 0)
+})
+
+test('rejects oversized string, buffer, and parsed JSON bodies before fetch', async () => {
+  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
+  process.env.NCB_SECRET_KEY = 'server-secret'
+  let calls = 0
+  globalThis.fetch = async () => { calls += 1; throw new Error('must not be called') }
+  const handler = createNcbHandler('auth')
+  const oversizedJson = JSON.stringify({ email: 'person@example.test', password: 'x'.repeat(32 * 1024) })
+  const requestOptions = {
+    method: 'POST',
+    path: ['sign-in', 'email'],
+    headers: { origin: 'https://app.example.test', 'x-forwarded-proto': 'https', 'content-type': 'application/json' }
+  }
+
+  for (const parsedBody of [oversizedJson, Buffer.from(oversizedJson), JSON.parse(oversizedJson)]) {
+    const response = makeResponse()
+    await handler(makeRequest({ ...requestOptions, parsedBody }), response)
+    assert.equal(response.statusCode, 413)
+    assert.equal(response.payload.error.code, 'NCB_BODY_TOO_LARGE')
   }
   assert.equal(calls, 0)
 })
