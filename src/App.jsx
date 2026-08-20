@@ -6,6 +6,7 @@ import Layout from './components/Layout'
 import NCBAuth from './components/auth/NCBAuth'
 import ProfileSelector from './components/auth/ProfileSelector'
 import OnboardingFlow from './components/onboarding/OnboardingFlow'
+import AppErrorBoundary from './components/common/AppErrorBoundary'
 import { onboardingService } from './services/onboardingService'
 import { loadOnboardingState } from './services/onboardingState'
 
@@ -38,9 +39,11 @@ const ProtectedAppShell = ({ enabledModules, showOnboarding, onOnboardingComplet
   }
 
   return (
-    <Layout enabledModules={enabledModules}>
-      <Outlet />
-    </Layout>
+    <AppErrorBoundary>
+      <Layout enabledModules={enabledModules}>
+        <Outlet />
+      </Layout>
+    </AppErrorBoundary>
   )
 }
 
