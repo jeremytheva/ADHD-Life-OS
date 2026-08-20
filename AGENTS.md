@@ -6,7 +6,7 @@
 - Read the relevant implementation, tests, and documentation before editing. Preserve the existing React, JavaScript, and TypeScript conventions.
 - Update documentation and tests when a user-visible behavior, API contract, validation rule, security boundary, or contributor workflow changes.
 - Do not commit secrets, real credentials, `.env` files, production data, or generated `dist/` output. Use placeholders in examples.
-- Run the checks applicable to changed files before committing: `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`.
+- Run `npm run validate` before declaring implementation complete. Use the individual lint, typecheck, test, and build commands when isolating a failure.
 
 ## React and Vite
 
@@ -19,7 +19,7 @@
 
 - The committed `package-lock.json` is authoritative. In CI and reproducible local installs, use `npm ci`; use `npm install` only when intentionally changing dependencies and commit the resulting lockfile.
 - Do not hand-edit `package-lock.json`. Avoid dependency changes unless they are required and reviewed for security and compatibility.
-- Required checks are `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`. Note that `npm run build` runs lint before Vite's production build.
+- The canonical required check is `npm run validate`, which runs lint, typecheck, tests, and the production build in order. The individual commands remain `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`.
 
 ## NoCodeBackend proxy and security
 
@@ -31,5 +31,6 @@
 ## Tests and pull requests
 
 - Add focused `node:test` coverage in `test/` for behavior and contracts. Tests must be deterministic and must not require real NoCodeBackend credentials or network access.
+- Add browser end-to-end coverage only through a reviewed, lockfile-backed test dependency and keep the critical authenticated journey deterministic.
 - Use GitHub Issue Forms and the pull request template. Explain behavior, risk, validation, and documentation changes in pull requests.
 - Before requesting review, inspect `git diff --check` and `git status --short`; commit only intentional files.
