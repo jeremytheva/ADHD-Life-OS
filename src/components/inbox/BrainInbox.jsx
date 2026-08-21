@@ -2,15 +2,18 @@ import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import LoadErrorState from '../../common/LoadErrorState'
 import { inboxService } from '../../services/inboxService'
 
-const { FiInbox, FiPlus, FiCheck, FiArrowRight, FiTrash2, FiEdit3, FiTag, FiZap } = FiIcons
+const { FiInbox, FiPlus, FiArrowRight, FiTrash2, FiEdit3, FiTag, FiZap } = FiIcons
 
 const BrainInbox = () => {
-  const [mode, setMode] = useState('capture') // 'capture' or 'organize'
+  const [mode, setMode] = useState('capture')
   const [items, setItems] = useState([])
   const [currentInput, setCurrentInput] = useState('')
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
+  const [operationError, setOperationError] = useState('')
   const [editingId, setEditingId] = useState(null)
   const [editText, setEditText] = useState('')
   const inputRef = useRef(null)
@@ -28,10 +31,12 @@ const BrainInbox = () => {
   const loadItems = async () => {
     try {
       setLoading(true)
+      setLoadError(null)
       const data = await inboxService.getInboxItems()
       setItems(data)
     } catch (error) {
       console.error('Error loading inbox items:', error)
+      setLoadError(error)
     } finally {
       setLoading(false)
     }
@@ -42,28 +47,31 @@ const BrainInbox = () => {
     if (!currentInput.trim()) return
 
     try {
+      setOperationError('')
       const newItem = await inboxService.createInboxItem({
         content: currentInput.trim(),
         status: 'captured'
       })
       setItems(prev => [newItem, ...prev])
       setCurrentInput('')
-      
-      // Keep focus on input for rapid entry
+
       if (inputRef.current) {
         inputRef.current.focus()
       }
     } catch (error) {
       console.error('Error adding item:', error)
+      setOperationError('We couldn’t save that thought. It is still in the input box so you can try again.')
     }
   }
 
   const handleDeleteItem = async (id) => {
     try {
+      setOperationError('')
       await inboxService.deleteInboxItem(id)
       setItems(prev => prev.filter(item => item.id !== id))
     } catch (error) {
       console.error('Error deleting item:', error)
+      setOperationError('We couldn’t delete that inbox item. It has been left in your inbox.')
     }
   }
 
@@ -76,6 +84,7 @@ const BrainInbox = () => {
     if (!editText.trim()) return
 
     try {
+      setOperationError('')
       const updated = await inboxService.updateInboxItem(id, {
         content: editText.trim()
       })
@@ -84,24 +93,29 @@ const BrainInbox = () => {
       setEditText('')
     } catch (error) {
       console.error('Error updating item:', error)
+      setOperationError('We couldn’t save that edit. Your edited text is still here so you can try again.')
     }
   }
 
   const handleCategoryChange = async (id, category) => {
     try {
+      setOperationError('')
       const updated = await inboxService.updateInboxItem(id, { category })
       setItems(prev => prev.map(item => item.id === id ? updated : item))
     } catch (error) {
       console.error('Error updating category:', error)
+      setOperationError('We couldn’t update that category. The inbox item has not been removed.')
     }
   }
 
   const handleConvertToTask = async (item) => {
     try {
+      setOperationError('')
       await inboxService.convertToTask(item.id)
       setItems(prev => prev.filter(i => i.id !== item.id))
     } catch (error) {
       console.error('Error converting to task:', error)
+      setOperationError('We couldn’t convert that item to a task. It remains in your inbox so you can try again.')
     }
   }
 
@@ -126,9 +140,33 @@ const BrainInbox = () => {
     )
   }
 
+  if (loadError) {
+    return (
+      <LoadErrorState
+        title="We couldn’t load your brain inbox"
+        message="Your captured thoughts have not been removed. Please try loading them again."
+        onRetry={loadItems}
+      />
+    )
+  }
+
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {operationError && (
+        <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
+          <div className="flex items-start justify-between gap-4">
+            <p className="text-sm">{operationError}</p>
+            <button
+              type="button"
+              onClick={() => setOperationError('')}
+              className="text-sm font-medium text-red-700 hover:text-red-900"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg border border-purple-200 p-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
@@ -137,7 +175,7 @@ const BrainInbox = () => {
           <div className="flex-1">
             <h1 className="text-2xl font-bold text-slate-900">Brain Inbox</h1>
             <p className="text-slate-600">
-              {mode === 'capture' 
+              {mode === 'capture'
                 ? "Let's get everything out of your head! 🧠✨"
                 : "Great! Now let's organize these thoughts 📋"
               }
@@ -145,7 +183,6 @@ const BrainInbox = () => {
           </div>
         </div>
 
-        {/* Mode Toggle */}
         <div className="flex gap-2">
           <button
             onClick={() => setMode('capture')}
@@ -179,7 +216,6 @@ const BrainInbox = () => {
           </button>
         </div>
 
-        {/* Stats */}
         {items.length > 0 && (
           <div className="mt-4 flex items-center justify-center gap-4 text-sm">
             <div className="px-3 py-1 bg-white rounded-full">
@@ -196,21 +232,18 @@ const BrainInbox = () => {
         )}
       </div>
 
-      {/* Capture Mode */}
       {mode === 'capture' && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="space-y-4"
         >
-          {/* Encouragement */}
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
             <p className="text-blue-800 text-center font-medium">
               💭 Don't worry about organizing yet – just jot down everything that comes to mind!
             </p>
           </div>
 
-          {/* Input Form */}
           <form onSubmit={handleAddItem} className="bg-white rounded-lg border-2 border-purple-300 p-4 shadow-md">
             <div className="flex gap-3">
               <input
@@ -236,7 +269,6 @@ const BrainInbox = () => {
             </p>
           </form>
 
-          {/* Captured Items List */}
           {items.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -264,14 +296,14 @@ const BrainInbox = () => {
                       <div className="flex items-center justify-center w-6 h-6 bg-purple-100 text-purple-600 rounded-full text-sm font-medium flex-shrink-0 mt-0.5">
                         {index + 1}
                       </div>
-                      
+
                       {editingId === item.id ? (
                         <div className="flex-1 flex gap-2">
                           <input
                             type="text"
                             value={editText}
                             onChange={(e) => setEditText(e.target.value)}
-                            onKeyPress={(e) => e.key === 'Enter' && handleSaveEdit(item.id)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit(item.id)}
                             className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                             autoFocus
                           />
@@ -314,12 +346,14 @@ const BrainInbox = () => {
                           <div className="flex gap-1">
                             <button
                               onClick={() => handleStartEdit(item)}
+                              aria-label={`Edit ${item.content}`}
                               className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                             >
                               <SafeIcon icon={FiEdit3} className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => handleDeleteItem(item.id)}
+                              aria-label={`Delete ${item.content}`}
                               className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             >
                               <SafeIcon icon={FiTrash2} className="w-4 h-4" />
@@ -332,7 +366,6 @@ const BrainInbox = () => {
                 ))}
               </AnimatePresence>
 
-              {/* Encouragement to organize */}
               {items.length >= 5 && uncategorizedItems.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -354,18 +387,13 @@ const BrainInbox = () => {
             </div>
           )}
 
-          {/* Empty State */}
           {items.length === 0 && (
             <div className="bg-white rounded-lg border-2 border-dashed border-slate-300 p-12 text-center">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <SafeIcon icon={FiInbox} className="w-8 h-8 text-purple-600" />
               </div>
-              <h3 className="text-lg font-medium text-slate-900 mb-2">
-                Your inbox is empty
-              </h3>
-              <p className="text-slate-600 mb-4">
-                Start by typing the first thing that comes to mind! 💭
-              </p>
+              <h3 className="text-lg font-medium text-slate-900 mb-2">Your inbox is empty</h3>
+              <p className="text-slate-600 mb-4">Start by typing the first thing that comes to mind! 💭</p>
               <div className="max-w-md mx-auto text-left space-y-2 text-sm text-slate-600">
                 <p>✨ Quick ideas to get started:</p>
                 <ul className="list-disc list-inside space-y-1 ml-4">
@@ -381,21 +409,18 @@ const BrainInbox = () => {
         </motion.div>
       )}
 
-      {/* Organize Mode */}
       {mode === 'organize' && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="space-y-6"
         >
-          {/* Instructions */}
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
             <p className="text-blue-800 text-center font-medium">
               📋 Now let's group related items together! Pick a category for each one.
             </p>
           </div>
 
-          {/* Uncategorized Items */}
           {uncategorizedItems.length > 0 && (
             <div className="space-y-3">
               <h3 className="text-lg font-medium text-slate-900">
@@ -435,16 +460,13 @@ const BrainInbox = () => {
             </div>
           )}
 
-          {/* Categorized Items */}
           {categorizedItems.length > 0 && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-medium text-slate-900">
                   Organized ({categorizedItems.length} items)
                 </h3>
-                <div className="text-sm text-green-600 font-medium">
-                  ✅ Great job categorizing!
-                </div>
+                <div className="text-sm text-green-600 font-medium">✅ Great job categorizing!</div>
               </div>
 
               {categories.map(cat => {
@@ -482,13 +504,14 @@ const BrainInbox = () => {
                             <button
                               onClick={() => handleCategoryChange(item.id, null)}
                               className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
-                              title="Remove category"
+                              aria-label={`Remove category from ${item.content}`}
                             >
                               <SafeIcon icon={FiTag} className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => handleDeleteItem(item.id)}
                               className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              aria-label={`Delete ${item.content}`}
                             >
                               <SafeIcon icon={FiTrash2} className="w-4 h-4" />
                             </button>
@@ -502,7 +525,6 @@ const BrainInbox = () => {
             </div>
           )}
 
-          {/* All Organized! */}
           {uncategorizedItems.length === 0 && categorizedItems.length > 0 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -514,8 +536,7 @@ const BrainInbox = () => {
                 Awesome work! Everything is organized!
               </h3>
               <p className="text-green-800 mb-4">
-                You've successfully cleared your mental clutter and organized your thoughts. 
-                Now you can convert these into actionable tasks!
+                You've successfully cleared your mental clutter and organized your thoughts. Now you can convert these into actionable tasks!
               </p>
               <div className="text-sm text-green-700">
                 💡 Tip: Click the "Task" button on any item to turn it into a full task
@@ -523,12 +544,9 @@ const BrainInbox = () => {
             </motion.div>
           )}
 
-          {/* Empty State */}
           {items.length === 0 && (
             <div className="bg-white rounded-lg border-2 border-dashed border-slate-300 p-12 text-center">
-              <p className="text-slate-600 mb-4">
-                No items to organize yet!
-              </p>
+              <p className="text-slate-600 mb-4">No items to organize yet!</p>
               <button
                 onClick={() => setMode('capture')}
                 className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
