@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import LoadErrorState from '../../common/LoadErrorState'
 import { routineService } from '../../services/routineService'
 import { useMode } from '../../contexts/ModeContext'
 import RoutineCard from './RoutineCard'
@@ -16,6 +17,7 @@ const RoutineList = () => {
   const { currentMode, filterByMode } = useMode()
   const [routines, setRoutines] = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [showTemplates, setShowTemplates] = useState(false)
   const [editingRoutine, setEditingRoutine] = useState(null)
@@ -29,14 +31,16 @@ const RoutineList = () => {
   const loadRoutines = async () => {
     try {
       setLoading(true)
+      setLoadError(false)
       const data = await routineService.getRoutines()
-      
+
       // Apply mode filtering
       const filteredData = filterByMode(data, 'routine')
-      
+
       setRoutines(filteredData)
     } catch (error) {
       console.error('Error loading routines:', error)
+      setLoadError(true)
     } finally {
       setLoading(false)
     }
@@ -49,7 +53,7 @@ const RoutineList = () => {
         ...routineData,
         mode: currentMode.id !== 'all' ? currentMode.id : null
       }
-      
+
       await routineService.createRoutine(routineWithMode)
       setShowForm(false)
       loadRoutines()
@@ -127,6 +131,18 @@ const RoutineList = () => {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
           <p className="text-slate-600">Loading routines...</p>
         </div>
+      </div>
+    )
+  }
+
+  if (loadError) {
+    return (
+      <div className="p-6">
+        <LoadErrorState
+          title="We couldn’t load your routines"
+          message="Your routines have not been removed. Check your connection and try again."
+          onRetry={loadRoutines}
+        />
       </div>
     )
   }
