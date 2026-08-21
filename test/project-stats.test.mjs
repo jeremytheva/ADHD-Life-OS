@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { calculateProjectStats } from '../src/services/projectService.js'
+import { calculateProjectStats } from '../src/domain/projectStats.js'
 
 test('project stats are calculated from an already-loaded project graph', () => {
   const stats = calculateProjectStats({
