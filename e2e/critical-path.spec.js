@@ -103,7 +103,7 @@ test('critical path persists onboarding and tasks across reload and sign-in', as
   await page.getByRole('link', { name: 'Tasks' }).click()
   await page.getByRole('button', { name: 'Add Task' }).click()
   await page.getByLabel('Title *').fill('Persisted browser task')
-  await page.getByRole('button', { name: 'Create' }).click()
+  await page.getByRole('button', { name: 'Create', exact: true }).click()
   await expect(page.getByText('Persisted browser task')).toBeVisible()
 
   await page.reload()
@@ -126,7 +126,7 @@ test('a second authenticated user does not receive the first user task', async (
   await page.getByRole('link', { name: 'Tasks' }).click()
   await page.getByRole('button', { name: 'Add Task' }).click()
   await page.getByLabel('Title *').fill('Owner-only task')
-  await page.getByRole('button', { name: 'Create' }).click()
+  await page.getByRole('button', { name: 'Create', exact: true }).click()
   await expect(page.getByText('Owner-only task')).toBeVisible()
 
   await page.getByRole('button', { name: 'Switch Profile' }).click()
