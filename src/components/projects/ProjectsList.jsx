@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import LoadErrorState from '../../common/LoadErrorState'
 import { projectService } from '../../services/projectService'
 import { useMode } from '../../contexts/ModeContext'
 import ProjectCard from './ProjectCard'
@@ -24,6 +25,7 @@ const ProjectsList = () => {
   const [projects, setProjects] = useState([])
   const [projectStats, setProjectStats] = useState({})
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
   const [viewMode, setViewMode] = useState('grid')
   const [selectedProject, setSelectedProject] = useState(null)
   const [showForm, setShowForm] = useState(false)
@@ -40,14 +42,12 @@ const ProjectsList = () => {
   const loadProjects = async () => {
     try {
       setLoading(true)
+      setLoadError(null)
       const data = await projectService.getProjects()
-      
-      // Apply mode filtering
+
       const filteredData = filterByMode(data, 'project')
-      
       setProjects(filteredData)
 
-      // Load stats for each project
       const stats = {}
       for (const project of filteredData) {
         const projectStats = await projectService.getProjectStats(project.id)
@@ -56,6 +56,7 @@ const ProjectsList = () => {
       setProjectStats(stats)
     } catch (error) {
       console.error('Error loading projects:', error)
+      setLoadError(error)
     } finally {
       setLoading(false)
     }
@@ -63,7 +64,6 @@ const ProjectsList = () => {
 
   const handleQuickCapture = async (items) => {
     try {
-      // Create a new "Quick Capture" project if it doesn't exist
       let quickProject = projects.find((p) => p.title === '📥 Quick Capture')
 
       if (!quickProject) {
@@ -77,7 +77,6 @@ const ProjectsList = () => {
         })
       }
 
-      // Add all captured items as tasks
       for (const item of items) {
         await projectService.createTask(quickProject.id, {
           title: item,
@@ -90,7 +89,6 @@ const ProjectsList = () => {
       setShowQuickCapture(false)
       await loadProjects()
 
-      // Open the quick capture project
       const updatedProject = await projectService.getProject(quickProject.id)
       setSelectedProject(updatedProject)
     } catch (error) {
@@ -100,12 +98,11 @@ const ProjectsList = () => {
 
   const handleCreateProject = async (projectData) => {
     try {
-      // Auto-tag with current mode
       const projectWithMode = {
         ...projectData,
         mode: currentMode.id !== 'all' ? currentMode.id : null
       }
-      
+
       await projectService.createProject(projectWithMode)
       setShowForm(false)
       setEditingProject(null)
@@ -127,11 +124,7 @@ const ProjectsList = () => {
   }
 
   const handleDeleteProject = async (projectId) => {
-    if (
-      !window.confirm(
-        'Are you sure you want to delete this project? All tasks and subtasks will be deleted.'
-      )
-    ) {
+    if (!window.confirm('Are you sure you want to delete this project? All tasks and subtasks will be deleted.')) {
       return
     }
 
@@ -235,9 +228,20 @@ const ProjectsList = () => {
     )
   }
 
+  if (loadError) {
+    return (
+      <div className="p-6">
+        <LoadErrorState
+          title="We couldn’t load your projects"
+          message="Your projects and tasks have not been removed. Please try loading them again."
+          onRetry={loadProjects}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="p-6 space-y-6">
-      {/* Mode Context Banner */}
       {currentMode.id !== 'all' && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -247,9 +251,7 @@ const ProjectsList = () => {
           <div className="flex items-center gap-3">
             <span className="text-2xl">{currentMode.icon}</span>
             <div>
-              <div className="font-medium">
-                Viewing {currentMode.label} Projects
-              </div>
+              <div className="font-medium">Viewing {currentMode.label} Projects</div>
               <div className="text-xs text-white text-opacity-90">
                 Showing only {currentMode.label.toLowerCase()}-related projects
               </div>
@@ -258,13 +260,10 @@ const ProjectsList = () => {
         </motion.div>
       )}
 
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Projects</h1>
-          <p className="text-slate-600 mt-1">
-            Organize your goals into manageable steps
-          </p>
+          <p className="text-slate-600 mt-1">Organize your goals into manageable steps</p>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -291,7 +290,6 @@ const ProjectsList = () => {
         </div>
       </div>
 
-      {/* Quick Capture Tip */}
       {projects.length === 0 && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -303,13 +301,9 @@ const ProjectsList = () => {
               <SafeIcon icon={FiZap} className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-bold text-green-900 mb-2">
-                🧠 Brain Dump First, Organize Later!
-              </h3>
+              <h3 className="text-lg font-bold text-green-900 mb-2">🧠 Brain Dump First, Organize Later!</h3>
               <p className="text-green-800 mb-4">
-                Feeling overwhelmed? Use <strong>Quick Capture</strong> to dump
-                all your tasks out of your head first. Don't worry about
-                organizing - just get everything written down!
+                Feeling overwhelmed? Use <strong>Quick Capture</strong> to dump all your tasks out of your head first. Don't worry about organizing - just get everything written down!
               </p>
               <button
                 onClick={() => setShowQuickCapture(true)}
@@ -323,7 +317,6 @@ const ProjectsList = () => {
         </motion.div>
       )}
 
-      {/* Overall Stats */}
       {projects.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -336,58 +329,45 @@ const ProjectsList = () => {
           </div>
           <div className="grid grid-cols-4 gap-4">
             <div className="bg-white rounded-lg p-4 text-center">
-              <div className="text-3xl font-bold text-purple-600">
-                {totalStats.projects}
-              </div>
+              <div className="text-3xl font-bold text-purple-600">{totalStats.projects}</div>
               <div className="text-sm text-slate-600">Active Projects</div>
             </div>
             <div className="bg-white rounded-lg p-4 text-center">
-              <div className="text-3xl font-bold text-blue-600">
-                {totalStats.tasks}
-              </div>
+              <div className="text-3xl font-bold text-blue-600">{totalStats.tasks}</div>
               <div className="text-sm text-slate-600">Total Tasks</div>
             </div>
             <div className="bg-white rounded-lg p-4 text-center">
-              <div className="text-3xl font-bold text-green-600">
-                {totalStats.completed}
-              </div>
+              <div className="text-3xl font-bold text-green-600">{totalStats.completed}</div>
               <div className="text-sm text-slate-600">Completed</div>
             </div>
             <div className="bg-white rounded-lg p-4 text-center">
-              <div className="text-3xl font-bold text-indigo-600">
-                {totalStats.completion}%
-              </div>
+              <div className="text-3xl font-bold text-indigo-600">{totalStats.completion}%</div>
               <div className="text-sm text-slate-600">Overall Progress</div>
             </div>
           </div>
         </motion.div>
       )}
 
-      {/* View Mode Toggle */}
       {projects.length > 0 && (
         <div className="flex items-center justify-between">
           <div className="text-sm text-slate-600">
             {projects.length} project{projects.length !== 1 ? 's' : ''}
             {currentMode.id !== 'all' && (
-              <span className="ml-2 text-xs text-slate-500">
-                (filtered by {currentMode.label} mode)
-              </span>
+              <span className="ml-2 text-xs text-slate-500">(filtered by {currentMode.label} mode)</span>
             )}
           </div>
           <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-2 rounded transition-colors ${
-                viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-slate-200'
-              }`}
+              aria-label="Grid view"
+              className={`p-2 rounded transition-colors ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-slate-200'}`}
             >
               <SafeIcon icon={FiGrid} className="w-4 h-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded transition-colors ${
-                viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-slate-200'
-              }`}
+              aria-label="List view"
+              className={`p-2 rounded transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-slate-200'}`}
             >
               <SafeIcon icon={FiList} className="w-4 h-4" />
             </button>
@@ -395,15 +375,8 @@ const ProjectsList = () => {
         </div>
       )}
 
-      {/* Projects Grid/List */}
       {projects.length > 0 ? (
-        <div
-          className={
-            viewMode === 'grid'
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
-              : 'space-y-3'
-          }
-        >
+        <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-3'}>
           {projects.map((project, index) => (
             <motion.div
               key={project.id}
@@ -428,14 +401,9 @@ const ProjectsList = () => {
             <SafeIcon icon={FiGrid} className="w-8 h-8 text-purple-600" />
           </div>
           <h3 className="text-lg font-medium text-slate-900 mb-2">
-            {currentMode.id !== 'all'
-              ? `No ${currentMode.label.toLowerCase()} projects yet`
-              : 'No projects yet'
-            }
+            {currentMode.id !== 'all' ? `No ${currentMode.label.toLowerCase()} projects yet` : 'No projects yet'}
           </h3>
-          <p className="text-slate-600 mb-4">
-            Break down overwhelming tasks into manageable projects
-          </p>
+          <p className="text-slate-600 mb-4">Break down overwhelming tasks into manageable projects</p>
           <div className="flex gap-3 justify-center">
             <button
               onClick={() => setShowQuickCapture(true)}
@@ -460,7 +428,6 @@ const ProjectsList = () => {
         </div>
       )}
 
-      {/* Modals */}
       <AnimatePresence>
         {showQuickCapture && (
           <QuickCaptureModal
