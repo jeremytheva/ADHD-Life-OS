@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import LoadErrorState from '../../common/LoadErrorState'
 import { houseworkService } from '../../services/houseworkService'
 import { format, isToday, isPast, parseISO } from 'date-fns'
 
-const { 
-  FiHome, 
-  FiCheck, 
-  FiClock, 
-  FiChevronRight, 
-  FiAlertCircle,
+const {
+  FiHome,
+  FiCheck,
+  FiClock,
+  FiChevronRight,
   FiSun,
   FiMoon,
   FiRefreshCw
@@ -19,6 +19,7 @@ const {
 const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
   const [filter, setFilter] = useState('today')
   const [stats, setStats] = useState(null)
 
@@ -30,16 +31,18 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
   const loadTasks = async () => {
     try {
       setLoading(true)
+      setLoadError(false)
       const filters = {}
-      
+
       if (filter === 'today') {
         filters.dueToday = true
       }
-      
+
       const data = await houseworkService.getHouseworkTasks(filters)
       setTasks(data)
     } catch (error) {
       console.error('Error loading housework tasks:', error)
+      setLoadError(true)
     } finally {
       setLoading(false)
     }
@@ -51,7 +54,13 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
       setStats(statsData)
     } catch (error) {
       console.error('Error loading stats:', error)
+      setStats(null)
     }
+  }
+
+  const retryLoad = () => {
+    loadTasks()
+    loadStats()
   }
 
   const handleCompleteTask = async (taskId) => {
@@ -104,6 +113,16 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
     )
   }
 
+  if (loadError) {
+    return (
+      <LoadErrorState
+        title="We couldn’t load your chores"
+        message="Your chore list has not been cleared. Check your connection and try again."
+        onRetry={retryLoad}
+      />
+    )
+  }
+
   const todayTasks = tasks.filter(t => {
     const dueDate = parseISO(t.next_due_date)
     return isToday(dueDate) || isPast(dueDate)
@@ -129,8 +148,9 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
             </div>
           </div>
           <button
-            onClick={loadTasks}
+            onClick={retryLoad}
             className="p-2 text-purple-600 hover:bg-purple-100 rounded-lg transition-colors"
+            aria-label="Refresh chores"
           >
             <SafeIcon icon={FiRefreshCw} className="w-5 h-5" />
           </button>
@@ -188,7 +208,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
           </h3>
           <div className="space-y-2">
             {todayTasks.map((task, index) => {
-              const status = getTaskStatus(task)
+              getTaskStatus(task)
               return (
                 <motion.div
                   key={task.id}
@@ -202,10 +222,11 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
                       <button
                         onClick={() => handleCompleteTask(task.id)}
                         className="mt-1 p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                        aria-label={`Complete ${task.title}`}
                       >
                         <SafeIcon icon={FiCheck} className="w-5 h-5" />
                       </button>
-                      
+
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xl">{getRoomIcon(task.room)}</span>
@@ -213,7 +234,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
                             {task.title}
                           </h4>
                         </div>
-                        
+
                         <div className="flex items-center gap-3 text-sm text-slate-600">
                           <div className="flex items-center gap-1">
                             <SafeIcon icon={FiClock} className="w-4 h-4" />
@@ -236,12 +257,14 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
                         onClick={() => handleSnoozeTask(task.id)}
                         className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         title="Move to tomorrow"
+                        aria-label={`Move ${task.title} to tomorrow`}
                       >
                         <SafeIcon icon={FiMoon} className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => onSelectTask && onSelectTask(task)}
                         className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                        aria-label={`Open ${task.title}`}
                       >
                         <SafeIcon icon={FiChevronRight} className="w-5 h-5" />
                       </button>
@@ -283,6 +306,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
                   <button
                     onClick={() => onSelectTask && onSelectTask(task)}
                     className="p-2 text-slate-400 hover:text-purple-600 transition-colors"
+                    aria-label={`Open ${task.title}`}
                   >
                     <SafeIcon icon={FiChevronRight} className="w-5 h-5" />
                   </button>
