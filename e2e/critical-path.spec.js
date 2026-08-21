@@ -6,6 +6,13 @@ const json = (route, body, status = 200) => route.fulfill({
   body: JSON.stringify(body)
 })
 
+const surfaceBrowserErrors = (page) => {
+  page.on('console', (message) => {
+    if (message.type() === 'error') console.error(`[browser console] ${message.text()}`)
+  })
+  page.on('pageerror', (error) => console.error(`[browser pageerror] ${error.name}: ${error.message}`))
+}
+
 const createMockNcb = async (page) => {
   let currentUser = null
   const usersByEmail = new Map()
@@ -95,6 +102,7 @@ const registerAndSkipSetup = async (page, email) => {
 }
 
 test('critical path persists onboarding and tasks across reload and sign-in', async ({ page }) => {
+  surfaceBrowserErrors(page)
   await createMockNcb(page)
   const email = 'first@example.test'
 
@@ -120,6 +128,7 @@ test('critical path persists onboarding and tasks across reload and sign-in', as
 })
 
 test('a second authenticated user does not receive the first user task', async ({ page }) => {
+  surfaceBrowserErrors(page)
   await createMockNcb(page)
 
   await registerAndSkipSetup(page, 'owner@example.test')
