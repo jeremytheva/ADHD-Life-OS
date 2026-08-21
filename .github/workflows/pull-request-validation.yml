@@ -28,8 +28,11 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
-      - name: Report dependency audit details
-        run: npm audit --audit-level=moderate || true
+      - name: Preview non-breaking dependency remediation
+        run: |
+          npm audit fix --package-lock-only
+          npm audit --audit-level=moderate || true
+          git diff -- package.json package-lock.json
 
       - name: Run canonical validation
         run: npm run validate
