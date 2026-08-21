@@ -25,11 +25,16 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - name: Install locked dependencies
+      - name: Preview Vite 8 migration
+        run: |
+          npm install --save-dev --package-lock-only --ignore-scripts vite@8.2.2 @vitejs/plugin-react@latest
+          git diff -- package.json package-lock.json
+
+      - name: Install migrated dependency tree
         run: npm ci
 
-      - name: Report dependency audit details
-        run: npm audit --audit-level=moderate || true
+      - name: Audit migrated dependency tree
+        run: npm audit --audit-level=moderate
 
       - name: Run canonical validation
         run: npm run validate
