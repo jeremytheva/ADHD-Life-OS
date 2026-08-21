@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { lazy, Suspense, useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom'
 import { AUTH_STATUS, AuthProvider, useAuth } from './contexts/AuthContext'
 import { ModeProvider } from './contexts/ModeContext'
@@ -9,15 +9,14 @@ import OnboardingFlow from './components/onboarding/OnboardingFlow'
 import AppErrorBoundary from './components/common/AppErrorBoundary'
 import { onboardingService } from './services/onboardingService'
 import { loadOnboardingState } from './services/onboardingState'
-
-// Pages
 import TodayView from './components/today/TodayView'
-import TaskList from './components/tasks/TaskList'
-import RoutineList from './components/routines/RoutineList'
-import Settings from './components/settings/Settings'
-import Housework from './pages/Housework'
-import Inbox from './pages/Inbox'
-import Projects from './pages/Projects'
+
+const TaskList = lazy(() => import('./components/tasks/TaskList'))
+const RoutineList = lazy(() => import('./components/routines/RoutineList'))
+const Settings = lazy(() => import('./components/settings/Settings'))
+const Housework = lazy(() => import('./pages/Housework'))
+const Inbox = lazy(() => import('./pages/Inbox'))
+const Projects = lazy(() => import('./pages/Projects'))
 
 const LoadingScreen = () => (
   <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -26,6 +25,12 @@ const LoadingScreen = () => (
       <div className="text-slate-600">Loading...</div>
     </div>
   </div>
+)
+
+const LazyRoute = ({ children }) => (
+  <Suspense fallback={<LoadingScreen />}>
+    {children}
+  </Suspense>
 )
 
 const ProtectedAppShell = ({ enabledModules, showOnboarding, onOnboardingComplete }) => {
@@ -127,12 +132,12 @@ const AppRoutes = () => {
         }
       >
         <Route path="/" element={<TodayView />} />
-        <Route path="/tasks" element={<TaskList />} />
-        <Route path="/routines" element={<RoutineList />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/housework" element={<Housework />} />
-        <Route path="/inbox" element={<Inbox />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/tasks" element={<LazyRoute><TaskList /></LazyRoute>} />
+        <Route path="/routines" element={<LazyRoute><RoutineList /></LazyRoute>} />
+        <Route path="/projects" element={<LazyRoute><Projects /></LazyRoute>} />
+        <Route path="/housework" element={<LazyRoute><Housework /></LazyRoute>} />
+        <Route path="/inbox" element={<LazyRoute><Inbox /></LazyRoute>} />
+        <Route path="/settings" element={<LazyRoute><Settings /></LazyRoute>} />
       </Route>
       <Route
         path="*"
