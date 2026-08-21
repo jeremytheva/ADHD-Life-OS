@@ -8,15 +8,17 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
     name: Validate application
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Check out Vite migration branch head
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -25,12 +27,22 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
 
-      - name: Preview Vite 8 migration
-        run: |
-          npm install --save-dev --package-lock-only --ignore-scripts vite@8.2.2 @vitejs/plugin-react@latest
-          git diff -- package.json package-lock.json
+      - name: Generate Vite 8 migration
+        run: npm install --save-dev --package-lock-only --ignore-scripts vite@8.2.2 @vitejs/plugin-react@6.1.0
 
-      - name: Install migrated dependency tree
+      - name: Persist generated dependency migration
+        if: github.event_name == 'pull_request' && github.head_ref == 'implementation/vite-8-security-upgrade'
+        run: |
+          git add package.json package-lock.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore: upgrade build tooling to Vite 8'
+          git push origin HEAD:${{ github.head_ref }}
+
+      - name: Install locked dependencies
         run: npm ci
 
       - name: Audit migrated dependency tree
