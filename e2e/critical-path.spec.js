@@ -13,12 +13,26 @@ const surfaceBrowserErrors = (page) => {
   page.on('pageerror', (error) => console.error(`[browser pageerror] ${error.name}: ${error.message}`))
 }
 
+const taskCardHeading = (page, title) => page
+  .locator('[id^="task-task-"]')
+  .getByRole('heading', { name: title, exact: true })
+
 const createMockNcb = async (page) => {
   let currentUser = null
   const usersByEmail = new Map()
   const preferencesByUser = new Map()
   const tasksByUser = new Map()
   let nextId = 1
+  const emptyCollections = new Set([
+    'projects',
+    'subtasks',
+    'routines',
+    'routine-steps',
+    'routine-sessions',
+    'housework-tasks',
+    'housework-completions',
+    'inbox-items'
+  ])
 
   const userForEmail = (email) => {
     if (!usersByEmail.has(email)) {
@@ -87,6 +101,8 @@ const createMockNcb = async (page) => {
       return json(route, record)
     }
 
+    if (emptyCollections.has(path) && method === 'GET') return json(route, [])
+
     return json(route, { error: { code: 'MOCK_DATA_ROUTE_NOT_FOUND', path, method } }, 404)
   })
 }
@@ -105,17 +121,18 @@ test('critical path persists onboarding and tasks across reload and sign-in', as
   surfaceBrowserErrors(page)
   await createMockNcb(page)
   const email = 'first@example.test'
+  const taskTitle = 'Persisted browser task'
 
   await registerAndSkipSetup(page, email)
 
   await page.getByRole('link', { name: 'Tasks' }).click()
   await page.getByRole('button', { name: 'Add Task' }).click()
-  await page.getByLabel('Title *').fill('Persisted browser task')
+  await page.getByLabel('Title *').fill(taskTitle)
   await page.getByRole('button', { name: 'Create', exact: true }).click()
-  await expect(page.getByText('Persisted browser task')).toBeVisible()
+  await expect(taskCardHeading(page, taskTitle)).toBeVisible()
 
   await page.reload()
-  await expect(page.getByText('Persisted browser task')).toBeVisible()
+  await expect(taskCardHeading(page, taskTitle)).toBeVisible()
   await expect(page.getByRole('button', { name: 'Skip Setup' })).toHaveCount(0)
 
   await page.getByRole('button', { name: 'Switch Profile' }).click()
@@ -124,19 +141,20 @@ test('critical path persists onboarding and tasks across reload and sign-in', as
   await page.getByLabel('Password').fill('browser-test-password')
   await page.getByRole('button', { name: 'Sign In' }).click()
   await page.getByRole('link', { name: 'Tasks' }).click()
-  await expect(page.getByText('Persisted browser task')).toBeVisible()
+  await expect(taskCardHeading(page, taskTitle)).toBeVisible()
 })
 
 test('a second authenticated user does not receive the first user task', async ({ page }) => {
   surfaceBrowserErrors(page)
   await createMockNcb(page)
+  const taskTitle = 'Owner-only task'
 
   await registerAndSkipSetup(page, 'owner@example.test')
   await page.getByRole('link', { name: 'Tasks' }).click()
   await page.getByRole('button', { name: 'Add Task' }).click()
-  await page.getByLabel('Title *').fill('Owner-only task')
+  await page.getByLabel('Title *').fill(taskTitle)
   await page.getByRole('button', { name: 'Create', exact: true }).click()
-  await expect(page.getByText('Owner-only task')).toBeVisible()
+  await expect(taskCardHeading(page, taskTitle)).toBeVisible()
 
   await page.getByRole('button', { name: 'Switch Profile' }).click()
   await page.goto('/register')
@@ -146,5 +164,5 @@ test('a second authenticated user does not receive the first user task', async (
   await page.getByRole('button', { name: 'Skip Setup' }).click()
   await page.getByRole('link', { name: 'Tasks' }).click()
 
-  await expect(page.getByText('Owner-only task')).toHaveCount(0)
+  await expect(taskCardHeading(page, taskTitle)).toHaveCount(0)
 })
