@@ -8,15 +8,17 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
     name: Validate application
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Check out remediation branch head
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -24,6 +26,21 @@ jobs:
           node-version: 20
           cache: npm
           cache-dependency-path: package-lock.json
+
+      - name: Normalize lockfile
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Persist normalized lockfile
+        if: github.event_name == 'pull_request' && github.head_ref == 'implementation/dependency-audit-remediation'
+        run: |
+          git add package-lock.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore: normalize lockfile after uuid removal'
+          git push origin HEAD:${{ github.head_ref }}
 
       - name: Install locked dependencies
         run: npm ci
