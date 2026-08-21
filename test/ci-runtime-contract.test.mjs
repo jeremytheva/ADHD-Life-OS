@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs/promises'
+import { URL } from 'node:url'
 
 const workflow = await fs.readFile(new URL('../.github/workflows/pull-request-validation.yml', import.meta.url), 'utf8')
 
