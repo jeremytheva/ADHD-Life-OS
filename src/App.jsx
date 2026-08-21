@@ -3,14 +3,14 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation }
 import { AUTH_STATUS, AuthProvider, useAuth } from './contexts/AuthContext'
 import { ModeProvider } from './contexts/ModeContext'
 import Layout from './components/Layout'
-import NCBAuth from './components/auth/NCBAuth'
 import ProfileSelector from './components/auth/ProfileSelector'
-import OnboardingFlow from './components/onboarding/OnboardingFlow'
 import AppErrorBoundary from './components/common/AppErrorBoundary'
 import { onboardingService } from './services/onboardingService'
 import { loadOnboardingState } from './services/onboardingState'
 import TodayView from './components/today/TodayView'
 
+const NCBAuth = lazy(() => import('./components/auth/NCBAuth'))
+const OnboardingFlow = lazy(() => import('./components/onboarding/OnboardingFlow'))
 const TaskList = lazy(() => import('./components/tasks/TaskList'))
 const RoutineList = lazy(() => import('./components/routines/RoutineList'))
 const Settings = lazy(() => import('./components/settings/Settings'))
@@ -36,10 +36,12 @@ const LazyRoute = ({ children }) => (
 const ProtectedAppShell = ({ enabledModules, showOnboarding, onOnboardingComplete }) => {
   if (showOnboarding) {
     return (
-      <OnboardingFlow
-        onComplete={onOnboardingComplete}
-        onSkip={onOnboardingComplete}
-      />
+      <LazyRoute>
+        <OnboardingFlow
+          onComplete={onOnboardingComplete}
+          onSkip={onOnboardingComplete}
+        />
+      </LazyRoute>
     )
   }
 
@@ -111,8 +113,14 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/login" element={isAuthenticated ? <Navigate to="/" replace /> : <NCBAuth mode="login" />} />
-      <Route path="/register" element={isAuthenticated ? <Navigate to="/" replace /> : <NCBAuth mode="register" />} />
+      <Route
+        path="/login"
+        element={isAuthenticated ? <Navigate to="/" replace /> : <LazyRoute><NCBAuth mode="login" /></LazyRoute>}
+      />
+      <Route
+        path="/register"
+        element={isAuthenticated ? <Navigate to="/" replace /> : <LazyRoute><NCBAuth mode="register" /></LazyRoute>}
+      />
       {import.meta.env.DEV && (
         <Route path="/dev-profiles" element={<ProfileSelector />} />
       )}
