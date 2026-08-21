@@ -44,3 +44,33 @@ test('housework mutations surface failures without optimistic data loss', async 
   assert.match(source, /Its current due date has not been changed/)
   assert.match(source, /<OperationErrorState/)
 })
+
+test('project detail distinguishes stale detail state from a genuine empty project', async () => {
+  const source = await read('src/components/projects/ProjectDetailView.jsx')
+
+  assert.match(source, /const \[detailLoadError, setDetailLoadError\] = useState\(false\)/)
+  assert.match(source, /title="We couldn’t refresh this project"/)
+  assert.match(source, /shown below may be out of date/)
+  assert.match(source, /onRetry=\{loadProjectDetails\}/)
+  assert.match(source, /pendingTasks\.length === 0 && completedTasks\.length === 0 && !detailLoadError/)
+})
+
+test('project detail reports failed writes and partial-success refresh failures', async () => {
+  const source = await read('src/components/projects/ProjectDetailView.jsx')
+
+  assert.match(source, /task form is still open so you can review it and try again/)
+  assert.match(source, /The task was saved, but the latest project details could not be reloaded/)
+  assert.match(source, /It has not been confirmed as completed/)
+  assert.match(source, /It remains in the project/)
+  assert.match(source, /subtask may have been completed, but the latest project details could not be confirmed/)
+  assert.match(source, /<OperationErrorState/)
+})
+
+test('project detail celebrations require confirmed refreshed state', async () => {
+  const source = await read('src/components/projects/ProjectDetailView.jsx')
+
+  assert.match(source, /const refreshed = await refreshAfterWrite\(/)
+  assert.match(source, /if \(!refreshed\) return/)
+  assert.match(source, /setCelebrationMessage\('Nice work on that step! 🎉'\)/)
+  assert.match(source, /setCelebrationMessage\('Each small step you do is a quick win! ⭐'\)/)
+})
