@@ -3,6 +3,7 @@ import { requireAuthenticatedUser } from '../infrastructure/nocodebackend/errors
 import { getCurrentUserId } from './authStorage'
 import { inboxItemFormSchema } from '../domains/schemas'
 import { validateFormSubmission } from '../domains/validation'
+import { taskService } from './taskService'
 
 const userId = () => requireAuthenticatedUser(getCurrentUserId())
 export const inboxService = {
@@ -12,7 +13,6 @@ export const inboxService = {
   async deleteInboxItem(itemId) { return repositories.inboxItems.remove(itemId, { user_id: userId() }) },
   async convertToTask(itemId) {
     const item = await repositories.inboxItems.get(itemId, { user_id: userId() })
-    const { taskService } = await import('./taskService')
     const task = await taskService.createTask({ title: item.content, description: '', estimated_duration: 30, is_essential: item.category === 'urgent' })
     await this.deleteInboxItem(itemId)
     return task
