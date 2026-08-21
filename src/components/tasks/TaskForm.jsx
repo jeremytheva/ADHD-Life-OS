@@ -30,26 +30,27 @@ const TaskForm = ({ onSave, onCancel, task = null }) => {
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-md"
       >
-        {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-slate-200">
           <h2 className="text-lg font-medium text-slate-900">
             {task ? 'Edit Task' : 'New Task'}
           </h2>
           <button
+            type="button"
             onClick={onCancel}
+            aria-label="Close task form"
             className="p-1 text-slate-400 hover:text-slate-600"
           >
             <SafeIcon icon={FiX} className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="task-title" className="block text-sm font-medium text-slate-700 mb-2">
               Title *
             </label>
             <input
+              id="task-title"
               type="text"
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
@@ -59,10 +60,11 @@ const TaskForm = ({ onSave, onCancel, task = null }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="task-description" className="block text-sm font-medium text-slate-700 mb-2">
               Description
             </label>
             <textarea
+              id="task-description"
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
               rows={3}
@@ -71,10 +73,11 @@ const TaskForm = ({ onSave, onCancel, task = null }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="task-due-date" className="block text-sm font-medium text-slate-700 mb-2">
               Due Date
             </label>
             <input
+              id="task-due-date"
               type="date"
               value={formData.due_date}
               onChange={(e) => handleChange('due_date', e.target.value)}
@@ -83,10 +86,11 @@ const TaskForm = ({ onSave, onCancel, task = null }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="task-estimated-duration" className="block text-sm font-medium text-slate-700 mb-2">
               Estimated Duration (minutes)
             </label>
             <input
+              id="task-estimated-duration"
               type="number"
               value={formData.estimated_duration}
               onChange={(e) => handleChange('estimated_duration', parseInt(e.target.value))}
