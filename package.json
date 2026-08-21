@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "node --test",
+    "test:e2e": "playwright test",
     "validate": "npm run lint && npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
@@ -24,7 +25,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@playwright/test": "^1.62.1",
+    "@vitejs/plugin-react": "^6.1.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.9.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
@@ -33,6 +35,6 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "typescript": "^6.0.3",
-    "vite": "^5.4.2"
+    "vite": "^8.2.2"
   }
 }

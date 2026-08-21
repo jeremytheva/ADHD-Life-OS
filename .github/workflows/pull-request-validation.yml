@@ -28,8 +28,14 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
-      - name: Report dependency audit details
-        run: npm audit --audit-level=moderate || true
+      - name: Audit dependency tree
+        run: npm audit --audit-level=moderate
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run canonical validation
         run: npm run validate
+
+      - name: Run critical-path browser tests
+        run: npm run test:e2e
