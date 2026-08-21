@@ -16,7 +16,10 @@ const TaskForm = ({ onSave, onCancel, task = null }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSave(formData)
+    onSave({
+      ...formData,
+      due_date: formData.due_date || null
+    })
   }
 
   const handleChange = (field, value) => {
