@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { lazy, Suspense, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format, parseISO } from 'date-fns'
 import * as FiIcons from 'react-icons/fi'
@@ -8,9 +8,18 @@ import { taskService } from '../../services/taskService'
 import { useMode } from '../../contexts/ModeContext'
 import { useAuth } from '../../contexts/AuthContext'
 import BlockCard from './BlockCard'
-import GamificationDashboard from '../gamification/GamificationDashboard'
+
+const GamificationDashboard = lazy(() => import('../gamification/GamificationDashboard'))
 
 const { FiRefreshCw, FiAward } = FiIcons
+
+const ModalLoadingFallback = () => (
+  <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black bg-opacity-40" role="status" aria-live="polite">
+    <div className="rounded-lg bg-white px-5 py-4 text-sm text-slate-600 shadow-lg">
+      Loading…
+    </div>
+  </div>
+)
 
 const TodayView = () => {
   const { user } = useAuth()
@@ -29,28 +38,27 @@ const TodayView = () => {
       setLoading(true)
       const today = new Date()
       const schedule = await timelineService.getTimeline(today, user)
-      
+
       // Apply mode filtering to blocks and unscheduled tasks
-      const filteredBlocks = currentMode.id === 'all' 
-        ? schedule.blocks 
+      const filteredBlocks = currentMode.id === 'all'
+        ? schedule.blocks
         : schedule.blocks.filter(block => {
             // Always show anchor blocks (sleep, work, events)
             if (block.is_anchor) return true
-            
+
             // Filter tasks and routine steps by mode
             if (block.ref_type === 'task' || block.ref_type === 'routine_step') {
-              const item = { mode: block.label.toLowerCase(), tags: [] }
               const modeTags = currentMode.tags || []
-              return modeTags.some(modeTag => 
+              return modeTags.some(modeTag =>
                 block.label.toLowerCase().includes(modeTag)
               )
             }
-            
+
             return true
           })
-      
+
       const filteredUnscheduled = filterByMode(schedule.unscheduledTasks, 'task')
-      
+
       setTimeline({
         blocks: filteredBlocks,
         unscheduledTasks: filteredUnscheduled
@@ -235,11 +243,13 @@ const TodayView = () => {
       )}
 
       {/* Gamification Modal */}
-      <AnimatePresence>
-        {showGamification && (
-          <GamificationDashboard onClose={() => setShowGamification(false)} />
-        )}
-      </AnimatePresence>
+      <Suspense fallback={<ModalLoadingFallback />}>
+        <AnimatePresence>
+          {showGamification && (
+            <GamificationDashboard onClose={() => setShowGamification(false)} />
+          )}
+        </AnimatePresence>
+      </Suspense>
     </div>
   )
 }

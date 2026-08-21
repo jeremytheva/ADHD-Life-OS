@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { lazy, Suspense, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
@@ -6,12 +6,13 @@ import SafeIcon from '../common/SafeIcon'
 import { useAuth } from '../contexts/AuthContext'
 import { useMode } from '../contexts/ModeContext'
 import ModeSwitcher from './mode/ModeSwitcher'
-import ModePreferences from './mode/ModePreferences'
-import AccessibilitySettings from './accessibility/AccessibilitySettings'
-import GamificationDashboard from './gamification/GamificationDashboard'
-import RewardShop from './gamification/RewardShop'
 import { gamificationService } from '../services/gamificationService'
 import { getVisibleNavigationItems } from '../config/navigation'
+
+const ModePreferences = lazy(() => import('./mode/ModePreferences'))
+const AccessibilitySettings = lazy(() => import('./accessibility/AccessibilitySettings'))
+const GamificationDashboard = lazy(() => import('./gamification/GamificationDashboard'))
+const RewardShop = lazy(() => import('./gamification/RewardShop'))
 
 const {
   FiCalendar,
@@ -33,10 +34,17 @@ const iconByPath = {
   '/housework': FiHome, '/inbox': FiInbox, '/settings': FiSettings
 }
 
+const ModalLoadingFallback = () => (
+  <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black bg-opacity-40" role="status" aria-live="polite">
+    <div className="rounded-lg bg-white px-5 py-4 text-sm text-slate-600 shadow-lg">
+      Loading…
+    </div>
+  </div>
+)
 
 const Layout = ({ children, enabledModules = [] }) => {
   const { user, signOut } = useAuth()
-  const { currentMode, filterByMode } = useMode()
+  const { currentMode } = useMode()
   const [showGamification, setShowGamification] = useState(false)
   const [showRewardShop, setShowRewardShop] = useState(false)
   const [showModePreferences, setShowModePreferences] = useState(false)
@@ -87,7 +95,7 @@ const Layout = ({ children, enabledModules = [] }) => {
               </div>
               <span className="text-xs text-purple-700">{stats.points} pts</span>
             </div>
-            
+
             {/* Mini Progress Bar */}
             <div className="w-full bg-purple-200 rounded-full h-1.5 overflow-hidden">
               <div
@@ -160,7 +168,7 @@ const Layout = ({ children, enabledModules = [] }) => {
             <SafeIcon icon={FiUser} />
             <span className="truncate flex-1">{user?.email}</span>
           </div>
-          
+
           <button
             onClick={handleSignOut}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors"
@@ -177,23 +185,25 @@ const Layout = ({ children, enabledModules = [] }) => {
       </main>
 
       {/* Modals */}
-      <AnimatePresence>
-        {showGamification && (
-          <GamificationDashboard onClose={() => setShowGamification(false)} />
-        )}
-        {showRewardShop && (
-          <RewardShop onClose={() => setShowRewardShop(false)} />
-        )}
-        {showModePreferences && (
-          <ModePreferences 
-            modeId={currentMode.id}
-            onClose={() => setShowModePreferences(false)} 
-          />
-        )}
-        {showAccessibility && (
-          <AccessibilitySettings onClose={() => setShowAccessibility(false)} />
-        )}
-      </AnimatePresence>
+      <Suspense fallback={<ModalLoadingFallback />}>
+        <AnimatePresence>
+          {showGamification && (
+            <GamificationDashboard onClose={() => setShowGamification(false)} />
+          )}
+          {showRewardShop && (
+            <RewardShop onClose={() => setShowRewardShop(false)} />
+          )}
+          {showModePreferences && (
+            <ModePreferences
+              modeId={currentMode.id}
+              onClose={() => setShowModePreferences(false)}
+            />
+          )}
+          {showAccessibility && (
+            <AccessibilitySettings onClose={() => setShowAccessibility(false)} />
+          )}
+        </AnimatePresence>
+      </Suspense>
     </div>
   )
 }

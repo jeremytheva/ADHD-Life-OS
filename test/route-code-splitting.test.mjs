@@ -17,6 +17,15 @@ test('secondary authenticated routes remain lazy-loaded while Today stays eager'
   assert.match(app, /const Settings = lazy\(\(\) => import\(['"]\.\/components\/settings\/Settings['"]\)\)/)
 })
 
+test('auth and onboarding surfaces load only for the user flows that need them', async () => {
+  const app = await read('src/App.jsx')
+
+  assert.match(app, /const NCBAuth = lazy\(\(\) => import\(['"]\.\/components\/auth\/NCBAuth['"]\)\)/)
+  assert.match(app, /const OnboardingFlow = lazy\(\(\) => import\(['"]\.\/components\/onboarding\/OnboardingFlow['"]\)\)/)
+  assert.doesNotMatch(app, /import NCBAuth from ['"]\.\/components\/auth\/NCBAuth['"]/)
+  assert.doesNotMatch(app, /import OnboardingFlow from ['"]\.\/components\/onboarding\/OnboardingFlow['"]/)
+})
+
 test('inbox service does not use a defeated dynamic taskService import', async () => {
   const inbox = await read('src/services/inboxService.js')
 
