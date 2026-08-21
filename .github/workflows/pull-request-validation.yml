@@ -30,7 +30,7 @@ jobs:
 
       - name: Preview non-breaking dependency remediation
         run: |
-          npm audit fix --package-lock-only
+          npm audit fix --package-lock-only || true
           npm audit --audit-level=moderate || true
           git diff -- package.json package-lock.json
 
