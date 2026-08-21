@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 import LoadErrorState from '../../common/LoadErrorState'
+import OperationErrorState from '../../common/OperationErrorState'
 import { routineService } from '../../services/routineService'
 import { useMode } from '../../contexts/ModeContext'
 import RoutineCard from './RoutineCard'
@@ -18,6 +19,7 @@ const RoutineList = () => {
   const [routines, setRoutines] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
+  const [operationError, setOperationError] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [showTemplates, setShowTemplates] = useState(false)
   const [editingRoutine, setEditingRoutine] = useState(null)
@@ -33,10 +35,7 @@ const RoutineList = () => {
       setLoading(true)
       setLoadError(false)
       const data = await routineService.getRoutines()
-
-      // Apply mode filtering
       const filteredData = filterByMode(data, 'routine')
-
       setRoutines(filteredData)
     } catch (error) {
       console.error('Error loading routines:', error)
@@ -48,7 +47,7 @@ const RoutineList = () => {
 
   const handleCreateRoutine = async (routineData) => {
     try {
-      // Auto-tag with current mode
+      setOperationError('')
       const routineWithMode = {
         ...routineData,
         mode: currentMode.id !== 'all' ? currentMode.id : null
@@ -56,9 +55,10 @@ const RoutineList = () => {
 
       await routineService.createRoutine(routineWithMode)
       setShowForm(false)
-      loadRoutines()
+      await loadRoutines()
     } catch (error) {
       console.error('Error creating routine:', error)
+      setOperationError('We couldn’t create that routine. Your form has been left open so you can review it and try again.')
     }
   }
 
@@ -66,6 +66,7 @@ const RoutineList = () => {
     if (type !== 'routine') return
 
     try {
+      setOperationError('')
       const routineData = {
         name: template.name,
         description: template.description,
@@ -76,9 +77,11 @@ const RoutineList = () => {
       }
 
       await routineService.createRoutine(routineData)
-      loadRoutines()
+      setShowTemplates(false)
+      await loadRoutines()
     } catch (error) {
       console.error('Error applying template:', error)
+      setOperationError('We couldn’t create a routine from that template. Nothing has been removed; you can choose a template and try again.')
     }
   }
 
@@ -89,12 +92,14 @@ const RoutineList = () => {
 
   const handleUpdateRoutine = async (routineData) => {
     try {
+      setOperationError('')
       await routineService.updateRoutine(editingRoutine.id, routineData)
       setShowForm(false)
       setEditingRoutine(null)
-      loadRoutines()
+      await loadRoutines()
     } catch (error) {
       console.error('Error updating routine:', error)
+      setOperationError('We couldn’t save those routine changes. Your form remains open so you can try again.')
     }
   }
 
@@ -104,10 +109,12 @@ const RoutineList = () => {
     }
 
     try {
+      setOperationError('')
       await routineService.deleteRoutine(id)
-      loadRoutines()
+      await loadRoutines()
     } catch (error) {
       console.error('Error deleting routine:', error)
+      setOperationError('We couldn’t delete that routine. It is still in your routine list.')
     }
   }
 
@@ -149,7 +156,11 @@ const RoutineList = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Mode Context Banner */}
+      <OperationErrorState
+        message={operationError}
+        onDismiss={() => setOperationError('')}
+      />
+
       {currentMode.id !== 'all' && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -159,9 +170,7 @@ const RoutineList = () => {
           <div className="flex items-center gap-3">
             <span className="text-2xl">{currentMode.icon}</span>
             <div>
-              <div className="font-medium">
-                Viewing {currentMode.label} Routines
-              </div>
+              <div className="font-medium">Viewing {currentMode.label} Routines</div>
               <div className="text-xs text-white text-opacity-90">
                 Showing only {currentMode.label.toLowerCase()}-related routines
               </div>
@@ -170,7 +179,6 @@ const RoutineList = () => {
         </motion.div>
       )}
 
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-medium text-slate-900">Routines</h1>
         <div className="flex gap-2">
@@ -191,7 +199,6 @@ const RoutineList = () => {
         </div>
       </div>
 
-      {/* Routine List */}
       <div className="space-y-4">
         {routines.length === 0 ? (
           <div className="bg-white rounded-lg border border-slate-200 p-8 text-center">
@@ -237,7 +244,6 @@ const RoutineList = () => {
         )}
       </div>
 
-      {/* Modals */}
       <AnimatePresence>
         {showForm && (
           <RoutineForm
