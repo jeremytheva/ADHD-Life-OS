@@ -7,7 +7,7 @@ import PriorityBadge from './PriorityBadge'
 
 const { FiCheck, FiClock, FiTrash2, FiAlertCircle } = FiIcons
 
-const TaskCard = ({ task, onComplete, onDelete, showPriority = false }) => {
+const TaskCard = ({ task, onComplete, onDelete, showPriority = false, pending = false }) => {
   const isOverdue = task.due_date && new Date(task.due_date) < new Date()
   const isDueToday = task.due_date && format(new Date(task.due_date), 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd')
 
@@ -23,8 +23,11 @@ const TaskCard = ({ task, onComplete, onDelete, showPriority = false }) => {
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3 flex-1">
           <button
+            type="button"
             onClick={onComplete}
-            className="p-1 text-slate-400 hover:text-green-600 transition-colors mt-1"
+            disabled={pending}
+            aria-label={`Complete ${task.title}`}
+            className="p-1 text-slate-400 hover:text-green-600 transition-colors mt-1 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiCheck} className="w-5 h-5" />
           </button>
@@ -33,8 +36,8 @@ const TaskCard = ({ task, onComplete, onDelete, showPriority = false }) => {
             <div className="flex items-start gap-2 mb-1">
               <h3 className="font-medium text-slate-900 flex-1">{task.title}</h3>
               {showPriority && task.priorityScore && (
-                <PriorityBadge 
-                  level={task.priorityLevel} 
+                <PriorityBadge
+                  level={task.priorityLevel}
                   score={task.priorityScore}
                   urgencyReason={task.urgencyReason}
                 />
@@ -55,9 +58,9 @@ const TaskCard = ({ task, onComplete, onDelete, showPriority = false }) => {
 
               {task.due_date && (
                 <div className="flex items-center space-x-1">
-                  <SafeIcon 
-                    icon={isOverdue ? FiAlertCircle : FiClock} 
-                    className={`w-4 h-4 ${isOverdue ? 'text-amber-600' : ''}`} 
+                  <SafeIcon
+                    icon={isOverdue ? FiAlertCircle : FiClock}
+                    className={`w-4 h-4 ${isOverdue ? 'text-amber-600' : ''}`}
                   />
                   <span className={isOverdue ? 'text-amber-600 font-medium' : ''}>
                     Due {format(parseISO(task.due_date), 'MMM d')}
@@ -75,8 +78,11 @@ const TaskCard = ({ task, onComplete, onDelete, showPriority = false }) => {
         </div>
 
         <button
+          type="button"
           onClick={onDelete}
-          className="p-1 text-slate-400 hover:text-red-600 transition-colors"
+          disabled={pending}
+          aria-label={`Delete ${task.title}`}
+          className="p-1 text-slate-400 hover:text-red-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
         >
           <SafeIcon icon={FiTrash2} className="w-4 h-4" />
         </button>

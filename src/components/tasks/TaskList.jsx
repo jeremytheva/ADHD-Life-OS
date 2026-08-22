@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import LoadErrorState from '../../common/LoadErrorState'
+import OperationErrorState from '../../common/OperationErrorState'
 import { taskService } from '../../services/taskService'
 import { getUserPreferences } from '../../domain/preferences/repository'
 import { adhdPriorityService } from '../../services/adhdPriorityService'
@@ -20,6 +22,9 @@ const TaskList = () => {
   const { currentMode, filterByMode, getModePreferences } = useMode()
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
+  const [operationError, setOperationError] = useState(null)
+  const [pendingAction, setPendingAction] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [showTemplates, setShowTemplates] = useState(false)
   const [filter, setFilter] = useState('all')
@@ -42,16 +47,23 @@ const TaskList = () => {
 
   const loadPreferences = async () => {
     try {
+      setLoading(true)
+      setLoadError(null)
       const prefs = await getUserPreferences(user)
       setPreferences(prefs)
+      return true
     } catch (error) {
       console.error('Error loading preferences:', error)
+      setLoadError('preferences')
+      setLoading(false)
+      return false
     }
   }
 
   const loadTasks = async () => {
     try {
       setLoading(true)
+      setLoadError(null)
       const taskFilter = {
         status: filter === 'completed' ? 'completed' : 'active',
         timeframe: filter,
@@ -59,76 +71,87 @@ const TaskList = () => {
       }
 
       const data = await taskService.getTasks(taskFilter)
-      
-      // Keep display-level mode filtering for cross-entity consistency.
       const filteredData = filterByMode(data, 'task')
-      
       const prioritizedTasks = adhdPriorityService.prioritizeTasks(filteredData, preferences)
-      
-      // Apply mode preferences for hiding completed
+
       let displayTasks = prioritizedTasks
       if (modePrefs.hideCompleted) {
         displayTasks = displayTasks.filter(t => !t.completed)
       }
-      
+
       const sorted = sortTasks(displayTasks, modePrefs.sortBy || sortBy)
       setTasks(sorted)
-
-      const taskAnalysis = adhdPriorityService.analyzeTaskLoad(filteredData, preferences)
-      setAnalysis(taskAnalysis)
-
-      const recommended = adhdPriorityService.getRecommendedTasks(filteredData, preferences, 3)
-      setRecommendedTasks(recommended)
+      setAnalysis(adhdPriorityService.analyzeTaskLoad(filteredData, preferences))
+      setRecommendedTasks(adhdPriorityService.getRecommendedTasks(filteredData, preferences, 3))
+      return true
     } catch (error) {
       console.error('Error loading tasks:', error)
+      setLoadError('tasks')
+      return false
     } finally {
       setLoading(false)
     }
   }
 
-  const sortTasks = (tasks, sortType) => {
+  const retryLoad = () => {
+    setOperationError(null)
+    if (preferences) {
+      loadTasks()
+    } else {
+      loadPreferences()
+    }
+  }
+
+  const sortTasks = (items, sortType) => {
     switch (sortType) {
       case 'priority':
-        return [...tasks].sort((a, b) => b.priorityScore - a.priorityScore)
+        return [...items].sort((a, b) => b.priorityScore - a.priorityScore)
       case 'due_date':
-        return [...tasks].sort((a, b) => {
+        return [...items].sort((a, b) => {
           if (!a.due_date) return 1
           if (!b.due_date) return -1
           return new Date(a.due_date) - new Date(b.due_date)
         })
       case 'created':
-        return [...tasks].sort((a, b) => 
-          new Date(b.created_at) - new Date(a.created_at)
-        )
+        return [...items].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
       case 'alphabetical':
-        return [...tasks].sort((a, b) => 
-          a.title.localeCompare(b.title)
-        )
+        return [...items].sort((a, b) => a.title.localeCompare(b.title))
       default:
-        return tasks
+        return items
     }
   }
 
   const handleCreateTask = async (taskData) => {
+    if (pendingAction) return
+    setOperationError(null)
+    setPendingAction('create')
+
     try {
-      // Auto-tag with current mode
       const taskWithMode = {
         ...taskData,
         mode: currentMode.id !== 'all' ? currentMode.id : null,
         tags: taskData.tags || []
       }
-      
+
       await taskService.createTask(taskWithMode)
       setShowForm(false)
-      loadTasks()
+      const refreshed = await loadTasks()
+      if (!refreshed) {
+        setOperationError('The task was created, but the task list could not refresh. Reload Tasks before creating it again.')
+      }
     } catch (error) {
       console.error('Error creating task:', error)
+      setOperationError('We couldn’t create that task. The task form is still open and your entries have not been discarded.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
   const handleApplyTemplate = async (template, type) => {
-    if (type !== 'task') return
+    if (type !== 'task' || pendingAction) return
 
+    setOperationError(null)
+    setPendingAction('template')
     try {
       const taskData = {
         title: template.title,
@@ -139,27 +162,55 @@ const TaskList = () => {
       }
 
       await taskService.createTask(taskData)
-      loadTasks()
+      setShowTemplates(false)
+      const refreshed = await loadTasks()
+      if (!refreshed) {
+        setOperationError('The template task was created, but the task list could not refresh. Do not apply the template again until Tasks has reloaded.')
+      }
     } catch (error) {
       console.error('Error applying template:', error)
+      setOperationError('We couldn’t create a task from that template. The template library is still open so you can try again.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
   const handleCompleteTask = async (id) => {
+    if (pendingAction) return
+
+    setOperationError(null)
+    setPendingAction(`complete:${id}`)
     try {
       await taskService.completeTask(id)
-      loadTasks()
+      const refreshed = await loadTasks()
+      if (!refreshed) {
+        setOperationError('The task was completed, but the task list could not refresh. Reload Tasks before acting on it again.')
+      }
     } catch (error) {
       console.error('Error completing task:', error)
+      setOperationError('We couldn’t complete that task. It has not been confirmed as completed and remains safe to retry.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
   const handleDeleteTask = async (id) => {
+    if (pendingAction) return
+    if (!window.confirm('Delete this task? This action cannot be undone.')) return
+
+    setOperationError(null)
+    setPendingAction(`delete:${id}`)
     try {
       await taskService.deleteTask(id)
-      loadTasks()
+      const refreshed = await loadTasks()
+      if (!refreshed) {
+        setOperationError('The task was deleted, but the task list could not refresh. Reload Tasks before trying to delete it again.')
+      }
     } catch (error) {
       console.error('Error deleting task:', error)
+      setOperationError('We couldn’t delete that task. It has not been confirmed as deleted and remains in your task data.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
@@ -189,9 +240,20 @@ const TaskList = () => {
     )
   }
 
+  if (loadError) {
+    return (
+      <div className="p-6">
+        <LoadErrorState
+          title={loadError === 'preferences' ? 'We couldn’t load your task preferences' : 'We couldn’t load your tasks'}
+          message="Your task data has not been cleared. Check your connection and try again."
+          onRetry={retryLoad}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="p-6 space-y-6">
-      {/* Mode Context Banner */}
       {currentMode.id !== 'all' && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -201,30 +263,27 @@ const TaskList = () => {
           <div className="flex items-center gap-3">
             <span className="text-2xl">{currentMode.icon}</span>
             <div>
-              <div className="font-medium">
-                Viewing {currentMode.label} Tasks
-              </div>
-              <div className="text-xs text-white text-opacity-90">
-                Showing only {currentMode.label.toLowerCase()}-related tasks
-              </div>
+              <div className="font-medium">Viewing {currentMode.label} Tasks</div>
+              <div className="text-xs text-white text-opacity-90">Showing only {currentMode.label.toLowerCase()}-related tasks</div>
             </div>
           </div>
         </motion.div>
       )}
 
-      {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-medium text-slate-900">Tasks</h1>
         <div className="flex gap-2">
           <button
-            onClick={() => setShowTemplates(true)}
+            type="button"
+            onClick={() => { setOperationError(null); setShowTemplates(true) }}
             className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 flex items-center space-x-2"
           >
             <SafeIcon icon={FiBookOpen} className="w-4 h-4" />
             <span>Templates</span>
           </button>
           <button
-            onClick={() => setShowForm(true)}
+            type="button"
+            onClick={() => { setOperationError(null); setShowForm(true) }}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
           >
             <SafeIcon icon={FiPlus} className="w-4 h-4" />
@@ -233,6 +292,7 @@ const TaskList = () => {
         </div>
       </div>
 
+      <OperationErrorState message={operationError} onDismiss={() => setOperationError(null)} />
       <TaskLoadAnalysis analysis={analysis} />
 
       {recommendedTasks.length > 0 && modePrefs.viewMode === 'detailed' && (
@@ -256,16 +316,10 @@ const TaskList = () => {
           <SafeIcon icon={FiFilter} className="w-5 h-5 text-slate-600" />
           {filters.map((filterOption) => (
             <button
+              type="button"
               key={filterOption.key}
               onClick={() => setFilter(filterOption.key)}
-              className={`
-                px-3 py-2 rounded-md text-sm transition-colors
-                ${
-                  filter === filterOption.key
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-slate-600 hover:bg-slate-100'
-                }
-              `}
+              className={`px-3 py-2 rounded-md text-sm transition-colors ${filter === filterOption.key ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-slate-100'}`}
             >
               {filterOption.label}
             </button>
@@ -276,16 +330,10 @@ const TaskList = () => {
           <span className="text-sm text-slate-600">Sort by:</span>
           {sortOptions.map((option) => (
             <button
+              type="button"
               key={option.key}
               onClick={() => setSortBy(option.key)}
-              className={`
-                px-3 py-2 rounded-md text-sm transition-colors flex items-center gap-1
-                ${
-                  sortBy === option.key
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-slate-600 hover:bg-slate-100'
-                }
-              `}
+              className={`px-3 py-2 rounded-md text-sm transition-colors flex items-center gap-1 ${sortBy === option.key ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-slate-100'}`}
             >
               <SafeIcon icon={option.icon} className="w-4 h-4" />
               {option.label}
@@ -298,25 +346,12 @@ const TaskList = () => {
         {tasks.length === 0 ? (
           <div className="bg-white rounded-lg border border-slate-200 p-8 text-center">
             <p className="text-slate-600 mb-4">
-              {currentMode.id !== 'all' 
-                ? `No ${currentMode.label.toLowerCase()} tasks found`
-                : 'No tasks found'
-              }
+              {currentMode.id !== 'all' ? `No ${currentMode.label.toLowerCase()} tasks found` : 'No tasks found'}
             </p>
             <div className="flex gap-3 justify-center">
-              <button
-                onClick={() => setShowForm(true)}
-                className="text-blue-600 hover:text-blue-700"
-              >
-                Create your first task
-              </button>
+              <button type="button" onClick={() => setShowForm(true)} className="text-blue-600 hover:text-blue-700">Create your first task</button>
               <span className="text-slate-400">or</span>
-              <button
-                onClick={() => setShowTemplates(true)}
-                className="text-purple-600 hover:text-purple-700"
-              >
-                Browse templates
-              </button>
+              <button type="button" onClick={() => setShowTemplates(true)} className="text-purple-600 hover:text-purple-700">Browse templates</button>
             </div>
           </div>
         ) : (
@@ -333,6 +368,7 @@ const TaskList = () => {
                 onComplete={() => handleCompleteTask(task.id)}
                 onDelete={() => handleDeleteTask(task.id)}
                 showPriority={sortBy === 'priority'}
+                pending={pendingAction?.endsWith(`:${task.id}`)}
               />
             </motion.div>
           ))
@@ -344,6 +380,7 @@ const TaskList = () => {
           <TaskForm
             onSave={handleCreateTask}
             onCancel={() => setShowForm(false)}
+            saving={pendingAction === 'create'}
           />
         )}
 

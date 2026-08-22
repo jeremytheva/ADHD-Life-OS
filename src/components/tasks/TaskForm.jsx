@@ -5,7 +5,7 @@ import SafeIcon from '../../common/SafeIcon'
 
 const { FiX } = FiIcons
 
-const TaskForm = ({ onSave, onCancel, task = null }) => {
+const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
   const [formData, setFormData] = useState({
     title: task?.title || '',
     description: task?.description || '',
@@ -16,6 +16,8 @@ const TaskForm = ({ onSave, onCancel, task = null }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    if (saving) return
+
     onSave({
       ...formData,
       due_date: formData.due_date || null
@@ -40,8 +42,9 @@ const TaskForm = ({ onSave, onCancel, task = null }) => {
           <button
             type="button"
             onClick={onCancel}
+            disabled={saving}
             aria-label="Close task form"
-            className="p-1 text-slate-400 hover:text-slate-600"
+            className="p-1 text-slate-400 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiX} className="w-5 h-5" />
           </button>
@@ -120,15 +123,17 @@ const TaskForm = ({ onSave, onCancel, task = null }) => {
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 bg-slate-100 text-slate-700 py-2 px-4 rounded-md hover:bg-slate-200"
+              disabled={saving}
+              className="flex-1 bg-slate-100 text-slate-700 py-2 px-4 rounded-md hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+              disabled={saving}
+              className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {task ? 'Update' : 'Create'}
+              {saving ? 'Saving...' : task ? 'Update' : 'Create'}
             </button>
           </div>
         </form>
