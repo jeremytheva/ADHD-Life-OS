@@ -213,3 +213,19 @@ test('task failures preserve create input and distinguish load failure from empt
   await page.getByRole('button', { name: 'All Tasks' }).click()
   await expect(taskCardHeading(page, taskTitle)).toBeVisible()
 })
+
+test('Today surfaces timeline retrieval failure and recovers on retry', async ({ page }) => {
+  surfaceBrowserErrors(page)
+  const mock = await createMockNcb(page)
+
+  await registerAndSkipSetup(page, 'today-recovery@example.test')
+  await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Refresh Today' })).toBeVisible()
+
+  mock.failNextTaskLoad()
+  await page.getByRole('button', { name: 'Refresh Today' }).click()
+
+  await expect(page.getByRole('heading', { name: 'We couldn’t load your day' })).toBeVisible()
+  await page.getByRole('button', { name: 'Try again' }).click()
+  await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible()
+})
