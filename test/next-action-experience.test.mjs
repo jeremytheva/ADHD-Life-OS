@@ -1,0 +1,38 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import fs from 'node:fs/promises'
+import { URL } from 'node:url'
+
+const read = (path) => fs.readFile(new URL(`../${path}`, import.meta.url), 'utf8')
+
+test('Today exposes the unified next-action experience before the timeline', async () => {
+  const source = await read('src/components/today/TodayView.jsx')
+  assert.match(source, /import NextActionPanel from '\.\/NextActionPanel'/)
+  assert.match(source, /<NextActionPanel currentMode=\{currentMode\} \/>/)
+})
+
+test('next-action panel captures low-friction execution state and uses the execution engine', async () => {
+  const source = await read('src/components/today/NextActionPanel.jsx')
+  assert.match(source, /executionEngine\.getNextActions/)
+  assert.match(source, /current_energy: energy/)
+  assert.match(source, /available_time: availableTime/)
+  assert.match(source, /current_location: location/)
+  assert.match(source, /aria-label="Energy now"/)
+  assert.match(source, /aria-label="Time available"/)
+})
+
+test('next-action panel presents initiation guidance and bounded alternatives', async () => {
+  const source = await read('src/components/today/NextActionPanel.jsx')
+  assert.match(source, /What should I do now\?/)
+  assert.match(source, /Start with this/)
+  assert.match(source, /selected\.start_action/)
+  assert.match(source, /Give me another option/)
+  assert.match(source, /recommendations\.length > 1/)
+})
+
+test('next-action retrieval failures remain retryable and do not imply activity loss', async () => {
+  const source = await read('src/components/today/NextActionPanel.jsx')
+  assert.match(source, /title="We couldn’t choose a next action"/)
+  assert.match(source, /Your activities have not changed/)
+  assert.match(source, /onRetry=\{loadRecommendations\}/)
+})
