@@ -209,5 +209,7 @@ test('task failures preserve create input and distinguish load failure from empt
   await expect(page.getByText('No tasks found')).toHaveCount(0)
 
   await page.getByRole('button', { name: 'Try again' }).click()
+  await expect(page.getByText('No tasks found')).toBeVisible()
+  await page.getByRole('button', { name: 'All Tasks' }).click()
   await expect(taskCardHeading(page, taskTitle)).toBeVisible()
 })
