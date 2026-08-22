@@ -58,9 +58,11 @@ const ProjectsList = () => {
         stats[project.id] = await projectService.getProjectStats(project.id)
       }
       setProjectStats(stats)
+      return true
     } catch (error) {
       console.error('Error loading projects:', error)
       setLoadError(error)
+      return false
     } finally {
       setLoading(false)
     }
@@ -97,12 +99,7 @@ const ProjectsList = () => {
     } catch (error) {
       console.error('Error in quick capture:', error)
       const remainingItems = items.slice(savedCount)
-
-      try {
-        await loadProjects()
-      } catch (refreshError) {
-        console.error('Error refreshing projects after partial quick capture:', refreshError)
-      }
+      await loadProjects()
 
       if (projectId) {
         setOperationError(
@@ -116,13 +113,18 @@ const ProjectsList = () => {
     }
 
     setShowQuickCapture(false)
+    const refreshed = await loadProjects()
+    if (!refreshed) {
+      setOperationError(`All ${items.length} quick-capture tasks were saved, but the project list could not refresh. Reload Projects before adding the same tasks again.`)
+      return { savedCount, remainingItems: [] }
+    }
+
     try {
-      await loadProjects()
       const updatedProject = await projectService.getProject(projectId)
       setSelectedProject(updatedProject)
     } catch (refreshError) {
-      console.error('Error refreshing completed quick capture:', refreshError)
-      setOperationError(`All ${items.length} quick-capture tasks were saved, but the project view could not refresh. Reload Projects before adding the same tasks again.`)
+      console.error('Error opening completed quick capture:', refreshError)
+      setOperationError(`All ${items.length} quick-capture tasks were saved, but the project view could not open. Reload Projects before adding the same tasks again.`)
     }
 
     return { savedCount, remainingItems: [] }
@@ -137,7 +139,10 @@ const ProjectsList = () => {
       })
       setShowForm(false)
       setEditingProject(null)
-      await loadProjects()
+      const refreshed = await loadProjects()
+      if (!refreshed) {
+        setOperationError('The project was created, but the project list could not refresh. Reload Projects before creating it again.')
+      }
     } catch (error) {
       console.error('Error creating project:', error)
       setOperationError('We couldn’t create that project. The project form is still open and your entries have not been discarded.')
@@ -150,7 +155,10 @@ const ProjectsList = () => {
       await projectService.updateProject(editingProject.id, projectData)
       setShowForm(false)
       setEditingProject(null)
-      await loadProjects()
+      const refreshed = await loadProjects()
+      if (!refreshed) {
+        setOperationError('The project changes were saved, but the project list could not refresh. Reload Projects before editing it again.')
+      }
     } catch (error) {
       console.error('Error updating project:', error)
       setOperationError('We couldn’t save those project changes. The project form is still open so you can try again.')
@@ -163,7 +171,10 @@ const ProjectsList = () => {
     setOperationError(null)
     try {
       await projectService.deleteProject(projectId)
-      await loadProjects()
+      const refreshed = await loadProjects()
+      if (!refreshed) {
+        setOperationError('The project was deleted, but the project list could not refresh. Reload Projects before taking another action on the stale entry.')
+      }
     } catch (error) {
       console.error('Error deleting project:', error)
       setOperationError('We couldn’t delete that project. It has not been removed from your project list.')
@@ -174,7 +185,10 @@ const ProjectsList = () => {
     setOperationError(null)
     try {
       await projectService.updateProject(projectId, { status: 'archived' })
-      await loadProjects()
+      const refreshed = await loadProjects()
+      if (!refreshed) {
+        setOperationError('The project was archived, but the project list could not refresh. Reload Projects before acting on the stale entry.')
+      }
     } catch (error) {
       console.error('Error archiving project:', error)
       setOperationError('We couldn’t archive that project. It is still active and has not been removed from this list.')
@@ -241,12 +255,14 @@ const ProjectsList = () => {
       }
 
       setShowTemplates(false)
-      try {
-        await loadProjects()
-        const partialProject = await projectService.getProject(newProject.id)
-        setSelectedProject(partialProject)
-      } catch (refreshError) {
-        console.error('Error refreshing partially applied template:', refreshError)
+      const refreshed = await loadProjects()
+      if (refreshed) {
+        try {
+          const partialProject = await projectService.getProject(newProject.id)
+          setSelectedProject(partialProject)
+        } catch (refreshError) {
+          console.error('Error opening partially applied template:', refreshError)
+        }
       }
 
       setOperationError(
@@ -256,10 +272,8 @@ const ProjectsList = () => {
     }
 
     setShowTemplates(false)
-    try {
-      await loadProjects()
-    } catch (refreshError) {
-      console.error('Error refreshing projects after template application:', refreshError)
+    const refreshed = await loadProjects()
+    if (!refreshed) {
       setOperationError('The template was fully saved, but the project list could not refresh. Reload Projects before applying the same template again.')
     }
   }
