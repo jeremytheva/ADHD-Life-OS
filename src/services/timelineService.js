@@ -102,36 +102,23 @@ const prioritizeTasksForTimeline = (tasks = [], userState = {}) => {
 
 export const timelineService = {
   async getTimeline(date, user = getCurrentUser()) {
-    try {
-      // Get user preferences
-      const preferences = {
-        ...DEFAULT_DAY_SKELETON,
-        ...(await getUserPreferences(user))
-      }
-      const userState = mapPreferencesToUserState(preferences)
-      
-      // Get canonical Activities for the Decision Engine while legacy UI services continue migrating.
-      const activities = await activityService.getActivities()
-      const prioritizedTasks = prioritizeTasksForTimeline(activities, userState)
-      
-      // Extract routine-step Activities for the scheduler's routine input.
-      const routineSteps = activities.filter(activity => activity.type === 'routine_step')
-      
-      // Create scheduling engine
-      const scheduler = new SchedulingEngine(
-        preferences,
-        prioritizedTasks.filter(activity => !activity.completed && activity.type !== 'routine_step'),
-        routineSteps,
-        [] // events
-      )
-      
-      // Generate schedule
-      const schedule = scheduler.generateSchedule(date)
-      
-      return schedule
-    } catch (error) {
-      console.error('Error generating timeline:', error)
-      return { blocks: [], unscheduledTasks: [] }
+    const preferences = {
+      ...DEFAULT_DAY_SKELETON,
+      ...(await getUserPreferences(user))
     }
+    const userState = mapPreferencesToUserState(preferences)
+
+    const activities = await activityService.getActivities()
+    const prioritizedTasks = prioritizeTasksForTimeline(activities, userState)
+    const routineSteps = activities.filter(activity => activity.type === 'routine_step')
+
+    const scheduler = new SchedulingEngine(
+      preferences,
+      prioritizedTasks.filter(activity => !activity.completed && activity.type !== 'routine_step'),
+      routineSteps,
+      []
+    )
+
+    return scheduler.generateSchedule(date)
   }
 }
