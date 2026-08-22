@@ -23,6 +23,8 @@ const createMockNcb = async (page) => {
   const preferencesByUser = new Map()
   const tasksByUser = new Map()
   let nextId = 1
+  let failTaskCreateCount = 0
+  let failTaskLoadCount = 0
   const emptyCollections = new Set([
     'projects',
     'subtasks',
@@ -85,10 +87,19 @@ const createMockNcb = async (page) => {
     }
 
     if (path === 'tasks' && method === 'GET') {
+      if (failTaskLoadCount > 0) {
+        failTaskLoadCount -= 1
+        return json(route, { error: { code: 'MOCK_TASK_LOAD_FAILURE' } }, 503)
+      }
       return json(route, tasksByUser.get(userId) ?? [])
     }
 
     if (path === 'tasks' && method === 'POST') {
+      if (failTaskCreateCount > 0) {
+        failTaskCreateCount -= 1
+        return json(route, { error: { code: 'MOCK_TASK_CREATE_FAILURE' } }, 503)
+      }
+
       const now = new Date().toISOString()
       const record = {
         id: `task-${nextId++}`,
@@ -105,6 +116,11 @@ const createMockNcb = async (page) => {
 
     return json(route, { error: { code: 'MOCK_DATA_ROUTE_NOT_FOUND', path, method } }, 404)
   })
+
+  return {
+    failNextTaskCreate: () => { failTaskCreateCount += 1 },
+    failNextTaskLoad: () => { failTaskLoadCount += 1 }
+  }
 }
 
 const registerAndSkipSetup = async (page, email) => {
@@ -165,4 +181,33 @@ test('a second authenticated user does not receive the first user task', async (
   await page.getByRole('link', { name: 'Tasks' }).click()
 
   await expect(taskCardHeading(page, taskTitle)).toHaveCount(0)
+})
+
+test('task failures preserve create input and distinguish load failure from empty data', async ({ page }) => {
+  surfaceBrowserErrors(page)
+  const mock = await createMockNcb(page)
+  const taskTitle = 'Retry-safe browser task'
+
+  await registerAndSkipSetup(page, 'recovery@example.test')
+  await page.getByRole('link', { name: 'Tasks' }).click()
+
+  mock.failNextTaskCreate()
+  await page.getByRole('button', { name: 'Add Task' }).click()
+  await page.getByLabel('Title *').fill(taskTitle)
+  await page.getByRole('button', { name: 'Create', exact: true }).click()
+
+  await expect(page.getByText('We couldn’t create that task. The task form is still open and your entries have not been discarded.')).toBeVisible()
+  await expect(page.getByLabel('Title *')).toHaveValue(taskTitle)
+  await expect(page.getByRole('button', { name: 'Create', exact: true })).toBeEnabled()
+
+  await page.getByRole('button', { name: 'Create', exact: true }).click()
+  await expect(taskCardHeading(page, taskTitle)).toBeVisible()
+
+  mock.failNextTaskLoad()
+  await page.getByRole('button', { name: 'Due Today' }).click()
+  await expect(page.getByRole('heading', { name: 'We couldn’t load your tasks' })).toBeVisible()
+  await expect(page.getByText('No tasks found')).toHaveCount(0)
+
+  await page.getByRole('button', { name: 'Try again' }).click()
+  await expect(taskCardHeading(page, taskTitle)).toBeVisible()
 })
