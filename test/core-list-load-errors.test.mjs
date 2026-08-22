@@ -59,6 +59,18 @@ test('tasks distinguish preference or task retrieval failure from an empty task 
   assert.match(source, /Your task data has not been cleared/)
 })
 
+test('Today propagates timeline generation failure into a retryable load state', async () => {
+  const timelineSource = await read('src/services/timelineService.js')
+  const todaySource = await read('src/components/today/TodayView.jsx')
+
+  assert.doesNotMatch(timelineSource, /return \{ blocks: \[\], unscheduledTasks: \[\] \}/)
+  assert.match(todaySource, /const \[loadError, setLoadError\] = useState\(false\)/)
+  assert.match(todaySource, /setLoadError\(true\)/)
+  assert.match(todaySource, /title="We couldn’t load your day"/)
+  assert.match(todaySource, /onRetry=\{loadTimeline\}/)
+  assert.match(todaySource, /Your tasks, routines, projects and chores have not been cleared/)
+})
+
 test('shared load error state is accessible and retryable', async () => {
   const source = await read('src/common/LoadErrorState.jsx')
 
