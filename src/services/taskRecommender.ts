@@ -45,7 +45,6 @@ export class TaskRecommender {
     tasks: PrioritizedTask[],
     userState?: UserState
   ): TaskRecommendation[] {
-    // Score all tasks
     const scoredTasks = tasks.map(task => ({
       ...task,
       priority_score: taskPriorityModel.calculatePriorityScore(task, userState),
@@ -57,7 +56,6 @@ export class TaskRecommender {
 
     const recommendations: TaskRecommendation[] = []
 
-    // Get one recommendation from each path
     const quickWin = this.getQuickWinRecommendation(scoredTasks, userState)
     if (quickWin) recommendations.push(quickWin)
 
@@ -67,16 +65,11 @@ export class TaskRecommender {
     const braveFrog = this.getBraveFrogRecommendation(scoredTasks, userState)
     if (braveFrog) recommendations.push(braveFrog)
 
-    // Sort by score and return top 3
     return recommendations
       .sort((a, b) => b.score - a.score)
       .slice(0, 3)
   }
 
-  /**
-   * Quick Win Path
-   * Fast, easy tasks for immediate dopamine hit
-   */
   private getQuickWinRecommendation(
     tasks: PrioritizedTask[],
     userState?: UserState
@@ -97,8 +90,7 @@ export class TaskRecommender {
 
     if (candidates.length === 0) return null
 
-    // Pick highest scoring candidate
-    const best = candidates.reduce((a, b) => 
+    const best = candidates.reduce((a, b) =>
       (a.priority_score || 0) > (b.priority_score || 0) ? a : b
     )
 
@@ -111,10 +103,6 @@ export class TaskRecommender {
     }
   }
 
-  /**
-   * Momentum Path
-   * Medium-effort tasks that build productive flow
-   */
   private getMomentumRecommendation(
     tasks: PrioritizedTask[],
     userState?: UserState
@@ -139,7 +127,6 @@ export class TaskRecommender {
 
     if (candidates.length === 0) return null
 
-    // Prefer tasks with good energy match
     const best = candidates.reduce((a, b) => {
       const aScore = (a.priority_score || 0) + (a.energy_match_score || 0) * 0.3
       const bScore = (b.priority_score || 0) + (b.energy_match_score || 0) * 0.3
@@ -155,10 +142,6 @@ export class TaskRecommender {
     }
   }
 
-  /**
-   * Brave Frog Path
-   * Aversive but important tasks, broken into microform
-   */
   private getBraveFrogRecommendation(
     tasks: PrioritizedTask[],
     userState?: UserState
@@ -167,31 +150,25 @@ export class TaskRecommender {
 
     const candidates = tasks.filter(task => {
       const aversiveness = task.priority_metadata?.aversiveness || 0
-      return (
-        aversiveness >= config.min_aversiveness &&
-        (task.is_essential || config.is_essential)
-      )
+      const essentialMatch = !config.is_essential || task.is_essential === true
+      return aversiveness >= config.min_aversiveness && essentialMatch
     })
 
     if (candidates.length === 0) return null
 
-    // Pick most urgent aversive task
-    const best = candidates.reduce((a, b) => 
+    const best = candidates.reduce((a, b) =>
       (a.urgency_score || 0) > (b.urgency_score || 0) ? a : b
     )
 
     return {
       task: best,
-      score: (best.priority_score || 0) * 0.8, // Slight penalty for being aversive
+      score: (best.priority_score || 0) * 0.8,
       path: 'brave_frog',
       reason: `🐸 Brave frog! Just ${config.microform_time} minutes to start`,
-      confidence: this.calculateConfidence(best, userState) * 0.7 // Lower confidence for aversive
+      confidence: this.calculateConfidence(best, userState) * 0.7
     }
   }
 
-  /**
-   * Filter tasks by criteria
-   */
   filterTasks(
     tasks: PrioritizedTask[],
     criteria: TaskFilterCriteria
@@ -199,25 +176,21 @@ export class TaskRecommender {
     return tasks.filter(task => {
       const metadata = task.priority_metadata
 
-      // Time filter
       if (criteria.max_time) {
         const duration = task.estimated_duration || metadata?.time_required || 60
         if (duration > criteria.max_time) return false
       }
 
-      // Energy filter
       if (criteria.energy_level && metadata?.energy_required) {
         if (ENERGY_VALUES[metadata.energy_required] > ENERGY_VALUES[criteria.energy_level]) {
           return false
         }
       }
 
-      // Location filter
       if (criteria.location && metadata?.location) {
         if (metadata.location !== criteria.location) return false
       }
 
-      // Required items filter
       if (criteria.required_items && metadata?.available_items) {
         const hasAllItems = metadata.available_items.every(
           item => criteria.required_items?.includes(item)
@@ -225,12 +198,10 @@ export class TaskRecommender {
         if (!hasAllItems) return false
       }
 
-      // Interest filter
       if (criteria.min_interest && metadata?.interest_level) {
         if (metadata.interest_level < criteria.min_interest) return false
       }
 
-      // Aversiveness filter
       if (criteria.exclude_aversive && metadata?.aversiveness) {
         if (metadata.aversiveness >= 3) return false
       }
@@ -239,25 +210,20 @@ export class TaskRecommender {
     })
   }
 
-  /**
-   * Calculate confidence in recommendation (0-1)
-   */
   private calculateConfidence(
     task: PrioritizedTask,
     userState?: UserState
   ): number {
-    let confidence = 0.5 // Base confidence
+    let confidence = 0.5
 
-    // More confidence if we have user state
     if (userState) {
       confidence += 0.2
     }
 
-    // More confidence if task has metadata
     if (task.priority_metadata) {
       const metadata = task.priority_metadata
       let metadataFields = 0
-      let totalFields = 6
+      const totalFields = 6
 
       if (metadata.energy_required) metadataFields++
       if (metadata.time_required) metadataFields++
@@ -272,9 +238,6 @@ export class TaskRecommender {
     return Math.min(1, confidence)
   }
 
-  /**
-   * Get single best recommendation
-   */
   getBestRecommendation(
     tasks: PrioritizedTask[],
     userState?: UserState
@@ -283,9 +246,6 @@ export class TaskRecommender {
     return recommendations.length > 0 ? recommendations[0] : null
   }
 
-  /**
-   * Get recommendations for specific dopamine path
-   */
   getPathRecommendations(
     tasks: PrioritizedTask[],
     path: 'quick_win' | 'momentum' | 'brave_frog',
@@ -372,10 +332,8 @@ export class TaskRecommender {
     return tasks
       .filter(task => {
         const aversiveness = task.priority_metadata?.aversiveness || 0
-        return (
-          aversiveness >= config.min_aversiveness &&
-          (task.is_essential || config.is_essential)
-        )
+        const essentialMatch = !config.is_essential || task.is_essential === true
+        return aversiveness >= config.min_aversiveness && essentialMatch
       })
       .map(task => ({
         task,
