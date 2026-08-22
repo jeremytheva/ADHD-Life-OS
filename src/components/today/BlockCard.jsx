@@ -6,7 +6,7 @@ import SafeIcon from '../../common/SafeIcon'
 
 const { FiCheck, FiClock, FiCalendar, FiRefreshCw } = FiIcons
 
-const BlockCard = ({ block, onComplete }) => {
+const BlockCard = ({ block, onComplete, pending = false }) => {
   const startTime = format(parseISO(block.start_at), 'h:mm a')
   const endTime = format(parseISO(block.end_at), 'h:mm a')
 
@@ -24,10 +24,8 @@ const BlockCard = ({ block, onComplete }) => {
   }
 
   const getBlockColor = () => {
-    if (block.is_essential) {
-      return 'border-blue-200 bg-blue-50'
-    }
-    
+    if (block.is_essential) return 'border-blue-200 bg-blue-50'
+
     switch (block.ref_type) {
       case 'task':
         return 'border-green-200 bg-green-50'
@@ -41,7 +39,7 @@ const BlockCard = ({ block, onComplete }) => {
   }
 
   const handleComplete = () => {
-    if (block.ref_type === 'task' && onComplete) {
+    if (!pending && block.ref_type === 'task' && onComplete) {
       onComplete(block.id, block.ref_id)
     }
   }
@@ -50,26 +48,24 @@ const BlockCard = ({ block, onComplete }) => {
     <motion.div
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
-      className={`
-        border rounded-lg p-4 ${getBlockColor()}
-        transition-all duration-200
-      `}
+      className={`border rounded-lg p-4 ${getBlockColor()} transition-all duration-200`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <SafeIcon icon={getBlockIcon()} className="w-5 h-5 text-slate-600" />
           <div>
             <h3 className="font-medium text-slate-900">{block.label}</h3>
-            <p className="text-sm text-slate-600">
-              {startTime} - {endTime}
-            </p>
+            <p className="text-sm text-slate-600">{startTime} - {endTime}</p>
           </div>
         </div>
-        
+
         {block.ref_type === 'task' && (
           <button
+            type="button"
             onClick={handleComplete}
-            className="p-2 text-slate-600 hover:text-green-600 transition-colors"
+            disabled={pending}
+            aria-label={`Complete ${block.label}`}
+            className="p-2 text-slate-600 hover:text-green-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiCheck} className="w-5 h-5" />
           </button>
