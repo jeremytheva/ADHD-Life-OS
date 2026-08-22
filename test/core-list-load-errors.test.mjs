@@ -48,6 +48,17 @@ test('brain inbox distinguishes load failures and keeps failed mutations visible
   assert.match(source, /role="alert"/)
 })
 
+test('tasks distinguish preference or task retrieval failure from an empty task list', async () => {
+  const source = await read('src/components/tasks/TaskList.jsx')
+
+  assert.match(source, /const \[loadError, setLoadError\] = useState\(null\)/)
+  assert.match(source, /setLoadError\('preferences'\)/)
+  assert.match(source, /setLoadError\('tasks'\)/)
+  assert.match(source, /title=\{loadError === 'preferences' \? 'We couldn’t load your task preferences' : 'We couldn’t load your tasks'\}/)
+  assert.match(source, /onRetry=\{retryLoad\}/)
+  assert.match(source, /Your task data has not been cleared/)
+})
+
 test('shared load error state is accessible and retryable', async () => {
   const source = await read('src/common/LoadErrorState.jsx')
 
