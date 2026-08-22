@@ -116,3 +116,22 @@ test('project detail celebrations require confirmed refreshed state', async () =
   assert.match(source, /setCelebrationMessage\('Nice work on that step! 🎉'\)/)
   assert.match(source, /setCelebrationMessage\('Each small step you do is a quick win! ⭐'\)/)
 })
+
+test('task mutations preserve retry context and distinguish reconciliation failure', async () => {
+  const listSource = await read('src/components/tasks/TaskList.jsx')
+  const cardSource = await read('src/components/tasks/TaskCard.jsx')
+  const formSource = await read('src/components/tasks/TaskForm.jsx')
+
+  assert.match(listSource, /const \[operationError, setOperationError\] = useState\(null\)/)
+  assert.match(listSource, /const \[pendingAction, setPendingAction\] = useState\(null\)/)
+  assert.match(listSource, /task form is still open and your entries have not been discarded/)
+  assert.match(listSource, /The task was created, but the task list could not refresh/)
+  assert.match(listSource, /It has not been confirmed as completed and remains safe to retry/)
+  assert.match(listSource, /Delete this task\? This action cannot be undone/)
+  assert.match(listSource, /It has not been confirmed as deleted and remains in your task data/)
+  assert.match(listSource, /pending=\{pendingAction\?\.endsWith\(`:\$\{task\.id\}`\)\}/)
+  assert.match(cardSource, /disabled=\{pending\}/)
+  assert.match(cardSource, /aria-label=\{`Delete \$\{task\.title\}`\}/)
+  assert.match(formSource, /disabled=\{saving\}/)
+  assert.match(formSource, /saving \? 'Saving\.\.\.'/)
+})
