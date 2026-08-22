@@ -5,10 +5,11 @@ import SafeIcon from '../../common/SafeIcon'
 
 const { FiX, FiPlus, FiZap, FiChevronDown, FiChevronUp } = FiIcons
 
-const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
+const QuickCaptureModal = ({ onSave, onCancel }) => {
   const [items, setItems] = useState([''])
   const [currentInput, setCurrentInput] = useState('')
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
   const handleAddItem = () => {
     if (currentInput.trim()) {
@@ -28,10 +29,18 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
     setItems(items.filter((_, i) => i !== index))
   }
 
-  const handleSaveAll = () => {
+  const handleSaveAll = async () => {
     const validItems = items.filter(i => i.trim())
-    if (validItems.length > 0) {
-      onSave(validItems)
+    if (validItems.length === 0 || isSaving) return
+
+    setIsSaving(true)
+    try {
+      const result = await onSave(validItems)
+      if (result?.remainingItems) {
+        setItems(result.remainingItems.length > 0 ? result.remainingItems : [''])
+      }
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -42,7 +51,6 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col"
       >
-        {/* Header */}
         <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-white">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-3">
@@ -58,6 +66,7 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
             </div>
             <button
               onClick={onCancel}
+              aria-label="Close quick capture"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
             >
               <SafeIcon icon={FiX} className="w-6 h-6" />
@@ -65,22 +74,20 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
           </div>
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
-          {/* Encouragement */}
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 mb-6">
             <p className="text-blue-800 text-center font-medium">
               💭 Don't worry about perfect wording or order - just get it all out of your head!
             </p>
           </div>
 
-          {/* Quick Input */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="quick-capture-input" className="block text-sm font-medium text-slate-700 mb-2">
               Type a task and press Enter
             </label>
             <div className="flex gap-2">
               <input
+                id="quick-capture-input"
                 type="text"
                 value={currentInput}
                 onChange={(e) => setCurrentInput(e.target.value)}
@@ -91,7 +98,7 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
               />
               <button
                 onClick={handleAddItem}
-                disabled={!currentInput.trim()}
+                disabled={!currentInput.trim() || isSaving}
                 className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 <SafeIcon icon={FiPlus} className="w-5 h-5" />
@@ -103,7 +110,6 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
             </p>
           </div>
 
-          {/* Captured Items */}
           {items.filter(i => i).length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -120,7 +126,7 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
               <AnimatePresence>
                 {items.filter(i => i).map((item, index) => (
                   <motion.div
-                    key={index}
+                    key={`${item}-${index}`}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
@@ -136,7 +142,9 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
                       </div>
                       <button
                         onClick={() => handleRemoveItem(index)}
-                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        aria-label={`Remove ${item}`}
+                        disabled={isSaving}
+                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                       >
                         <SafeIcon icon={FiX} className="w-4 h-4" />
                       </button>
@@ -147,7 +155,6 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
             </div>
           )}
 
-          {/* Empty State */}
           {items.filter(i => i).length === 0 && (
             <div className="text-center py-12 bg-slate-50 rounded-lg border-2 border-dashed border-slate-300">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -171,12 +178,12 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
             </div>
           )}
 
-          {/* Advanced Options Toggle */}
           {items.filter(i => i).length > 0 && (
             <div className="mt-6">
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="w-full flex items-center justify-between px-4 py-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                disabled={isSaving}
+                className="w-full flex items-center justify-between px-4 py-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors disabled:opacity-50"
               >
                 <span className="text-sm font-medium text-slate-700">
                   Organization Options (Optional)
@@ -195,26 +202,12 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200"
                   >
-                    <p className="text-sm text-slate-600 mb-3">
-                      💡 After saving, you can:
-                    </p>
+                    <p className="text-sm text-slate-600 mb-3">💡 After saving, you can:</p>
                     <ul className="space-y-2 text-sm text-slate-700">
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600">✓</span>
-                        <span>Mark some tasks as "Essential"</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600">✓</span>
-                        <span>Add time estimates</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600">✓</span>
-                        <span>Break tasks into smaller subtasks</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600">✓</span>
-                        <span>Reorder by priority</span>
-                      </li>
+                      <li className="flex items-start gap-2"><span className="text-green-600">✓</span><span>Mark some tasks as "Essential"</span></li>
+                      <li className="flex items-start gap-2"><span className="text-green-600">✓</span><span>Add time estimates</span></li>
+                      <li className="flex items-start gap-2"><span className="text-green-600">✓</span><span>Break tasks into smaller subtasks</span></li>
+                      <li className="flex items-start gap-2"><span className="text-green-600">✓</span><span>Reorder by priority</span></li>
                     </ul>
                   </motion.div>
                 )}
@@ -222,7 +215,6 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
             </div>
           )}
 
-          {/* Success Message */}
           {items.filter(i => i).length >= 5 && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -230,29 +222,28 @@ const QuickCaptureModal = ({ onSave, onCancel, projectId }) => {
               className="mt-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border-2 border-green-200"
             >
               <p className="text-green-800 text-center font-medium">
-                🎉 Awesome! You've captured {items.filter(i => i).length} tasks!
-                That's huge progress in clearing your mental space!
+                🎉 Awesome! You've captured {items.filter(i => i).length} tasks! That's huge progress in clearing your mental space!
               </p>
             </motion.div>
           )}
         </div>
 
-        {/* Footer */}
         <div className="p-6 border-t border-slate-200 bg-slate-50">
           <div className="flex gap-3">
             <button
               onClick={onCancel}
-              className="flex-1 px-4 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition-colors"
+              disabled={isSaving}
+              className="flex-1 px-4 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               onClick={handleSaveAll}
-              disabled={items.filter(i => i).length === 0}
+              disabled={items.filter(i => i).length === 0 || isSaving}
               className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <SafeIcon icon={FiZap} className="w-5 h-5" />
-              Save {items.filter(i => i).length} Task{items.filter(i => i).length !== 1 ? 's' : ''}
+              {isSaving ? 'Saving…' : `Save ${items.filter(i => i).length} Task${items.filter(i => i).length !== 1 ? 's' : ''}`}
             </button>
           </div>
         </div>
