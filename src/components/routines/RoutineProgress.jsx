@@ -1,51 +1,81 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import LoadErrorState from '../../common/LoadErrorState'
+import OperationErrorState from '../../common/OperationErrorState'
 import { routineProgressService } from '../../services/routineProgressService'
 
-const { FiPlay, FiCheck, FiSkipForward, FiX, FiClock, FiAlertCircle } = FiIcons
+const { FiCheck, FiSkipForward, FiX, FiClock, FiAlertCircle } = FiIcons
 
 const RoutineProgress = ({ routine, onClose, onComplete }) => {
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
+  const [operationError, setOperationError] = useState('')
+  const [actionPending, setActionPending] = useState(false)
   const [currentStep, setCurrentStep] = useState(null)
   const [stepStartTime, setStepStartTime] = useState(null)
+  const [elapsedSeconds, setElapsedSeconds] = useState(0)
+  const completionAttemptedRef = useRef(false)
 
   useEffect(() => {
     initializeSession()
-  }, [routine])
+  }, [routine.id])
 
   useEffect(() => {
-    if (session && session.current_step_index < routine.routine_steps.length) {
+    if (!session) return
+
+    if (session.current_step_index < routine.routine_steps.length) {
       setCurrentStep(routine.routine_steps[session.current_step_index])
       setStepStartTime(Date.now())
-    } else if (session && session.current_step_index >= routine.routine_steps.length) {
+      setElapsedSeconds(0)
+      completionAttemptedRef.current = false
+      return
+    }
+
+    setCurrentStep(null)
+    if (!completionAttemptedRef.current) {
+      completionAttemptedRef.current = true
       handleCompleteRoutine()
     }
-  }, [session?.current_step_index])
+  }, [session?.current_step_index, routine.routine_steps])
+
+  useEffect(() => {
+    if (!currentStep || !stepStartTime) return undefined
+
+    const timer = window.setInterval(() => {
+      setElapsedSeconds(Math.floor((Date.now() - stepStartTime) / 1000))
+    }, 1000)
+
+    return () => window.clearInterval(timer)
+  }, [currentStep?.id, stepStartTime])
 
   const initializeSession = async () => {
     try {
       setLoading(true)
-      
-      // Check for existing active session
+      setLoadError(false)
+      setOperationError('')
+      completionAttemptedRef.current = false
+
       let activeSession = await routineProgressService.getActiveSession(routine.id)
-      
       if (!activeSession) {
-        // Start new session
         activeSession = await routineProgressService.startRoutine(routine.id, routine)
       }
-      
       setSession(activeSession)
     } catch (error) {
       console.error('Error initializing session:', error)
+      setLoadError(true)
     } finally {
       setLoading(false)
     }
   }
 
   const handleCompleteStep = async () => {
+    if (actionPending) return
+
+    setActionPending(true)
+    setOperationError('')
     try {
       const updatedSession = await routineProgressService.completeStep(
         session.id,
@@ -55,10 +85,17 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
       setSession(updatedSession)
     } catch (error) {
       console.error('Error completing step:', error)
+      setOperationError('We couldn’t save this step as completed. It has not been advanced, so you can safely try again.')
+    } finally {
+      setActionPending(false)
     }
   }
 
   const handleSkipStep = async () => {
+    if (actionPending) return
+
+    setActionPending(true)
+    setOperationError('')
     try {
       const updatedSession = await routineProgressService.skipStep(
         session.id,
@@ -68,42 +105,54 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
       setSession(updatedSession)
     } catch (error) {
       console.error('Error skipping step:', error)
+      setOperationError('We couldn’t save this step as skipped. The routine has not advanced, so you can safely try again.')
+    } finally {
+      setActionPending(false)
     }
   }
 
   const handleCompleteRoutine = async () => {
+    if (!session || actionPending) return
+
+    setActionPending(true)
+    setOperationError('')
     try {
       await routineProgressService.completeRoutine(session.id)
-      if (onComplete) {
-        onComplete()
-      }
+      if (onComplete) onComplete()
       onClose()
     } catch (error) {
       console.error('Error completing routine:', error)
+      setOperationError('All steps are recorded, but we couldn’t save the routine as finished. Your session remains open; try finishing again.')
+    } finally {
+      setActionPending(false)
     }
   }
 
   const handleCancel = async () => {
-    if (window.confirm('Are you sure you want to cancel this routine?')) {
-      try {
-        await routineProgressService.cancelRoutine(session.id)
-        onClose()
-      } catch (error) {
-        console.error('Error canceling routine:', error)
-      }
+    if (!session || actionPending) return
+    if (!window.confirm('Are you sure you want to cancel this routine?')) return
+
+    setActionPending(true)
+    setOperationError('')
+    try {
+      await routineProgressService.cancelRoutine(session.id)
+      onClose()
+    } catch (error) {
+      console.error('Error canceling routine:', error)
+      setOperationError('We couldn’t cancel this routine session. It remains active, so you can keep working or try cancelling again.')
+    } finally {
+      setActionPending(false)
     }
   }
 
   const calculateProgress = () => {
-    if (!session) return 0
+    if (!session?.total_steps) return 0
     return (session.current_step_index / session.total_steps) * 100
   }
 
   const getElapsedTime = () => {
-    if (!stepStartTime) return '0:00'
-    const elapsed = Math.floor((Date.now() - stepStartTime) / 1000)
-    const minutes = Math.floor(elapsed / 60)
-    const seconds = elapsed % 60
+    const minutes = Math.floor(elapsedSeconds / 60)
+    const seconds = elapsedSeconds % 60
     return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
 
@@ -118,7 +167,59 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
     )
   }
 
-  if (!session || !currentStep) return null
+  if (loadError || !session) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-lg p-6 w-full max-w-lg space-y-4">
+          <LoadErrorState
+            title="We couldn’t start this routine"
+            message="No progress was changed. Try loading the routine session again."
+            onRetry={initializeSession}
+          />
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const isFinishing = session.current_step_index >= routine.routine_steps.length
+
+  if (isFinishing) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-lg p-6 w-full max-w-lg space-y-4">
+          <h2 className="text-xl font-bold text-slate-900">Finishing {routine.name}</h2>
+          {actionPending && <p className="text-slate-600">Saving your completed routine…</p>}
+          <OperationErrorState message={operationError} onDismiss={() => setOperationError('')} />
+          {!actionPending && operationError && (
+            <button
+              type="button"
+              onClick={handleCompleteRoutine}
+              className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+            >
+              Try finishing again
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={handleCancel}
+            disabled={actionPending}
+            className="w-full px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 disabled:opacity-50"
+          >
+            Cancel session
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (!currentStep) return null
 
   const progress = calculateProgress()
   const completedSteps = session.completed_steps.length
@@ -131,7 +232,6 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-2xl overflow-hidden"
       >
-        {/* Header */}
         <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-6 text-white">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
@@ -142,13 +242,14 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
             </div>
             <button
               onClick={handleCancel}
-              className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+              disabled={actionPending}
+              aria-label="Cancel routine session"
+              className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:opacity-50"
             >
               <SafeIcon icon={FiX} className="w-6 h-6" />
             </button>
           </div>
 
-          {/* Progress Bar */}
           <div className="w-full bg-purple-700 rounded-full h-3 overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
@@ -159,17 +260,17 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
           </div>
         </div>
 
-        {/* Current Step */}
         <div className="p-8">
+          <OperationErrorState message={operationError} onDismiss={() => setOperationError('')} />
+
           <AnimatePresence mode="wait">
             <motion.div
               key={session.current_step_index}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
+              className="space-y-6 mt-4"
             >
-              {/* Step Number Badge */}
               <div className="flex items-center justify-center">
                 <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
                   <span className="text-2xl font-bold text-purple-600">
@@ -178,19 +279,14 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
                 </div>
               </div>
 
-              {/* Step Name */}
               <h3 className="text-2xl font-bold text-slate-900 text-center">
                 {currentStep.name}
               </h3>
 
-              {/* Step Description */}
               {currentStep.description && (
-                <p className="text-slate-600 text-center">
-                  {currentStep.description}
-                </p>
+                <p className="text-slate-600 text-center">{currentStep.description}</p>
               )}
 
-              {/* Step Info */}
               <div className="flex items-center justify-center gap-6 text-sm text-slate-500">
                 {currentStep.duration_minutes && (
                   <div className="flex items-center gap-2">
@@ -206,47 +302,42 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
                 )}
               </div>
 
-              {/* Timer Display */}
               <div className="bg-slate-50 rounded-lg p-4 text-center">
                 <p className="text-sm text-slate-600 mb-1">Time Elapsed</p>
-                <p className="text-3xl font-bold text-slate-900">
-                  {getElapsedTime()}
-                </p>
+                <p className="text-3xl font-bold text-slate-900">{getElapsedTime()}</p>
               </div>
 
-              {/* Action Buttons */}
               <div className="flex gap-3">
                 <button
                   onClick={handleSkipStep}
-                  className="flex-1 px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
+                  disabled={actionPending}
+                  className="flex-1 px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   <SafeIcon icon={FiSkipForward} className="w-5 h-5" />
-                  <span>Skip</span>
+                  <span>{actionPending ? 'Saving…' : 'Skip'}</span>
                 </button>
                 <button
                   onClick={handleCompleteStep}
-                  className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+                  disabled={actionPending}
+                  className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   <SafeIcon icon={FiCheck} className="w-5 h-5" />
-                  <span>Complete</span>
+                  <span>{actionPending ? 'Saving…' : 'Complete'}</span>
                 </button>
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* Steps Overview */}
           <div className="mt-8 pt-6 border-t border-slate-200">
-            <h4 className="text-sm font-medium text-slate-700 mb-3">
-              All Steps
-            </h4>
+            <h4 className="text-sm font-medium text-slate-700 mb-3">All Steps</h4>
             <div className="space-y-2">
               {routine.routine_steps.map((step, index) => {
                 const isCompleted = session.completed_steps.some(
-                  s => s.step_index === index
+                  completed => completed.step_index === index
                 )
                 const isCurrent = session.current_step_index === index
                 const isSkipped = session.completed_steps.find(
-                  s => s.step_index === index && s.skipped
+                  completed => completed.step_index === index && completed.skipped
                 )
 
                 return (
@@ -281,18 +372,11 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
                         <span className="text-xs">{index + 1}</span>
                       )}
                     </div>
-                    <span
-                      className={`
-                        text-sm flex-1
-                        ${isCurrent ? 'font-medium text-purple-900' : 'text-slate-700'}
-                      `}
-                    >
+                    <span className={`text-sm flex-1 ${isCurrent ? 'font-medium text-purple-900' : 'text-slate-700'}`}>
                       {step.name}
                     </span>
                     {step.duration_minutes && (
-                      <span className="text-xs text-slate-500">
-                        {step.duration_minutes}m
-                      </span>
+                      <span className="text-xs text-slate-500">{step.duration_minutes}m</span>
                     )}
                   </div>
                 )
