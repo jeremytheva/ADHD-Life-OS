@@ -28,6 +28,7 @@ const ProjectsList = () => {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(null)
   const [operationError, setOperationError] = useState(null)
+  const [quickCaptureProjectId, setQuickCaptureProjectId] = useState(null)
   const [viewMode, setViewMode] = useState('grid')
   const [selectedProject, setSelectedProject] = useState(null)
   const [showForm, setShowForm] = useState(false)
@@ -49,6 +50,9 @@ const ProjectsList = () => {
       const filteredData = filterByMode(data, 'project')
       setProjects(filteredData)
 
+      const quickCaptureProject = filteredData.find((project) => project.title === '📥 Quick Capture')
+      if (quickCaptureProject) setQuickCaptureProjectId(quickCaptureProject.id)
+
       const stats = {}
       for (const project of filteredData) {
         stats[project.id] = await projectService.getProjectStats(project.id)
@@ -64,11 +68,12 @@ const ProjectsList = () => {
 
   const handleQuickCapture = async (items) => {
     setOperationError(null)
-    try {
-      let quickProject = projects.find((project) => project.title === '📥 Quick Capture')
+    let projectId = projects.find((project) => project.title === '📥 Quick Capture')?.id || quickCaptureProjectId
+    let savedCount = 0
 
-      if (!quickProject) {
-        quickProject = await projectService.createProject({
+    try {
+      if (!projectId) {
+        const quickProject = await projectService.createProject({
           title: '📥 Quick Capture',
           description: 'Tasks captured quickly without overthinking',
           color: 'green',
@@ -76,25 +81,51 @@ const ProjectsList = () => {
           status: 'active',
           mode: currentMode.id !== 'all' ? currentMode.id : null
         })
+        projectId = quickProject.id
+        setQuickCaptureProjectId(projectId)
       }
 
       for (const item of items) {
-        await projectService.createTask(quickProject.id, {
+        await projectService.createTask(projectId, {
           title: item,
           description: '',
           estimated_duration: 30,
           is_essential: false
         })
+        savedCount += 1
       }
-
-      setShowQuickCapture(false)
-      await loadProjects()
-      const updatedProject = await projectService.getProject(quickProject.id)
-      setSelectedProject(updatedProject)
     } catch (error) {
       console.error('Error in quick capture:', error)
-      setOperationError('We couldn’t save your quick capture. The capture window is still open so you can try again without re-entering your list.')
+      const remainingItems = items.slice(savedCount)
+
+      try {
+        await loadProjects()
+      } catch (refreshError) {
+        console.error('Error refreshing projects after partial quick capture:', refreshError)
+      }
+
+      if (projectId) {
+        setOperationError(
+          `${savedCount} of ${items.length} quick-capture tasks were saved before the interruption. Only the unsaved tasks remain in the capture window, so retrying will not duplicate the saved tasks.`
+        )
+      } else {
+        setOperationError('We couldn’t create the Quick Capture project. None of these tasks were saved, and your list is still available to retry.')
+      }
+
+      return { savedCount, remainingItems }
     }
+
+    setShowQuickCapture(false)
+    try {
+      await loadProjects()
+      const updatedProject = await projectService.getProject(projectId)
+      setSelectedProject(updatedProject)
+    } catch (refreshError) {
+      console.error('Error refreshing completed quick capture:', refreshError)
+      setOperationError(`All ${items.length} quick-capture tasks were saved, but the project view could not refresh. Reload Projects before adding the same tasks again.`)
+    }
+
+    return { savedCount, remainingItems: [] }
   }
 
   const handleCreateProject = async (projectData) => {
@@ -160,8 +191,17 @@ const ProjectsList = () => {
     if (type !== 'project') return
 
     setOperationError(null)
+    let newProject = null
+    let createdTasks = 0
+    let createdSubtasks = 0
+    const totalTasks = template.tasks?.length || 0
+    const totalSubtasks = template.tasks?.reduce(
+      (total, task) => total + (task.subtasks?.length || 0),
+      0
+    ) || 0
+
     try {
-      const newProject = await projectService.createProject({
+      newProject = await projectService.createProject({
         title: template.name,
         description: template.description,
         color: template.color,
@@ -178,6 +218,7 @@ const ProjectsList = () => {
             estimated_duration: taskTemplate.estimated_duration || 30,
             is_essential: taskTemplate.is_essential || false
           })
+          createdTasks += 1
 
           if (taskTemplate.subtasks?.length) {
             for (const subtaskTemplate of taskTemplate.subtasks) {
@@ -186,16 +227,40 @@ const ProjectsList = () => {
                 description: subtaskTemplate.description || '',
                 estimated_duration: subtaskTemplate.estimated_duration || null
               })
+              createdSubtasks += 1
             }
           }
         }
       }
-
-      setShowTemplates(false)
-      await loadProjects()
     } catch (error) {
       console.error('Error applying template:', error)
-      setOperationError('We couldn’t finish applying that template. The template picker is still open so you can review or try again.')
+
+      if (!newProject) {
+        setOperationError('We couldn’t create the project for that template. Nothing from the template was saved, so it is safe to try again.')
+        return
+      }
+
+      setShowTemplates(false)
+      try {
+        await loadProjects()
+        const partialProject = await projectService.getProject(newProject.id)
+        setSelectedProject(partialProject)
+      } catch (refreshError) {
+        console.error('Error refreshing partially applied template:', refreshError)
+      }
+
+      setOperationError(
+        `The project was created, but the template was only partly applied: ${createdTasks} of ${totalTasks} tasks and ${createdSubtasks} of ${totalSubtasks} subtasks were saved. Do not apply the template again because that can duplicate the saved items. Open the project and finish the missing steps manually.`
+      )
+      return
+    }
+
+    setShowTemplates(false)
+    try {
+      await loadProjects()
+    } catch (refreshError) {
+      console.error('Error refreshing projects after template application:', refreshError)
+      setOperationError('The template was fully saved, but the project list could not refresh. Reload Projects before applying the same template again.')
     }
   }
 
