@@ -1,11 +1,20 @@
 # Stage 2 Closure Register — Core Workflow Integrity
 
 **Date:** 2026-08-22
-**Status:** Pending final closure PR validation
+**Status:** Pending Today closure correction validation
 
 ## Scope completed
 
 Stage 2 establishes consistent failure, retry, reconciliation, partial-success, and destructive-action semantics across the platform's core persisted workflows.
+
+### Today
+
+- Timeline generation failures propagate to the UI instead of being converted into a false empty day.
+- Timeline retrieval failures render an explicit retryable load state.
+- Today task-completion writes are serialized.
+- Failed completion remains explicitly unconfirmed and safe to retry.
+- Successful completion followed by failed timeline reconciliation is reported as partial success rather than a failed write.
+- Browser coverage deliberately injects a timeline dependency failure and verifies recovery through retry.
 
 ### Projects
 
@@ -51,7 +60,7 @@ Stage 2 establishes consistent failure, retry, reconciliation, partial-success, 
 - Shared accessible load-error and operation-error components.
 - Node 24 validation pipeline.
 - Locked dependency installation and blocking moderate-or-higher dependency audit.
-- Lint, typecheck, Node tests, Vite production build, Chromium installation and Playwright critical path.
+- Lint, typecheck, Node tests, Vite production build, Chromium installation and Playwright critical/failure-path coverage.
 - Server-verified identity and NoCodeBackend trust boundary remain unchanged by Stage 2.
 
 ## Deferred beyond Stage 2
@@ -65,4 +74,4 @@ These items are not blockers for core-workflow-integrity closure and belong to l
 
 ## Closure criterion
 
-Stage 2 may be marked complete when the task-closure PR passes the full repository validation pipeline, including the deliberate browser failure/retry scenario, and is merged into `main`.
+Stage 2 may be marked complete when the Today closure-correction PR passes the full repository validation pipeline, including the deliberate Today failure/retry browser scenario, and is merged into `main`.
