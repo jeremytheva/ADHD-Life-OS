@@ -1,7 +1,7 @@
 # Stage 2 Closure Register — Core Workflow Integrity
 
 **Date:** 2026-08-22
-**Status:** Pending Today closure correction validation
+**Status:** Complete
 
 ## Scope completed
 
@@ -63,6 +63,10 @@ Stage 2 establishes consistent failure, retry, reconciliation, partial-success, 
 - Lint, typecheck, Node tests, Vite production build, Chromium installation and Playwright critical/failure-path coverage.
 - Server-verified identity and NoCodeBackend trust boundary remain unchanged by Stage 2.
 
+## Validation evidence
+
+The Today closure correction passed the full repository validation pipeline on 2026-08-22, including locked dependency installation, zero-vulnerability audit, lint, typecheck, Node tests, production build, Chromium setup, and all four Playwright critical/failure-path scenarios. The exact final documentation commit remains subject to the same PR validation gate before merge.
+
 ## Deferred beyond Stage 2
 
 These items are not blockers for core-workflow-integrity closure and belong to later delivery work:
@@ -72,6 +76,6 @@ These items are not blockers for core-workflow-integrity closure and belong to l
 - Stage 3 unified ADHD execution/replanning engine.
 - External calendar and intelligence integrations.
 
-## Closure criterion
+## Closure outcome
 
-Stage 2 may be marked complete when the Today closure-correction PR passes the full repository validation pipeline, including the deliberate Today failure/retry browser scenario, and is merged into `main`.
+Stage 2 Core Workflow Integrity is complete. Subsequent implementation should proceed under Stage 3 unless a regression reopens a Stage 2 acceptance criterion.
