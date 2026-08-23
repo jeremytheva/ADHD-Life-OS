@@ -15,10 +15,13 @@ External calendar/event synchronization is a planned integration area and is **n
 
 ## Documentation
 
+- [Project control](PROJECT.md): purpose, scope, principles, system-of-record hierarchy, and delivery model.
+- [Current status](STATUS.md): current stage, recent progress, risks, and recommended next implementation outcome.
 - [Delivery guide](docs/DELIVERY.md): local delivery, environments, release, and rollback.
 - [Product overview](docs/PRODUCT.md): current user behavior, principles, and planned-integration boundary.
-- [Architecture](docs/ARCHITECTURE.md): React/Vite structure and NoCodeBackend request flow.
-- [Data model](docs/DATA_MODEL.md): supported collections, relationships, and validation contracts.
+- [Architecture](docs/ARCHITECTURE.md): React/Vite structure, dependency direction, execution layer, and NoCodeBackend request flow.
+- [Data model](docs/DATA_MODEL.md): supported collections, relationships, validation, compatibility, and migration contracts.
+- [Decision register](docs/DECISIONS/README.md): accepted consequential decisions and decision-record conventions.
 - [Security guide](docs/SECURITY.md): secrets, proxy trust boundary, and reporting.
 - [Testing guide](docs/TESTING.md): required checks, contract coverage, and manual validation.
 - [Contributing guide](docs/CONTRIBUTING.md): setup and review expectations.
