@@ -16,6 +16,14 @@ test('execution engine consumes canonical activities and returns ranked executio
   assert.match(source, /getBestNextAction/)
 })
 
+test('execution engine supports transient exclusion of not-now activities', async () => {
+  const source = await read('src/services/executionEngine.js')
+
+  assert.match(source, /normalizeExcludedActivityIds\(options\.excludeActivityIds\)/)
+  assert.match(source, /!excludedActivityIds\.has\(String\(activity\.id\)\)/)
+  assert.match(source, /excluded_count: excludedActivityIds\.size/)
+})
+
 test('brave frog recommendations require essential work when configured as essential-only', async () => {
   const source = await read('src/services/taskRecommender.ts')
 
