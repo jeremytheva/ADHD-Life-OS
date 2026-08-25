@@ -10,6 +10,14 @@ test('completion triggers immediate replanning when reconciliation succeeded', (
   })
 })
 
+test('failed execution completion preserves the current plan', () => {
+  assert.deepEqual(decideReplanning({ event: 'execution_completed', outcome: { status: 'failed', phase: 'execution_session' } }), {
+    should_replan: false,
+    reason: 'execution_completion_failed',
+    mode: 'none'
+  })
+})
+
 test('partial success defers replanning until reconciliation', () => {
   assert.deepEqual(decideReplanning({ event: 'execution_completed', outcome: { status: 'partial_success', reconciliation_required: true } }), {
     should_replan: true,
