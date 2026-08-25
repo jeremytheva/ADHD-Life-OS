@@ -13,7 +13,8 @@
     "test": "node --test",
     "test:e2e": "playwright test",
     "validate": "npm run lint && npm run typecheck && npm test && npm run build",
-    "verify:nocodebackend": "node scripts/verify-nocodebackend-provider.mjs"
+    "verify:nocodebackend": "node scripts/verify-nocodebackend-provider.mjs",
+    "verify:execution-activation": "node scripts/verify-execution-activation-readiness.mjs"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
@@ -30,7 +31,7 @@
     "@vitejs/plugin-react": "^6.1.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.9.1",
-    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-hooks": "^5.0.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",
     "globals": "^15.9.0",
     "postcss": "^8.4.49",
