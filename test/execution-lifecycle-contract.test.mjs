@@ -25,6 +25,7 @@ test('execution lifecycle starts from a canonical activity without mutating it',
   assert.deepEqual(activity, before)
   assert.equal(session.activity_id, 'task:42')
   assert.equal(session.source_id, '42')
+  assert.equal(session.title_snapshot, 'Prepare weekly report')
   assert.equal(session.status, 'in_progress')
   assert.equal(session.started_at, at(0))
 })
