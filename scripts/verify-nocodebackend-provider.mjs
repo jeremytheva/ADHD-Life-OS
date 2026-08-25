@@ -100,6 +100,7 @@ export const certifyNoCodeBackendProvider = async (options, env = process.env) =
   const report = {
     collection: options.collection,
     mode: options.write ? 'read-write' : 'read-only',
+    expected_fields: [...options.expectFields],
     read: null,
     create: null,
     update: null,
