@@ -7,6 +7,7 @@ import LoadErrorState from '../../common/LoadErrorState'
 import OperationErrorState from '../../common/OperationErrorState'
 import { timelineService } from '../../services/timelineService'
 import { taskService } from '../../services/taskService'
+import { productionExecutionRuntime } from '../../services/productionExecutionRuntime'
 import { useMode } from '../../contexts/ModeContext'
 import { useAuth } from '../../contexts/AuthContext'
 import BlockCard from './BlockCard'
@@ -124,7 +125,7 @@ const TodayView = () => {
       </div>
 
       <OperationErrorState message={operationError} onDismiss={() => setOperationError(null)} />
-      <NextActionPanel currentMode={currentMode} />
+      <NextActionPanel currentMode={currentMode} executionRuntime={productionExecutionRuntime} userId={user?.id || null} />
 
       <div className="space-y-8">
         {timeGroups.map((group) => (
