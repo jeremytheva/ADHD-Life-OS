@@ -6,8 +6,20 @@ import test from 'node:test'
 import { createNcbHandler } from '../api/ncb/handler.js'
 
 const originalFetch = globalThis.fetch
-const originalBaseUrl = process.env.NCB_API_BASE_URL
-const originalSecret = process.env.NCB_SECRET_KEY
+const ENV_NAMES = [
+  'NOCODEBACKEND_AUTH_BASE_URL',
+  'NOCODEBACKEND_DATA_BASE_URL',
+  'NOCODEBACKEND_SECRET_KEY',
+  'NOCODEBACKEND_INSTANCE'
+]
+const originalEnv = Object.fromEntries(ENV_NAMES.map((name) => [name, process.env[name]]))
+
+const configureProvider = () => {
+  process.env.NOCODEBACKEND_AUTH_BASE_URL = 'https://auth.example.test/api/user-auth'
+  process.env.NOCODEBACKEND_DATA_BASE_URL = 'https://data.example.test/'
+  process.env.NOCODEBACKEND_SECRET_KEY = 'server-secret'
+  process.env.NOCODEBACKEND_INSTANCE = 'life_os_test'
+}
 
 const makeRequest = ({ method = 'GET', path = [], query = {}, headers = {}, body, parsedBody } = {}) => {
   const request = Readable.from(body === undefined ? [] : [Buffer.from(body)])
@@ -31,15 +43,14 @@ const makeResponse = () => ({
 
 test.after(() => {
   globalThis.fetch = originalFetch
-  if (originalBaseUrl === undefined) delete process.env.NCB_API_BASE_URL
-  else process.env.NCB_API_BASE_URL = originalBaseUrl
-  if (originalSecret === undefined) delete process.env.NCB_SECRET_KEY
-  else process.env.NCB_SECRET_KEY = originalSecret
+  for (const name of ENV_NAMES) {
+    if (originalEnv[name] === undefined) delete process.env[name]
+    else process.env[name] = originalEnv[name]
+  }
 })
 
 test('rejects routes, methods, CSRF failures, and malformed bodies before fetch', async () => {
-  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
-  process.env.NCB_SECRET_KEY = 'server-secret'
+  configureProvider()
   let calls = 0
   globalThis.fetch = async () => { calls += 1; throw new Error('must not be called') }
   const handler = createNcbHandler('auth')
@@ -60,8 +71,7 @@ test('rejects routes, methods, CSRF failures, and malformed bodies before fetch'
 })
 
 test('rejects oversized string, buffer, and parsed JSON bodies before fetch', async () => {
-  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
-  process.env.NCB_SECRET_KEY = 'server-secret'
+  configureProvider()
   let calls = 0
   globalThis.fetch = async () => { calls += 1; throw new Error('must not be called') }
   const handler = createNcbHandler('auth')
@@ -81,16 +91,15 @@ test('rejects oversized string, buffer, and parsed JSON bodies before fetch', as
   assert.equal(calls, 0)
 })
 
-test('forwards only approved request data and preserves upstream cookies', async () => {
-  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
-  process.env.NCB_SECRET_KEY = 'server-secret'
+test('translates app create requests to generated provider routes and preserves upstream cookies', async () => {
+  configureProvider()
   let captured
   globalThis.fetch = async (url, options) => {
-    if (String(url).endsWith('/get-session')) {
+    if (String(url).endsWith('/api/user-auth/get-session')) {
       return new Response(JSON.stringify({ data: { user: { id: 'user-1' } } }), { status: 200, headers: { 'content-type': 'application/json' } })
     }
     captured = { url: String(url), options }
-    return new Response(JSON.stringify({ data: { id: 'task-1', user_id: 'user-1', title: 'Write tests', description: '', due_date: null, estimated_duration: 30, is_essential: false, completed: false, project_id: null, category: null, tags: [] } }), {
+    return new Response(JSON.stringify({ status: 'success', data: { id: 'task-1', user_id: 'user-1', title: 'Write tests', description: '', due_date: null, estimated_duration: 30, is_essential: false, completed: false, project_id: null, category: null, tags: [] } }), {
       status: 200,
       headers: { 'content-type': 'application/json', 'set-cookie': 'ncb_session=abc; HttpOnly' }
     })
@@ -105,7 +114,8 @@ test('forwards only approved request data and preserves upstream cookies', async
   await createNcbHandler('data')(request, response)
 
   assert.equal(response.statusCode, 200)
-  assert.equal(captured.url, 'https://ncb.example.test/v1/data/tasks?user_id=user-1')
+  assert.equal(captured.url, 'https://data.example.test/create/tasks?Instance=life_os_test&user_id=user-1')
+  assert.equal(captured.options.method, 'POST')
   assert.equal(captured.options.headers.Authorization, 'Bearer server-secret')
   assert.equal(captured.options.headers.Cookie, 'ncb_session=old')
   assert.equal(captured.options.headers.Origin, undefined)
@@ -113,12 +123,55 @@ test('forwards only approved request data and preserves upstream cookies', async
   assert.equal(response.headers.get('set-cookie')[0], 'ncb_session=abc; HttpOnly')
 })
 
+test('translates app PATCH to generated update PUT', async () => {
+  configureProvider()
+  let captured
+  globalThis.fetch = async (url, options) => {
+    if (String(url).endsWith('/api/user-auth/get-session')) {
+      return new Response(JSON.stringify({ user: { id: 'user-1' } }), { status: 200, headers: { 'content-type': 'application/json' } })
+    }
+    captured = { url: String(url), options }
+    return new Response(JSON.stringify({ status: 'success', data: { id: 'task-1', user_id: 'user-1', title: 'Updated', description: '', due_date: null, estimated_duration: 30, is_essential: false, completed: false, project_id: null, category: null, tags: [] } }), { status: 200, headers: { 'content-type': 'application/json' } })
+  }
+
+  const response = makeResponse()
+  await createNcbHandler('data')(makeRequest({
+    method: 'PATCH',
+    path: ['tasks', 'task-1'],
+    headers: { origin: 'https://app.example.test', 'x-forwarded-proto': 'https', 'content-type': 'application/json' },
+    body: JSON.stringify({ title: 'Updated' })
+  }), response)
+
+  assert.equal(response.statusCode, 200)
+  assert.equal(captured.url, 'https://data.example.test/update/tasks/task-1?Instance=life_os_test&user_id=user-1')
+  assert.equal(captured.options.method, 'PUT')
+})
+
+test('normalizes filtered provider collection reads back to the app item contract', async () => {
+  configureProvider()
+  const calls = []
+  globalThis.fetch = async (url) => {
+    calls.push(String(url))
+    if (String(url).endsWith('/api/user-auth/get-session')) {
+      return new Response(JSON.stringify({ data: { user: { id: 'user-1' } } }), { status: 200, headers: { 'content-type': 'application/json' } })
+    }
+    return new Response(JSON.stringify({ status: 'success', data: [{ id: 'task-1', user_id: 'user-1', title: 'Write tests', description: '', due_date: null, estimated_duration: 30, is_essential: false, completed: false, project_id: null, category: null, tags: [] }] }), { status: 200, headers: { 'content-type': 'application/json' } })
+  }
+
+  const response = makeResponse()
+  await createNcbHandler('data')(makeRequest({ path: ['tasks', 'task-1'] }), response)
+
+  assert.equal(response.statusCode, 200)
+  assert.equal(calls[1], 'https://data.example.test/read/tasks?Instance=life_os_test&id=task-1&user_id=user-1')
+  const payload = JSON.parse(response.payload.toString('utf8'))
+  assert.equal(payload.data.id, 'task-1')
+})
+
 test('rejects malformed upstream domain records with a structured proxy error', async () => {
-  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
-  process.env.NCB_SECRET_KEY = 'server-secret'
-  globalThis.fetch = async (url) => new Response(JSON.stringify(String(url).endsWith('/get-session')
+  configureProvider()
+  globalThis.fetch = async (url) => new Response(JSON.stringify(String(url).endsWith('/api/user-auth/get-session')
     ? { data: { user: { id: 'user-1' } } }
-    : { data: { id: 'task-1', title: 42 } }), {
+    : { status: 'success', data: [{ id: 'task-1', title: 42 }] }), {
     status: 200,
     headers: { 'content-type': 'application/json' }
   })
@@ -135,12 +188,11 @@ test('rejects malformed upstream domain records with a structured proxy error', 
 })
 
 test('rejects cross-user data attempts after session verification without data upstream requests', async () => {
-  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
-  process.env.NCB_SECRET_KEY = 'server-secret'
+  configureProvider()
   const calls = []
   globalThis.fetch = async (url) => {
     calls.push(String(url))
-    assert.match(String(url), /\/get-session$/)
+    assert.match(String(url), /\/api\/user-auth\/get-session$/)
     return new Response(JSON.stringify({ data: { user: { id: 'user-1' } } }), { status: 200, headers: { 'content-type': 'application/json' } })
   }
   const handler = createNcbHandler('data')
@@ -159,5 +211,5 @@ test('rejects cross-user data attempts after session verification without data u
     assert.equal(response.payload.error.code, 'NCB_USER_ID_MISMATCH')
   }
   assert.equal(calls.length, crossUserRequests.length)
-  assert.ok(calls.every((url) => !url.includes('/data/')))
+  assert.ok(calls.every((url) => url.includes('/api/user-auth/get-session')))
 })

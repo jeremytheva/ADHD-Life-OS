@@ -23,9 +23,12 @@
 
 ## NoCodeBackend proxy and security
 
-- All NoCodeBackend traffic must go through the same-origin, allowlisted handlers in `api/ncb/`. Do not add a generic path proxy, expose `NCB_SECRET_KEY`, or send backend credentials from the browser.
-- Only `NCB_API_BASE_URL` and `NCB_SECRET_KEY` belong in the server/runtime environment. Browser configuration may use only the proxy URL variables (`VITE_AUTH_PROXY_URL` and `VITE_DATA_PROXY_URL`).
+- All NoCodeBackend traffic must go through the same-origin, allowlisted handlers in `api/ncb/`. Do not add a generic path proxy, expose `NOCODEBACKEND_SECRET_KEY`, or send backend credentials from the browser.
+- The canonical server/runtime environment contract is exactly `NOCODEBACKEND_AUTH_BASE_URL`, `NOCODEBACKEND_DATA_BASE_URL`, `NOCODEBACKEND_SECRET_KEY`, and `NOCODEBACKEND_INSTANCE`. Do not introduce or restore `NCB_*` aliases.
+- The canonical provider bases are `https://app.nocodebackend.com/api/user-auth` for authentication and `https://api.nocodebackend.com/` for generated data APIs unless a deployment explicitly supplies equivalent provider endpoints.
+- Browser configuration may use only the proxy URL variables (`VITE_AUTH_PROXY_URL` and `VITE_DATA_PROXY_URL`).
 - Preserve route allowlists, method allowlists, request-size limits, origin/CSRF checks, request and response validation, upstream timeouts, and structured error/correlation-ID behavior. Add or update handler contract tests for changes to this trust boundary.
+- The application-owned data API is provider-agnostic. Translate its GET/POST/PATCH/DELETE collection contract to verified NoCodeBackend generated `read/create/update/delete` routes inside the server boundary rather than leaking provider paths into browser code.
 - Never log authorization headers, cookies, passwords, secrets, or personally identifiable user content. Treat upstream responses as untrusted until validated.
 
 ## Tests and pull requests

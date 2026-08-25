@@ -48,9 +48,20 @@ Open `http://localhost:5173`.
 
 The browser defaults to `/api/ncb/auth` and `/api/ncb/data`. `VITE_AUTH_PROXY_URL` and `VITE_DATA_PROXY_URL` may override those browser-visible proxy paths.
 
-Set `NCB_API_BASE_URL` and `NCB_SECRET_KEY` only in the server/runtime environment. Never expose `NCB_SECRET_KEY` through a `VITE_*` variable, commit `.env` files, or bypass the explicit proxy handlers. Development uses the same allowlisted handler contract as deployment.
+Set these four values only in the server/runtime environment:
 
-The supported data collections are `user-preferences`, `tasks`, `projects`, `subtasks`, `routines`, `routine-steps`, `routine-sessions`, `housework-tasks`, `housework-completions`, and `inbox-items`. Details are in the [data model](docs/DATA_MODEL.md).
+```text
+NOCODEBACKEND_AUTH_BASE_URL=https://app.nocodebackend.com/api/user-auth
+NOCODEBACKEND_DATA_BASE_URL=https://api.nocodebackend.com/
+NOCODEBACKEND_SECRET_KEY=<server-only secret>
+NOCODEBACKEND_INSTANCE=<instance name>
+```
+
+Do not create or restore `NCB_*` aliases. Never expose `NOCODEBACKEND_SECRET_KEY` through a `VITE_*` variable, commit `.env` files, or bypass the explicit proxy handlers.
+
+The browser-facing data contract remains application-owned (`GET/POST/PATCH/DELETE` against `/api/ncb/data/{collection}`); the server trust boundary translates those calls to NoCodeBackend's generated `read/create/update/delete` route families and injects the configured `Instance` plus server-held Bearer credential.
+
+The supported data collections are `user-preferences`, `tasks`, `projects`, `subtasks`, `routines`, `routine-steps`, `routine-sessions`, `housework-tasks`, `housework-completions`, and `inbox-items`. `execution-sessions` is not enabled until its provider schema and generated API are verified. Details are in the [data model](docs/DATA_MODEL.md).
 
 ## Development and validation
 
@@ -64,12 +75,13 @@ npm run build
 Available scripts:
 
 - `npm run dev` — start Vite development server.
-- `npm run build` — lint and create the production build.
+- `npm run build` — create the production build.
 - `npm run preview` — serve the production build locally.
 - `npm run lint` — run ESLint.
 - `npm run lint:error` — show ESLint errors only.
 - `npm run typecheck` — run TypeScript without emitting files.
 - `npm test` — run Node tests.
+- `npm run validate` — run lint, typecheck, tests, and production build.
 
 ## Contributing
 
