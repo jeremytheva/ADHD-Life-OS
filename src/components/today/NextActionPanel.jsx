@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { executionEngine } from '../../services/executionEngine'
 import LoadErrorState from '../../common/LoadErrorState'
+import ExecutionControls from './ExecutionControls'
 
 const ENERGY_OPTIONS = ['low', 'medium', 'high']
 const TIME_OPTIONS = [10, 15, 30, 60]
@@ -12,7 +13,7 @@ const pathLabel = (path) => ({
   priority: 'Priority'
 }[path] || 'Next action')
 
-const NextActionPanel = ({ currentMode }) => {
+const NextActionPanel = ({ currentMode, executionRuntime = null, userId = null }) => {
   const [energy, setEnergy] = useState('medium')
   const [availableTime, setAvailableTime] = useState(15)
   const [result, setResult] = useState(null)
@@ -21,6 +22,10 @@ const NextActionPanel = ({ currentMode }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [excludedActivityIds, setExcludedActivityIds] = useState([])
   const [feedbackMessage, setFeedbackMessage] = useState('')
+  const [executionState, setExecutionState] = useState(null)
+  const [executionBusy, setExecutionBusy] = useState(false)
+  const [executionError, setExecutionError] = useState('')
+  const [latestExecutionResult, setLatestExecutionResult] = useState(null)
 
   const location = useMemo(() => {
     if (!currentMode || currentMode.id === 'all') return null
@@ -55,6 +60,78 @@ const NextActionPanel = ({ currentMode }) => {
 
   const recommendations = result?.recommendations || []
   const selected = recommendations[selectedIndex] || null
+  const runtimeAvailable = Boolean(executionRuntime?.available && userId)
+
+  const refreshExecutionState = async (latestResult = latestExecutionResult) => {
+    if (!runtimeAvailable) {
+      setExecutionState(null)
+      return null
+    }
+
+    try {
+      setExecutionError('')
+      const next = await executionRuntime.getState({
+        userId,
+        recommendation: selected?.activity || null,
+        latestResult
+      })
+      setExecutionState(next)
+      return next
+    } catch (error) {
+      console.error('Error loading execution state:', error)
+      setExecutionError('Execution status could not be loaded. Your recommendation has not been changed.')
+      return null
+    }
+  }
+
+  useEffect(() => {
+    refreshExecutionState()
+  }, [runtimeAvailable, userId, selected?.activity_id])
+
+  const runExecutionAction = async (action) => {
+    if (!runtimeAvailable || executionBusy) return
+
+    const session = executionState?.currentExecution?.session || null
+    try {
+      setExecutionBusy(true)
+      setExecutionError('')
+      let outcome = null
+
+      if (action === 'start' || action === 'open_routine') {
+        if (!selected?.activity) throw new Error('No executable activity is selected.')
+        outcome = await executionRuntime.start({ userId, activity: selected.activity })
+      } else if (action === 'continue') {
+        if (!session) throw new Error('No paused execution is available to continue.')
+        outcome = await executionRuntime.resume({ session })
+      } else if (action === 'pause') {
+        if (!session) throw new Error('No active execution is available to pause.')
+        outcome = await executionRuntime.pause({ session })
+      } else if (action === 'complete') {
+        if (!session) throw new Error('No active execution is available to complete.')
+        outcome = await executionRuntime.complete({ session })
+      } else if (action === 'cancel') {
+        if (!session) throw new Error('No active execution is available to stop.')
+        outcome = await executionRuntime.cancel({ session })
+      } else if (action === 'refresh_status') {
+        await refreshExecutionState(null)
+        return
+      } else {
+        throw new Error(`Unsupported execution action: ${action}`)
+      }
+
+      setLatestExecutionResult(outcome)
+      await refreshExecutionState(outcome)
+
+      if (outcome?.replanning?.should_replan && outcome.replanning.mode === 'immediate') {
+        await loadRecommendations()
+      }
+    } catch (error) {
+      console.error('Execution action failed:', error)
+      setExecutionError('That execution change was not confirmed. Your current work remains safe to retry.')
+    } finally {
+      setExecutionBusy(false)
+    }
+  }
 
   const chooseAnother = () => {
     if (recommendations.length < 2) return
@@ -111,6 +188,20 @@ const NextActionPanel = ({ currentMode }) => {
 
       {feedbackMessage && (
         <p className="mb-3 text-sm text-slate-600" role="status" aria-live="polite">{feedbackMessage}</p>
+      )}
+
+      {executionError && runtimeAvailable && (
+        <p className="mb-3 text-sm text-rose-700" role="alert">{executionError}</p>
+      )}
+
+      {runtimeAvailable && executionState?.presentation && (
+        <ExecutionControls
+          presentation={executionState.presentation}
+          recommendation={selected}
+          busy={executionBusy}
+          onPrimaryAction={runExecutionAction}
+          onSecondaryAction={runExecutionAction}
+        />
       )}
 
       {loading && <p className="text-sm text-slate-600" role="status">Finding a realistic next action…</p>}
