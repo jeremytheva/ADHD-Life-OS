@@ -14,8 +14,25 @@ A change is ready when it has a clear issue or pull request scope, focused tests
 
 ## Environments and configuration
 
-The app uses Vite in development and deployment. The data and auth APIs are same-origin routes: `/api/ncb/data` and `/api/ncb/auth`. Server/runtime configuration supplies `NCB_API_BASE_URL` and `NCB_SECRET_KEY`; browser code may configure only `VITE_DATA_PROXY_URL` and `VITE_AUTH_PROXY_URL`.
+The app uses Vite in development and deployment. Browser traffic uses the same-origin application routes `/api/ncb/data` and `/api/ncb/auth`.
+
+The server/runtime environment must supply exactly:
+
+```text
+NOCODEBACKEND_AUTH_BASE_URL=https://app.nocodebackend.com/api/user-auth
+NOCODEBACKEND_DATA_BASE_URL=https://api.nocodebackend.com/
+NOCODEBACKEND_SECRET_KEY=<server-only secret>
+NOCODEBACKEND_INSTANCE=<instance name>
+```
+
+Do not deploy `NCB_*` aliases. Browser code may configure only `VITE_DATA_PROXY_URL` and `VITE_AUTH_PROXY_URL`.
+
+The server proxy translates the stable application data contract into NoCodeBackend generated `read/create/update/delete` routes and injects `Instance` and the Bearer credential. Provider route changes therefore belong in the server integration boundary, not in React components or repositories.
+
+Before enabling a newly introduced provider collection, verify its generated API contract against the target NoCodeBackend instance and capture the expected request/response behaviour in repository tests. In particular, `execution-sessions` must remain disabled until its schema and create/read/update capabilities are verified.
 
 ## Release and rollback
 
-Build with `npm run build` and deploy the generated `dist/` artifact through the hosting platform. Verify the application shell, authentication state, and a representative data request after deployment without exposing credentials. Roll back by redeploying the previously known-good artifact; do not attempt a browser-side fallback for failed domain-data requests.
+Build with `npm run build` and deploy the generated `dist/` artifact through the hosting platform. Verify the application shell, authenticated session resolution, one representative generated data read, and one controlled write in the target environment without exposing credentials.
+
+Roll back by redeploying the previously known-good artifact and restoring its matching environment contract if necessary. Do not attempt a browser-side fallback for failed domain-data requests.
