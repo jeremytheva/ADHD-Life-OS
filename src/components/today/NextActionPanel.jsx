@@ -114,6 +114,9 @@ const NextActionPanel = ({ currentMode, executionRuntime = null, userId = null }
       } else if (action === 'cancel') {
         if (!session) throw new Error('No active execution is available to stop.')
         outcome = await executionRuntime.cancel({ session })
+      } else if (action === 'reconcile_execution') {
+        if (!session) throw new Error('No saved execution is available to reconcile.')
+        outcome = await executionRuntime.reconcileCompletedSource({ session })
       } else if (action === 'refresh_status') {
         await refreshExecutionState(null)
         return
