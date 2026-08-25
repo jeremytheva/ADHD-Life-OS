@@ -1,0 +1,14 @@
+{
+  "user_id": "REPLACE_WITH_TEST_USER_ID",
+  "activity_id": "task:provider-certification",
+  "activity_type": "task",
+  "source_id": "provider-certification",
+  "source_parent_id": null,
+  "title_snapshot": "Provider certification execution session",
+  "status": "in_progress",
+  "started_at": "2026-08-25T09:00:00.000Z",
+  "paused_at": null,
+  "resumed_at": null,
+  "completed_at": null,
+  "cancelled_at": null
+}
