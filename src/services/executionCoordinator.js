@@ -99,6 +99,17 @@ export const createExecutionCoordinator = ({
       })
     },
 
+    async reconcileCompletedSource(session, completedAt = new Date()) {
+      requireMethod(sessions, 'complete', 'An execution-session service')
+      const next = await sessions.complete(session, completedAt)
+      return asResult('reconciled', {
+        owner: 'generic_execution_session',
+        session: next,
+        source_completed_elsewhere: true,
+        replanning: decideReplanning({ event: 'source_completed' })
+      })
+    },
+
     contextChanged() {
       return asResult('context_changed', {
         replanning: decideReplanning({ contextChanged: true })
