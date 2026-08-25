@@ -24,7 +24,7 @@ export const startExecution = (activity, startedAt = new Date()) => {
     activity_type: source.type || source.source_type || 'task',
     source_id: String(source.source_id || source.id),
     source_parent_id: source.source_parent_id || null,
-    title: source.title || source.name || 'Untitled activity',
+    title_snapshot: source.title || source.name || 'Untitled activity',
     status: 'in_progress',
     started_at: timestamp,
     resumed_at: null,
