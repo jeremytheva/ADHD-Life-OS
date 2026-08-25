@@ -1,4 +1,4 @@
-import { resolveExecutionEntry } from '../domain/execution/executionEntry.js'
+import { resolveExecutionEntry } from '../domain/execution/executionEntryRouting.js'
 import { decideReplanning } from '../domain/execution/replanningPolicy.js'
 
 const requireMethod = (value, method, label) => {
@@ -9,6 +9,7 @@ const requireMethod = (value, method, label) => {
 }
 
 const asResult = (status, values = {}) => Object.freeze({ status, ...values })
+const noReplan = (event) => decideReplanning({ event })
 
 export const createExecutionCoordinator = ({
   sessionService,
@@ -30,7 +31,7 @@ export const createExecutionCoordinator = ({
       owner: 'routine_session',
       entry,
       routine: routed,
-      replanning: decideReplanning({ event: 'execution_paused' })
+      replanning: noReplan('execution_started')
     })
   }
 
@@ -38,7 +39,7 @@ export const createExecutionCoordinator = ({
     async getCurrent(userId) {
       const session = await sessions.getCurrent(userId)
       return session
-        ? asResult('active', { owner: 'generic_session', session })
+        ? asResult('active', { owner: 'generic_execution_session', session })
         : asResult('idle', { owner: null, session: null })
     },
 
@@ -52,10 +53,10 @@ export const createExecutionCoordinator = ({
       requireMethod(sessions, 'start', 'An execution-session service')
       const session = await sessions.start(userId, activity, startedAt)
       return asResult('started', {
-        owner: 'generic_session',
+        owner: 'generic_execution_session',
         entry,
         session,
-        replanning: decideReplanning({ event: 'execution_paused' })
+        replanning: noReplan('execution_started')
       })
     },
 
@@ -63,7 +64,7 @@ export const createExecutionCoordinator = ({
       requireMethod(sessions, 'pause', 'An execution-session service')
       const next = await sessions.pause(session, pausedAt)
       return asResult('paused', {
-        owner: 'generic_session',
+        owner: 'generic_execution_session',
         session: next,
         replanning: decideReplanning({ event: 'execution_paused' })
       })
@@ -73,9 +74,9 @@ export const createExecutionCoordinator = ({
       requireMethod(sessions, 'resume', 'An execution-session service')
       const next = await sessions.resume(session, resumedAt)
       return asResult('resumed', {
-        owner: 'generic_session',
+        owner: 'generic_execution_session',
         session: next,
-        replanning: decideReplanning({ event: 'execution_paused' })
+        replanning: noReplan('execution_resumed')
       })
     },
 
@@ -83,7 +84,7 @@ export const createExecutionCoordinator = ({
       requireMethod(sessions, 'cancel', 'An execution-session service')
       const next = await sessions.cancel(session, cancelledAt)
       return asResult('cancelled', {
-        owner: 'generic_session',
+        owner: 'generic_execution_session',
         session: next,
         replanning: decideReplanning({ event: 'execution_cancelled' })
       })
@@ -92,7 +93,7 @@ export const createExecutionCoordinator = ({
     async complete(session, completedAt = new Date()) {
       const outcome = await completion.complete(session, completedAt)
       return asResult(outcome.status, {
-        owner: 'generic_session',
+        owner: 'generic_execution_session',
         outcome,
         replanning: decideReplanning({ event: 'execution_completed', outcome })
       })
