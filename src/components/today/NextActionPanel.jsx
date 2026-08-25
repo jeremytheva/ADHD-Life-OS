@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { executionEngine } from '../../services/executionEngine'
 import LoadErrorState from '../../common/LoadErrorState'
 import ExecutionControls from './ExecutionControls'
@@ -14,6 +15,7 @@ const pathLabel = (path) => ({
 }[path] || 'Next action')
 
 const NextActionPanel = ({ currentMode, executionRuntime = null, userId = null }) => {
+  const navigate = useNavigate()
   const [energy, setEnergy] = useState('medium')
   const [availableTime, setAvailableTime] = useState(15)
   const [result, setResult] = useState(null)
@@ -119,6 +121,16 @@ const NextActionPanel = ({ currentMode, executionRuntime = null, userId = null }
         throw new Error(`Unsupported execution action: ${action}`)
       }
 
+      if (outcome?.status === 'routed' && outcome.routine?.path) {
+        navigate(outcome.routine.path, {
+          state: {
+            routineId: outcome.routine.routine_id,
+            stepId: outcome.routine.step_id
+          }
+        })
+        return
+      }
+
       setLatestExecutionResult(outcome)
       await refreshExecutionState(outcome)
 
@@ -164,75 +176,42 @@ const NextActionPanel = ({ currentMode, executionRuntime = null, userId = null }
       <div className="mb-4 grid gap-3 sm:grid-cols-2">
         <label className="text-sm font-medium text-slate-700">
           Energy now
-          <select
-            aria-label="Energy now"
-            value={energy}
-            onChange={(event) => setEnergy(event.target.value)}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
-          >
+          <select aria-label="Energy now" value={energy} onChange={(event) => setEnergy(event.target.value)} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2">
             {ENERGY_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}
           </select>
         </label>
         <label className="text-sm font-medium text-slate-700">
           Time available
-          <select
-            aria-label="Time available"
-            value={availableTime}
-            onChange={(event) => setAvailableTime(Number(event.target.value))}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
-          >
+          <select aria-label="Time available" value={availableTime} onChange={(event) => setAvailableTime(Number(event.target.value))} className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2">
             {TIME_OPTIONS.map((minutes) => <option key={minutes} value={minutes}>{minutes} minutes</option>)}
           </select>
         </label>
       </div>
 
-      {feedbackMessage && (
-        <p className="mb-3 text-sm text-slate-600" role="status" aria-live="polite">{feedbackMessage}</p>
-      )}
-
-      {executionError && runtimeAvailable && (
-        <p className="mb-3 text-sm text-rose-700" role="alert">{executionError}</p>
-      )}
+      {feedbackMessage && <p className="mb-3 text-sm text-slate-600" role="status" aria-live="polite">{feedbackMessage}</p>}
+      {executionError && runtimeAvailable && <p className="mb-3 text-sm text-rose-700" role="alert">{executionError}</p>}
 
       {runtimeAvailable && executionState?.presentation && (
-        <ExecutionControls
-          presentation={executionState.presentation}
-          recommendation={selected}
-          busy={executionBusy}
-          onPrimaryAction={runExecutionAction}
-          onSecondaryAction={runExecutionAction}
-        />
+        <ExecutionControls presentation={executionState.presentation} recommendation={selected} busy={executionBusy} onPrimaryAction={runExecutionAction} onSecondaryAction={runExecutionAction} />
       )}
 
       {loading && <p className="text-sm text-slate-600" role="status">Finding a realistic next action…</p>}
 
       {!loading && loadError && (
-        <LoadErrorState
-          title="We couldn’t choose a next action"
-          message="Your activities have not changed. Try the recommendation again."
-          onRetry={loadRecommendations}
-        />
+        <LoadErrorState title="We couldn’t choose a next action" message="Your activities have not changed. Try the recommendation again." onRetry={loadRecommendations} />
       )}
 
       {!loading && !loadError && !selected && (
         <div className="rounded-lg border border-emerald-200 bg-white p-4">
-          <h3 className="font-medium text-slate-900">
-            {excludedActivityIds.length > 0 ? 'Nothing else fits right now' : 'Nothing fits these constraints yet'}
-          </h3>
-          <p className="mt-1 text-sm text-slate-600">
-            {excludedActivityIds.length > 0
-              ? 'You can bring skipped options back or change your time and energy. No task has been changed.'
-              : 'Try a longer time window or different energy level. No task has been changed.'}
-          </p>
+          <h3 className="font-medium text-slate-900">{excludedActivityIds.length > 0 ? 'Nothing else fits right now' : 'Nothing fits these constraints yet'}</h3>
+          <p className="mt-1 text-sm text-slate-600">{excludedActivityIds.length > 0 ? 'You can bring skipped options back or change your time and energy. No task has been changed.' : 'Try a longer time window or different energy level. No task has been changed.'}</p>
         </div>
       )}
 
       {!loading && !loadError && selected && (
         <div className="rounded-lg border border-emerald-200 bg-white p-4">
           <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-emerald-700">
-            <span>{pathLabel(selected.path)}</span>
-            <span aria-hidden="true">•</span>
-            <span>{selected.fits_available_time ? `${selected.estimated_duration_minutes} min` : `${selected.start_minutes} min start`}</span>
+            <span>{pathLabel(selected.path)}</span><span aria-hidden="true">•</span><span>{selected.fits_available_time ? `${selected.estimated_duration_minutes} min` : `${selected.start_minutes} min start`}</span>
           </div>
           <h3 className="mt-2 text-lg font-semibold text-slate-900">{selected.title}</h3>
           <p className="mt-1 text-sm text-slate-600">{selected.reason}</p>
@@ -241,25 +220,15 @@ const NextActionPanel = ({ currentMode, executionRuntime = null, userId = null }
             <p className="mt-1 text-sm font-medium text-slate-900">{selected.start_action}</p>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
-            <button type="button" onClick={markNotNow} className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
-              Not now
-            </button>
-            {recommendations.length > 1 && (
-              <button type="button" onClick={chooseAnother} className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
-                Give me another option
-              </button>
-            )}
-            <button type="button" onClick={loadRecommendations} className="rounded-lg px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50">
-              Recheck now
-            </button>
+            <button type="button" onClick={markNotNow} className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Not now</button>
+            {recommendations.length > 1 && <button type="button" onClick={chooseAnother} className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Give me another option</button>}
+            <button type="button" onClick={loadRecommendations} className="rounded-lg px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50">Recheck now</button>
           </div>
         </div>
       )}
 
       {excludedActivityIds.length > 0 && !loading && !loadError && (
-        <button type="button" onClick={restoreSkippedOptions} className="mt-3 text-sm font-medium text-emerald-700 hover:underline">
-          Bring skipped options back
-        </button>
+        <button type="button" onClick={restoreSkippedOptions} className="mt-3 text-sm font-medium text-emerald-700 hover:underline">Bring skipped options back</button>
       )}
     </section>
   )
