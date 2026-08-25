@@ -30,6 +30,16 @@ test('next-action panel presents initiation guidance and bounded alternatives', 
   assert.match(source, /recommendations\.length > 1/)
 })
 
+test('next-action panel treats not-now feedback as transient recommendation state', async () => {
+  const source = await read('src/components/today/NextActionPanel.jsx')
+  assert.match(source, /const \[excludedActivityIds, setExcludedActivityIds\] = useState\(\[\]\)/)
+  assert.match(source, /excludeActivityIds: excludedActivityIds/)
+  assert.match(source, />\s*Not now\s*</)
+  assert.match(source, /Nothing was changed/)
+  assert.match(source, /Bring skipped options back/)
+  assert.doesNotMatch(source, /localStorage|sessionStorage|upsertActivity|updateTask/)
+})
+
 test('next-action retrieval failures remain retryable and do not imply activity loss', async () => {
   const source = await read('src/components/today/NextActionPanel.jsx')
   assert.match(source, /title="We couldn’t choose a next action"/)

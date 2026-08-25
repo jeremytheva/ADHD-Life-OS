@@ -19,6 +19,8 @@ const NextActionPanel = ({ currentMode }) => {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [excludedActivityIds, setExcludedActivityIds] = useState([])
+  const [feedbackMessage, setFeedbackMessage] = useState('')
 
   const location = useMemo(() => {
     if (!currentMode || currentMode.id === 'all') return null
@@ -33,7 +35,10 @@ const NextActionPanel = ({ currentMode }) => {
         current_energy: energy,
         available_time: availableTime,
         current_location: location
-      }, { limit: 3 })
+      }, {
+        limit: 3,
+        excludeActivityIds: excludedActivityIds
+      })
       setResult(next)
       setSelectedIndex(0)
     } catch (error) {
@@ -46,7 +51,7 @@ const NextActionPanel = ({ currentMode }) => {
 
   useEffect(() => {
     loadRecommendations()
-  }, [energy, availableTime, location])
+  }, [energy, availableTime, location, excludedActivityIds])
 
   const recommendations = result?.recommendations || []
   const selected = recommendations[selectedIndex] || null
@@ -54,6 +59,21 @@ const NextActionPanel = ({ currentMode }) => {
   const chooseAnother = () => {
     if (recommendations.length < 2) return
     setSelectedIndex((index) => (index + 1) % recommendations.length)
+  }
+
+  const markNotNow = () => {
+    if (!selected?.activity_id) return
+    setFeedbackMessage(`${selected.title || 'That activity'} is out of the suggestions for now. Nothing was changed.`)
+    setExcludedActivityIds((current) => (
+      current.includes(selected.activity_id)
+        ? current
+        : [...current, selected.activity_id]
+    ))
+  }
+
+  const restoreSkippedOptions = () => {
+    setFeedbackMessage('Skipped options are available again.')
+    setExcludedActivityIds([])
   }
 
   return (
@@ -89,6 +109,10 @@ const NextActionPanel = ({ currentMode }) => {
         </label>
       </div>
 
+      {feedbackMessage && (
+        <p className="mb-3 text-sm text-slate-600" role="status" aria-live="polite">{feedbackMessage}</p>
+      )}
+
       {loading && <p className="text-sm text-slate-600" role="status">Finding a realistic next action…</p>}
 
       {!loading && loadError && (
@@ -101,8 +125,14 @@ const NextActionPanel = ({ currentMode }) => {
 
       {!loading && !loadError && !selected && (
         <div className="rounded-lg border border-emerald-200 bg-white p-4">
-          <h3 className="font-medium text-slate-900">Nothing fits these constraints yet</h3>
-          <p className="mt-1 text-sm text-slate-600">Try a longer time window or different energy level. No task has been changed.</p>
+          <h3 className="font-medium text-slate-900">
+            {excludedActivityIds.length > 0 ? 'Nothing else fits right now' : 'Nothing fits these constraints yet'}
+          </h3>
+          <p className="mt-1 text-sm text-slate-600">
+            {excludedActivityIds.length > 0
+              ? 'You can bring skipped options back or change your time and energy. No task has been changed.'
+              : 'Try a longer time window or different energy level. No task has been changed.'}
+          </p>
         </div>
       )}
 
@@ -120,6 +150,9 @@ const NextActionPanel = ({ currentMode }) => {
             <p className="mt-1 text-sm font-medium text-slate-900">{selected.start_action}</p>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
+            <button type="button" onClick={markNotNow} className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+              Not now
+            </button>
             {recommendations.length > 1 && (
               <button type="button" onClick={chooseAnother} className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
                 Give me another option
@@ -130,6 +163,12 @@ const NextActionPanel = ({ currentMode }) => {
             </button>
           </div>
         </div>
+      )}
+
+      {excludedActivityIds.length > 0 && !loading && !loadError && (
+        <button type="button" onClick={restoreSkippedOptions} className="mt-3 text-sm font-medium text-emerald-700 hover:underline">
+          Bring skipped options back
+        </button>
       )}
     </section>
   )

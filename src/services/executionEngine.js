@@ -18,16 +18,23 @@ const dedupeById = (items = []) => {
   })
 }
 
+const normalizeExcludedActivityIds = (value) => (
+  new Set(Array.isArray(value) ? value.filter(Boolean).map(String) : [])
+)
+
 export const executionEngine = {
   rankActivities(activities = [], userState = {}, options = {}) {
     const state = normalizeExecutionState(userState)
     const limit = Math.max(1, Number(options.limit) || DEFAULT_LIMIT)
+    const excludedActivityIds = normalizeExcludedActivityIds(options.excludeActivityIds)
     const eligible = selectEligibleActivities(activities, state)
+      .filter((activity) => !excludedActivityIds.has(String(activity.id)))
 
     if (eligible.length === 0) {
       return {
         state,
         candidate_count: 0,
+        excluded_count: excludedActivityIds.size,
         recommendations: []
       }
     }
@@ -51,6 +58,7 @@ export const executionEngine = {
     return {
       state,
       candidate_count: eligible.length,
+      excluded_count: excludedActivityIds.size,
       recommendations: rankedActivities.map((activity, index) => (
         buildExecutionOption(
           activity,
