@@ -6,6 +6,10 @@ const hasCoordinatorContract = (coordinator) => (
   coordinator && REQUIRED_COORDINATOR_METHODS.every((method) => typeof coordinator[method] === 'function')
 )
 
+const hasRecoveryContract = (recoveryService) => (
+  recoveryService && typeof recoveryService.assess === 'function'
+)
+
 const unavailable = (reason = 'execution_provider_unavailable') => Object.freeze({
   available: false,
   reason,
@@ -14,7 +18,7 @@ const unavailable = (reason = 'execution_provider_unavailable') => Object.freeze
   message: 'Execution tracking is not available yet. Your recommendation is still safe to review.'
 })
 
-export const createExecutionRuntime = ({ coordinator } = {}) => {
+export const createExecutionRuntime = ({ coordinator, recoveryService = null } = {}) => {
   if (!hasCoordinatorContract(coordinator)) {
     return Object.freeze({
       available: false,
@@ -32,11 +36,21 @@ export const createExecutionRuntime = ({ coordinator } = {}) => {
     async getState({ userId, recommendation = null, latestResult = null } = {}) {
       if (!userId) throw new Error('A user id is required to load execution state.')
       const currentExecution = await coordinator.getCurrent(userId)
+      const recoveryAssessment = currentExecution?.session && hasRecoveryContract(recoveryService)
+        ? await recoveryService.assess(currentExecution.session)
+        : null
+
       return Object.freeze({
         available: true,
         reason: null,
-        presentation: deriveExecutionPresentation({ recommendation, currentExecution, latestResult }),
-        currentExecution
+        presentation: deriveExecutionPresentation({
+          recommendation,
+          currentExecution,
+          latestResult,
+          recoveryAssessment
+        }),
+        currentExecution,
+        recoveryAssessment
       })
     },
 
@@ -59,6 +73,13 @@ export const createExecutionRuntime = ({ coordinator } = {}) => {
 
     async complete({ session, at } = {}) {
       return coordinator.complete(session, at)
+    },
+
+    async reconcileCompletedSource({ session, at } = {}) {
+      if (typeof coordinator.reconcileCompletedSource !== 'function') {
+        throw new Error('Execution reconciliation is not available.')
+      }
+      return coordinator.reconcileCompletedSource(session, at)
     }
   })
 }

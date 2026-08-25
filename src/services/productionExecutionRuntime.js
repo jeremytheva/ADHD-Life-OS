@@ -1,9 +1,12 @@
 import { repositories } from '../infrastructure/nocodebackend/repositories.js'
+import { activityService } from './activityService.js'
 import { createExecutionSessionService } from './executionSessionService.js'
 import { createSourceCompletionAdapter } from './sourceCompletionAdapter.js'
 import { createExecutionCompletionService } from './executionCompletionService.js'
 import { createExecutionCoordinator } from './executionCoordinator.js'
 import { createExecutionRuntime } from './executionRuntime.js'
+import { createExecutionSourceResolver } from './executionSourceResolver.js'
+import { createExecutionRecoveryService } from './executionRecoveryService.js'
 import { taskService } from './taskService.js'
 import { houseworkService } from './houseworkService.js'
 
@@ -23,6 +26,22 @@ const createSourceCompletion = () => createSourceCompletionAdapter({
   chore: ({ source_id }) => houseworkService.completeHouseworkTask(source_id)
 })
 
+const resolveCanonicalSource = async ({ source_id, execution_session }) => {
+  const activities = await activityService.getActivities()
+  return activities.find((activity) => (
+    String(activity.type || activity.source_type) === String(execution_session.activity_type) &&
+    String(activity.source_id || activity.id) === String(source_id)
+  )) || null
+}
+
+const createSourceRecovery = () => createExecutionRecoveryService({
+  sourceResolver: createExecutionSourceResolver({
+    task: resolveCanonicalSource,
+    projectTask: resolveCanonicalSource,
+    chore: resolveCanonicalSource
+  })
+})
+
 export const createProductionExecutionRuntime = ({ executionSessionRepository = repositories.executionSessions } = {}) => {
   if (!executionSessionRepository) return createExecutionRuntime()
 
@@ -36,8 +55,9 @@ export const createProductionExecutionRuntime = ({ executionSessionRepository = 
     completionService,
     routineEntryAdapter
   })
+  const recoveryService = createSourceRecovery()
 
-  return createExecutionRuntime({ coordinator })
+  return createExecutionRuntime({ coordinator, recoveryService })
 }
 
 export const productionExecutionRuntime = createProductionExecutionRuntime()
