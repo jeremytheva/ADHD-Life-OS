@@ -1,5 +1,6 @@
 const REPLAN_REASONS = Object.freeze({
   EXECUTION_COMPLETED: 'execution_completed',
+  EXECUTION_COMPLETION_FAILED: 'execution_completion_failed',
   SOURCE_COMPLETED: 'source_completed',
   SOURCE_PARTIAL_SUCCESS: 'source_partial_success',
   EXECUTION_CANCELLED: 'execution_cancelled',
@@ -28,6 +29,9 @@ export const decideReplanning = ({ event, outcome, contextChanged = false } = {}
 
   switch (event) {
     case 'execution_completed':
+      if (outcome?.status === 'failed') {
+        return result(false, REPLAN_REASONS.EXECUTION_COMPLETION_FAILED)
+      }
       if (outcome?.status === 'partial_success' || outcome?.reconciliation_required) {
         return result(true, REPLAN_REASONS.SOURCE_PARTIAL_SUCCESS, 'after_reconciliation')
       }
