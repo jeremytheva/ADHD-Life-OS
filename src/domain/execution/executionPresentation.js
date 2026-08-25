@@ -2,10 +2,47 @@ import { resolveExecutionEntry } from './executionEntryRouting.js'
 
 const view = (mode, values = {}) => Object.freeze({ mode, ...values })
 
+const recoveryPresentation = (assessment, currentExecution) => {
+  const recovery = assessment?.recovery
+  if (!recovery || recovery.mode === 'recoverable' || recovery.mode === 'none') return null
+
+  if (recovery.mode === 'source_completed_elsewhere') {
+    return view('reconciliation_required', {
+      owner: 'generic_execution_session',
+      session: currentExecution?.session || null,
+      primary_action: 'reconcile_execution',
+      primary_label: 'Finish reconciliation',
+      can_start_another: false,
+      message: recovery.message
+    })
+  }
+
+  if (recovery.mode === 'source_missing' || recovery.mode === 'source_closed') {
+    return view('source_recovery_required', {
+      owner: 'generic_execution_session',
+      session: currentExecution?.session || null,
+      primary_action: 'cancel',
+      primary_label: 'Stop saved execution',
+      can_start_another: false,
+      message: recovery.message
+    })
+  }
+
+  return view('source_recovery_required', {
+    owner: 'generic_execution_session',
+    session: currentExecution?.session || null,
+    primary_action: 'refresh_status',
+    primary_label: 'Check source again',
+    can_start_another: false,
+    message: recovery.message || 'The source item must be verified before this execution can continue.'
+  })
+}
+
 export const deriveExecutionPresentation = ({
   recommendation = null,
   currentExecution = null,
-  latestResult = null
+  latestResult = null,
+  recoveryAssessment = null
 } = {}) => {
   if (latestResult?.status === 'partial_success' || latestResult?.outcome?.reconciliation_required) {
     return view('reconciliation_required', {
@@ -26,6 +63,9 @@ export const deriveExecutionPresentation = ({
       message: 'That execution change did not complete. Your current work remains available.'
     })
   }
+
+  const recoveryView = recoveryPresentation(recoveryAssessment, currentExecution)
+  if (recoveryView) return recoveryView
 
   const session = currentExecution?.session || null
   if (currentExecution?.status === 'active' && session?.status === 'paused') {
