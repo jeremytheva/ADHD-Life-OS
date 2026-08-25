@@ -1,6 +1,8 @@
 import { domainCreateSchemasByCollection, domainPatchSchemasByCollection, domainSchemasByCollection } from '../../domains/schemas'
+import { isProviderCapabilityEnabled } from '../../config/providerCapabilities'
 import { requestDataEndpoint } from './dataClient'
 import { DomainValidationError, NoCodeBackendError } from './errors'
+import { executionSessionRepository } from './executionSessionRepository'
 
 const toQuery = (filters = {}) => { const query = new URLSearchParams(); Object.entries(filters).forEach(([key, value]) => { if (value !== undefined && value !== null) query.set(key, String(value)) }); const value = query.toString(); return value ? `?${value}` : '' }
 const requireRecord = (record, collection, id) => { if (!record) throw new NoCodeBackendError(`${collection} record ${id} was not found.`, { code: 'NOT_FOUND', status: 404 }); return record }
@@ -20,4 +22,17 @@ export const createNoCodeBackendRepository = (collection) => {
     async remove(id, filters = {}) { await requestDataEndpoint(`${collection}/${encodeURIComponent(id)}${toQuery(filters)}`, { method: 'DELETE' }); return true }
   }
 }
-export const repositories = Object.freeze({ preferences: createNoCodeBackendRepository('user-preferences'), tasks: createNoCodeBackendRepository('tasks'), projects: createNoCodeBackendRepository('projects'), subtasks: createNoCodeBackendRepository('subtasks'), routines: createNoCodeBackendRepository('routines'), routineSteps: createNoCodeBackendRepository('routine-steps'), routineSessions: createNoCodeBackendRepository('routine-sessions'), houseworkTasks: createNoCodeBackendRepository('housework-tasks'), houseworkCompletions: createNoCodeBackendRepository('housework-completions'), inboxItems: createNoCodeBackendRepository('inbox-items') })
+
+export const repositories = Object.freeze({
+  preferences: createNoCodeBackendRepository('user-preferences'),
+  tasks: createNoCodeBackendRepository('tasks'),
+  projects: createNoCodeBackendRepository('projects'),
+  subtasks: createNoCodeBackendRepository('subtasks'),
+  routines: createNoCodeBackendRepository('routines'),
+  routineSteps: createNoCodeBackendRepository('routine-steps'),
+  routineSessions: createNoCodeBackendRepository('routine-sessions'),
+  houseworkTasks: createNoCodeBackendRepository('housework-tasks'),
+  houseworkCompletions: createNoCodeBackendRepository('housework-completions'),
+  inboxItems: createNoCodeBackendRepository('inbox-items'),
+  executionSessions: isProviderCapabilityEnabled('executionSessions') ? executionSessionRepository : null
+})
