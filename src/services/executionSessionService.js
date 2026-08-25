@@ -4,7 +4,7 @@ import {
   pauseExecution,
   resumeExecution,
   startExecution
-} from '../domain/execution/executionLifecycle'
+} from '../domain/execution/executionLifecycle.js'
 
 const ACTIVE_STATUSES = new Set(['in_progress', 'paused'])
 
