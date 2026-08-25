@@ -1,13 +1,13 @@
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
-import { domainCreateSchemasByCollection, domainPatchSchemasByCollection, domainSchemasByCollection } from '../../src/domains/schemas.js'
+import { proxyCollectionContracts } from './collectionContracts.js'
 import { buildAuthTarget, buildDataTarget } from './providerContract.js'
 
 const MAX_BODY_BYTES = 32 * 1024
 const UPSTREAM_TIMEOUT_MS = 10000
 const SAFE_UPSTREAM_STATUSES = new Set([400, 401, 403, 404, 409, 422, 429])
 const FORWARDED_RESPONSE_HEADERS = new Set(['cache-control', 'content-type', 'etag', 'last-modified', 'location', 'www-authenticate'])
-const COLLECTIONS = ['user-preferences', 'tasks', 'projects', 'subtasks', 'routines', 'routine-steps', 'routine-sessions', 'housework-tasks', 'housework-completions', 'inbox-items']
+const COLLECTIONS = proxyCollectionContracts.collections
 
 const identifierSchema = z.string().min(1).max(200).regex(/^[A-Za-z0-9._-]+$/)
 const collectionSchema = z.enum(COLLECTIONS)
@@ -16,7 +16,7 @@ const dataQuerySchema = z.object({
   user_id: identifierSchema.optional(),
   routine_id: identifierSchema.optional(),
   task_id: identifierSchema.optional(),
-  status: z.enum(['in_progress', 'completed', 'cancelled']).optional()
+  status: z.enum(['in_progress', 'paused', 'completed', 'cancelled']).optional()
 }).strict()
 const credentialsSchema = z.object({
   email: z.string().trim().email().max(254),
@@ -127,12 +127,14 @@ const readJsonBody = (req) => new Promise((resolve, reject) => {
 
 const requestSchema = (scope, route, path, method) => {
   if (scope !== 'data' || !['POST', 'PATCH'].includes(method)) return route.methods[method]
-  return method === 'POST' ? domainCreateSchemasByCollection[path[0]] : domainPatchSchemasByCollection[path[0]]
+  return method === 'POST'
+    ? proxyCollectionContracts.createSchemas[path[0]]
+    : proxyCollectionContracts.patchSchemas[path[0]]
 }
 
 const normalizeDataResponse = (path, method, responseBody, itemRead = false) => {
   if (method === 'DELETE') return { valid: true, body: responseBody }
-  const schema = domainSchemasByCollection[path[0]]
+  const schema = proxyCollectionContracts.schemas[path[0]]
   if (!schema) return { valid: false, body: responseBody }
 
   let parsed

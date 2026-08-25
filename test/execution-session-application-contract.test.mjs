@@ -6,6 +6,8 @@ import {
   executionSessionPatchSchema,
   executionSessionSchema
 } from '../src/domains/executionSessionSchemas.js'
+import { providerCapabilities } from '../src/config/providerCapabilities.js'
+import { proxyCollectionContracts } from '../api/ncb/collectionContracts.js'
 
 const validRecord = {
   id: 'session-1',
@@ -53,14 +55,17 @@ test('patch contract cannot mutate ownership, source identity, activity identity
   }
 })
 
-test('execution-sessions remains outside the production proxy activation allowlist', async () => {
-  const handler = await readFile(new URL('../api/ncb/handler.js', import.meta.url), 'utf8')
-  const collectionLine = handler.split('\n').find((line) => line.includes('const COLLECTIONS')) || ''
-  assert.equal(collectionLine.includes('execution-sessions'), false)
+test('execution sessions remain disabled in the live proxy contract until certification flips the capability', () => {
+  assert.equal(providerCapabilities.executionSessions, false)
+  assert.equal(proxyCollectionContracts.collections.includes('execution-sessions'), false)
+  assert.equal(proxyCollectionContracts.schemas['execution-sessions'], undefined)
+  assert.equal(proxyCollectionContracts.createSchemas['execution-sessions'], undefined)
+  assert.equal(proxyCollectionContracts.patchSchemas['execution-sessions'], undefined)
 })
 
-test('prepared repository is not exported through the production repository registry', async () => {
+test('prepared repository is registered only through the capability gate', async () => {
   const registry = await readFile(new URL('../src/infrastructure/nocodebackend/repositories.js', import.meta.url), 'utf8')
-  assert.equal(registry.includes('executionSessions'), false)
-  assert.equal(registry.includes("createNoCodeBackendRepository('execution-sessions')"), false)
+  assert.equal(registry.includes('executionSessions'), true)
+  assert.equal(registry.includes('providerCapabilities.executionSessions'), true)
+  assert.equal(registry.includes('createExecutionSessionRepository'), true)
 })
