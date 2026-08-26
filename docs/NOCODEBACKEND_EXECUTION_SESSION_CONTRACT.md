@@ -57,13 +57,11 @@ paused -> cancelled
 
 Terminal sessions (`completed`, `cancelled`) must not resume.
 
-Completing an execution session does not itself complete the source task/chore/routine occurrence. Source-domain completion remains a separate write with the platform's explicit partial-success and reconciliation semantics.
+Completing an execution session does not itself complete the source task/chore/routine occurrence. Source-domain completion remains a separate write with explicit partial-success and reconciliation semantics.
 
 ## 5. Ownership invariant
 
-All application reads and writes must be constrained to the authenticated server-verified `user_id` through the application-owned trust boundary.
-
-The browser must never establish ownership merely by submitting a `user_id` value.
+All application reads/writes must be constrained to the authenticated server-verified `user_id` through the application-owned trust boundary. The browser must never establish ownership merely by submitting a `user_id` value.
 
 Provider certification proves the generated data contract. Application ownership enforcement remains a separate required proxy/repository test before production activation.
 
@@ -71,7 +69,7 @@ Provider certification proves the generated data contract. Application ownership
 
 The initial Stage 3 model permits at most one non-terminal generic execution session per user.
 
-Provider-atomic uniqueness has not been certified. Until it is, the application must use compensating controls:
+Provider-atomic uniqueness has not been certified. Until it is, application compensating controls must:
 
 1. load current non-terminal sessions for the authenticated user;
 2. refuse Start when another active/paused generic session exists;
@@ -79,7 +77,7 @@ Provider-atomic uniqueness has not been certified. Until it is, the application 
 4. classify provider duplicate/conflict responses explicitly when available;
 5. upgrade to provider-atomic enforcement only after verified capability evidence exists.
 
-Do not describe this invariant as provider-atomic until that is demonstrated.
+Do not describe this invariant as provider-atomic until demonstrated.
 
 ## 7. Required provider operations
 
@@ -91,7 +89,7 @@ Before application activation, verify the generated provider API supports:
 - sufficient filtering for current/non-terminal retrieval, or a safe server-side fallback when filtering is insufficient;
 - deletion only if later required by product/data policy.
 
-The repository must not guess route families, update methods, or response envelopes. Capture the exact generated URLs and the generated update method from the target NoCodeBackend instance.
+The repository must not guess route families, update methods, or response envelopes. Capture the exact generated URLs and generated update method from the target instance.
 
 ## 8. Certification command
 
@@ -106,11 +104,9 @@ npm run certify:execution-sessions
 Set:
 
 ```text
-NCB_EXECUTION_SESSIONS_READ_URL=<exact generated read URL>
+NOCODEBACKEND_EXECUTION_SESSIONS_READ_URL=<exact generated read URL>
 NOCODEBACKEND_SECRET_KEY=<server-only provider secret>
 ```
-
-`NCB_SECRET_KEY` is also accepted for compatibility with the repository's current runtime configuration.
 
 Then run:
 
@@ -118,25 +114,25 @@ Then run:
 npm run certify:execution-sessions
 ```
 
-Read mode performs no provider mutation. It requires a successful JSON response whose data is an array, and validates every returned execution-session record against the logical contract.
+Read mode performs no provider mutation. It requires a successful JSON response whose data is an array and validates every returned execution-session record against the logical contract.
 
 ### Full create/update certification
 
 Full mode deliberately requires explicit write confirmation and the verified generated update method:
 
 ```text
-NCB_EXECUTION_SESSIONS_READ_URL=<exact generated read URL>
-NCB_EXECUTION_SESSIONS_CREATE_URL=<exact generated create URL>
-NCB_EXECUTION_SESSIONS_UPDATE_URL_TEMPLATE=<exact update URL containing {id}>
-NCB_EXECUTION_SESSIONS_UPDATE_METHOD=<PUT or PATCH exactly as generated>
-NCB_CERT_USER_ID=<test/certification user id>
+NOCODEBACKEND_EXECUTION_SESSIONS_READ_URL=<exact generated read URL>
+NOCODEBACKEND_EXECUTION_SESSIONS_CREATE_URL=<exact generated create URL>
+NOCODEBACKEND_EXECUTION_SESSIONS_UPDATE_URL_TEMPLATE=<exact update URL containing {id}>
+NOCODEBACKEND_EXECUTION_SESSIONS_UPDATE_METHOD=<PUT or PATCH exactly as generated>
+NOCODEBACKEND_CERT_USER_ID=<test/certification user id>
 NOCODEBACKEND_SECRET_KEY=<server-only provider secret>
 ```
 
 Optional cleanup deletion:
 
 ```text
-NCB_EXECUTION_SESSIONS_DELETE_URL_TEMPLATE=<exact delete URL containing {id}>
+NOCODEBACKEND_EXECUTION_SESSIONS_DELETE_URL_TEMPLATE=<exact delete URL containing {id}>
 ```
 
 Run:
