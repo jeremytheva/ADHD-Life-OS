@@ -16,7 +16,7 @@ export default [
   { ignores: ['dist'] },
   js.configs.recommended,
   {
-    files: ['**/*.{js,jsx,mjs}'],
+    files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
@@ -50,7 +50,15 @@ export default [
     },
   },
   {
-    files: ['**/*.{js,mjs}'],
+    files: ['**/*.js'],
+    rules: unusedCodeRules
+  },
+  {
+    files: ['**/*.mjs'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module'
+    },
     rules: unusedCodeRules
   }
 ];
