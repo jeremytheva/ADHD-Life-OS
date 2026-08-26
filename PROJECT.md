@@ -2,7 +2,7 @@
 
 **Status:** Active development  
 **Repository:** `jeremytheva/ADHD-Life-OS`  
-**Last reviewed:** 23 August 2026
+**Last reviewed:** 26 August 2026
 
 ## Purpose
 
@@ -57,6 +57,8 @@ These may be future capabilities only after architecture, privacy, data, and pro
 8. **Protect the data boundary.** Client code must not bypass the application-owned proxy or expose server credentials.
 9. **Prefer root-cause fixes.** Avoid isolated workarounds when a state, architecture, data, or validation problem is responsible.
 10. **Keep documentation executable.** Project documents must reflect implemented behaviour and guide subsequent AI/Codex work.
+11. **Externalise execution state.** Neither users nor delivery agents should have to reconstruct important state from memory when the system can preserve it explicitly.
+12. **Minimise avoidable decisions.** Use bounded choices, sensible defaults, and one recommended next action while preserving control over consequential choices.
 
 ## Technology baseline
 
@@ -99,15 +101,32 @@ Work follows the GitHub–Codex operating model used by this project:
 ```text
 Repository state
   -> outcome-based stage/milestone
-  -> one focused implementation issue
+  -> one focused implementation contract
   -> Codex implementation
   -> tests + build + evidence
   -> pull request review/audit
   -> merge
   -> STATUS.md and affected documents updated
+  -> next dependency-ordered action
 ```
 
-The normal unit of implementation is one GitHub issue producing one focused pull request. Large architectural or product changes must be decomposed before implementation.
+The normal unit of implementation is one focused outcome producing one focused pull request. Large architectural or product changes must be decomposed before implementation.
+
+## Cognitive-load and execution-continuity controls
+
+The delivery framework intentionally applies the same kinds of controls the product uses to support executive function. The objective is to prevent context loss, branching, decision overload, scope creep, restart friction, and overengineering from becoming delivery failures.
+
+1. **Externalise context.** Repository files, accepted decisions, pull requests, checks, and `STATUS.md` hold durable state; chat memory does not.
+2. **Resume rather than restart.** A continuation instruction resumes the current PR, acceptance criteria, or next dependency-ordered outcome rather than regenerating a plan.
+3. **Human-in-the-loop is selective.** Low-risk reversible implementation choices are resolved automatically from evidence and conventions. Consequential product, architecture, destructive-data, security/privacy, permission, or external-commitment decisions are escalated when genuinely unresolved.
+4. **Limit work in progress.** Maintain one primary implementation thread by default; parallelise only independent, explicitly parallel-safe work.
+5. **Park scope rather than follow it.** Useful discoveries are captured as follow-up work and do not expand the active outcome merely because they are interesting or adjacent.
+6. **Maintain a re-entry checkpoint.** `STATUS.md` records enough current state to resume after interruption without reconstructing history.
+7. **Define enough as well as done.** Once acceptance criteria, required validation, safety, and documentation are satisfied, further improvement is new scope unless necessary for the root-cause correction.
+8. **Prefer exception-based reporting.** Routine progress should be concise; blockers, consequential decisions, failures, scope changes, and stage transitions receive explicit attention.
+9. **Determine the next action after state changes.** Completion, failure, review, merge, and blocker resolution should each result in an explicit next action rather than leaving the workflow in an ambiguous state.
+
+These controls are detailed in `AGENTS.md`, `docs/CODEX_WORKFLOW.md`, `docs/DELIVERY.md`, and the accepted decision record for cognitive-load and execution continuity.
 
 ## Current delivery direction
 
@@ -126,6 +145,7 @@ The live delivery snapshot and immediate next action are maintained in [`STATUS.
 - [`docs/SECURITY.md`](docs/SECURITY.md) — security requirements.
 - [`docs/TESTING.md`](docs/TESTING.md) — validation requirements.
 - [`docs/DELIVERY.md`](docs/DELIVERY.md) — delivery/release process.
+- [`docs/CODEX_WORKFLOW.md`](docs/CODEX_WORKFLOW.md) — continuation, decision, and execution workflow.
 - [`docs/DECISIONS/README.md`](docs/DECISIONS/README.md) — decision register.
 
 ## Definition of project-level progress
@@ -139,4 +159,5 @@ A feature or stage is not considered complete solely because code exists. Comple
 - security/data/accessibility implications resolved;
 - affected documentation updated;
 - no unresolved in-scope blocking review findings;
-- follow-up work captured separately rather than hidden in the completed scope.
+- follow-up work captured separately rather than hidden in the completed scope;
+- an explicit next action or stage decision recorded when delivery state materially changes.
