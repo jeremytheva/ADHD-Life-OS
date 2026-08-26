@@ -6,8 +6,20 @@ import test from 'node:test'
 import { createNcbHandler } from '../api/ncb/handler.js'
 
 const originalFetch = globalThis.fetch
-const originalBaseUrl = process.env.NCB_API_BASE_URL
-const originalSecret = process.env.NCB_SECRET_KEY
+const originalAuthBaseUrl = process.env.NOCODEBACKEND_AUTH_BASE_URL
+const originalDataBaseUrl = process.env.NOCODEBACKEND_DATA_BASE_URL
+const originalSecret = process.env.NOCODEBACKEND_SECRET_KEY
+
+const setProviderEnv = () => {
+  process.env.NOCODEBACKEND_AUTH_BASE_URL = 'https://ncb.example.test/v1'
+  process.env.NOCODEBACKEND_DATA_BASE_URL = 'https://ncb.example.test/v1/data'
+  process.env.NOCODEBACKEND_SECRET_KEY = 'server-secret'
+}
+
+const restoreEnv = (name, value) => {
+  if (value === undefined) delete process.env[name]
+  else process.env[name] = value
+}
 
 const makeRequest = ({ method = 'GET', path = [], query = {}, headers = {}, body, parsedBody } = {}) => {
   const request = Readable.from(body === undefined ? [] : [Buffer.from(body)])
@@ -31,15 +43,13 @@ const makeResponse = () => ({
 
 test.after(() => {
   globalThis.fetch = originalFetch
-  if (originalBaseUrl === undefined) delete process.env.NCB_API_BASE_URL
-  else process.env.NCB_API_BASE_URL = originalBaseUrl
-  if (originalSecret === undefined) delete process.env.NCB_SECRET_KEY
-  else process.env.NCB_SECRET_KEY = originalSecret
+  restoreEnv('NOCODEBACKEND_AUTH_BASE_URL', originalAuthBaseUrl)
+  restoreEnv('NOCODEBACKEND_DATA_BASE_URL', originalDataBaseUrl)
+  restoreEnv('NOCODEBACKEND_SECRET_KEY', originalSecret)
 })
 
 test('rejects routes, methods, CSRF failures, and malformed bodies before fetch', async () => {
-  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
-  process.env.NCB_SECRET_KEY = 'server-secret'
+  setProviderEnv()
   let calls = 0
   globalThis.fetch = async () => { calls += 1; throw new Error('must not be called') }
   const handler = createNcbHandler('auth')
@@ -60,8 +70,7 @@ test('rejects routes, methods, CSRF failures, and malformed bodies before fetch'
 })
 
 test('rejects oversized string, buffer, and parsed JSON bodies before fetch', async () => {
-  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
-  process.env.NCB_SECRET_KEY = 'server-secret'
+  setProviderEnv()
   let calls = 0
   globalThis.fetch = async () => { calls += 1; throw new Error('must not be called') }
   const handler = createNcbHandler('auth')
@@ -82,8 +91,7 @@ test('rejects oversized string, buffer, and parsed JSON bodies before fetch', as
 })
 
 test('forwards only approved request data and preserves upstream cookies', async () => {
-  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
-  process.env.NCB_SECRET_KEY = 'server-secret'
+  setProviderEnv()
   let captured
   globalThis.fetch = async (url, options) => {
     if (String(url).endsWith('/get-session')) {
@@ -114,8 +122,7 @@ test('forwards only approved request data and preserves upstream cookies', async
 })
 
 test('rejects malformed upstream domain records with a structured proxy error', async () => {
-  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
-  process.env.NCB_SECRET_KEY = 'server-secret'
+  setProviderEnv()
   globalThis.fetch = async (url) => new Response(JSON.stringify(String(url).endsWith('/get-session')
     ? { data: { user: { id: 'user-1' } } }
     : { data: { id: 'task-1', title: 42 } }), {
@@ -135,8 +142,7 @@ test('rejects malformed upstream domain records with a structured proxy error', 
 })
 
 test('rejects cross-user data attempts after session verification without data upstream requests', async () => {
-  process.env.NCB_API_BASE_URL = 'https://ncb.example.test/v1'
-  process.env.NCB_SECRET_KEY = 'server-secret'
+  setProviderEnv()
   const calls = []
   globalThis.fetch = async (url) => {
     calls.push(String(url))

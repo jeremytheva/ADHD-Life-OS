@@ -130,7 +130,7 @@ const requestSchema = (scope, route, path, method) => {
   return method === 'POST' ? domainCreateSchemasByCollection[path[0]] : domainPatchSchemasByCollection[path[0]]
 }
 
-// The proxy is also a trust boundary for responses.  Do not relay a record the
+// The proxy is also a trust boundary for responses. Do not relay a record the
 // browser would later reject into component state; return a stable API error
 // with the request correlation id instead.
 const hasValidDataResponse = (path, method, responseBody) => {
@@ -143,13 +143,17 @@ const hasValidDataResponse = (path, method, responseBody) => {
   return (path.length === 1 && method === 'GET' ? z.array(schema) : schema).safeParse(data).success
 }
 
+const upstreamBaseUrlForScope = (scope) => scope === 'auth'
+  ? process.env.NOCODEBACKEND_AUTH_BASE_URL
+  : process.env.NOCODEBACKEND_DATA_BASE_URL
+
 const getUpstreamUrl = (scope, path, query) => {
-  if (!process.env.NCB_API_BASE_URL || !process.env.NCB_SECRET_KEY) return null
+  const baseUrl = upstreamBaseUrlForScope(scope)
+  if (!baseUrl || !process.env.NOCODEBACKEND_SECRET_KEY) return null
   try {
-    const base = new URL(process.env.NCB_API_BASE_URL)
+    const base = new URL(baseUrl)
     if (!['http:', 'https:'].includes(base.protocol)) return null
-    const prefix = scope === 'data' ? 'data/' : ''
-    const target = new URL(`${base.pathname.replace(/\/$/, '')}/${prefix}${path.map(encodeURIComponent).join('/')}`, base.origin)
+    const target = new URL(`${base.pathname.replace(/\/$/, '')}/${path.map(encodeURIComponent).join('/')}`, base.origin)
     for (const [key, value] of Object.entries(query)) target.searchParams.set(key, value)
     return target
   } catch {
@@ -171,7 +175,7 @@ const getAuthenticatedUserId = async (req, correlationId) => {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS)
   try {
-    const headers = { Authorization: `Bearer ${process.env.NCB_SECRET_KEY}`, Accept: 'application/json', 'X-Correlation-Id': correlationId }
+    const headers = { Authorization: `Bearer ${process.env.NOCODEBACKEND_SECRET_KEY}`, Accept: 'application/json', 'X-Correlation-Id': correlationId }
     if (req.headers.cookie) headers.Cookie = req.headers.cookie
     const upstream = await fetch(target, { method: 'GET', headers, signal: controller.signal, redirect: 'manual' })
     if (!upstream.ok) return { code: 'NCB_AUTH_REQUIRED', status: 401 }
@@ -240,7 +244,7 @@ export const createNcbHandler = (scope) => async (req, res) => {
   const timeout = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS)
   try {
     // Do not copy browser-controlled headers. The secret is owned by this runtime.
-    const headers = { Authorization: `Bearer ${process.env.NCB_SECRET_KEY}`, Accept: 'application/json', 'X-Correlation-Id': correlationId }
+    const headers = { Authorization: `Bearer ${process.env.NOCODEBACKEND_SECRET_KEY}`, Accept: 'application/json', 'X-Correlation-Id': correlationId }
     if (req.headers.cookie) headers.Cookie = req.headers.cookie
     if (body !== undefined) headers['Content-Type'] = 'application/json'
     const upstream = await fetch(target, { method, headers, body: body === undefined ? undefined : JSON.stringify(parsedBody.data), signal: controller.signal, redirect: 'manual' })

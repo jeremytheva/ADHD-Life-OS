@@ -2,15 +2,19 @@
 
 **Status:** Active development  
 **Repository:** `jeremytheva/ADHD-Life-OS`  
-**Last reviewed:** 26 August 2026
+**Last materially reviewed:** 26 August 2026
 
 ## Purpose
 
-ADHD Life OS is a low-stimulation life-management platform designed to reduce cognitive load and help users move from capture and planning to a clear, achievable next action. The current MVP combines tasks, projects, routines, daily planning, Brain Inbox capture, housework workflows, onboarding preferences, accessibility settings, and an emerging unified execution engine.
+ADHD Life OS is a low-stimulation life-management platform designed to reduce cognitive load and help users move from capture and planning to a clear, achievable next action. It combines tasks, projects, routines, daily planning, Brain Inbox capture, housework workflows, onboarding preferences, accessibility settings, and a unified execution/recommendation direction.
 
 The platform is intended to support executive-function needs without punitive or shame-based patterns. It should favour small next steps, flexible structure, explicit feedback, user agency, and resilient recovery when plans change.
 
-## Product outcomes
+## Target users
+
+People who benefit from lower-friction capture, planning, initiation, continuation and recovery support, including users with executive-function challenges.
+
+## Core outcomes
 
 The platform should enable a user to:
 
@@ -18,12 +22,12 @@ The platform should enable a user to:
 2. organise work into tasks, projects, subtasks, routines, and home-management structures;
 3. identify a suitable next action using context such as energy, duration, interest, aversiveness, importance, and current execution state;
 4. start and continue work with minimal navigation and decision overhead;
-5. recover from interruption, partial completion, or changed capacity without losing state;
+5. recover from interruption, partial completion, or changed capacity without losing important state;
 6. review the day and adjust plans without punitive overdue behaviour;
 7. maintain preferences, accessibility settings, and optional modules across sessions;
 8. keep persisted domain data behind a controlled application-owned server boundary.
 
-## Current product scope
+## Scope
 
 ### Implemented foundation
 
@@ -34,31 +38,55 @@ The platform should enable a user to:
 - Same-origin NoCodeBackend authentication and data proxy boundary.
 - Runtime schema validation with structured upstream error handling.
 - Unified execution-engine foundation and Stage 3 next-action experience.
-- Automated lint, typecheck, unit/contract test, build, and Playwright capabilities.
+- Automated static, unit/contract, build, governance and Playwright validation.
 
-### Explicitly not promised by the current MVP
+## Out of scope for the current milestone
 
 - Third-party calendar synchronization.
 - Background calendar or task synchronization.
 - Remote AI/LLM scheduling or coaching services.
 - Browser-local fallback storage for failed NoCodeBackend domain writes.
+- Generic durable execution-session persistence before provider certification.
 
-These may be future capabilities only after architecture, privacy, data, and product decisions are recorded.
+These may become future capabilities only after the relevant product, architecture, privacy, data and provider decisions are recorded.
 
-## Product principles
+## Master standards inherited
 
-1. **Reduce cognitive load.** Prefer one clear action over dense choice sets.
-2. **Support initiation.** Optimise the path from intention to starting.
-3. **Preserve agency.** Recommendations guide; users retain control.
-4. **Avoid shame mechanics.** Do not use punitive overdue language or coercive streak patterns.
-5. **Make state visible.** Loading, success, partial success, failure, and recovery states must be explicit.
-6. **Design for interruption.** Workflows must tolerate context switching and incomplete sessions.
-7. **Accessibility is core quality.** Keyboard, focus, readable layout, reduced motion, contrast, responsive behaviour, and clear labels are part of normal acceptance criteria.
-8. **Protect the data boundary.** Client code must not bypass the application-owned proxy or expose server credentials.
-9. **Prefer root-cause fixes.** Avoid isolated workarounds when a state, architecture, data, or validation problem is responsible.
-10. **Keep documentation executable.** Project documents must reflect implemented behaviour and guide subsequent AI/Codex work.
-11. **Externalise execution state.** Neither users nor delivery agents should have to reconstruct important state from memory when the system can preserve it explicitly.
-12. **Minimise avoidable decisions.** Use bounded choices, sensible defaults, and one recommended next action while preserving control over consequential choices.
+This project inherits the current master sources supplied by the product owner, including:
+
+- `AI_FIRST_PLATFORM_DEVELOPMENT_FRAMEWORK.md`;
+- `AI_PLATFORM_DEVELOPMENT_STANDARD.md`;
+- `PLATFORM_ENGINEERING_STANDARD.md`;
+- `PLATFORM_DESIGN_PRINCIPLES.md`;
+- `PROJECT_DOCUMENTATION_STANDARD.md`;
+- `TESTING_VALIDATION_RELEASE_STANDARD.md`;
+- `DATA_MODELLING_AND_MIGRATION_STANDARD.md`;
+- applicable provider guides for GitHub, Vercel and NoCodeBackend.
+
+The repository stores project-specific facts, decisions, implementation state and deviations rather than copying the master standards wholesale. If a project-specific rule intentionally differs from a master default, the difference must be explicit and documented before it is treated as authoritative.
+
+## Providers / external systems
+
+| Provider/system | Project role | Current state source |
+| --- | --- | --- |
+| GitHub | Repository, pull requests, CI and implementation history | GitHub + `STATUS.md` summary |
+| NoCodeBackend | Authentication and persisted domain data | provider evidence + project contract/docs |
+| Vercel | Intended deployment platform | Vercel provider state + `STATUS.md`; no project binding currently verified |
+
+## Project-specific exceptions
+
+- GitHub Issues are currently unavailable for this repository, so focused pull-request bodies may serve as implementation contracts where an issue cannot be created.
+- The source tree is mixed JavaScript with TypeScript checking rather than a fully TypeScript codebase.
+- The current generic NoCodeBackend proxy contract predates certification of future generic execution sessions; new provider behaviour must not be inferred from that existing contract.
+
+## Important constraints
+
+1. Browser-delivered code is untrusted and secret-free.
+2. Privileged NoCodeBackend access remains behind the application-owned same-origin proxy.
+3. Remote domain data is authoritative; failed persistence must not silently become browser-local state.
+4. One unified execution engine should own recommendation/execution policy rather than screen-specific alternatives.
+5. Durable generic execution remains fail-closed until the real provider contract is certified.
+6. Accessibility, interruption recovery and low cognitive load are normal quality requirements, not optional polish.
 
 ## Technology baseline
 
@@ -76,88 +104,55 @@ These may be future capabilities only after architecture, privacy, data, and pro
 | Unit/contract testing | Node `node:test` |
 | End-to-end testing | Playwright |
 | Package manager | npm with committed `package-lock.json` |
-| Required validation | `npm run validate` |
+| Canonical full validation | `npm run platform:validate` |
 
-## System-of-record hierarchy
+## Source-of-truth hierarchy
 
-1. Repository code/configuration — implemented behaviour.
-2. `AGENTS.md` — persistent implementation rules.
-3. `PROJECT.md` — project purpose, scope, principles, and control model.
-4. `STATUS.md` — current delivery state and next action.
-5. `docs/PRODUCT.md` — product behaviour and boundaries.
-6. `docs/ARCHITECTURE.md` — system structure and runtime boundaries.
-7. `docs/DATA_MODEL.md` — persisted entities and data contracts.
-8. `docs/SECURITY.md` — security and privacy controls.
-9. `docs/TESTING.md` — validation expectations.
-10. `docs/DECISIONS/` — accepted consequential decisions.
-11. GitHub issues/PRs — implementation contracts and delivery evidence.
+Use the real current system rather than chat memory. For this project:
 
-If sources conflict, do not silently reconcile them. Identify the conflict and update the incorrect or obsolete source as part of the relevant change.
+1. repository code/configuration — implemented behaviour;
+2. provider/deployment state where the fact is external;
+3. `AGENTS.md` — persistent repository implementation rules;
+4. `PROJECT.md` — project identity, scope, inheritance and constraints;
+5. `STATUS.md` — actual current delivery state, active gate and next action;
+6. `docs/ARCHITECTURE.md` — intended current architecture;
+7. `docs/DATA_MODEL.md` — canonical data model and physical mapping constraints;
+8. `ROADMAP.md` — intended future direction;
+9. `SYSTEM_MAP.md` — compact system navigation map;
+10. `docs/DECISIONS/` — consequential accepted decisions;
+11. GitHub PRs/CI — implementation contracts and detailed validation evidence;
+12. prior chat/context — supporting context only.
+
+When sources disagree, investigate and correct the stale/incorrect source rather than silently choosing one.
 
 ## Delivery model
 
-Work follows the GitHub–Codex operating model used by this project:
+Implementation follows the inherited master standards and the repository-specific workflow in `AGENTS.md` and `docs/CODEX_WORKFLOW.md`.
 
-```text
-Repository state
-  -> outcome-based stage/milestone
-  -> one focused implementation contract
-  -> Codex implementation
-  -> tests + build + evidence
-  -> pull request review/audit
-  -> merge
-  -> STATUS.md and affected documents updated
-  -> next dependency-ordered action
-```
-
-The normal unit of implementation is one focused outcome producing one focused pull request. Large architectural or product changes must be decomposed before implementation.
-
-## Cognitive-load and execution-continuity controls
-
-The delivery framework intentionally applies the same kinds of controls the product uses to support executive function. The objective is to prevent context loss, branching, decision overload, scope creep, restart friction, and overengineering from becoming delivery failures.
-
-1. **Externalise context.** Repository files, accepted decisions, pull requests, checks, and `STATUS.md` hold durable state; chat memory does not.
-2. **Resume rather than restart.** A continuation instruction resumes the current PR, acceptance criteria, or next dependency-ordered outcome rather than regenerating a plan.
-3. **Human-in-the-loop is selective.** Low-risk reversible implementation choices are resolved automatically from evidence and conventions. Consequential product, architecture, destructive-data, security/privacy, permission, or external-commitment decisions are escalated when genuinely unresolved.
-4. **Limit work in progress.** Maintain one primary implementation thread by default; parallelise only independent, explicitly parallel-safe work.
-5. **Park scope rather than follow it.** Useful discoveries are captured as follow-up work and do not expand the active outcome merely because they are interesting or adjacent.
-6. **Maintain a re-entry checkpoint.** `STATUS.md` records enough current state to resume after interruption without reconstructing history.
-7. **Define enough as well as done.** Once acceptance criteria, required validation, safety, and documentation are satisfied, further improvement is new scope unless necessary for the root-cause correction.
-8. **Prefer exception-based reporting.** Routine progress should be concise; blockers, consequential decisions, failures, scope changes, and stage transitions receive explicit attention.
-9. **Determine the next action after state changes.** Completion, failure, review, merge, and blocker resolution should each result in an explicit next action rather than leaving the workflow in an ambiguous state.
-
-These controls are detailed in `AGENTS.md`, `docs/CODEX_WORKFLOW.md`, `docs/DELIVERY.md`, and the accepted decision record for cognitive-load and execution continuity.
+The normal unit of work is one focused outcome producing one focused pull request. Significant changes pass the relevant project-entry, change, integration, release and completion gates. `STATUS.md` records the current material gate when evidence remains outstanding.
 
 ## Current delivery direction
 
-Stage 2 integrity work has been closed and Stage 3 has begun. The Stage 3 foundation establishes a unified execution engine and integrates a next-action decision experience into Today. Subsequent Stage 3 work should deepen initiation, continuation, recovery, and cross-workflow execution behaviour without creating competing recommendation engines.
+Stage 2 integrity work is complete. Stage 3 is active and aims to turn the existing recommendation/next-action foundation into a durable Start/Continue/Recover execution loop without creating competing engines or unverified provider behaviour.
 
-The live delivery snapshot and immediate next action are maintained in [`STATUS.md`](STATUS.md).
+The live delivery snapshot and immediate dependency-correct work are maintained in [`STATUS.md`](STATUS.md). Intended future direction is maintained separately in [`ROADMAP.md`](ROADMAP.md).
 
 ## Authoritative supporting documents
 
 - [`README.md`](README.md) — repository entry point and setup.
-- [`AGENTS.md`](AGENTS.md) — implementation constraints.
-- [`STATUS.md`](STATUS.md) — current state and next action.
+- [`AGENTS.md`](AGENTS.md) — repository implementation constraints.
+- [`STATUS.md`](STATUS.md) — current state, execution gate and next work.
+- [`ROADMAP.md`](ROADMAP.md) — intended milestone/future direction.
+- [`SYSTEM_MAP.md`](SYSTEM_MAP.md) — compact implementation relationships.
 - [`docs/PRODUCT.md`](docs/PRODUCT.md) — product boundary.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — system architecture.
 - [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) — data model.
-- [`docs/SECURITY.md`](docs/SECURITY.md) — security requirements.
-- [`docs/TESTING.md`](docs/TESTING.md) — validation requirements.
-- [`docs/DELIVERY.md`](docs/DELIVERY.md) — delivery/release process.
-- [`docs/CODEX_WORKFLOW.md`](docs/CODEX_WORKFLOW.md) — continuation, decision, and execution workflow.
+- [`docs/SECURITY.md`](docs/SECURITY.md) — project-specific security boundary.
+- [`docs/TESTING.md`](docs/TESTING.md) — project validation strategy.
+- [`docs/DELIVERY.md`](docs/DELIVERY.md) — project delivery/release details.
+- [`docs/CODEX_WORKFLOW.md`](docs/CODEX_WORKFLOW.md) — continuation, gate and execution workflow.
 - [`docs/DECISIONS/README.md`](docs/DECISIONS/README.md) — decision register.
 
-## Definition of project-level progress
+## Project-level completion rule
 
-A feature or stage is not considered complete solely because code exists. Completion requires:
-
-- observable product behaviour matching the intended outcome;
-- applicable acceptance criteria demonstrated;
-- `npm run validate` passing;
-- appropriate regression and contract coverage;
-- security/data/accessibility implications resolved;
-- affected documentation updated;
-- no unresolved in-scope blocking review findings;
-- follow-up work captured separately rather than hidden in the completed scope;
-- an explicit next action or stage decision recorded when delivery state materially changes.
+A feature or stage is not complete because code exists, a PR merged, or a deployment succeeded. Completion requires the relevant acceptance outcome, integration, validation/provider/runtime evidence, documentation accuracy, explicit classification of remaining blocked/deferred work, and a current `STATUS.md` handoff.

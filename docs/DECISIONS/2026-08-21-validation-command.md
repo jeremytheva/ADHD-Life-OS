@@ -1,7 +1,8 @@
 # Canonical validation command
 
-- **Status:** Accepted
+- **Status:** Superseded
 - **Date:** 2026-08-21
+- **Superseded by:** `2026-08-26-platform-validation-and-standards-inheritance.md`
 
 ## Decision
 
@@ -11,9 +12,13 @@ Use `npm run validate` as the canonical repository validation command. It runs l
 
 The repository previously documented four separate required commands while `npm run build` also ran linting internally. This duplicated work and made it easier for local, Codex, and CI validation behavior to drift.
 
-## Consequences
+## Consequences at the time
 
 - `npm run build` performs only the Vite production build.
-- `npm run validate` is the complete release-quality local/CI gate.
+- `npm run validate` became the application static/unit/build gate.
 - Individual commands remain available for diagnosis.
-- Browser end-to-end validation remains a separate follow-on capability until its dependency and lockfile are added through a verified install.
+- Browser end-to-end validation was initially separate.
+
+## Supersession
+
+The master Testing, Validation & Release Standard later established a canonical full repository entry point that also covers executable governance, dependency/security checks and critical browser validation. `npm run validate` remains a useful subset, while `npm run platform:validate` is now the canonical full gate.

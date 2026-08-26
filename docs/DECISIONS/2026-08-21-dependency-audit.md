@@ -1,16 +1,19 @@
 # Dependency audit remediation
 
-Date: 2026-08-21
+**Date:** 2026-08-21  
+**Status:** Accepted
 
 ## Context
 
-The canonical GitHub Actions validation install currently reports nine npm audit findings: three moderate and six high severity vulnerabilities. The aggregate count does not identify whether the findings affect runtime dependencies, development/build tooling, or transitive packages.
+At the time of this decision, the canonical GitHub Actions install reported nine npm audit findings: three moderate and six high severity vulnerabilities. The aggregate count did not identify whether the findings affected runtime dependencies, development/build tooling, or transitive packages.
+
+This record preserves the decision made from that evidence; it is not a statement of the repository's current advisory count. Current dependency evidence comes from `npm audit` / `npm run platform:validate` and CI.
 
 ## Decision
 
-Expose the full `npm audit` advisory output in the branch CI log before changing dependency versions. Do not use `npm audit fix --force` as a substitute for review because it may introduce breaking dependency changes.
+Expose the full `npm audit` advisory output before changing dependency versions. Do not use `npm audit fix --force` as a substitute for review because it may introduce breaking dependency changes.
 
-After the advisory set is identified, remediate the smallest safe dependency set, regenerate the lockfile through npm, restore CI to a policy-oriented audit gate, and validate lint, typecheck, tests, and production build.
+After an advisory set is identified, remediate the smallest safe dependency set, regenerate the lockfile through npm, restore CI to a policy-oriented audit gate, and validate the complete repository.
 
 ## Constraints
 
@@ -18,3 +21,4 @@ After the advisory set is identified, remediate the smallest safe dependency set
 - Prefer non-breaking dependency updates where they remove the advisory.
 - Treat runtime-impacting advisories as higher priority than development-only findings.
 - Do not suppress advisories solely to make CI green.
+- Current full repository validation is `npm run platform:validate`; this historical record does not override the later validation decision.

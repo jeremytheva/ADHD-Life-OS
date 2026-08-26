@@ -1,11 +1,11 @@
 # ADHD Life OS — Architecture
 
 **Status:** Current architecture baseline  
-**Last reviewed:** 23 August 2026
+**Last materially reviewed:** 26 August 2026
 
 ## 1. Purpose
 
-This document defines the current system structure, trust boundaries, dependency direction, runtime data flow, and extension rules for ADHD Life OS. It is authoritative for architecture assumptions that affect implementation. Product intent is defined in [`PRODUCT.md`](PRODUCT.md); persisted entities are defined in [`DATA_MODEL.md`](DATA_MODEL.md); security requirements are defined in [`SECURITY.md`](SECURITY.md).
+This document defines the current system structure, trust boundaries, dependency direction, runtime data flow, and extension rules for ADHD Life OS. Product intent is defined in [`PRODUCT.md`](PRODUCT.md); persisted entities are defined in [`DATA_MODEL.md`](DATA_MODEL.md); security requirements are defined in [`SECURITY.md`](SECURITY.md); the compact navigational view is [`../SYSTEM_MAP.md`](../SYSTEM_MAP.md).
 
 ## 2. System context
 
@@ -77,13 +77,7 @@ pages/components
                 -> /api/ncb/*
 ```
 
-Avoid:
-
-- components calling privileged external services directly;
-- pages embedding data-shape validation ad hoc;
-- duplicated recommendation or execution scoring in multiple screens;
-- services importing presentation components;
-- domain logic depending on Vite/browser globals when a pure function is possible.
+Avoid components calling privileged external services directly, pages embedding data-shape validation ad hoc, duplicated recommendation/execution scoring, services importing presentation components, or domain logic depending on Vite/browser globals when a pure function is possible.
 
 ## 6. Data flow
 
@@ -95,7 +89,8 @@ UI requests data
   -> browser client
   -> /api/ncb/data/<allowlisted operation>
   -> request validation
-  -> server-only authorization added
+  -> trusted session/ownership handling
+  -> server-only provider configuration
   -> NoCodeBackend
   -> upstream response validation
   -> structured result/error
@@ -109,42 +104,55 @@ Writes follow the same route but require independently validated create/patch pa
 
 ### 6.3 Authentication path
 
-Authentication requests use `/api/ncb/auth/*`. Session/authentication behaviour must remain behind the same application-owned boundary and must not require browser access to server secrets.
+Authentication requests use `/api/ncb/auth/*`. Session/authentication behaviour remains behind the same application-owned boundary and must not require browser access to server secrets.
 
-## 7. Execution-engine direction
+## 7. NoCodeBackend provider integration
 
-Stage 3 introduces a unified execution layer. The architecture intent is that task startability and next-action selection converge on one reusable policy rather than being calculated independently by Today, project views, routines, or future modes.
+Canonical server/runtime configuration is:
 
-The execution layer should evolve around these responsibilities:
+```text
+NOCODEBACKEND_AUTH_BASE_URL
+NOCODEBACKEND_DATA_BASE_URL
+NOCODEBACKEND_SECRET_KEY
+NOCODEBACKEND_INSTANCE
+```
+
+Auth and data upstream bases are deliberately separate. Browser-safe proxy paths remain separate from server credentials. New provider route/method/envelope/filtering behaviour must be verified against the real provider contract before it is encoded into the application.
+
+The existing generic proxy contract remains the current application boundary. It must not be treated as evidence that future `execution-sessions` routes exist or share the same generated provider semantics.
+
+## 8. Execution-engine direction
+
+Stage 3 introduces a unified execution layer. Task startability and next-action selection should converge on one reusable policy rather than being calculated independently by Today, project views, routines, or future modes.
+
+The execution layer should:
 
 - determine whether a candidate is currently executable;
 - evaluate contextual metadata consistently;
-- select or rank a suitable next action;
-- expose reason/context needed by the UI without presentation-specific coupling;
+- select/rank a suitable next action;
+- expose reason/context needed by UI without presentation coupling;
 - support start/continue/recovery state as Stage 3 deepens;
-- remain deterministic enough for focused unit tests.
+- remain deterministic enough for focused tests.
 
-If execution state becomes persisted rather than derived/transient, record that decision and update [`DATA_MODEL.md`](DATA_MODEL.md) before treating the schema as established.
+Generic durable execution persistence remains blocked until the contract in [`NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md`](NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md) is certified against the real target instance.
 
-## 8. State management
+## 9. State management
 
 Cross-cutting client state belongs in contexts only when multiple routes/features genuinely need coordinated access. Feature-local transient state should remain local where possible.
 
-Persisted domain state must be distinguished from:
+Persisted domain state must be distinguished from UI state, derived state, session/runtime state, and durable remote records in NoCodeBackend. Do not use local storage as an implicit substitute for failed remote domain persistence.
 
-- UI state (open modal, selected tab, temporary input);
-- derived state (recommendations, filtered lists, summary counts);
-- session/runtime state (current execution candidate if not yet persisted);
-- durable remote records in NoCodeBackend.
-
-Do not use local storage as an implicit substitute for failed remote domain persistence.
-
-## 9. External integrations
+## 10. External integrations
 
 ### Current
 
 - NoCodeBackend authentication.
 - NoCodeBackend domain data.
+- GitHub repository/CI.
+
+### Intended deployment provider
+
+- Vercel, but no ADHD Life OS project is currently linked in the connected account; production binding/runtime state is therefore unverified.
 
 ### Planned but not enabled
 
@@ -152,63 +160,55 @@ Do not use local storage as an implicit substitute for failed remote domain pers
 - remote AI/LLM services;
 - broader productivity-service integrations.
 
-Any new external provider requires explicit review of authentication, privacy, data ownership, failure handling, rate limits, observability, and whether it belongs behind an application-owned adapter/API boundary.
+Any new external provider requires explicit review of authentication, privacy, data ownership, failure handling, rate limits, observability, and adapter/trust-boundary placement.
 
-## 10. Error and recovery model
+## 11. Error and recovery model
 
-The application should distinguish at least:
+The application should distinguish validation failure, authentication/session failure, authorization/access failure, unavailable/missing configuration, provider failure, network/timeout failure, legitimate empty result, stale/deleted referenced record, and partial success across related operations.
 
-- validation failure;
-- authentication/session failure;
-- authorization/access failure where applicable;
-- unavailable/missing configuration;
-- upstream/provider failure;
-- network/timeout failure;
-- empty legitimate result;
-- stale or deleted referenced record;
-- partial success when multiple related operations are involved.
+Errors crossing the proxy boundary should be structured and use safe correlation identifiers. Secrets, passwords, cookies, authorization headers, and sensitive user content must not be logged.
 
-Errors crossing the proxy boundary should be structured and use safe correlation identifiers. Secrets, passwords, cookies, authorization headers, and user-sensitive content must not be logged.
+## 12. Deployment and validation model
 
-## 11. Deployment model
+The production build is a Vite SPA plus application-owned API handlers. Deployment must provide server/runtime NoCodeBackend configuration separately from browser-safe Vite configuration.
 
-The production build is a Vite SPA plus application-owned API handlers. Deployment must provide server/runtime NoCodeBackend variables separately from browser-exposed Vite configuration.
-
-Canonical validation before release is:
+Canonical repository validation is:
 
 ```bash
-npm run validate
+npm run platform:validate
 ```
 
-Playwright critical-path checks should be run where the change affects a supported end-to-end journey.
+This proves the declared repository checks only. Release/production claims additionally require applicable provider/configuration/migration/deployed-commit/runtime/smoke evidence.
 
-## 12. Architectural constraints and debt
+## 13. Architectural constraints and debt
 
 Current constraints to preserve or resolve deliberately:
 
 - mixed JavaScript/TypeScript checking rather than a fully TypeScript source tree;
-- NoCodeBackend remote contract as the persistence provider;
+- NoCodeBackend as the persistence provider;
 - current app is primarily browser-driven with a narrow backend-for-frontend boundary;
 - external calendar/AI integrations remain deferred;
-- Stage 3 execution semantics are still being deepened and should not be duplicated in new feature-specific engines.
+- Stage 3 durable execution semantics remain provider-blocked and should not be duplicated through feature-specific fallbacks.
 
-Technical debt is not automatically a reason to refactor. Refactoring should be tied to a concrete reliability, maintainability, performance, or product outcome.
+Technical debt is not automatically a reason to refactor. Refactoring should be tied to a concrete reliability, maintainability, performance, security or product outcome.
 
-## 13. Extension protocol
+## 14. Extension protocol
 
 Before adding a new persisted collection, external integration, cross-cutting execution rule, or privileged API operation:
 
 1. establish the user/system outcome;
-2. inspect existing domain and adapter boundaries;
-3. record a decision if the change constrains future architecture;
-4. define/update schemas and data ownership rules;
-5. add the smallest explicit proxy/API contract required;
-6. implement service/domain behaviour;
-7. integrate the UI without duplicating policy;
-8. add unit/contract and applicable end-to-end coverage;
-9. run `npm run validate`;
-10. update architecture, data, security, testing, and status documents where their assumptions changed.
+2. inspect existing domain, system-map and adapter boundaries;
+3. check the relevant master/project standards and accepted decisions;
+4. verify provider behaviour rather than infer it;
+5. define/update schemas, ownership and relationship rules;
+6. add the smallest explicit proxy/API contract required;
+7. implement service/domain behaviour;
+8. integrate UI without duplicating policy;
+9. add unit/contract and applicable end-to-end coverage;
+10. run `npm run platform:validate`;
+11. update only architecture/data/security/testing/status/decision records whose meaning changed;
+12. do not advance release/completion state without required external evidence.
 
-## 14. Related decisions
+## 15. Related decisions
 
 Consequential architecture decisions are indexed in [`DECISIONS/README.md`](DECISIONS/README.md). New decisions should not be buried only in pull-request descriptions or chat history.

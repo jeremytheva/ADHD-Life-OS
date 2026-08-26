@@ -1,79 +1,116 @@
 # Codex Workflow
 
-## Before editing
+## Project entry
 
-1. Read `AGENTS.md` and any more-specific `AGENTS.md` in the target directory tree.
-2. Inspect the existing implementation, related tests, package scripts, documentation, accepted decisions, and current `STATUS.md` checkpoint.
-3. Identify the current implementation contract and continue it when one exists instead of creating a replacement plan.
-4. Define the smallest coherent scope and identify required checks before changing files.
-5. Confirm whether the proposed work is the repository's primary active implementation thread or is explicitly parallel-safe.
+Before meaningful implementation:
+
+1. read `AGENTS.md`, `PROJECT.md` and `STATUS.md`;
+2. inspect the relevant `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `SYSTEM_MAP.md`, `ROADMAP.md` and accepted decisions rather than rereading unrelated documents;
+3. inspect current implementation, callers, tests, package scripts and configuration;
+4. check current GitHub PR/branch state for overlapping work;
+5. confirm provider/deployment identity when the outcome depends on external state;
+6. identify the current implementation contract and dependency-correct outcome.
+
+The project-entry gate passes only when the work location, current state and authoritative evidence are understood.
+
+## Change gate
+
+Before editing:
+
+- identify the observable user/system outcome;
+- identify existing implementation and affected layers;
+- classify partial/planned/deprecated/legacy work before changing or removing it;
+- check master/project standards and project-specific exceptions;
+- check duplicate/conflicting implementation;
+- identify the verified root cause or required capability;
+- choose the smallest complete architecturally consistent correction.
+
+Whole-system analysis is required; speculative unrelated changes are not.
 
 ## Continuation protocol
 
-When asked to continue, do not treat the instruction as a new planning exercise. Resume in this order:
+When asked to `Continue` or `Next`, resume in this order:
 
-1. fix blocking review findings or failing required checks on the active pull request;
-2. satisfy any remaining acceptance criteria in the active implementation contract;
-3. finish remaining in-scope work on the active branch;
-4. if no implementation is active, select the next dependency-ordered outcome recorded in `STATUS.md` or the repository control documents.
+1. fix blocking review or required-check failures on the active pull request;
+2. satisfy remaining acceptance criteria;
+3. finish remaining in-scope branch work;
+4. if no implementation is active, select the next dependency-correct outcome from `STATUS.md` and `ROADMAP.md`.
 
-Do not ask the user to choose between implementation steps when repository evidence already determines the next safe action. Do not reopen accepted decisions or reproduce a roadmap merely because a new model/session is continuing the work.
+Do not restart solved planning, reopen accepted decisions, or ask the product owner to choose routine implementation steps when the repository determines the answer.
 
 ## Decision escalation
 
-Before asking for a human decision, determine whether the choice is already resolved by code, documentation, an accepted decision, established repository convention, or a safe reversible default.
+Proceed autonomously when a choice is technical, reversible, low-risk, consistent with accepted architecture/standards, or materially equivalent to other implementation options.
 
-### Proceed autonomously
+Escalate only genuinely unresolved choices that materially affect:
 
-Proceed and use the simplest coherent option when the choice is:
+- product purpose, scope or user-facing policy;
+- future-constraining architecture;
+- destructive/irreversible data behaviour;
+- authentication, authorisation, privacy or security posture;
+- external cost, provider commitment, legal/compliance posture or another consequential boundary.
 
-- low-risk and reversible;
-- consistent with accepted architecture and product rules;
-- an implementation detail with materially equivalent alternatives;
-- a conventional default that preserves future configurability;
-- recoverable without destructive migration or external commitment.
+When safe work can continue around a consequential unresolved decision, record/park it and continue independent scope.
 
-### Escalate
+## Integration gate
 
-Escalate only when a genuinely unresolved choice materially affects:
+Before describing work as integrated, verify the applicable real path:
 
-- product purpose, scope, or user-facing policy;
-- architecture that meaningfully constrains future work;
-- destructive or irreversible data behaviour;
-- authentication, authorisation, privacy, or security policy;
-- external cost, commitment, provider dependency, or legal/compliance posture.
+```text
+caller / UI
+  → service/domain behaviour
+  → auth/session + ownership policy
+  → repository/client
+  → application-owned proxy/provider adapter
+  → configuration/provider
+  → validated response
+  → visible/reconciled state
+```
 
-If work can safely continue around an unresolved consequential decision, park that decision explicitly and continue independent in-scope work rather than blocking everything.
+No required layer should remain only mocked, placeholder, disconnected or assumed. Provider-dependent capability is not integrated merely because a local adapter exists.
 
-## Implementation rules
+## Work-in-progress and scope control
 
-- Make the minimum coherent change; do not mix cleanup or dependency upgrades with unrelated work.
-- Maintain one primary implementation thread by default. Start parallel work only when dependency analysis shows it is genuinely independent and will not create avoidable conflicts in shared architecture, state, schema, routing, or trust-boundary code.
-- Follow React/Vite conventions and use existing validation schemas and service boundaries.
-- Treat `api/ncb/` as a security-sensitive trust boundary. Never expose secrets through Vite variables or introduce an unrestricted proxy.
-- Add deterministic tests and documentation when changing visible behavior, data contracts, security behavior, or contributor workflows.
-- When useful out-of-scope work is discovered, capture it as follow-up context and return to the current outcome. Discovery alone does not expand scope.
-- Prefer root-cause corrections, but stop expanding once the agreed outcome is complete. Improvements beyond the acceptance criteria become new scope unless required to correct the root cause safely.
+- Maintain one primary implementation thread by default.
+- Parallel work must be genuinely independent and explicitly parallel-safe.
+- Useful discoveries that are not required for the active acceptance criteria/root-cause correction are parked as follow-up work.
+- Stop expanding once the Definition of Enough is met.
 
 ## Re-entry and state handoff
 
-Before ending a material implementation session or after changing delivery state, make sure the durable repository state is sufficient for another model/session to resume without reconstructing chat history. `STATUS.md` should identify:
+After a material delivery-state change, `STATUS.md` should identify:
 
-- current stage;
-- current implementation thread or pull request;
+- current phase/stage;
+- current execution gate/state and material missing evidence;
+- current implementation thread/PR;
 - last completed outcome;
-- current blocker;
-- next action;
-- next queued outcome after that action.
+- blocker;
+- next dependency-correct action;
+- next queued outcome.
 
-If GitHub state and `STATUS.md` disagree, verify GitHub and correct the stale document.
+If GitHub/provider/deployment evidence conflicts with `STATUS.md`, verify the real system and correct the stale document.
+
+## Validation and release gate
+
+The canonical full repository command is:
+
+```bash
+npm run platform:validate
+```
+
+It composes dependency audit, executable governance checks, lint, typecheck, Node tests, production build and critical Playwright coverage. Use narrower commands only for diagnosis.
+
+A passing `platform:validate` does **not** prove deployment/provider/runtime state. Before claiming deployment/production readiness, verify the applicable provider contract, environment/configuration, migration/data state, exact deployed commit, runtime readiness, smoke/end-to-end behaviour and recovery/rollback path.
 
 ## Completion workflow
 
-1. Review the implementation against every acceptance criterion and stop adding unrelated improvements once the definition of enough is met.
-2. Run `git diff --check`.
-3. Run `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build` (or the canonical `npm run validate` when appropriate).
-4. For perceptible web UI changes, capture a screenshot after manual verification.
-5. Review `git status --short`; commit only intended files with an imperative message.
-6. Update affected documentation and the re-entry checkpoint when delivery state materially changes.
-7. Open or update a pull request using the repository template and record scope, checks, risks, documentation, parked follow-up work, and the next action.
+1. audit the implementation against every acceptance criterion;
+2. verify the relevant integration path rather than code presence alone;
+3. run `npm run platform:validate`;
+4. resolve blocking review/CI findings at root cause;
+5. update only project documents whose meaning changed;
+6. ensure `STATUS.md` records the correct gate/evidence/next action;
+7. open/update one focused pull request with outcome, scope, evidence, risk, parked work and next action;
+8. mark COMPLETE only when acceptance and required real-system evidence support it.
+
+For perceptible UI changes, include appropriate visual/manual accessibility evidence in addition to automated checks.

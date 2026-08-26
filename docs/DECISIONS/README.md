@@ -1,13 +1,13 @@
 # ADHD Life OS — Decision Register
 
 **Purpose:** Index consequential product, architecture, data, security, testing, and delivery decisions that constrain future implementation.  
-**Last reviewed:** 26 August 2026
+**Last materially reviewed:** 26 August 2026
 
 ## How to use this register
 
-Create a decision record when a choice materially affects future implementation, compatibility, data ownership, security, provider integration, architecture, product behaviour, or the delivery controls used to preserve reliable execution across AI-assisted sessions.
+Create a decision record when a choice materially affects future implementation, compatibility, data ownership, security, provider integration, architecture, product behaviour, or delivery controls.
 
-Do **not** create a decision record for routine implementation details already governed by repository conventions.
+Do **not** create a decision record for routine implementation details already governed by inherited master standards or repository conventions.
 
 Each decision record should contain:
 
@@ -32,15 +32,9 @@ Use:
 YYYY-MM-DD-short-decision-name.md
 ```
 
-Example:
-
-```text
-2026-08-23-persist-execution-session-state.md
-```
-
 ## Current indexed decisions
 
-The repository currently contains decision records covering areas including:
+The directory contains decisions covering areas including:
 
 - GitHub Actions / Node runtime updates;
 - dependency-audit outcomes;
@@ -48,34 +42,29 @@ The repository currently contains decision records covering areas including:
 - list load/error-state behaviour;
 - project statistics caching;
 - route code splitting;
-- the canonical validation command;
-- core mutation feedback;
-- housework integrity;
-- project-detail recovery;
-- project partial-success behaviour;
-- Stage 3 execution-engine direction and related implementation decisions recorded during recent delivery work;
-- cognitive-load and execution-continuity controls for AI-assisted delivery, including deterministic continuation, selective escalation, WIP limits, scope parking, re-entry state, and the definition of enough (`2026-08-26-cognitive-load-execution-continuity.md`).
+- core mutation feedback and workflow integrity;
+- Stage 3 execution-engine direction and related implementation decisions;
+- cognitive-load and execution-continuity controls for AI-assisted delivery (`2026-08-26-cognitive-load-execution-continuity.md`);
+- master-standard inheritance, canonical `platform:validate`, required continuity documents and canonical NoCodeBackend configuration (`2026-08-26-platform-validation-and-standards-inheritance.md`).
 
-Because the folder is the authoritative register, contributors should inspect the directory directly before making a change that may conflict with an accepted decision.
+The earlier `2026-08-21-validation-command.md` decision is retained as historical evidence and marked **Superseded**; `npm run validate` remains an application subset, not the canonical full repository gate.
+
+Because the folder is the authoritative register, inspect the directory directly before making a change that may conflict with an accepted decision.
 
 ## Decision categories
 
-Use these informal categories in the title/body when helpful:
-
 | Category | Typical trigger |
 | --- | --- |
-| Product | A user-facing rule or scope boundary that future features must preserve. |
+| Product | User-facing rule or scope boundary that future features must preserve. |
 | Architecture | Dependency direction, runtime boundary, provider pattern, state model, or major technical structure. |
 | Data | Entity shape, ownership, lifecycle, migration, retention, synchronization, or source-of-truth choice. |
 | Security | Authentication, authorization, secret handling, rate limiting, logging, trust-boundary change. |
-| UX/accessibility | A consequential interaction rule shared across workflows. |
+| UX/accessibility | Consequential interaction rule shared across workflows. |
 | Testing/release | Validation policy or release gate that implementation must follow. |
-| Delivery/governance | Continuation, decision escalation, WIP, scope, re-entry, evidence, or stopping rules that materially constrain future AI-assisted delivery. |
+| Delivery/governance | Continuation, decision escalation, WIP, scope, re-entry, evidence, gate or stopping rules. |
 | Provider/integration | External service contract, adapter pattern, failure model, or synchronization rule. |
 
 ## Decision template
-
-Use this structure for new records:
 
 ```markdown
 # <Decision title>
@@ -132,12 +121,12 @@ Why was the selected option preferred?
 
 ## Decisions likely to be required next
 
-The following should become decision records **only when implementation reaches them**:
+Create these only when implementation reaches them and evidence is sufficient:
 
-1. **Persisted execution state:** whether Stage 3 start/continue/recovery state belongs on tasks, a dedicated session entity, or remains transient/derived.
-2. **External calendar synchronization:** provider boundary, source of truth, conflict resolution, consent, and deletion behaviour.
-3. **Remote AI services:** what data may leave the application, provider abstraction, consent/privacy, failure modes, and whether outputs are advisory or state-changing.
-4. **Cross-device conflict semantics:** required only if the platform introduces concurrent mutation/synchronization behaviour beyond the current provider contract.
+1. external calendar synchronization provider/source-of-truth/conflict/consent behaviour;
+2. remote AI service data-sharing/provider abstraction and advisory-versus-state-changing policy;
+3. cross-device conflict semantics beyond the verified execution-session contract;
+4. any provider-specific execution-session uniqueness/concurrency posture that requires a material application architecture decision after certification.
 
 Do not pre-decide these in documentation before the product/technical evidence exists.
 
@@ -152,4 +141,4 @@ When a decision changes:
 5. update affected architecture/data/security/product documents;
 6. capture implementation work in a focused GitHub issue or pull-request implementation contract when Issues are unavailable.
 
-Historical decisions should remain in the repository for auditability.
+Historical decisions remain in the repository for auditability.
