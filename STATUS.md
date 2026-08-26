@@ -3,35 +3,35 @@
 **Snapshot date:** 26 August 2026  
 **Last materially reviewed:** 26 August 2026  
 **Default branch:** `main`  
-**Last verified main commit:** `5f2be90` — PR #93, provider-certification blocker synchronization  
-**Overall status:** Active development / external provider evidence still required  
+**Last verified main implementation commit:** `24f5fdc` — PR #94, NoCodeBackend Swagger/OpenAPI evidence intake  
+**Overall status:** Active development / externally blocked  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
 ## Current objective
 
-Reduce the remaining NoCodeBackend provider-certification friction without guessing the target contract. The active repository slice adds deterministic Swagger/OpenAPI evidence intake so an exported target specification can be fingerprinted and translated into a redacted candidate-operation report before connected certification.
+Obtain real target-instance NoCodeBackend evidence for the physical operations ADHD Life OS needs. The repository-side evidence tooling is now complete for the next dependency step: generated Swagger/OpenAPI JSON can be inspected safely and exact read operations can be certified non-destructively. No physical provider operation should be enabled until that target evidence exists.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | IN PROGRESS |
-| Missing evidence | The OpenAPI evidence-intake slice must pass canonical validation/review. Actual provider operations still require authenticated target-instance generated API/Swagger evidence plus a connected certification pass. |
+| Gate state | BLOCKED |
+| Missing evidence | The target ADHD Life OS NoCodeBackend generated API/Swagger or exported JSON specification, target instance identity, and a successful connected certification result for an exact operation. |
 
-This is safe provider-independent work because it only inspects an explicitly supplied specification and cannot enable or call provider operations.
+The blocker is external provider evidence, not unresolved repository implementation. Do not replace it with guessed routes/methods, another project's provider contract, browser persistence, or speculative execution-session implementation.
 
 ## Re-entry checkpoint
 
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Primary implementation thread | NoCodeBackend Swagger/OpenAPI evidence intake |
-| Current branch | `feat/ncb-openapi-evidence-intake` |
-| Last completed outcome | PR #93 merged — durable status now records the real external provider blocker after read-certification tooling merged |
-| Current blocker | No authenticated target ADHD Life OS NoCodeBackend workspace/generated API or exported target spec is available through connected tools |
-| Next action | Validate/review the OpenAPI evidence-intake tooling and merge if clean |
-| Next queued outcome | Inspect the real target generated specification for `tasks`, run connected read certification on the exact evidenced URL, then enable only that verified provider mapping |
+| Primary implementation thread | Target-instance NoCodeBackend physical-operation certification |
+| Active application PR | None |
+| Last completed outcome | PR #94 merged — target Swagger/OpenAPI JSON can now be fingerprinted and converted into a redacted `CANDIDATE_ONLY` operation report |
+| Current blocker | No authenticated target ADHD Life OS NoCodeBackend workspace/generated API or exported target specification is available through connected tools |
+| Next action | Export/open the target generated Swagger/OpenAPI JSON and run `npm run inspect:ncb-openapi -- --spec=<target-openapi.json> --collection=tasks` |
+| Next queued outcome | Use the exact target candidate to run connected `certify:ncb-read`, record redacted evidence, then enable only that verified provider mapping |
 
 If this checkpoint conflicts with GitHub, provider or deployment evidence, verify the authoritative source and update this file rather than reconstructing state from chat history.
 
@@ -42,28 +42,11 @@ If this checkpoint conflicts with GitHub, provider or deployment evidence, verif
 - Cognitive-load/execution-continuity controls and master AI-platform standards are merged.
 - `npm run platform:validate` is the canonical repository validation gate.
 - Canonical `NOCODEBACKEND_*` configuration naming is merged.
-- PR #91 separated stable application operations from physical NoCodeBackend operations and made unverified mappings fail closed.
-- PR #92 added `npm run certify:ncb-read -- --collection=<collection>`, exact `Instance`/optional ownership-filter validation, application-domain response validation, redacted evidence output and deterministic tests.
-- PR #93 synchronized Stage 3 to the real provider-evidence blocker rather than opening speculative downstream implementation.
+- PR #91 separated stable application operations from physical NoCodeBackend operations and made unverified production mappings fail closed.
+- PR #92 added read-only connected provider certification through `npm run certify:ncb-read -- --collection=<collection>`, including exact `Instance`, optional ownership-filter, application-schema and redacted-evidence checks.
+- PR #93 synchronized Stage 3 to the real external provider-evidence blocker.
+- PR #94 added `npm run inspect:ncb-openapi -- --spec=<target-openapi.json> --collection=<collection>` with OpenAPI 3.x / Swagger 2.0 JSON support, source fingerprinting, redacted candidate metadata and deterministic tests.
 - Execution-session logical contract and guarded read/write certification tooling remain available for the later Stage 3 persistence step.
-
-## In progress
-
-### Target-spec evidence intake
-
-The active branch adds:
-
-- `npm run inspect:ncb-openapi -- --spec=<target-openapi.json> --collection=<collection>`;
-- OpenAPI 3.x and Swagger 2.0 JSON support;
-- SHA-256 fingerprinting of the exact supplied specification;
-- candidate discovery from collection path/operation metadata;
-- redacted method/path/server/parameter/request/response/security summaries;
-- local parameter-reference resolution where possible;
-- explicit `Instance` and `user_id` declaration reporting;
-- a strict **CANDIDATE_ONLY** state that cannot become provider verification automatically;
-- credential-free deterministic regression tests.
-
-The inspector does not call NoCodeBackend, does not accept provider secrets, does not infer application CRUD mapping and cannot edit `api/ncb/dataProviderContract.js`.
 
 ## Blocked
 
@@ -71,19 +54,19 @@ The inspector does not call NoCodeBackend, does not accept provider secrets, doe
 
 **State:** PROVIDER UNVERIFIED.
 
-External evidence still required after the current repository slice:
+Required target evidence:
 
-1. authenticated access to the target ADHD Life OS NoCodeBackend generated API/Swagger or its exact exported JSON specification;
+1. target ADHD Life OS NoCodeBackend generated API/Swagger or exact exported JSON specification;
 2. target instance identity;
-3. one exact generated read/list operation for a supported existing collection;
-4. configured server secret for connected certification;
+3. exact read/list candidate for a supported existing collection, preferably `tasks`;
+4. configured server-only `NOCODEBACKEND_SECRET_KEY` for connected certification;
 5. optional dedicated certification user/filter where ownership filtering is being checked;
-6. successful connected read-only certification output;
-7. non-secret endpoint/method/envelope evidence recorded in `docs/NOCODEBACKEND_OPERATIONS.md`.
+6. successful `npm run certify:ncb-read -- --collection=tasks` result against the exact target operation;
+7. non-secret path/method/query-key/envelope evidence recorded in `docs/NOCODEBACKEND_OPERATIONS.md`.
 
-Only after that evidence should `api/ncb/dataProviderContract.js` enable the exact evidenced operation.
+Only after that evidence should a focused PR update `api/ncb/dataProviderContract.js` with the exact evidenced operation and run connected application verification.
 
-Write operations remain separately unverified and require their own target-instance route, method, body and failure evidence.
+Write operations remain separately unverified and require target-instance path, HTTP method, body, filtering, success-envelope and representative failure evidence.
 
 ### Durable generic execution persistence
 
@@ -99,7 +82,7 @@ Do not claim durable Start/Continue/Recover or cross-reload recovery until those
 
 ## Known defects
 
-No known application defect currently overrides the external provider-certification dependency. Fail-closed data operations while the physical provider contract is unverified are intentional trust-boundary behaviour.
+No known application defect currently overrides the external provider-certification blocker. Fail-closed data operations while the physical provider contract is unverified are intentional trust-boundary behaviour.
 
 ## Technical debt
 
@@ -117,11 +100,11 @@ No known application defect currently overrides the external provider-certificat
 
 | System / capability | State | Evidence / implication |
 | --- | --- | --- |
-| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #93 merged as `5f2be90` |
+| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #94 implementation merged as `24f5fdc` |
 | Stable application data API | APPLICATION VERIFIED | Same-origin routes and domain contracts are deterministic application boundaries |
-| Physical NoCodeBackend adapter | IMPLEMENTED | Fail-closed registry/adapter is merged |
-| Target Swagger/OpenAPI intake | IMPLEMENTATION IN REVIEW | Candidate-only inspection tooling is on the active branch; no target spec has been supplied |
-| Existing NoCodeBackend read certification | IMPLEMENTED / PROVIDER UNVERIFIED | Read-only connected harness is merged and validated; it has not been run against the target provider |
+| Physical NoCodeBackend adapter | IMPLEMENTED | Fail-closed registry/adapter is merged; production mapping remains `UNVERIFIED` |
+| Target Swagger/OpenAPI intake | IMPLEMENTED / TARGET EVIDENCE NOT SUPPLIED | Candidate-only inspector is merged and repository-validated; no target spec has been inspected |
+| Existing NoCodeBackend read certification | IMPLEMENTED / PROVIDER UNVERIFIED | Read-only connected harness is merged and repository-validated; it has not been run against the target provider |
 | Existing NoCodeBackend physical operations | PROVIDER UNVERIFIED | No production physical operation is enabled without target evidence |
 | Generic `execution-sessions` | IMPLEMENTED TOOLING / PROVIDER UNVERIFIED | Logical contract and guarded certification harness exist; provider collection/operations remain unverified |
 | Vercel | NOT CONFIGURED / UNVERIFIED | No ADHD Life OS project binding is available in the connected account |
@@ -130,7 +113,8 @@ No known application defect currently overrides the external provider-certificat
 
 - Application routes are not physical provider-route evidence.
 - Physical NoCodeBackend paths/methods are centralized server-side and fail closed until verified.
-- A generated Swagger/OpenAPI operation is candidate evidence, not connected provider verification.
+- A generated Swagger/OpenAPI operation is **candidate evidence**, not connected provider verification.
+- The spec inspector never infers application CRUD mapping, never calls the provider, and never enables production operations.
 - Provider certification, application verification, deployment and runtime verification are separate evidence states.
 - `Instance` and Bearer credentials are server-owned; auth/session cookies are not generated-data credentials.
 - Evidence reports omit provider secret values, query values and examples that could contain data.
@@ -138,25 +122,19 @@ No known application defect currently overrides the external provider-certificat
 
 ## Next dependency-correct work
 
-### Current repository outcome
+### External provider certification
 
-1. finish OpenAPI/Swagger candidate evidence intake and deterministic tests;
-2. run `npm run platform:validate` in CI;
-3. correct in-scope failures at root cause;
-4. review the candidate-only/security boundary;
-5. merge and synchronize the checkpoint if clean.
-
-### External provider certification after merge
-
-1. export/open the target ADHD Life OS NoCodeBackend generated API/Swagger;
-2. run `npm run inspect:ncb-openapi -- --spec=<target-openapi.json> --collection=tasks` when JSON is available;
-3. use the candidate report to identify the exact generated list/read operation without transcribing values or secrets into project evidence;
-4. run `npm run certify:ncb-read -- --collection=tasks` against that exact URL with server-only credentials;
-5. record the redacted connected evidence in `docs/NOCODEBACKEND_OPERATIONS.md`;
-6. create a focused provider-mapping PR containing only the evidenced operation;
-7. run deterministic tests plus connected application verification;
-8. then certify required write operations;
-9. only after the general contract is proven, certify and activate `execution-sessions`.
+1. export/open the target ADHD Life OS NoCodeBackend generated API/Swagger as JSON;
+2. run `npm run inspect:ncb-openapi -- --spec=<target-openapi.json> --collection=tasks`;
+3. retain the specification SHA-256 and redacted candidate report as source evidence;
+4. identify the exact target list/read candidate without substituting another project's route family;
+5. construct the exact target read URL including the real `Instance` and any evidenced ownership filter;
+6. run `npm run certify:ncb-read -- --collection=tasks` with server-only credentials;
+7. record the command's redacted connected evidence in `docs/NOCODEBACKEND_OPERATIONS.md`;
+8. create a focused provider-mapping PR containing only the evidenced operation;
+9. run deterministic validation plus connected application verification;
+10. certify required write operations separately;
+11. only after the general provider contract is proven, certify and activate `execution-sessions`.
 
 ## Stage 3 exit conditions
 
