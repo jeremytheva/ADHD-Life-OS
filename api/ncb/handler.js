@@ -1,6 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import { z } from 'zod'
 import { domainCreateSchemasByCollection, domainPatchSchemasByCollection, domainSchemasByCollection } from '../../src/domains/schemas.js'
+import { assertDataProviderReady, buildDataProviderRequest, DataProviderContractError } from './dataProvider.js'
+import { dataProviderContract as defaultDataProviderContract } from './dataProviderContract.js'
 
 const MAX_BODY_BYTES = 32 * 1024
 const UPSTREAM_TIMEOUT_MS = 10000
@@ -23,7 +25,8 @@ const credentialsSchema = z.object({
 }).strict()
 const sessionUserSchema = z.object({ id: z.union([identifierSchema, z.number().int().nonnegative()]) }).passthrough()
 
-// This is intentionally an explicit API contract, rather than a path proxy.
+// This is intentionally an explicit application API contract, not a generic
+// path proxy. Provider-specific physical routes are mapped separately.
 const ROUTES = Object.freeze({
   auth: [
     { path: ['sign-up', 'email'], query: emptyQuerySchema, methods: { POST: credentialsSchema } },
@@ -143,15 +146,10 @@ const hasValidDataResponse = (path, method, responseBody) => {
   return (path.length === 1 && method === 'GET' ? z.array(schema) : schema).safeParse(data).success
 }
 
-const upstreamBaseUrlForScope = (scope) => scope === 'auth'
-  ? process.env.NOCODEBACKEND_AUTH_BASE_URL
-  : process.env.NOCODEBACKEND_DATA_BASE_URL
-
-const getUpstreamUrl = (scope, path, query) => {
-  const baseUrl = upstreamBaseUrlForScope(scope)
-  if (!baseUrl || !process.env.NOCODEBACKEND_SECRET_KEY) return null
+const getAuthUpstreamUrl = (path, query) => {
+  if (!process.env.NOCODEBACKEND_AUTH_BASE_URL || !process.env.NOCODEBACKEND_SECRET_KEY) return null
   try {
-    const base = new URL(baseUrl)
+    const base = new URL(process.env.NOCODEBACKEND_AUTH_BASE_URL)
     if (!['http:', 'https:'].includes(base.protocol)) return null
     const target = new URL(`${base.pathname.replace(/\/$/, '')}/${path.map(encodeURIComponent).join('/')}`, base.origin)
     for (const [key, value] of Object.entries(query)) target.searchParams.set(key, value)
@@ -169,15 +167,15 @@ const sessionUserFromResponse = (responseBody) => {
   return parsed.success ? String(parsed.data.id) : null
 }
 
-const getAuthenticatedUserId = async (req, correlationId) => {
-  const target = getUpstreamUrl('auth', ['get-session'], {})
+const getAuthenticatedUserId = async (req, correlationId, fetchImpl) => {
+  const target = getAuthUpstreamUrl(['get-session'], {})
   if (!target) return { code: 'NCB_SERVICE_UNAVAILABLE', status: 503 }
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS)
   try {
     const headers = { Authorization: `Bearer ${process.env.NOCODEBACKEND_SECRET_KEY}`, Accept: 'application/json', 'X-Correlation-Id': correlationId }
     if (req.headers.cookie) headers.Cookie = req.headers.cookie
-    const upstream = await fetch(target, { method: 'GET', headers, signal: controller.signal, redirect: 'manual' })
+    const upstream = await fetchImpl(target, { method: 'GET', headers, signal: controller.signal, redirect: 'manual' })
     if (!upstream.ok) return { code: 'NCB_AUTH_REQUIRED', status: 401 }
     const userId = sessionUserFromResponse(Buffer.from(await upstream.arrayBuffer()))
     return userId ? { userId } : { code: 'NCB_AUTH_REQUIRED', status: 401 }
@@ -204,7 +202,17 @@ const forwardSetCookies = (upstream, res) => {
   if (cookies.length) res.setHeader('Set-Cookie', cookies)
 }
 
-export const createNcbHandler = (scope) => async (req, res) => {
+const providerContractError = (res, error, correlationId) => apiError(
+  res,
+  503,
+  error instanceof DataProviderContractError ? error.code : 'NCB_PROVIDER_CONTRACT_INVALID',
+  correlationId
+)
+
+export const createNcbHandler = (
+  scope,
+  { fetchImpl = globalThis.fetch, dataProviderContract = defaultDataProviderContract } = {}
+) => async (req, res) => {
   const correlationId = randomUUID()
   const path = normalizePath(req.query?.path)
   const route = findRoute(scope, path)
@@ -215,7 +223,7 @@ export const createNcbHandler = (scope) => async (req, res) => {
   const context = hasValidRequestContext(req, method)
   if (context.code) return apiError(res, 403, context.code, correlationId)
 
-  const { path: ignoredPath, ...query } = req.query ?? {}
+  const { path: _ignoredPath, ...query } = req.query ?? {}
   const parsedQuery = route.query.safeParse(query)
   if (!parsedQuery.success) return apiError(res, 400, 'NCB_INVALID_REQUEST', correlationId)
 
@@ -223,33 +231,84 @@ export const createNcbHandler = (scope) => async (req, res) => {
   if (contentType && !contentType.toLowerCase().startsWith('application/json')) return apiError(res, 400, 'NCB_INVALID_JSON', correlationId)
   let body
   try { body = await readJsonBody(req) } catch (error) { return apiError(res, error.code === 'NCB_BODY_TOO_LARGE' ? 413 : 400, error.code ?? 'NCB_INVALID_JSON', correlationId) }
+
+  const schema = requestSchema(scope, route, path, method)
+  const parsedBody = schema?.safeParse(body)
+  if (!parsedBody?.success) return apiError(res, 400, 'NCB_INVALID_REQUEST', correlationId)
+  body = parsedBody.data
+
   if (scope === 'data') {
-    // The browser cache is not an authority. Resolve ownership from the
-    // upstream session before an allowlisted data endpoint is ever contacted.
-    const identity = await getAuthenticatedUserId(req, correlationId)
+    // Fail before contacting auth or data providers when the physical target
+    // contract/configuration is not certified. Application routes must never be
+    // treated as evidence of provider routes.
+    try {
+      assertDataProviderReady({
+        appMethod: method,
+        id: path[1],
+        contract: dataProviderContract,
+        env: process.env
+      })
+    } catch (error) {
+      return providerContractError(res, error, correlationId)
+    }
+
+    // The browser cache is not an authority. Resolve ownership from the auth
+    // provider before an allowlisted generated-data operation is contacted.
+    const identity = await getAuthenticatedUserId(req, correlationId, fetchImpl)
     if (identity.code) return apiError(res, identity.status, identity.code, correlationId)
     const constrained = constrainDataRequestToUser(parsedQuery.data, body, method, identity.userId)
     if (constrained.code) return apiError(res, 403, constrained.code, correlationId)
     body = constrained.body
     parsedQuery.data = constrained.query
   }
-  const schema = requestSchema(scope, route, path, method)
-  const parsedBody = schema?.safeParse(body)
-  if (!parsedBody?.success) return apiError(res, 400, 'NCB_INVALID_REQUEST', correlationId)
-
-  const target = getUpstreamUrl(scope, path, parsedQuery.data)
-  if (!target) return apiError(res, 503, 'NCB_SERVICE_UNAVAILABLE', correlationId)
 
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS)
   try {
-    // Do not copy browser-controlled headers. The secret is owned by this runtime.
-    const headers = { Authorization: `Bearer ${process.env.NOCODEBACKEND_SECRET_KEY}`, Accept: 'application/json', 'X-Correlation-Id': correlationId }
-    if (req.headers.cookie) headers.Cookie = req.headers.cookie
-    if (body !== undefined) headers['Content-Type'] = 'application/json'
-    const upstream = await fetch(target, { method, headers, body: body === undefined ? undefined : JSON.stringify(parsedBody.data), signal: controller.signal, redirect: 'manual' })
+    let upstream
+    if (scope === 'data') {
+      let providerRequest
+      try {
+        providerRequest = buildDataProviderRequest({
+          appMethod: method,
+          collection: path[0],
+          id: path[1],
+          query: parsedQuery.data,
+          body,
+          contract: dataProviderContract,
+          env: process.env
+        })
+      } catch (error) {
+        return providerContractError(res, error, correlationId)
+      }
+
+      // Generated data API requests receive only server-owned provider
+      // credentials and validated application data. Auth cookies and browser
+      // Origin/Referer headers are intentionally not forwarded.
+      upstream = await fetchImpl(providerRequest.url, {
+        method: providerRequest.method,
+        headers: providerRequest.headers,
+        body: providerRequest.body,
+        signal: controller.signal,
+        redirect: 'manual'
+      })
+    } else {
+      const target = getAuthUpstreamUrl(path, parsedQuery.data)
+      if (!target) return apiError(res, 503, 'NCB_SERVICE_UNAVAILABLE', correlationId)
+      const headers = { Authorization: `Bearer ${process.env.NOCODEBACKEND_SECRET_KEY}`, Accept: 'application/json', 'X-Correlation-Id': correlationId }
+      if (req.headers.cookie) headers.Cookie = req.headers.cookie
+      if (body !== undefined) headers['Content-Type'] = 'application/json'
+      upstream = await fetchImpl(target, {
+        method,
+        headers,
+        body: body === undefined ? undefined : JSON.stringify(body),
+        signal: controller.signal,
+        redirect: 'manual'
+      })
+    }
+
     const responseBody = Buffer.from(await upstream.arrayBuffer())
-    forwardSetCookies(upstream, res)
+    if (scope === 'auth') forwardSetCookies(upstream, res)
     if (!upstream.ok) return apiError(res, SAFE_UPSTREAM_STATUSES.has(upstream.status) ? upstream.status : 502, 'NCB_UPSTREAM_REQUEST_FAILED', correlationId)
     if (scope === 'data' && !hasValidDataResponse(path, method, responseBody)) return apiError(res, 502, 'NCB_INVALID_RESPONSE', correlationId)
     upstream.headers.forEach((value, key) => { if (FORWARDED_RESPONSE_HEADERS.has(key.toLowerCase())) res.setHeader(key, value) })

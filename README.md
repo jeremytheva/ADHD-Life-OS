@@ -4,11 +4,11 @@ ADHD Life-OS is a React and Vite life-management platform designed for supportiv
 
 ## Current behaviour
 
-- **Tasks and prioritisation:** create and organise tasks; optional energy, duration, interest, aversiveness, location and item metadata informs Quick Wins, Momentum Builders and Brave Frog recommendations.
+- **Tasks and prioritisation:** create and organise tasks at the application/domain level; optional energy, duration, interest, aversiveness, location and item metadata informs Quick Wins, Momentum Builders and Brave Frog recommendations.
 - **Planning workflows:** projects/subtasks, routines/routine sessions, daily planning, Brain Inbox capture, templates and Home-mode housework checklists.
 - **Personalisation:** onboarding roles/modules plus accessibility preferences including font size, contrast, reduced motion, focus mode, dyslexic font and line spacing.
 - **Execution direction:** one unified execution/recommendation policy feeds the Today next-action experience. Durable generic Start/Continue/Recover remains provider-blocked until the real NoCodeBackend execution-session contract is certified.
-- **Data and authentication:** browser requests use same-origin, allowlisted NoCodeBackend auth/data proxy routes. Server-only credentials stay behind that trust boundary; failures return explicit structured errors instead of silently creating browser-local domain records.
+- **Provider boundary:** browser requests use stable same-origin auth/data application routes. Physical NoCodeBackend data operations are isolated server-side and currently fail closed until the target ADHD Life OS generated API is certified; deterministic tests do not count as provider evidence.
 
 ## Planned integrations and limits
 
@@ -23,6 +23,8 @@ External calendar/event synchronisation, background synchronisation, remote AI/L
 - [Product overview](docs/PRODUCT.md) — current product behaviour and boundaries.
 - [Architecture](docs/ARCHITECTURE.md) — current system/trust/provider structure.
 - [Data model](docs/DATA_MODEL.md) — canonical entities, relationships and migration rules.
+- [NoCodeBackend operations](docs/NOCODEBACKEND_OPERATIONS.md) — stable application operations versus target physical provider certification state.
+- [Execution-session provider contract](docs/NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md) — Stage 3 durable execution provider requirements.
 - [Security guide](docs/SECURITY.md) — project-specific trusted boundary and secret handling.
 - [Testing guide](docs/TESTING.md) — validation layers and canonical command.
 - [Delivery guide](docs/DELIVERY.md) — project delivery/release details.
@@ -34,7 +36,7 @@ External calendar/event synchronisation, background synchronisation, remote AI/L
 ### Prerequisites
 
 - Node.js 20 or later and npm.
-- A NoCodeBackend environment for live authentication/data interaction. Automated tests do not require real credentials or network access.
+- An identified NoCodeBackend target instance for live authentication/data certification. Automated repository tests do not require real credentials or network access.
 
 ### Install and run
 
@@ -49,7 +51,7 @@ Open `http://localhost:5173`.
 
 ## Configure the NoCodeBackend boundary
 
-Browser-visible same-origin paths default to:
+Browser-visible same-origin application paths default to:
 
 ```text
 /api/ncb/auth
@@ -72,9 +74,11 @@ NOCODEBACKEND_SECRET_KEY
 NOCODEBACKEND_INSTANCE
 ```
 
-Never expose `NOCODEBACKEND_SECRET_KEY` through `VITE_*`, commit real `.env` files, or bypass the explicit proxy handlers. Supply exact verified upstream bases; do not infer provider route families from related endpoints.
+Never expose `NOCODEBACKEND_SECRET_KEY` through `VITE_*`, commit real `.env` files, or bypass the explicit handlers.
 
-The currently allowlisted domain collections are documented in [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md).
+The base URLs identify provider services; they do not define physical collection operations. The server-side `api/ncb/dataProviderContract.js` registry remains `UNVERIFIED` until the target generated API/Swagger is inspected and the exact paths/methods are recorded in [`docs/NOCODEBACKEND_OPERATIONS.md`](docs/NOCODEBACKEND_OPERATIONS.md).
+
+The currently allowlisted logical domain collections are documented in [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md).
 
 ## Development and validation
 
@@ -98,7 +102,7 @@ npm run test:e2e
 npm run validate
 ```
 
-`platform:validate` proves only the checks declared by the repository. Provider, deployment and production-runtime verification remain separate evidence states.
+`platform:validate` proves only the checks declared by the repository. A test-only verified provider fixture proves translation/security behaviour only; provider, deployment and production-runtime verification remain separate evidence states.
 
 ## Contributing
 

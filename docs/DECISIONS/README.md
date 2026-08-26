@@ -45,7 +45,8 @@ The directory contains decisions covering areas including:
 - core mutation feedback and workflow integrity;
 - Stage 3 execution-engine direction and related implementation decisions;
 - cognitive-load and execution-continuity controls for AI-assisted delivery (`2026-08-26-cognitive-load-execution-continuity.md`);
-- master-standard inheritance, canonical `platform:validate`, required continuity documents and canonical NoCodeBackend configuration (`2026-08-26-platform-validation-and-standards-inheritance.md`).
+- master-standard inheritance, canonical `platform:validate`, required continuity documents and canonical NoCodeBackend configuration (`2026-08-26-platform-validation-and-standards-inheritance.md`);
+- fail-closed separation of stable application data operations from target-instance NoCodeBackend physical routes/methods (`2026-08-26-fail-closed-data-provider-contract.md`).
 
 The earlier `2026-08-21-validation-command.md` decision is retained as historical evidence and marked **Superseded**; `npm run validate` remains an application subset, not the canonical full repository gate.
 

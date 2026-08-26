@@ -4,7 +4,7 @@
 
 This repository inherits the current master AI-first platform development, engineering, design, documentation, testing/release and provider standards supplied by the product owner. This file records only repository-specific execution rules and constraints.
 
-Authoritative project state is in `PROJECT.md`, `STATUS.md`, `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `ROADMAP.md`, `SYSTEM_MAP.md`, accepted decisions, current GitHub state, and current provider/deployment evidence where applicable. Chat history is supporting context, not project state.
+Authoritative project state is in `PROJECT.md`, `STATUS.md`, `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `docs/NOCODEBACKEND_OPERATIONS.md`, `ROADMAP.md`, `SYSTEM_MAP.md`, accepted decisions, current GitHub state, and current provider/deployment evidence where applicable. Chat history is supporting context, not project state.
 
 ## Scope and workflow
 
@@ -87,14 +87,23 @@ Proceed autonomously for low-risk, reversible, technically clear choices consist
 - Use `npm run validate`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, or `npm run test:e2e` individually when isolating a failure.
 - Do not claim runtime/provider verification merely because `platform:validate` passes.
 
-## NoCodeBackend proxy and security
+## NoCodeBackend application and provider boundaries
 
 - All privileged NoCodeBackend traffic must go through the same-origin, allowlisted handlers in `api/ncb/`. Do not add a generic path proxy or send backend credentials from the browser.
+- Browser/repository routes under `/api/ncb/data/*` are stable **application** operations. They are not evidence that NoCodeBackend exposes the same physical path or HTTP method.
+- Physical generated-data mapping belongs only in `api/ncb/dataProviderContract.js` and `api/ncb/dataProvider.js`.
+- The production data-provider registry must remain `UNVERIFIED` until the target ADHD Life OS generated API/Swagger provides evidence for the relevant operation. Do not mark it verified from another project, a test fixture, or a generic documentation example.
+- A test may inject a clearly labelled verified fixture contract to prove translation/security behaviour. Test fixture paths/methods must never be described as provider certification.
 - Canonical server/runtime variables are `NOCODEBACKEND_AUTH_BASE_URL`, `NOCODEBACKEND_DATA_BASE_URL`, `NOCODEBACKEND_SECRET_KEY`, and `NOCODEBACKEND_INSTANCE`. Do not introduce alternate short aliases for these concepts.
+- `NOCODEBACKEND_INSTANCE` and the Bearer secret are server-owned provider inputs. The browser cannot override them.
 - Browser configuration may use only browser-safe proxy-path variables such as `VITE_AUTH_PROXY_URL` and `VITE_DATA_PROXY_URL`.
+- Resolve authenticated ownership through the auth/session boundary before an enabled generated-data request.
+- Do not forward browser auth cookies, Origin, Referer or application correlation headers to generated data operations unless target-provider evidence explicitly requires them.
+- Do not relay `Set-Cookie` from generated data responses; cookie handling belongs to the auth boundary.
 - Preserve route/method allowlists, request-size limits, origin/CSRF checks, request/response validation, timeouts and structured correlation-ID errors.
 - Never log authorization headers, cookies, passwords, secrets, or sensitive user content.
-- Verify provider contracts before encoding new route/method/envelope assumptions. Generic `execution-sessions` remains fail-closed until the real provider contract passes certification.
+- Record target provider evidence/state in `docs/NOCODEBACKEND_OPERATIONS.md`.
+- Generic `execution-sessions` remains fail-closed until both general data operations and the collection-specific provider contract pass certification.
 
 ## Tests and pull requests
 
