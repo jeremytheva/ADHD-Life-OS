@@ -28,8 +28,14 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   // The development middleware invokes the production handlers directly, so
   // credentials remain server-only and route validation is identical.
-  if (env.NCB_API_BASE_URL) process.env.NCB_API_BASE_URL = env.NCB_API_BASE_URL
-  if (env.NCB_SECRET_KEY) process.env.NCB_SECRET_KEY = env.NCB_SECRET_KEY
+  for (const name of [
+    'NOCODEBACKEND_AUTH_BASE_URL',
+    'NOCODEBACKEND_DATA_BASE_URL',
+    'NOCODEBACKEND_SECRET_KEY',
+    'NOCODEBACKEND_INSTANCE'
+  ]) {
+    if (env[name]) process.env[name] = env[name]
+  }
 
   return {
     plugins: [react(), ncbApiPlugin()],
