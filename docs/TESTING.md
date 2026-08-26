@@ -22,7 +22,7 @@ dependency audit
 
 The governance check verifies high-value mechanical rules including required project documents, canonical NoCodeBackend environment names, removal of deprecated provider aliases, current execution-gate fields in `STATUS.md`, and obvious browser exposure of the server-only secret name.
 
-Use narrower commands when diagnosing a failure:
+Use narrower commands when diagnosing or certifying a specific boundary:
 
 ```bash
 npm run validate:governance
@@ -32,9 +32,11 @@ npm test
 npm run build
 npm run test:e2e
 npm run validate
+npm run certify:ncb-read -- --collection=<collection>
+npm run certify:execution-sessions -- --mode=read
 ```
 
-`npm run validate` remains the application static/unit/build subset. `npm run platform:validate` is the canonical full repository gate.
+`npm run validate` remains the application static/unit/build subset. `npm run platform:validate` is the canonical full repository gate. Provider certification commands are separate connected-evidence tools and are not automatically run by CI because they require target-provider access and server credentials.
 
 ## Evidence boundaries
 
@@ -101,7 +103,7 @@ External provider capability is tracked separately from adapter code:
 | --- | --- | --- | --- |
 | Auth application boundary | Yes | Deployment/target evidence still required for release | Deterministic application tests |
 | Stable data application boundary | Yes | N/A — application-owned contract | Deterministic application tests |
-| Physical NoCodeBackend data operations | Fail-closed registry/adapter implemented | **No — target contract pending** | No connected-provider verification |
+| Physical NoCodeBackend data operations | Fail-closed registry/adapter + read certification tooling implemented | **No — target contract pending** | No connected-provider verification |
 | Generic `execution-sessions` | Certification tooling only | No | No |
 
 `api/ncb/dataProviderContract.js` is intentionally UNVERIFIED in production. Tests must not change that registry merely to exercise physical mapping.
@@ -123,6 +125,33 @@ Required coverage includes:
 - malformed 2xx provider records remain structured upstream-response errors.
 
 These tests prove adapter and trust-boundary behaviour only. The paths in injected test contracts are fixtures, not NoCodeBackend evidence.
+
+## Read-only target-provider certification
+
+`scripts/certify-ncb-read.mjs` turns the first provider-certification step into a deterministic connected check without writing provider data.
+
+Run it only with an exact URL taken from the target instance's generated API/Swagger:
+
+```bash
+NOCODEBACKEND_SECRET_KEY='<server secret>' \
+NOCODEBACKEND_INSTANCE='<target instance>' \
+NOCODEBACKEND_CERT_READ_URL='<exact generated read URL including Instance>' \
+npm run certify:ncb-read -- --collection=tasks
+```
+
+Optionally set `NOCODEBACKEND_CERT_USER_ID` and include the exact same `user_id` filter in the supplied URL to verify ownership filtering.
+
+The command verifies:
+
+- the URL contains the configured target instance;
+- only the Bearer credential and JSON `Accept` header are sent;
+- the provider returns a successful JSON array or `data` array envelope;
+- every returned record satisfies the selected application domain schema;
+- returned ownership matches the certification user when that check is enabled.
+
+Its output deliberately redacts query values and secrets. A pass establishes evidence for the exact exercised read/list operation only; it does not automatically alter the production provider registry or claim application/runtime verification.
+
+Regression coverage for this harness lives in `test/ncb-provider-read-certification.test.mjs` and must remain credential-free.
 
 ## Target-provider certification
 

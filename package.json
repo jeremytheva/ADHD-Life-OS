@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test",
     "test:e2e": "playwright test",
+    "certify:ncb-read": "node scripts/certify-ncb-read.mjs",
     "certify:execution-sessions": "node scripts/certify-execution-sessions.mjs",
     "validate:governance": "node scripts/validate-governance.mjs",
     "validate": "npm run lint && npm run typecheck && npm test && npm run build",
