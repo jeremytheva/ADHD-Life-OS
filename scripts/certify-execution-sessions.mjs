@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { pathToFileURL } from 'node:url'
+import process from 'node:process'
+import { pathToFileURL, URL } from 'node:url'
 
 const ACTIVITY_TYPES = new Set(['task', 'project_task', 'routine_step', 'chore'])
 const SESSION_STATUSES = new Set(['in_progress', 'paused', 'completed', 'cancelled'])
@@ -160,7 +161,7 @@ const requestNoContent = async ({ fetchImpl, url, secret, method }) => {
   return { status: response.status }
 }
 
-export const certifyReadContract = async ({ fetchImpl = fetch, readUrl, secret }) => {
+export const certifyReadContract = async ({ fetchImpl = globalThis.fetch, readUrl, secret }) => {
   normalizeUrl(readUrl, 'readUrl')
   if (!secret) throw new CertificationError('NCB_CERT_CONFIG_MISSING', 'Provider secret is required.')
 
@@ -196,7 +197,7 @@ const makeCertificationRecord = (userId, now) => {
 }
 
 export const certifyFullContract = async ({
-  fetchImpl = fetch,
+  fetchImpl = globalThis.fetch,
   readUrl,
   createUrl,
   updateUrlTemplate,
@@ -325,7 +326,7 @@ const main = async () => {
         })
       })()
 
-  console.log(JSON.stringify({ certification: 'passed', ...result }, null, 2))
+  process.stdout.write(`${JSON.stringify({ certification: 'passed', ...result }, null, 2)}\n`)
 }
 
 const isCli = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href
@@ -334,7 +335,7 @@ if (isCli) {
     const failure = error instanceof CertificationError
       ? { code: error.code, message: error.message, details: error.details }
       : { code: 'NCB_CERT_UNEXPECTED', message: error instanceof Error ? error.message : String(error) }
-    console.error(JSON.stringify({ certification: 'failed', error: failure }, null, 2))
+    process.stderr.write(`${JSON.stringify({ certification: 'failed', error: failure }, null, 2)}\n`)
     process.exitCode = 1
   })
 }
