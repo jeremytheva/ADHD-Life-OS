@@ -14,7 +14,7 @@ Use this section as the first recovery point after interruption, context loss, o
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Primary implementation thread | Durable generic execution persistence and recovery |
-| Current open PR | None after PR #84 merged on 26 August 2026 |
+| Current open PR | PR #85 — status refresh after cognitive-load controls merge |
 | Last completed outcome | PR #84 merged — cognitive-load and execution-continuity delivery controls |
 | Current blocker | Generic `execution-sessions` provider capability is not verified on `main` and must not be assumed or enabled |
 | Next action | Define/confirm the exact provider-side execution-session contract, create the structure in the target provider, and verify its generated API before application activation |
