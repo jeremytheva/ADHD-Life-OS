@@ -2,7 +2,7 @@
 
 **Snapshot date:** 26 August 2026  
 **Default branch reviewed:** `main`  
-**Last verified main commit:** `2af8110` — merge of PR #61  
+**Last verified main commit:** `ebedf0e` — merge of PR #84  
 **Overall state:** Active development  
 **Current delivery stage:** Stage 3 — execution and next-action experience
 
@@ -14,8 +14,8 @@ Use this section as the first recovery point after interruption, context loss, o
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Primary implementation thread | Durable generic execution persistence and recovery |
-| Current open PR | None returned by the repository's open-PR search on 26 August 2026 |
-| Last completed outcome | PR #61 merged — transient **Not now** recommendation feedback |
+| Current open PR | PR #85 — status refresh after cognitive-load controls merge |
+| Last completed outcome | PR #84 merged — cognitive-load and execution-continuity delivery controls |
 | Current blocker | Generic `execution-sessions` provider capability is not verified on `main` and must not be assumed or enabled |
 | Next action | Define/confirm the exact provider-side execution-session contract, create the structure in the target provider, and verify its generated API before application activation |
 | Next queued outcome | After provider evidence exists, add the exact application schema/proxy/repository adapter and activate durable Today Start/Continue/Recover behind the verified capability |
@@ -24,7 +24,7 @@ If this checkpoint conflicts with GitHub, code, or provider evidence, verify the
 
 ## Executive status
 
-ADHD Life OS has moved beyond repository-foundation and core-integrity work into Stage 3 execution behaviour. `main` contains the unified execution-engine foundation, the Today next-action experience, project-control documentation, and reversible transient **Not now** feedback.
+ADHD Life OS has moved beyond repository-foundation and core-integrity work into Stage 3 execution behaviour. `main` contains the unified execution-engine foundation, the Today next-action experience, project-control documentation, reversible transient **Not now** feedback, and explicit cognitive-load/execution-continuity controls for AI-assisted delivery.
 
 The next major Stage 3 boundary is durable generic execution persistence and recovery. Earlier stacked pull requests explored the execution lifecycle, orchestration, presentation and recovery contracts, but those closed PRs are not equivalent to merged capability on `main`. Application activation must remain fail-closed until the target NoCodeBackend provider contract is created and verified.
 
@@ -33,6 +33,7 @@ The next major Stage 3 boundary is durable generic execution persistence and rec
 | Area | Status | Notes |
 | --- | --- | --- |
 | Repository operating baseline | Green | `AGENTS.md`, project controls, CI/documentation conventions, testing, security, architecture, data model, delivery and ADR processes exist. |
+| Cognitive-load delivery controls | Green | PR #84 merged deterministic continuation, selective escalation, WIP limits, scope parking, re-entry and Definition of Enough into the repository framework. |
 | Stage 2 integrity closure | Green | Stage 2 closed before Stage 3 foundation work. |
 | Unified execution-engine foundation | Green | Merged through PR #58. |
 | Today next-action experience | Green | Merged through PR #59. |
@@ -46,14 +47,15 @@ The next major Stage 3 boundary is durable generic execution persistence and rec
 | External calendar integration | Grey / deferred | Planned only; not an enabled current capability. |
 | GitHub Issues | Unavailable | Issues remain disabled; focused PR bodies serve as implementation contracts. |
 
-## Merged Stage 3 foundation
+## Merged Stage 3 foundation and delivery controls
 
-The verified Stage 3 merges on `main` are:
+The verified relevant merges on `main` are:
 
 - **PR #58 — execution-engine foundation:** unified execution eligibility/policy behaviour and supporting tests/decision record.
 - **PR #59 — next-action experience:** next-action decision panel integrated into Today with focused coverage.
 - **PR #60 — project-control documentation:** `PROJECT.md`, `STATUS.md`, architecture/data updates and decision-register indexing.
 - **PR #61 — transient Not now feedback:** reversible session-local recommendation exclusion without mutating or persisting source domain records.
+- **PR #84 — cognitive-load execution-continuity controls:** repository delivery rules now explicitly protect against context loss, avoidable decision load, WIP sprawl, scope creep, restart friction and overengineering.
 
 ## Current architectural blocker
 
@@ -74,7 +76,8 @@ Before activation, the exact provider structure, ownership fields, lifecycle val
 - Recommendation feedback is separated from durable source-domain state.
 - Provider integration remains behind an explicit application-owned trust boundary.
 - Tests and accepted decisions accompany consequential Stage 3 changes.
-- Project-control documents now externalise current state rather than relying on chat history.
+- Project-control documents externalise current state rather than relying on chat history.
+- Delivery continuation, decision escalation, WIP, scope parking and stopping rules are now explicit and merged.
 
 ## Current risks and watch items
 
@@ -96,7 +99,7 @@ Completing an execution session is not automatically equivalent to completing it
 
 ### 5. Cognitive-load drift
 
-Delivery can fail even when individual code changes are correct if context is repeatedly reconstructed, work branches unnecessarily, consequential and trivial decisions are treated the same, or scope expands after acceptance criteria are already met. `AGENTS.md`, `docs/CODEX_WORKFLOW.md`, and `docs/DELIVERY.md` now define continuation, WIP, scope parking, escalation, re-entry, and definition-of-enough controls.
+Delivery can fail even when individual code changes are correct if context is repeatedly reconstructed, work branches unnecessarily, consequential and trivial decisions are treated the same, or scope expands after acceptance criteria are already met. These controls are now authoritative on `main` through PR #84 and must be preserved in subsequent work.
 
 ## Recommended next implementation outcome
 
