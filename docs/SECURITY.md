@@ -6,21 +6,37 @@ Report suspected vulnerabilities privately through the repository's GitHub secur
 
 ## Secrets and configuration
 
-`NCB_SECRET_KEY` and `NCB_API_BASE_URL` are server/runtime-only values. Never prefix a secret with `VITE_`, commit `.env` files, or include real values in screenshots, logs, issues, or pull requests. Values prefixed `VITE_` are bundled for the browser and are not secret.
+Canonical server/runtime NoCodeBackend configuration is:
+
+```text
+NOCODEBACKEND_AUTH_BASE_URL
+NOCODEBACKEND_DATA_BASE_URL
+NOCODEBACKEND_SECRET_KEY
+NOCODEBACKEND_INSTANCE
+```
+
+`NOCODEBACKEND_SECRET_KEY` is server-only. Never prefix it with `VITE_`, commit real `.env` files, or include secret values in screenshots, logs, issues, pull requests or browser-delivered source. `VITE_*` values are bundled for the browser and must contain only browser-safe configuration such as same-origin proxy paths.
+
+Do not create alternate short aliases for canonical provider configuration. Exact upstream bases and provider contracts must be verified rather than inferred.
 
 ## NoCodeBackend trust boundary
 
-The NoCodeBackend handler is deliberately an explicit contract rather than a generic proxy. It enforces route/method allowlists, same-origin checks for state-changing cookie requests, JSON and body-size restrictions, Zod request validation, upstream timeouts, constrained error statuses, and validated data responses. It forwards only required credentials and approved headers, while preserving correlation IDs for support.
+The NoCodeBackend handler is deliberately an explicit contract rather than a generic proxy. It enforces route/method allowlists, same-origin checks for state-changing cookie requests, JSON/body-size restrictions, Zod request validation, upstream timeouts, constrained error statuses, and validated data responses. It forwards only required credentials and approved headers while preserving safe correlation IDs for support.
 
-Every data request first resolves the user from NoCodeBackend's server-side `get-session` endpoint using the incoming session cookie and server-held credential. A missing, rejected, or malformed session is denied; the browser's cached user is never an ownership authority. The handler rejects client-supplied `user_id` values that differ from the verified session identity, supplies the verified identity when it is omitted, and attaches that identity to list and item requests. This constrains collection reads plus item GET, PATCH, and DELETE operations to the session owner before a data upstream request is made.
+Every data request first resolves the user through the server-side authentication path using the incoming session cookie and server-held credential. A missing, rejected or malformed session is denied; the browser's cached user is never an ownership authority. The handler rejects client-supplied `user_id` values that differ from verified session identity, supplies verified identity when omitted, and constrains allowlisted reads/writes accordingly.
 
-NoCodeBackend deployments must therefore guarantee that `get-session` validates the supplied session cookie and returns the authenticated user object with a stable `id`. Data endpoints must honor the handler's `user_id` filter for reads, writes, and deletes, and enforce equivalent server-side record ownership checks. The proxy's filter is defense in depth, not a replacement for upstream authorization.
+Provider-side ownership enforcement remains required. The application proxy is a trust boundary and defence-in-depth layer, not evidence that the upstream provider enforces every invariant automatically.
+
+## Provider-certification boundary
+
+Generic durable `execution-sessions` must remain disabled until the target NoCodeBackend instance and generated API are certified against `NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md`. Do not encode guessed routes, methods, envelopes, filtering or uniqueness semantics into production behaviour.
 
 ## Change checklist
 
-1. Do not weaken route, method, origin/CSRF, body-limit, timeout, or schema validation without a documented threat-model review.
-2. Keep authentication and data credentials server-side.
-3. Do not log secrets, authorization headers, cookies, passwords, or sensitive user content.
-4. Add contract tests for a changed proxy route or validation rule.
-5. Verify data routes derive ownership from a trusted session and cannot use a browser-supplied identity.
-6. Use `npm ci` for the lockfile-defined dependency graph and review dependency changes deliberately.
+1. Do not weaken route, method, origin/CSRF, body-limit, timeout or schema validation without a documented security review.
+2. Keep authentication/data credentials server-only.
+3. Do not log secrets, authorization headers, cookies, passwords or sensitive user content.
+4. Add contract tests for changed proxy/configuration behaviour.
+5. Verify data routes derive ownership from a trusted session and cannot use browser-supplied identity as authority.
+6. Verify new provider behaviour against the real provider contract before activation.
+7. Use `npm run platform:validate` before merge; treat deployment/provider/runtime verification as separate release evidence.
