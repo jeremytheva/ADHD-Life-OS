@@ -2,7 +2,7 @@
 
 **Snapshot date:** 26 August 2026  
 **Default branch reviewed:** `main`  
-**Last verified main commit:** `4f53743` — squash merge of PR #85  
+**Last verified main commit:** `f045c85` — squash merge of PR #86  
 **Overall state:** Active development  
 **Current delivery stage:** Stage 3 — execution and next-action experience
 
@@ -13,38 +13,39 @@ Use this section as the first recovery point after interruption, context loss, o
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Primary implementation thread | Certify the provider contract for durable generic execution sessions |
-| Current open PR | PR #86 — execution-session provider certification contract and harness |
-| Last completed outcome | PR #85 merged — durable status/re-entry checkpoint synchronized after cognitive-load controls |
-| Current blocker | The target NoCodeBackend `execution-sessions` structure and generated API are not yet certified and must not be assumed or enabled |
-| Next action | Complete PR #86 validation, then create the provider structure, capture its exact generated URLs, and run read/full certification |
-| Next queued outcome | After provider evidence passes, add the exact application schemas/proxy/repository adapter and activate durable Today Start/Continue/Recover behind the verified capability |
+| Primary implementation thread | Create and certify the real NoCodeBackend `execution-sessions` provider structure |
+| Current open PR | Status synchronization only; no application activation thread is open |
+| Last completed outcome | PR #86 merged — fail-closed execution-session provider contract and certification harness |
+| Current blocker | The target NoCodeBackend dashboard is an external dependency: `execution-sessions` must be created and its generated API certified before application activation. No authenticated NoCodeBackend connector/browser session is available in the current toolset. |
+| Next action | In the target NoCodeBackend instance, create `execution-sessions`, capture exact generated read/create/update URLs and update method, then run read-only and full certification. |
+| Next queued outcome | After provider evidence passes, add the exact application schemas, proxy allowlist entry, repository adapter and durable Today Start/Continue/Recover integration. |
 
 If this checkpoint conflicts with GitHub, code, or provider evidence, verify the authoritative source and update this section rather than reconstructing state from memory or chat history.
 
 ## Executive status
 
-ADHD Life OS has moved beyond repository-foundation and core-integrity work into Stage 3 execution behaviour. `main` contains the unified execution-engine foundation, the Today next-action experience, project-control documentation, reversible transient **Not now** feedback, and explicit cognitive-load/execution-continuity controls for AI-assisted delivery.
+ADHD Life OS is in Stage 3 execution work. `main` contains the unified execution-engine foundation, the Today next-action experience, reversible transient **Not now** feedback, project-control documentation, cognitive-load/execution-continuity delivery controls, and a provider-certification harness for durable generic execution sessions.
 
-The next major Stage 3 boundary is durable generic execution persistence and recovery. PR #86 prepares a repeatable provider-certification contract and harness while deliberately keeping production execution unavailable. Application activation must remain fail-closed until the target NoCodeBackend provider structure exists and its generated API has passed certification.
+PR #86 closes the application-side preparation needed to verify the external NoCodeBackend contract without guessing provider behaviour. Durable Start/Continue/Recover remains deliberately unavailable until the target provider structure exists and passes certification.
 
 ## Current stage assessment
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| Repository operating baseline | Green | `AGENTS.md`, project controls, CI/documentation conventions, testing, security, architecture, data model, delivery and ADR processes exist. |
-| Cognitive-load delivery controls | Green | PR #84 merged deterministic continuation, selective escalation, WIP limits, scope parking, re-entry and Definition of Enough into the repository framework. |
-| Stage 2 integrity closure | Green | Stage 2 closed before Stage 3 foundation work. |
+| Repository operating baseline | Green | Project controls, CI/documentation conventions, testing, security, architecture, data model, delivery and ADR processes exist. |
+| Cognitive-load delivery controls | Green | PR #84 merged deterministic continuation, selective escalation, WIP limits, scope parking, re-entry and Definition of Enough. |
+| Stage 2 integrity closure | Green | Stage 2 formally closed before Stage 3 foundation work. |
 | Unified execution-engine foundation | Green | Merged through PR #58. |
 | Today next-action experience | Green | Merged through PR #59. |
 | Project-control documentation | Green | Merged through PR #60. |
 | Transient Not now feedback | Green | Merged through PR #61. |
-| Provider certification tooling | Amber / active | PR #86 defines the logical `execution-sessions` contract and fail-closed read/full certification command without activating production capability. |
-| Durable generic execution lifecycle | Not merged / design evidence exists | Closed Stage 3 PRs contain useful implementation evidence, but `main` must not describe them as implemented capability. |
-| Durable execution persistence | Blocked | Requires real provider-side `execution-sessions` creation and passing certification before route/schema/repository activation. |
+| Provider certification tooling | Green | PR #86 merged the logical `execution-sessions` contract, fail-closed certification command and deterministic tests. |
+| Real provider certification | Blocked / external | Requires provider-side structure creation and exact generated API evidence. |
+| Durable generic execution lifecycle | Not merged / design evidence exists | Closed Stage 3 PRs remain design evidence, not implemented production capability. |
+| Durable execution persistence | Blocked | Cannot activate until real provider certification passes. |
 | Data boundary | Green | Existing domain requests use same-origin allowlisted NoCodeBackend proxy contracts. |
-| Validation baseline | Green | Canonical command is `npm run validate`; Playwright is available for end-to-end coverage. |
-| Vercel production binding | Grey / outstanding | No production binding is treated as verified in the current repository state. |
+| Validation baseline | Green | PR #86 passed the canonical Application validation after a lint-root-cause correction. |
+| Vercel production binding | Grey / outstanding | No production binding is treated as verified in current repository state. |
 | External calendar integration | Grey / deferred | Planned only; not an enabled current capability. |
 | GitHub Issues | Unavailable | Issues remain disabled; focused PR bodies serve as implementation contracts. |
 
@@ -56,69 +57,70 @@ The verified relevant merges on `main` are:
 - **PR #59 — next-action experience:** next-action decision panel integrated into Today with focused coverage.
 - **PR #60 — project-control documentation:** `PROJECT.md`, `STATUS.md`, architecture/data updates and decision-register indexing.
 - **PR #61 — transient Not now feedback:** reversible session-local recommendation exclusion without mutating or persisting source domain records.
-- **PR #84 — cognitive-load execution-continuity controls:** repository delivery rules now explicitly protect against context loss, avoidable decision load, WIP sprawl, scope creep, restart friction and overengineering.
-- **PR #85 — status synchronization:** the durable re-entry checkpoint was refreshed after the cognitive-load controls merged.
+- **PR #84 — cognitive-load execution-continuity controls:** deterministic continuation, bounded decision escalation, WIP/scope controls, re-entry and Definition of Enough.
+- **PR #85 — status synchronization:** durable re-entry state refreshed after PR #84.
+- **PR #86 — provider certification tooling:** exact logical execution-session contract plus read/full certification harness; production capability remains disabled.
 
-## Current architectural blocker
+## Provider certification boundary
 
-A generic `execution-sessions` provider capability is not certified. The application must therefore not yet:
+`docs/NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md` and `npm run certify:execution-sessions` are now on `main`.
 
-- expose or assume a live `execution-sessions` proxy route;
-- claim Start/Continue survives reloads or devices;
-- persist generic execution state in browser storage as a substitute for provider persistence;
-- overload task status or routine sessions to simulate generic execution state;
-- describe closed or stacked implementation work as merged production behaviour.
+The provider must still supply evidence for:
 
-PR #86 prepares a certification harness that requires exact generated provider URLs rather than guessing route shapes. Before activation, the exact provider structure, ownership fields, lifecycle values, generated CRUD contract, response envelopes, filtering behaviour, and concurrency/uniqueness limitations must be verified against the target provider.
+1. `execution-sessions` structure existence;
+2. exact field names/types or documented mappings;
+3. exact generated read URL;
+4. exact generated create URL;
+5. exact generated update URL/template;
+6. exact generated update method (`PUT` or `PATCH`);
+7. read certification;
+8. create → pause → resume → cancel certification;
+9. response envelope and filtering behaviour;
+10. uniqueness/concurrency capability classification.
+
+Until that evidence exists, the application must not expose an `execution-sessions` route, claim durable recovery, use browser persistence as a substitute, or describe closed design PRs as production capability.
 
 ## What is working well
 
 - One unified execution engine remains the policy source for recommendation behaviour.
-- The Activity abstraction allows multiple source domains to participate without duplicating ranking policy.
-- Recommendation feedback is separated from durable source-domain state.
-- Provider integration remains behind an explicit application-owned trust boundary.
-- Tests and accepted decisions accompany consequential Stage 3 changes.
-- Project-control documents externalise current state rather than relying on chat history.
-- Delivery continuation, decision escalation, WIP, scope parking and stopping rules are explicit and merged.
-- Provider certification is being separated from application activation so external contract uncertainty cannot silently leak into production code.
+- The Activity abstraction supports multiple domains without duplicating ranking policy.
+- Recommendation feedback remains separated from durable source-domain state.
+- Provider integration remains behind an application-owned trust boundary.
+- Provider uncertainty is now converted into an executable certification gate rather than assumptions in application code.
+- Delivery state and next action are externalised for reliable continuation.
 
 ## Current risks and watch items
 
 ### 1. Provider-contract drift
 
-Do not implement application routes or schemas from assumptions about a future NoCodeBackend structure. Create the provider structure, capture exact generated URLs and certify the real API first.
+Use the generated target-instance contract. Do not infer routes, methods, envelopes, filters or uniqueness semantics.
 
 ### 2. One-active-session integrity
 
-Durable execution will require explicit ownership and one-active-session protection. Provider-level atomic/uniqueness capability must be verified; otherwise compensating application controls must be documented.
+Provider-atomic uniqueness remains unverified. If unavailable, application compensating controls must remain explicit and tested.
 
 ### 3. Source completion versus execution completion
 
-Completing an execution session is not automatically equivalent to completing its source task/chore/routine step. Partial-success and reconciliation semantics must remain explicit.
+Execution-session completion and source-domain completion are separate writes. Partial-success and reconciliation semantics must remain explicit.
 
-### 4. Documentation/state drift
+### 4. External provider access
 
-`STATUS.md` must distinguish merged capability from design evidence, closed PRs, provider readiness, and future implementation. Open/closed pull requests must not be described as production behaviour unless merged.
-
-### 5. Cognitive-load drift
-
-Delivery can fail even when individual code changes are correct if context is repeatedly reconstructed, work branches unnecessarily, consequential and trivial decisions are treated the same, or scope expands after acceptance criteria are already met. These controls are authoritative on `main` through PR #84 and must be preserved in subsequent work.
+The repository is ready to certify the provider, but the current connected tools do not expose an authenticated NoCodeBackend account/session. This is an external delivery dependency, not a reason to bypass certification.
 
 ## Recommended next implementation outcome
 
-**Current outcome:** complete the provider-certification boundary in PR #86.
+**Current outcome:** obtain real NoCodeBackend execution-session certification evidence.
 
-After PR #86 passes validation and merges, the external certification sequence is:
+Sequence:
 
-1. create the `execution-sessions` structure in the target NoCodeBackend instance using the logical contract in `docs/NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md`;
-2. capture the exact generated read/create/update URLs rather than infer them;
+1. create `execution-sessions` in the target NoCodeBackend database using `docs/NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md`;
+2. capture the exact generated read/create/update URLs and update method;
 3. run `npm run certify:execution-sessions` in default read-only mode;
-4. run full create/pause/resume/cancel certification with explicit `--confirm-write`;
-5. record provider field/envelope/filtering and uniqueness/concurrency evidence;
-6. only then add the exact Zod schemas and explicit proxy allowlist entry;
-7. add the repository/provider adapter and ownership/contract tests;
-8. compose durable Today Start/Continue/Recover through the verified boundary;
-9. add Playwright coverage for the critical execution and recovery loop.
+4. run full certification with `--mode=full --confirm-write`;
+5. record field/envelope/filtering/uniqueness evidence;
+6. only after a pass, implement the exact application schemas/proxy/repository adapter;
+7. compose durable Today Start/Continue/Recover;
+8. add ownership, lifecycle, reconciliation and critical Playwright coverage.
 
 ## Stage 3 exit direction
 
