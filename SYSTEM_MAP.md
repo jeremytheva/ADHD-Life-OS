@@ -13,11 +13,13 @@ User
           → unified execution/recommendation engine
           → task/project/routine/housework/inbox domain rules
       → browser auth/data clients
-          → same-origin /api/ncb/auth/*
-          → same-origin /api/ncb/data/*
-              → api/ncb explicit trust-boundary handler
-                  → NoCodeBackend authentication upstream
-                  → NoCodeBackend data upstream
+          → stable same-origin /api/ncb/auth/*
+          → stable same-origin /api/ncb/data/*
+              → api/ncb/handler.js application trust boundary
+                  → auth provider path
+                  → dataProviderContract.js target operation evidence
+                      → dataProvider.js physical request mapping
+                          → NoCodeBackend generated data API
 ```
 
 ## Authentication
@@ -28,6 +30,7 @@ UI/auth context
   → /api/ncb/auth/*
   → route/method/body/origin validation
   → server-only NoCodeBackend auth configuration
+  → incoming auth cookie forwarded to auth provider when required
   → NoCodeBackend session/auth response
   → session identity returned to application
 ```
@@ -38,14 +41,24 @@ UI/auth context
 Page/component
   → service/repository
   → browser data client
-  → /api/ncb/data/*
-  → trusted session identity resolution
-  → ownership/query/payload validation
-  → server-only NoCodeBackend data configuration
-  → upstream record
-  → response schema validation
-  → application state
+  → /api/ncb/data/* application operation
+  → application route/query/body validation
+  → target provider-operation contract check
+      ├─ unverified/missing config → fail closed before provider access
+      └─ verified
+          → trusted auth-session identity resolution
+          → ownership constraint
+          → dataProvider.js physical URL/method mapping
+              → server-owned Instance + Bearer credential
+              → no browser auth cookie / Origin / Referer by default
+              → NoCodeBackend generated data API
+          → response schema validation
+          → application state
 ```
+
+The browser/repository route and HTTP method are not provider-route evidence. Physical provider mappings live only in `api/ncb/dataProviderContract.js` and are currently UNVERIFIED for the target ADHD Life OS instance.
+
+See [`docs/NOCODEBACKEND_OPERATIONS.md`](docs/NOCODEBACKEND_OPERATIONS.md) for provider-operation evidence state.
 
 ## Execution and next action
 
@@ -61,7 +74,7 @@ Current domain records + execution context
   → optional replanning
 ```
 
-Generic durable execution sessions remain provider-blocked until `docs/NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md` is certified against the real target instance.
+Generic durable execution sessions remain provider-blocked until both the general physical data operation contract and `docs/NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md` are certified against the real target instance.
 
 ## Persistence domains
 
@@ -79,7 +92,7 @@ User
   └─ inbox-items
 ```
 
-See [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) for invariants and physical mapping.
+See [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) for invariants and logical persisted shapes. Physical provider operation mapping is separate from the domain model.
 
 ## Validation and delivery
 
@@ -95,13 +108,15 @@ Implementation
       → Playwright critical path
   → pull request review
   → merge
-  → deployment/runtime verification when applicable
+  → connected provider/deployment verification when applicable
   → STATUS.md handoff
 ```
 
+Deterministic injected provider fixtures prove adapter behaviour only; they do not advance provider-verification state.
+
 ## Current external dependencies
 
-- **NoCodeBackend:** current auth/data provider; execution-session capability still requires real provider certification.
+- **NoCodeBackend:** intended auth/data provider. Physical target data operations and execution-session capability require real provider certification.
 - **GitHub:** implementation source of truth, CI and pull-request history.
 - **Vercel:** no ADHD Life OS project is currently linked in the connected account, so production deployment remains unverified/unconfigured.
 
@@ -112,8 +127,10 @@ Implementation
 | User-facing workflow | `src/pages/`, `src/components/`, relevant service/domain policy |
 | Recommendation/execution policy | execution/domain modules, not presentation-only code |
 | Persisted shape | `src/domains/schemas.js`, repository/client, proxy, `docs/DATA_MODEL.md` |
+| Stable browser data operation | `src/infrastructure/nocodebackend/`, `api/ncb/handler.js` |
+| Physical provider data route/method | `api/ncb/dataProviderContract.js`, `api/ncb/dataProvider.js`, `docs/NOCODEBACKEND_OPERATIONS.md` |
 | Auth/session | auth context/client + `/api/ncb/auth/*` + proxy contract tests |
-| Authorization/ownership | `api/ncb/` trust boundary + domain relationship rules/tests |
-| Provider change | provider contract/adapter + config + security/data docs |
+| Authorization/ownership | `api/ncb/handler.js` + domain relationship rules/tests |
+| Provider certification | `docs/NOCODEBACKEND_OPERATIONS.md`, target Swagger/API evidence, provider contract tests |
 | Release/CI | `package.json`, `.github/workflows/`, `docs/TESTING.md`, `docs/DELIVERY.md` |
 | Project direction/current state | `ROADMAP.md` / `STATUS.md` |
