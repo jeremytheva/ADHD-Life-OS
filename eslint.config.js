@@ -3,11 +3,20 @@ import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 
+const unusedCodeRules = {
+  'no-unused-vars': ['warn', {
+    argsIgnorePattern: '^_',
+    caughtErrorsIgnorePattern: '^_',
+    varsIgnorePattern: '^_'
+  }],
+  'no-useless-catch': 'warn'
+};
+
 export default [
   { ignores: ['dist'] },
   js.configs.recommended,
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['**/*.{js,jsx,mjs}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: {
@@ -32,13 +41,16 @@ export default [
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'react-refresh/only-export-components': 'off',
-      'no-unused-vars': ['warn', {
-        argsIgnorePattern: '^_',
-        caughtErrorsIgnorePattern: '^_',
-        varsIgnorePattern: '^_'
-      }],
+      // Core no-unused-vars cannot distinguish JSX element references without
+      // eslint-plugin-react's jsx-uses-vars rule. Keep JSX noise suppressed and
+      // enforce unused-code diagnostics on ordinary JS/MJS below.
+      'no-unused-vars': 'off',
       'no-case-declarations': 'off',
-      'no-useless-catch': 'warn'
+      'no-useless-catch': 'off'
     },
+  },
+  {
+    files: ['**/*.{js,mjs}'],
+    rules: unusedCodeRules
   }
 ];
