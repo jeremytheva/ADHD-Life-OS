@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test",
     "test:e2e": "playwright test",
+    "inspect:ncb-openapi": "node scripts/inspect-ncb-openapi.mjs",
     "certify:ncb-read": "node scripts/certify-ncb-read.mjs",
     "certify:execution-sessions": "node scripts/certify-execution-sessions.mjs",
     "validate:governance": "node scripts/validate-governance.mjs",

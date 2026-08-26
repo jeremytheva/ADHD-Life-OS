@@ -111,9 +111,35 @@ For each physical operation record:
 
 Do not record secret values or production personal data.
 
-## 8. Read-only certification harness
+## 8. Swagger/OpenAPI evidence intake
 
-The first target-provider evidence step is executable through:
+When the target generated API can be exported as JSON, inspect it before manually transcribing provider routes:
+
+```bash
+npm run inspect:ncb-openapi -- --spec=<target-openapi.json> --collection=tasks
+```
+
+The command accepts OpenAPI 3.x or Swagger 2.0 JSON and produces a **CANDIDATE_ONLY** evidence report. It:
+
+- requires a current application collection name;
+- fingerprints the exact supplied specification with SHA-256 so later evidence can identify the source document precisely;
+- finds only operations whose path or operation metadata mentions the selected collection;
+- records provider method, path, operation ID, server candidates, parameter names/locations/required state, request content types, response statuses/content types and security-scheme names;
+- resolves local parameter references where possible;
+- highlights whether `Instance` and `user_id` parameters are declared;
+- deliberately omits parameter values, examples, request examples and credentials;
+- does not infer that a candidate is the application's list/get/create/update/delete operation;
+- does not call the provider;
+- does not edit `dataProviderContract.js`;
+- does not change any provider verification state.
+
+The specification itself is evidence that a provider operation may exist, but it is not sufficient to mark an operation **PROVIDER VERIFIED**. A candidate must still be exercised against the target instance, including success/envelope/filter behaviour and representative failure behaviour.
+
+If the provider export is YAML, export or convert it to JSON before using the repository command. The tool intentionally avoids adding a YAML parser dependency solely for certification intake.
+
+## 9. Read-only certification harness
+
+The first connected target-provider evidence step is executable through:
 
 ```bash
 NOCODEBACKEND_SECRET_KEY='<server secret>' \
@@ -142,20 +168,21 @@ The read certification command:
 
 A passing command is evidence for the exact read/list contract that was exercised. It does **not** automatically edit `dataProviderContract.js`, certify writes, prove application integration, or prove production deployment.
 
-## 9. Target-instance certification sequence
+## 10. Target-instance certification sequence
 
-1. Open the target ADHD Life OS NoCodeBackend generated API/Swagger.
-2. Capture the exact read/list contract for one existing supported collection.
-3. Run `npm run certify:ncb-read -- --collection=<collection>` against that exact URL.
-4. Verify record lookup semantics rather than assuming an item URL.
-5. Capture create/update/delete routes and methods only where those operations are enabled.
-6. Verify whether update is PUT, PATCH or another generated method.
-7. Verify filtering used for ownership and relationships.
-8. Verify response envelopes and field types.
-9. Record non-secret evidence in this register.
-10. Update deterministic contract fixtures/tests.
-11. Update `api/ncb/dataProviderContract.js` with only the operations supported by target-instance evidence.
-12. Run `npm run platform:validate` and connected-provider application verification before changing the application verification state.
+1. Open/export the target ADHD Life OS NoCodeBackend generated API/Swagger.
+2. If JSON is available, run `npm run inspect:ncb-openapi -- --spec=<file> --collection=tasks` and retain the specification fingerprint plus candidate report.
+3. Select the exact read/list operation from provider evidence rather than from another project's route family.
+4. Run `npm run certify:ncb-read -- --collection=<collection>` against that exact URL.
+5. Verify record lookup semantics rather than assuming an item URL.
+6. Capture create/update/delete routes and methods only where those operations are enabled.
+7. Verify whether update is PUT, PATCH or another generated method.
+8. Verify filtering used for ownership and relationships.
+9. Verify response envelopes and field types.
+10. Record non-secret evidence in this register.
+11. Update deterministic contract fixtures/tests.
+12. Update `api/ncb/dataProviderContract.js` with only the operations supported by target-instance evidence.
+13. Run `npm run platform:validate` and connected-provider application verification before changing the application verification state.
 
 ### Evidence progression
 
@@ -169,9 +196,9 @@ IMPLEMENTED
 → RUNTIME VERIFIED
 ```
 
-A successful read certification can establish **PROVIDER VERIFIED** for the exact exercised read/list operation. It does not establish later states by itself.
+A generated specification produces candidate evidence. A successful connected read certification can establish **PROVIDER VERIFIED** for the exact exercised read/list operation. Neither establishes later states by itself.
 
-## 10. Execution-session dependency
+## 11. Execution-session dependency
 
 The future `execution-sessions` collection follows the same boundary. Its logical model and dedicated certification harness are defined in `NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md`.
 
