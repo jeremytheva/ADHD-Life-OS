@@ -32,11 +32,12 @@ npm test
 npm run build
 npm run test:e2e
 npm run validate
+npm run inspect:ncb-openapi -- --spec=<target-openapi.json> --collection=<collection>
 npm run certify:ncb-read -- --collection=<collection>
 npm run certify:execution-sessions -- --mode=read
 ```
 
-`npm run validate` remains the application static/unit/build subset. `npm run platform:validate` is the canonical full repository gate. Provider certification commands are separate connected-evidence tools and are not automatically run by CI because they require target-provider access and server credentials.
+`npm run validate` remains the application static/unit/build subset. `npm run platform:validate` is the canonical full repository gate. Provider evidence/certification commands are separate tools and are not automatically run by CI against a real provider because target-provider access and server credentials are external evidence.
 
 ## Evidence boundaries
 
@@ -103,7 +104,7 @@ External provider capability is tracked separately from adapter code:
 | --- | --- | --- | --- |
 | Auth application boundary | Yes | Deployment/target evidence still required for release | Deterministic application tests |
 | Stable data application boundary | Yes | N/A — application-owned contract | Deterministic application tests |
-| Physical NoCodeBackend data operations | Fail-closed registry/adapter + read certification tooling implemented | **No — target contract pending** | No connected-provider verification |
+| Physical NoCodeBackend data operations | Fail-closed registry/adapter + spec intake + read certification tooling implemented | **No — target contract pending** | No connected-provider verification |
 | Generic `execution-sessions` | Certification tooling only | No | No |
 
 `api/ncb/dataProviderContract.js` is intentionally UNVERIFIED in production. Tests must not change that registry merely to exercise physical mapping.
@@ -125,6 +126,29 @@ Required coverage includes:
 - malformed 2xx provider records remain structured upstream-response errors.
 
 These tests prove adapter and trust-boundary behaviour only. The paths in injected test contracts are fixtures, not NoCodeBackend evidence.
+
+## Target-spec evidence intake
+
+`scripts/inspect-ncb-openapi.mjs` reduces transcription and interpretation errors when the target generated API/Swagger can be exported as JSON.
+
+Run:
+
+```bash
+npm run inspect:ncb-openapi -- --spec=<target-openapi.json> --collection=tasks
+```
+
+The report is deliberately **CANDIDATE_ONLY**. Deterministic coverage in `test/ncb-openapi-evidence-intake.test.mjs` verifies that the inspector:
+
+- supports OpenAPI 3.x and Swagger 2.0 JSON;
+- fingerprints the exact input document;
+- finds collection candidates from path/operation metadata without inferring an application operation;
+- summarizes method/path/server/parameter/request/response/security metadata;
+- resolves local parameter references where practical;
+- highlights declared `Instance` and `user_id` parameters;
+- omits examples, defaults, query values and credentials from report output;
+- fails deterministically for unsupported collections, malformed specs or no matching candidate.
+
+The spec inspector does not call the provider and therefore cannot establish **PROVIDER VERIFIED**. Its purpose is to make the subsequent connected certification exact and auditable.
 
 ## Read-only target-provider certification
 
