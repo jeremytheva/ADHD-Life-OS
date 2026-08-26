@@ -7,7 +7,7 @@
 
 Stage 3 has a unified recommendation/execution direction, but `main` does not currently contain a verified generic execution-session provider capability. The application must therefore remain fail-closed until the target NoCodeBackend instance contains the required structure and its generated API has been certified.
 
-This document defines the logical contract. It does **not** assert that NoCodeBackend has already created the table, generated these exact routes, or supports provider-atomic uniqueness. Exact provider URLs and envelopes must be captured from the target instance rather than inferred.
+This document defines the logical contract. It does **not** assert that NoCodeBackend has already created the table, generated these exact routes/methods, or supports provider-atomic uniqueness. Exact provider URLs, methods, and envelopes must be captured from the target instance rather than inferred.
 
 ## 2. Required collection
 
@@ -91,7 +91,7 @@ Before application activation, verify the generated provider API supports:
 - sufficient filtering for current/non-terminal retrieval, or a safe server-side fallback when filtering is insufficient;
 - deletion only if later required by product/data policy.
 
-The repository must not guess route families or response envelopes. Capture the exact generated URLs from the target NoCodeBackend instance.
+The repository must not guess route families, update methods, or response envelopes. Capture the exact generated URLs and the generated update method from the target NoCodeBackend instance.
 
 ## 8. Certification command
 
@@ -122,12 +122,13 @@ Read mode performs no provider mutation. It requires a successful JSON response 
 
 ### Full create/update certification
 
-Full mode deliberately requires explicit write confirmation:
+Full mode deliberately requires explicit write confirmation and the verified generated update method:
 
 ```text
 NCB_EXECUTION_SESSIONS_READ_URL=<exact generated read URL>
 NCB_EXECUTION_SESSIONS_CREATE_URL=<exact generated create URL>
 NCB_EXECUTION_SESSIONS_UPDATE_URL_TEMPLATE=<exact update URL containing {id}>
+NCB_EXECUTION_SESSIONS_UPDATE_METHOD=<PUT or PATCH exactly as generated>
 NCB_CERT_USER_ID=<test/certification user id>
 NOCODEBACKEND_SECRET_KEY=<server-only provider secret>
 ```
@@ -148,12 +149,12 @@ The full certification path:
 
 1. verifies read;
 2. creates a temporary `in_progress` task execution session;
-3. verifies `in_progress -> paused`;
-4. verifies `paused -> in_progress`;
+3. verifies `in_progress -> paused` using the supplied generated update method;
+4. verifies `paused -> in_progress` using the same method;
 5. terminalizes the test session as `cancelled`;
 6. optionally deletes the test record when an exact delete endpoint is supplied.
 
-If a transition fails after creation, the tool attempts to cancel the created record and reports its id for manual cleanup. It never logs the provider secret.
+If a transition fails after creation, the tool attempts to cancel the created record using the same verified update method and reports its id for manual cleanup. It never logs the provider secret.
 
 ## 9. Evidence required before activation
 
@@ -162,6 +163,7 @@ If a transition fails after creation, the tool attempts to cancel the created re
 - [ ] Exact generated read URL captured.
 - [ ] Exact generated create URL captured.
 - [ ] Exact generated update URL/template captured.
+- [ ] Exact generated update method captured (`PUT` or `PATCH`).
 - [ ] Read certification passes.
 - [ ] Full create/pause/resume/cancel certification passes.
 - [ ] Returned response envelope and field types are captured in tests/fixtures.
@@ -173,7 +175,7 @@ If a transition fails after creation, the tool attempts to cancel the created re
 
 Only after provider evidence passes:
 
-1. add execution-session record/create/patch schemas;
+1. add execution-session record/create/update schemas matching the certified provider method/shape;
 2. add `execution-sessions` to the explicit server collection allowlist;
 3. add the execution-session repository/provider adapter;
 4. enforce authenticated ownership at the existing trust boundary;
