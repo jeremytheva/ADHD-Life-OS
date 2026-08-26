@@ -64,7 +64,7 @@ test('record validation rejects an unknown execution status', () => {
   )
 })
 
-test('full certification verifies create and pause/resume/cancel transitions without guessing route shapes', async () => {
+test('full certification uses the verified provider update method for pause/resume/cancel', async () => {
   const calls = []
   let currentRecord
   const timestamps = [
@@ -95,7 +95,7 @@ test('full certification verifies create and pause/resume/cancel transitions wit
       return jsonResponse({ status: 'success', data: currentRecord }, 201)
     }
 
-    if (options.method === 'PATCH') {
+    if (options.method === 'PUT') {
       currentRecord = { ...currentRecord, ...body }
       return jsonResponse({ status: 'success', data: currentRecord })
     }
@@ -108,6 +108,7 @@ test('full certification verifies create and pause/resume/cancel transitions wit
     readUrl: 'https://provider.example/read/execution-sessions',
     createUrl: 'https://provider.example/create/execution-sessions',
     updateUrlTemplate: 'https://provider.example/update/execution-sessions/{id}',
+    updateMethod: 'PUT',
     secret: 'test-secret',
     userId: 'user-1',
     now: () => timestamps[timestampIndex++]
@@ -116,8 +117,24 @@ test('full certification verifies create and pause/resume/cancel transitions wit
   assert.equal(result.passed, true)
   assert.deepEqual(result.evidence.map((item) => item.operation), ['read', 'create', 'pause', 'resume', 'cancel'])
   assert.equal(currentRecord.status, 'cancelled')
-  assert.equal(calls.filter((call) => call.options.method === 'PATCH').length, 3)
+  assert.equal(calls.filter((call) => call.options.method === 'PUT').length, 3)
   assert.equal(calls[2].url, 'https://provider.example/update/execution-sessions/provider-session-42')
+  assert.equal(result.evidence.find((item) => item.operation === 'pause').method, 'PUT')
+})
+
+test('full certification rejects an unverified update method', async () => {
+  await assert.rejects(
+    () => certifyFullContract({
+      fetchImpl: async () => jsonResponse({ data: [] }),
+      readUrl: 'https://provider.example/read/execution-sessions',
+      createUrl: 'https://provider.example/create/execution-sessions',
+      updateUrlTemplate: 'https://provider.example/update/execution-sessions/{id}',
+      updateMethod: 'POST',
+      secret: 'test-secret',
+      userId: 'user-1'
+    }),
+    (error) => error instanceof CertificationError && error.code === 'NCB_CERT_CONFIG_INVALID'
+  )
 })
 
 test('full certification reports the created record id if a later transition fails', async () => {
@@ -155,6 +172,7 @@ test('full certification reports the created record id if a later transition fai
       readUrl: 'https://provider.example/read/execution-sessions',
       createUrl: 'https://provider.example/create/execution-sessions',
       updateUrlTemplate: 'https://provider.example/update/execution-sessions/{id}',
+      updateMethod: 'PATCH',
       secret: 'test-secret',
       userId: 'user-1',
       now: () => '2026-08-26T00:00:00.000Z'
