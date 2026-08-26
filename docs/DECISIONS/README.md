@@ -1,11 +1,11 @@
 # ADHD Life OS — Decision Register
 
 **Purpose:** Index consequential product, architecture, data, security, testing, and delivery decisions that constrain future implementation.  
-**Last reviewed:** 23 August 2026
+**Last reviewed:** 26 August 2026
 
 ## How to use this register
 
-Create a decision record when a choice materially affects future implementation, compatibility, data ownership, security, provider integration, architecture, or product behaviour.
+Create a decision record when a choice materially affects future implementation, compatibility, data ownership, security, provider integration, architecture, product behaviour, or the delivery controls used to preserve reliable execution across AI-assisted sessions.
 
 Do **not** create a decision record for routine implementation details already governed by repository conventions.
 
@@ -53,7 +53,8 @@ The repository currently contains decision records covering areas including:
 - housework integrity;
 - project-detail recovery;
 - project partial-success behaviour;
-- Stage 3 execution-engine direction and related implementation decisions recorded during recent delivery work.
+- Stage 3 execution-engine direction and related implementation decisions recorded during recent delivery work;
+- cognitive-load and execution-continuity controls for AI-assisted delivery, including deterministic continuation, selective escalation, WIP limits, scope parking, re-entry state, and the definition of enough (`2026-08-26-cognitive-load-execution-continuity.md`).
 
 Because the folder is the authoritative register, contributors should inspect the directory directly before making a change that may conflict with an accepted decision.
 
@@ -69,6 +70,7 @@ Use these informal categories in the title/body when helpful:
 | Security | Authentication, authorization, secret handling, rate limiting, logging, trust-boundary change. |
 | UX/accessibility | A consequential interaction rule shared across workflows. |
 | Testing/release | Validation policy or release gate that implementation must follow. |
+| Delivery/governance | Continuation, decision escalation, WIP, scope, re-entry, evidence, or stopping rules that materially constrain future AI-assisted delivery. |
 | Provider/integration | External service contract, adapter pattern, failure model, or synchronization rule. |
 
 ## Decision template
@@ -148,6 +150,6 @@ When a decision changes:
 3. mark the previous record `Superseded`;
 4. link both directions;
 5. update affected architecture/data/security/product documents;
-6. capture implementation work in a focused GitHub issue.
+6. capture implementation work in a focused GitHub issue or pull-request implementation contract when Issues are unavailable.
 
 Historical decisions should remain in the repository for auditability.
