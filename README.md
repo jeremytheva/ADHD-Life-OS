@@ -1,40 +1,40 @@
 # ADHD Life-OS MVP
 
-ADHD Life-OS is a React and Vite life-management MVP designed for supportive, low-stimulation task, routine, project, inbox, and home-management workflows.
+ADHD Life-OS is a React and Vite life-management platform designed for supportive, low-stimulation task, routine, project, inbox, home-management and next-action workflows.
 
-## Current behavior
+## Current behaviour
 
-- **Tasks and prioritization:** create and organize tasks; optional energy, duration, interest, aversiveness, location, and item metadata informs Quick Wins, Momentum Builders, and Brave Frog recommendations.
-- **Planning workflows:** use projects and subtasks, routines and routine sessions, a daily timeline, day setup, Brain Inbox capture, templates, and Home-mode housework checklists.
-- **Personalization:** select roles and modules during onboarding; core navigation remains available, and accessibility preferences include font size, contrast, reduced motion, focus mode, dyslexic font, and line spacing.
-- **Data and authentication:** browser requests go to same-origin, allowlisted NoCodeBackend auth and data proxy routes. Server-only credentials are used by those routes; validated failures are returned as structured errors rather than silently storing domain records in browser storage.
+- **Tasks and prioritisation:** create and organise tasks; optional energy, duration, interest, aversiveness, location and item metadata informs Quick Wins, Momentum Builders and Brave Frog recommendations.
+- **Planning workflows:** projects/subtasks, routines/routine sessions, daily planning, Brain Inbox capture, templates and Home-mode housework checklists.
+- **Personalisation:** onboarding roles/modules plus accessibility preferences including font size, contrast, reduced motion, focus mode, dyslexic font and line spacing.
+- **Execution direction:** one unified execution/recommendation policy feeds the Today next-action experience. Durable generic Start/Continue/Recover remains provider-blocked until the real NoCodeBackend execution-session contract is certified.
+- **Data and authentication:** browser requests use same-origin, allowlisted NoCodeBackend auth/data proxy routes. Server-only credentials stay behind that trust boundary; failures return explicit structured errors instead of silently creating browser-local domain records.
 
 ## Planned integrations and limits
 
-External calendar/event synchronization is a planned integration area and is **not currently enabled**. Descriptions of scheduling and recommendations refer to existing in-app logic, not a promise of third-party calendar access, background synchronization, or remote AI services. See the [product overview](docs/PRODUCT.md) for the current product boundary.
+External calendar/event synchronisation, background synchronisation, remote AI/LLM assistance and broader productivity integrations are deferred. See [`ROADMAP.md`](ROADMAP.md) and [`STATUS.md`](STATUS.md) for intended direction versus actual state.
 
 ## Documentation
 
-- [Project control](PROJECT.md): purpose, scope, principles, system-of-record hierarchy, and delivery model.
-- [Current status](STATUS.md): current stage, recent progress, risks, and recommended next implementation outcome.
-- [Delivery guide](docs/DELIVERY.md): local delivery, environments, release, and rollback.
-- [Product overview](docs/PRODUCT.md): current user behavior, principles, and planned-integration boundary.
-- [Architecture](docs/ARCHITECTURE.md): React/Vite structure, dependency direction, execution layer, and NoCodeBackend request flow.
-- [Data model](docs/DATA_MODEL.md): supported collections, relationships, validation, compatibility, and migration contracts.
-- [Decision register](docs/DECISIONS/README.md): accepted consequential decisions and decision-record conventions.
-- [Security guide](docs/SECURITY.md): secrets, proxy trust boundary, and reporting.
-- [Testing guide](docs/TESTING.md): required checks, contract coverage, and manual validation.
-- [Contributing guide](docs/CONTRIBUTING.md): setup and review expectations.
-- [Codex workflow](docs/CODEX_WORKFLOW.md): agent-oriented implementation and completion process.
-- [GitHub configuration](docs/GITHUB_CONFIGURATION.md): Issue Forms, pull requests, and CI.
-- [ADR process](docs/ADR_PROCESS.md): documenting consequential technical decisions.
+- [Project control](PROJECT.md) — purpose, scope, inheritance, constraints and source-of-truth rules.
+- [Current status](STATUS.md) — current stage, execution gate, blockers and next dependency-correct work.
+- [Roadmap](ROADMAP.md) — intended milestone/future direction.
+- [System map](SYSTEM_MAP.md) — compact implementation relationships and change-location guide.
+- [Product overview](docs/PRODUCT.md) — current product behaviour and boundaries.
+- [Architecture](docs/ARCHITECTURE.md) — current system/trust/provider structure.
+- [Data model](docs/DATA_MODEL.md) — canonical entities, relationships and migration rules.
+- [Security guide](docs/SECURITY.md) — project-specific trusted boundary and secret handling.
+- [Testing guide](docs/TESTING.md) — validation layers and canonical command.
+- [Delivery guide](docs/DELIVERY.md) — project delivery/release details.
+- [Codex workflow](docs/CODEX_WORKFLOW.md) — gates, continuation and completion workflow.
+- [Decision register](docs/DECISIONS/README.md) — consequential accepted decisions.
 
 ## Getting started
 
 ### Prerequisites
 
 - Node.js 20 or later and npm.
-- A NoCodeBackend environment for live authentication and data interactions. Tests do not require live credentials or network access.
+- A NoCodeBackend environment for live authentication/data interaction. Automated tests do not require real credentials or network access.
 
 ### Install and run
 
@@ -47,37 +47,65 @@ npm run dev
 
 Open `http://localhost:5173`.
 
-### Configure the NoCodeBackend proxy
+## Configure the NoCodeBackend boundary
 
-The browser defaults to `/api/ncb/auth` and `/api/ncb/data`. `VITE_AUTH_PROXY_URL` and `VITE_DATA_PROXY_URL` may override those browser-visible proxy paths.
+Browser-visible same-origin paths default to:
 
-Set `NCB_API_BASE_URL` and `NCB_SECRET_KEY` only in the server/runtime environment. Never expose `NCB_SECRET_KEY` through a `VITE_*` variable, commit `.env` files, or bypass the explicit proxy handlers. Development uses the same allowlisted handler contract as deployment.
+```text
+/api/ncb/auth
+/api/ncb/data
+```
 
-The supported data collections are `user-preferences`, `tasks`, `projects`, `subtasks`, `routines`, `routine-steps`, `routine-sessions`, `housework-tasks`, `housework-completions`, and `inbox-items`. Details are in the [data model](docs/DATA_MODEL.md).
+Optional browser-safe overrides:
+
+```text
+VITE_AUTH_PROXY_URL
+VITE_DATA_PROXY_URL
+```
+
+Canonical server/runtime configuration:
+
+```text
+NOCODEBACKEND_AUTH_BASE_URL
+NOCODEBACKEND_DATA_BASE_URL
+NOCODEBACKEND_SECRET_KEY
+NOCODEBACKEND_INSTANCE
+```
+
+Never expose `NOCODEBACKEND_SECRET_KEY` through `VITE_*`, commit real `.env` files, or bypass the explicit proxy handlers. Supply exact verified upstream bases; do not infer provider route families from related endpoints.
+
+The currently allowlisted domain collections are documented in [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md).
 
 ## Development and validation
 
+The canonical full repository check is:
+
 ```bash
+npm run platform:validate
+```
+
+It composes dependency audit, executable governance checks, lint, typecheck, Node tests, production build and the critical Playwright suite.
+
+Narrower commands remain available for diagnosis:
+
+```bash
+npm run validate:governance
 npm run lint
 npm run typecheck
 npm test
 npm run build
+npm run test:e2e
+npm run validate
 ```
 
-Available scripts:
-
-- `npm run dev` — start Vite development server.
-- `npm run build` — lint and create the production build.
-- `npm run preview` — serve the production build locally.
-- `npm run lint` — run ESLint.
-- `npm run lint:error` — show ESLint errors only.
-- `npm run typecheck` — run TypeScript without emitting files.
-- `npm test` — run Node tests.
+`platform:validate` proves only the checks declared by the repository. Provider, deployment and production-runtime verification remain separate evidence states.
 
 ## Contributing
 
-Please read [AGENTS.md](AGENTS.md), the [contributing guide](docs/CONTRIBUTING.md), and the [testing guide](docs/TESTING.md). Use the GitHub Issue Forms and pull request template, keep work focused, add tests when behavior changes, and do not include credentials or personal data.
+Read [`AGENTS.md`](AGENTS.md), [`docs/CODEX_WORKFLOW.md`](docs/CODEX_WORKFLOW.md) and [`docs/TESTING.md`](docs/TESTING.md). Keep one focused implementation outcome per pull request, preserve project documentation/state, add regression coverage for meaningful defects and never include secrets or user data.
+
+GitHub Issues are currently unavailable for this repository, so a focused pull-request body may serve as the implementation contract when no issue can be created.
 
 ## License and support
 
-This project is licensed under the MIT License. For questions or support, open a repository discussion; report security vulnerabilities privately as described in the [security guide](docs/SECURITY.md).
+This project is licensed under the MIT License. Report security vulnerabilities privately as described in the [security guide](docs/SECURITY.md).
