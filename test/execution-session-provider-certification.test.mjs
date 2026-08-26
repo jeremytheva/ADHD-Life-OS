@@ -20,7 +20,7 @@ const makeRecord = (overrides = {}) => ({
   ...overrides
 })
 
-const jsonResponse = (payload, status = 200) => new Response(JSON.stringify(payload), {
+const jsonResponse = (payload, status = 200) => new globalThis.Response(JSON.stringify(payload), {
   status,
   headers: { 'Content-Type': 'application/json' }
 })
