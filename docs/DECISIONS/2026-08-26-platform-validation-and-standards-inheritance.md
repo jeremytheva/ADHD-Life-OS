@@ -61,6 +61,10 @@ This approach preserves the current architecture and project-specific delivery c
 - automation cannot prove subjective architecture intent, real provider capability, production configuration or runtime behaviour;
 - project documents must continue to be maintained when their meaning changes.
 
+## Evidence boundary
+
+Repository automation may prove mechanical compliance and checked-in behaviour only. Direct provider/deployment/runtime evidence remains required for the release gate. In particular, a passing `platform:validate` must not change `PROVIDER UNVERIFIED`, `DEPLOYED`, or `RUNTIME VERIFIED` states without separate evidence from the relevant external system.
+
 ## Implementation constraints
 
 - Do not make `platform:validate` imply production verification.
