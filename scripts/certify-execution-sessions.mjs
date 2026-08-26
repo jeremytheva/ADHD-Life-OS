@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url'
 
 const ACTIVITY_TYPES = new Set(['task', 'project_task', 'routine_step', 'chore'])
 const SESSION_STATUSES = new Set(['in_progress', 'paused', 'completed', 'cancelled'])
+const UPDATE_METHODS = new Set(['PATCH', 'PUT'])
 
 export class CertificationError extends Error {
   constructor(code, message, details = {}) {
@@ -75,6 +76,15 @@ const normalizeUrl = (value, label, { template = false } = {}) => {
     throw new CertificationError('NCB_CERT_CONFIG_INVALID', `${label} must contain an {id} placeholder.`)
   }
   return value
+}
+
+const normalizeUpdateMethod = (value) => {
+  if (!value) throw new CertificationError('NCB_CERT_CONFIG_MISSING', 'updateMethod is required for full certification.')
+  const normalized = value.toUpperCase()
+  if (!UPDATE_METHODS.has(normalized)) {
+    throw new CertificationError('NCB_CERT_CONFIG_INVALID', 'updateMethod must be PATCH or PUT.')
+  }
+  return normalized
 }
 
 const extractPayloadData = (payload) =>
@@ -190,6 +200,7 @@ export const certifyFullContract = async ({
   readUrl,
   createUrl,
   updateUrlTemplate,
+  updateMethod,
   deleteUrlTemplate,
   secret,
   userId,
@@ -199,6 +210,7 @@ export const certifyFullContract = async ({
   normalizeUrl(createUrl, 'createUrl')
   normalizeUrl(updateUrlTemplate, 'updateUrlTemplate', { template: true })
   if (deleteUrlTemplate) normalizeUrl(deleteUrlTemplate, 'deleteUrlTemplate', { template: true })
+  const verifiedUpdateMethod = normalizeUpdateMethod(updateMethod)
   if (!secret) throw new CertificationError('NCB_CERT_CONFIG_MISSING', 'Provider secret is required.')
   if (!isIdentifier(userId)) throw new CertificationError('NCB_CERT_CONFIG_MISSING', 'A certification user id is required for write verification.')
 
@@ -216,36 +228,36 @@ export const certifyFullContract = async ({
       fetchImpl,
       url: replaceId(updateUrlTemplate, created.id),
       secret,
-      method: 'PATCH',
+      method: verifiedUpdateMethod,
       body: { status: 'paused', paused_at: pausedAt }
     })
     const paused = extractSingleRecord(pausedResponse.payload, 'Pause update')
     if (paused.status !== 'paused') throw new CertificationError('NCB_CERT_TRANSITION_FAILED', 'Pause update did not return paused status.')
-    evidence.push({ operation: 'pause', passed: true, http_status: pausedResponse.status })
+    evidence.push({ operation: 'pause', passed: true, http_status: pausedResponse.status, method: verifiedUpdateMethod })
 
     const resumedAt = now()
     const resumedResponse = await requestJson({
       fetchImpl,
       url: replaceId(updateUrlTemplate, created.id),
       secret,
-      method: 'PATCH',
+      method: verifiedUpdateMethod,
       body: { status: 'in_progress', resumed_at: resumedAt }
     })
     const resumed = extractSingleRecord(resumedResponse.payload, 'Resume update')
     if (resumed.status !== 'in_progress') throw new CertificationError('NCB_CERT_TRANSITION_FAILED', 'Resume update did not return in_progress status.')
-    evidence.push({ operation: 'resume', passed: true, http_status: resumedResponse.status })
+    evidence.push({ operation: 'resume', passed: true, http_status: resumedResponse.status, method: verifiedUpdateMethod })
 
     const cancelledAt = now()
     const cancelledResponse = await requestJson({
       fetchImpl,
       url: replaceId(updateUrlTemplate, created.id),
       secret,
-      method: 'PATCH',
+      method: verifiedUpdateMethod,
       body: { status: 'cancelled', cancelled_at: cancelledAt }
     })
     const cancelled = extractSingleRecord(cancelledResponse.payload, 'Cancel update')
     if (cancelled.status !== 'cancelled') throw new CertificationError('NCB_CERT_TRANSITION_FAILED', 'Cleanup update did not return cancelled status.')
-    evidence.push({ operation: 'cancel', passed: true, http_status: cancelledResponse.status })
+    evidence.push({ operation: 'cancel', passed: true, http_status: cancelledResponse.status, method: verifiedUpdateMethod })
 
     if (deleteUrlTemplate) {
       const deleted = await requestNoContent({
@@ -263,7 +275,7 @@ export const certifyFullContract = async ({
           fetchImpl,
           url: replaceId(updateUrlTemplate, created.id),
           secret,
-          method: 'PATCH',
+          method: verifiedUpdateMethod,
           body: { status: 'cancelled', cancelled_at: now() }
         })
       } catch {
@@ -307,6 +319,7 @@ const main = async () => {
           ...common,
           createUrl: process.env.NCB_EXECUTION_SESSIONS_CREATE_URL,
           updateUrlTemplate: process.env.NCB_EXECUTION_SESSIONS_UPDATE_URL_TEMPLATE,
+          updateMethod: process.env.NCB_EXECUTION_SESSIONS_UPDATE_METHOD,
           deleteUrlTemplate: process.env.NCB_EXECUTION_SESSIONS_DELETE_URL_TEMPLATE,
           userId: process.env.NCB_CERT_USER_ID
         })
