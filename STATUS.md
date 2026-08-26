@@ -1,116 +1,117 @@
 # ADHD Life OS — Current Status
 
-**Snapshot date:** 25 August 2026  
+**Snapshot date:** 26 August 2026  
 **Default branch reviewed:** `main`  
+**Last verified main commit:** `2af8110` — merge of PR #61  
 **Overall state:** Active development  
 **Current delivery stage:** Stage 3 — execution and next-action experience
 
+## Re-entry checkpoint
+
+Use this section as the first recovery point after interruption, context loss, or a simple instruction to continue.
+
+| State | Current value |
+| --- | --- |
+| Current stage | Stage 3 — execution and next-action experience |
+| Primary implementation thread | Durable generic execution persistence and recovery |
+| Current open PR | None returned by the repository's open-PR search on 26 August 2026 |
+| Last completed outcome | PR #61 merged — transient **Not now** recommendation feedback |
+| Current blocker | Generic `execution-sessions` provider capability is not verified on `main` and must not be assumed or enabled |
+| Next action | Define/confirm the exact provider-side execution-session contract, create the structure in the target provider, and verify its generated API before application activation |
+| Next queued outcome | After provider evidence exists, add the exact application schema/proxy/repository adapter and activate durable Today Start/Continue/Recover behind the verified capability |
+
+If this checkpoint conflicts with GitHub, code, or provider evidence, verify the authoritative source and update this section rather than reconstructing state from memory or chat history.
+
 ## Executive status
 
-ADHD Life OS has moved beyond repository-foundation and core-integrity work into Stage 3 execution behaviour. `main` contains the unified execution-engine foundation and the first Today next-action experience. Additional Stage 3 work is currently staged through focused pull requests rather than being treated as merged capability prematurely.
+ADHD Life OS has moved beyond repository-foundation and core-integrity work into Stage 3 execution behaviour. `main` contains the unified execution-engine foundation, the Today next-action experience, project-control documentation, and reversible transient **Not now** feedback.
 
-The current priority is to extend the execution journey coherently from choosing an action into starting, continuing, recovering and completing work without fragmenting task-selection logic or inventing provider capabilities that are not yet verified.
+The next major Stage 3 boundary is durable generic execution persistence and recovery. Earlier stacked pull requests explored the execution lifecycle, orchestration, presentation and recovery contracts, but those closed PRs are not equivalent to merged capability on `main`. Application activation must remain fail-closed until the target NoCodeBackend provider contract is created and verified.
 
 ## Current stage assessment
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| Repository operating baseline | Green | `AGENTS.md`, CI/documentation conventions, testing, security, architecture, data model, delivery and ADR processes exist. |
+| Repository operating baseline | Green | `AGENTS.md`, project controls, CI/documentation conventions, testing, security, architecture, data model, delivery and ADR processes exist. |
 | Stage 2 integrity closure | Green | Stage 2 closed before Stage 3 foundation work. |
-| Unified execution-engine foundation | Green | Merged through PR #58 on 22 August 2026. |
-| Today next-action experience | Green | Merged through PR #59 on 22 August 2026. |
-| Transient Not now feedback | Green / pending merge | PR #61 passed Application validation and is ready for review. |
-| Execution lifecycle contract | Amber / stacked | PR #62 defines Start → Pause → Continue → Complete/Cancel plus provider requirements; stacked on #61. |
-| Execution-session service adapter | Amber / stacked | PR #63 adds provider-agnostic persistence orchestration; stacked on #62. |
-| Durable execution persistence | Blocked | Requires creation and verification of a generic `execution-sessions` provider structure before the NoCodeBackend allowlist/repository can be enabled. |
+| Unified execution-engine foundation | Green | Merged through PR #58. |
+| Today next-action experience | Green | Merged through PR #59. |
+| Project-control documentation | Green | Merged through PR #60. |
+| Transient Not now feedback | Green | Merged through PR #61. |
+| Durable generic execution lifecycle | Not merged / design evidence exists | Closed Stage 3 PRs contain useful implementation evidence, but `main` must not describe them as implemented capability. |
+| Durable execution persistence | Blocked | Requires verified provider-side `execution-sessions` capability before route/schema/repository activation. |
 | Data boundary | Green | Existing domain requests use same-origin allowlisted NoCodeBackend proxy contracts. |
 | Validation baseline | Green | Canonical command is `npm run validate`; Playwright is available for end-to-end coverage. |
-| Vercel production binding | Grey / outstanding | Connected Vercel account currently exposes no project linked to `jeremytheva/ADHD-Life-OS`. |
+| Vercel production binding | Grey / outstanding | No production binding is treated as verified in the current repository state. |
 | External calendar integration | Grey / deferred | Planned only; not an enabled current capability. |
-| GitHub Issues | Unavailable | Issues are disabled for this repository; focused PR bodies currently serve as implementation contracts. |
+| GitHub Issues | Unavailable | Issues remain disabled; focused PR bodies serve as implementation contracts. |
 
 ## Merged Stage 3 foundation
 
-The latest reviewed Stage 3 merges on `main` are:
+The verified Stage 3 merges on `main` are:
 
-- **PR #58 — Stage 3 execution-engine foundation:** unified execution eligibility/policy behaviour and supporting tests/decision record.
-- **PR #59 — Stage 3 next-action experience:** next-action decision panel integrated into Today with focused coverage.
-
-## Pending delivery stack
-
-### PR #60 — Project-control documentation
-
-Ready for review and Application validation passed. Adds `PROJECT.md`, `STATUS.md`, expands the canonical architecture/data documents, and adds the decision-register index.
-
-### PR #61 — Transient Not now feedback
-
-Ready for review and Application validation passed. Adds reversible session-local recommendation exclusion without mutating or persisting source domain records.
-
-### PR #62 — Execution lifecycle contract
-
-Draft/stacked on #61. Defines pure Start/Pause/Resume/Complete/Cancel lifecycle semantics, recovery behaviour, a dedicated generic execution-session boundary, and `docs/NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md`.
-
-### PR #63 — Execution-session adapter contract
-
-Draft/stacked on #62. Adds provider-agnostic execution-session orchestration through an injected `list/create/update` adapter, including one-active-session-per-user application protection and recovery lookup. It deliberately does not enable a NoCodeBackend `execution-sessions` route.
+- **PR #58 — execution-engine foundation:** unified execution eligibility/policy behaviour and supporting tests/decision record.
+- **PR #59 — next-action experience:** next-action decision panel integrated into Today with focused coverage.
+- **PR #60 — project-control documentation:** `PROJECT.md`, `STATUS.md`, architecture/data updates and decision-register indexing.
+- **PR #61 — transient Not now feedback:** reversible session-local recommendation exclusion without mutating or persisting source domain records.
 
 ## Current architectural blocker
 
-The repository's verified NoCodeBackend proxy currently supports only the established collection allowlist. A generic `execution-sessions` provider contract has not yet been created and verified.
+A generic `execution-sessions` provider capability is not verified on `main`. The application must therefore not yet:
 
-The application must therefore not yet:
-
-- add `execution-sessions` to the live proxy allowlist;
+- expose or assume a live `execution-sessions` proxy route;
 - claim Start/Continue survives reloads or devices;
-- persist generic execution state in browser storage;
-- overload task status or routine sessions to simulate generic execution state.
+- persist generic execution state in browser storage as a substitute for provider persistence;
+- overload task status or routine sessions to simulate generic execution state;
+- describe closed or stacked implementation work as merged production behaviour.
 
-The required provider structure and verification checklist are defined in `docs/NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md` on PR #62.
+Before activation, the exact provider structure, ownership fields, lifecycle values, generated CRUD contract, response envelopes, filtering behaviour, and concurrency/uniqueness limitations must be verified against the target provider.
 
 ## What is working well
 
 - One unified execution engine remains the policy source for recommendation behaviour.
 - The Activity abstraction allows multiple source domains to participate without duplicating ranking policy.
-- Recommendation feedback is being separated into transient versus durable state deliberately.
-- Execution lifecycle behaviour is now specified independently from persistence and UI.
+- Recommendation feedback is separated from durable source-domain state.
 - Provider integration remains behind an explicit application-owned trust boundary.
-- Tests and decisions accompany consequential Stage 3 changes.
+- Tests and accepted decisions accompany consequential Stage 3 changes.
+- Project-control documents now externalise current state rather than relying on chat history.
 
 ## Current risks and watch items
 
 ### 1. Provider-contract drift
 
-Do not implement application routes or schemas from assumptions about a future NoCodeBackend table. Verify the generated provider API first.
+Do not implement application routes or schemas from assumptions about a future NoCodeBackend structure. Verify the generated provider API first.
 
 ### 2. One-active-session integrity
 
-PR #63 adds an application-level guard, but concurrency-safe enforcement at the provider/trusted boundary must still be assessed once provider capabilities are verified.
+Durable execution will require explicit ownership and one-active-session protection. Provider-level atomic/uniqueness capability must be verified; otherwise compensating application controls must be documented.
 
 ### 3. Source completion versus execution completion
 
-Completing an execution session is not automatically equivalent to completing its source task/chore/routine step. Before connecting those operations, define partial-success and reconciliation semantics.
+Completing an execution session is not automatically equivalent to completing its source task/chore/routine step. Partial-success and reconciliation semantics must remain explicit.
 
 ### 4. Documentation/state drift
 
-`STATUS.md` must distinguish merged capability from validated or stacked pending work. Open PRs must not be described as production behaviour.
+`STATUS.md` must distinguish merged capability from design evidence, closed PRs, provider readiness, and future implementation. Open/closed pull requests must not be described as production behaviour unless merged.
 
-### 5. Deployment gap
+### 5. Cognitive-load drift
 
-No connected Vercel project currently maps to this repository, so production binding, environment verification and live smoke validation remain outstanding.
+Delivery can fail even when individual code changes are correct if context is repeatedly reconstructed, work branches unnecessarily, consequential and trivial decisions are treated the same, or scope expands after acceptance criteria are already met. `AGENTS.md`, `docs/CODEX_WORKFLOW.md`, and `docs/DELIVERY.md` now define continuation, WIP, scope parking, escalation, re-entry, and definition-of-enough controls.
 
 ## Recommended next implementation outcome
 
-**Next external dependency:** create and verify the `execution-sessions` structure in the target NoCodeBackend database using the contract in PR #62.
+**Next external dependency:** establish verified provider evidence for generic execution sessions.
 
-Once provider evidence exists, the next code slice should:
+The next implementation contract should:
 
-1. add the exact Zod record/create/patch schemas;
-2. add `execution-sessions` to the explicit proxy collection allowlist only if verified;
-3. add the repository/provider adapter;
-4. add ownership, query, response, lifecycle and duplicate-active-session tests;
-5. wire the adapter into `createExecutionSessionService`;
-6. integrate Today Start/Continue/Recover with explicit load/write/reconciliation failure states;
-7. add Playwright coverage for the critical execution loop.
+1. define the exact provider-side execution-session fields and lifecycle values;
+2. create the structure in the target NoCodeBackend instance;
+3. verify generated read/create/update behaviour, filters, ownership data and response envelopes;
+4. record provider limitations relevant to uniqueness, concurrency and recovery;
+5. only then add the exact Zod schemas and explicit proxy allowlist entry;
+6. add the repository/provider adapter and ownership/contract tests;
+7. compose durable Today Start/Continue/Recover through the verified boundary;
+8. add Playwright coverage for the critical execution and recovery loop.
 
 ## Stage 3 exit direction
 
@@ -138,6 +139,6 @@ These remain future directions and should not displace Stage 3 execution integri
 
 ## Update rules
 
-Update this file when a stage starts, materially advances or closes; a major blocker changes; an architectural dependency changes delivery order; a release changes the implemented product boundary; or the recommended next implementation outcome changes.
+Update this file when a stage starts, materially advances or closes; a major blocker changes; an architectural dependency changes delivery order; a release changes the implemented product boundary; the recommended next implementation outcome changes; or an interruption/re-entry checkpoint would otherwise become stale.
 
-Keep this file concise and current. Historical implementation detail belongs in issues where available, pull requests, commits, stage-closure documents and decision records.
+Keep the re-entry checkpoint compact and current. Historical implementation detail belongs in pull requests, commits, stage-closure documents and decision records.
