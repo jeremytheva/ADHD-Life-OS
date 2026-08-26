@@ -41,6 +41,7 @@ npm run validate
 A passing `platform:validate` means only that its declared automated checks passed. It does not by itself prove:
 
 - a NoCodeBackend capability exists in the real target instance;
+- a test-only provider contract matches the target generated API;
 - production environment configuration is correct;
 - a migration/backfill was applied;
 - a merged commit is deployed;
@@ -76,6 +77,7 @@ When fixing a meaningful defect, add regression coverage where practical for the
 Critical paths should test applicable failures, including:
 
 - missing/invalid configuration;
+- unverified provider operation;
 - unauthenticated or unauthorised access;
 - ownership mismatch;
 - invalid input;
@@ -93,18 +95,55 @@ Authorization evidence should cover unauthenticated denial, ownership/permission
 
 ## Provider capability evidence
 
-External provider capability should be tracked separately:
+External provider capability is tracked separately from adapter code:
 
 | Capability | Code implemented | Provider verified | Application verified |
 | --- | --- | --- | --- |
-| Existing NoCodeBackend auth/data proxy | Yes | Project-dependent/current provider evidence required for release | Contract-tested locally |
+| Auth application boundary | Yes | Deployment/target evidence still required for release | Deterministic application tests |
+| Stable data application boundary | Yes | N/A — application-owned contract | Deterministic application tests |
+| Physical NoCodeBackend data operations | Fail-closed registry/adapter implemented | **No — target contract pending** | No connected-provider verification |
 | Generic `execution-sessions` | Certification tooling only | No | No |
 
-The generic execution-session capability must not advance until real provider certification passes.
+`api/ncb/dataProviderContract.js` is intentionally UNVERIFIED in production. Tests must not change that registry merely to exercise physical mapping.
+
+## Provider-adapter contract coverage
+
+`test/ncb-data-provider-contract.test.mjs` and `test/ncb-handler-contract.test.mjs` protect the separation between application and provider contracts.
+
+Required coverage includes:
+
+- production data operations fail before any provider call while the physical contract is unverified;
+- missing `NOCODEBACKEND_INSTANCE` or other required server configuration fails closed;
+- a clearly labelled test-only contract can map stable application operations to different provider paths/methods;
+- `Instance` is server-owned and cannot be supplied by the browser;
+- the server-held Bearer credential is applied to generated data requests;
+- browser auth cookies, Origin, Referer and application correlation headers are not forwarded to generated data calls by default;
+- an unexpected generated-data `Set-Cookie` is not relayed to the browser;
+- session-derived ownership still rejects cross-user requests before a data provider request;
+- malformed 2xx provider records remain structured upstream-response errors.
+
+These tests prove adapter and trust-boundary behaviour only. The paths in injected test contracts are fixtures, not NoCodeBackend evidence.
+
+## Target-provider certification
+
+Before a physical operation is marked VERIFIED in `api/ncb/dataProviderContract.js`, capture the target-instance evidence described in `NOCODEBACKEND_OPERATIONS.md`.
+
+At minimum verify:
+
+- generated path/template;
+- provider HTTP method;
+- required `Instance`/query behaviour;
+- required headers;
+- request body where applicable;
+- success envelope;
+- filtering used by the application;
+- representative failure behaviour.
+
+Create/update/delete must not inherit route/method assumptions from another NoCodeBackend instance. Generic execution-session capability must not advance until both the general physical operation contract and the `execution-sessions` collection contract are certified.
 
 ## Proxy contract coverage
 
-For `api/ncb/` changes, cover rejected routes/methods/origins, malformed/oversized payloads, canonical server configuration, session-derived ownership, upstream request shaping, response validation, safe error translation, cookies where applicable and correlation IDs.
+For `api/ncb/` changes, cover rejected routes/methods/origins, malformed/oversized payloads, canonical server configuration, provider-contract state, session-derived ownership, provider request mapping, response validation, safe error translation, auth-cookie handling where applicable and correlation IDs.
 
 ## Release/runtime validation
 
