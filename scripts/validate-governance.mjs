@@ -13,7 +13,10 @@ const requiredFiles = [
   'SYSTEM_MAP.md',
   'docs/ARCHITECTURE.md',
   'docs/DATA_MODEL.md',
-  'docs/DECISIONS/README.md'
+  'docs/NOCODEBACKEND_OPERATIONS.md',
+  'docs/DECISIONS/README.md',
+  'api/ncb/dataProvider.js',
+  'api/ncb/dataProviderContract.js'
 ]
 const canonicalEnvironmentNames = [
   'NOCODEBACKEND_AUTH_BASE_URL',
@@ -57,7 +60,7 @@ const walk = async (directory = root) => {
 }
 
 for (const requiredFile of requiredFiles) {
-  if (!await exists(requiredFile)) failures.push(`Missing required project document: ${requiredFile}`)
+  if (!await exists(requiredFile)) failures.push(`Missing required project document/control: ${requiredFile}`)
 }
 
 const envExample = await readFile(path.join(root, '.env.example'), 'utf8')
@@ -68,6 +71,11 @@ for (const name of canonicalEnvironmentNames) {
 const status = await readFile(path.join(root, 'STATUS.md'), 'utf8')
 if (!/Current gate\s*[:|]/i.test(status)) failures.push('STATUS.md must expose the current execution gate.')
 if (!/Gate state\s*[:|]/i.test(status)) failures.push('STATUS.md must expose the current gate state.')
+
+const providerContract = await readFile(path.join(root, 'api/ncb/dataProviderContract.js'), 'utf8')
+if (!providerContract.includes("UNVERIFIED: 'UNVERIFIED'")) {
+  failures.push('Data-provider contract must retain an explicit UNVERIFIED state.')
+}
 
 const packageJson = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'))
 const platformValidate = packageJson.scripts?.['platform:validate'] ?? ''
