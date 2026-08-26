@@ -304,10 +304,9 @@ const main = async () => {
     throw new CertificationError('NCB_CERT_CONFIG_INVALID', 'Mode must be read or full.')
   }
 
-  const secret = process.env.NOCODEBACKEND_SECRET_KEY ?? process.env.NCB_SECRET_KEY
   const common = {
-    readUrl: process.env.NCB_EXECUTION_SESSIONS_READ_URL,
-    secret
+    readUrl: process.env.NOCODEBACKEND_EXECUTION_SESSIONS_READ_URL,
+    secret: process.env.NOCODEBACKEND_SECRET_KEY
   }
 
   const result = mode === 'read'
@@ -318,11 +317,11 @@ const main = async () => {
         }
         return certifyFullContract({
           ...common,
-          createUrl: process.env.NCB_EXECUTION_SESSIONS_CREATE_URL,
-          updateUrlTemplate: process.env.NCB_EXECUTION_SESSIONS_UPDATE_URL_TEMPLATE,
-          updateMethod: process.env.NCB_EXECUTION_SESSIONS_UPDATE_METHOD,
-          deleteUrlTemplate: process.env.NCB_EXECUTION_SESSIONS_DELETE_URL_TEMPLATE,
-          userId: process.env.NCB_CERT_USER_ID
+          createUrl: process.env.NOCODEBACKEND_EXECUTION_SESSIONS_CREATE_URL,
+          updateUrlTemplate: process.env.NOCODEBACKEND_EXECUTION_SESSIONS_UPDATE_URL_TEMPLATE,
+          updateMethod: process.env.NOCODEBACKEND_EXECUTION_SESSIONS_UPDATE_METHOD,
+          deleteUrlTemplate: process.env.NOCODEBACKEND_EXECUTION_SESSIONS_DELETE_URL_TEMPLATE,
+          userId: process.env.NOCODEBACKEND_CERT_USER_ID
         })
       })()
 
