@@ -126,3 +126,23 @@ test('Progress dashboard owns focus and restores its shell trigger on Escape', a
   await expect(dialog).toHaveCount(0)
   await expect(trigger).toBeFocused()
 })
+
+test('Project Form owns focus, exposes grouped choices, and restores its trigger on Escape', async ({ page }) => {
+  await createMockNcb(page)
+  await registerAndSkipSetup(page, 'project-dialog@example.test')
+  await page.getByRole('link', { name: 'Projects' }).click()
+
+  const trigger = page.getByRole('button', { name: 'New Project' })
+  await trigger.click()
+
+  const dialog = page.getByRole('dialog', { name: 'New Project' })
+  await expect(dialog).toBeVisible()
+  await expect(page.getByLabel('Project Title *')).toBeFocused()
+  await expect(page.getByRole('group', { name: 'Choose Color' })).toBeVisible()
+  await expect(page.getByRole('group', { name: 'Choose Icon' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Blue' })).toHaveAttribute('aria-pressed', 'true')
+
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+})
