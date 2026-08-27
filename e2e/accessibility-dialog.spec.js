@@ -188,7 +188,8 @@ test('Project Task Form owns focus and restores the Add Task trigger inside Proj
   await page.getByRole('link', { name: 'Projects' }).click()
 
   await page.getByText('View Details', { exact: true }).click()
-  await expect(page.getByText('Accessibility Test Project', { exact: true })).toBeVisible()
+  const detailHeading = page.getByRole('heading', { name: 'Accessibility Test Project', level: 2 })
+  await expect(detailHeading).toBeVisible()
 
   const trigger = page.getByRole('button', { name: 'Add Task', exact: true })
   await trigger.click()
@@ -202,5 +203,5 @@ test('Project Task Form owns focus and restores the Add Task trigger inside Proj
   await page.keyboard.press('Escape')
   await expect(dialog).toHaveCount(0)
   await expect(trigger).toBeFocused()
-  await expect(page.getByText('Accessibility Test Project', { exact: true })).toBeVisible()
+  await expect(detailHeading).toBeVisible()
 })
