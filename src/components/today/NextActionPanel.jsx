@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { executionEngine } from '../../services/executionEngine'
 import LoadErrorState from '../../common/LoadErrorState'
 
@@ -27,7 +27,7 @@ const NextActionPanel = ({ currentMode }) => {
     return currentMode.id
   }, [currentMode])
 
-  const loadRecommendations = async () => {
+  const loadRecommendations = useCallback(async () => {
     try {
       setLoading(true)
       setLoadError(false)
@@ -47,11 +47,11 @@ const NextActionPanel = ({ currentMode }) => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [availableTime, energy, excludedActivityIds, location])
 
   useEffect(() => {
     loadRecommendations()
-  }, [energy, availableTime, location, excludedActivityIds])
+  }, [loadRecommendations])
 
   const recommendations = result?.recommendations || []
   const selected = recommendations[selectedIndex] || null
