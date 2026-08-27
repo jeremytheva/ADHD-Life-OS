@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 
 const { FiX, FiSave } = FiIcons
 
@@ -12,6 +13,9 @@ const TaskForm = ({ projectId, task = null, onSave, onCancel }) => {
     estimated_duration: task?.estimated_duration || 30,
     is_essential: task?.is_essential || false
   })
+  const titleInputRef = useRef(null)
+  const dialogRef = useModalDialog({ onEscape: onCancel, initialFocusRef: titleInputRef })
+  const titleId = `project-task-title-${projectId}`
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -25,30 +29,37 @@ const TaskForm = ({ projectId, task = null, onSave, onCancel }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-task-form-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-md"
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-200">
-          <h3 className="text-lg font-bold text-slate-900">
+          <h3 id="project-task-form-title" className="text-lg font-bold text-slate-900">
             {task ? 'Edit Task' : 'Add Task'}
           </h3>
           <button
+            type="button"
             onClick={onCancel}
+            aria-label="Close task form"
             className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
           >
             <SafeIcon icon={FiX} className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor={titleId} className="block text-sm font-medium text-slate-700 mb-2">
               Task Title *
             </label>
             <input
+              ref={titleInputRef}
+              id={titleId}
               type="text"
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
@@ -59,10 +70,11 @@ const TaskForm = ({ projectId, task = null, onSave, onCancel }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="project-task-description" className="block text-sm font-medium text-slate-700 mb-2">
               Description
             </label>
             <textarea
+              id="project-task-description"
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
               rows={3}
@@ -72,10 +84,11 @@ const TaskForm = ({ projectId, task = null, onSave, onCancel }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="project-task-duration" className="block text-sm font-medium text-slate-700 mb-2">
               Estimated Time (minutes)
             </label>
             <input
+              id="project-task-duration"
               type="number"
               value={formData.estimated_duration}
               onChange={(e) =>
@@ -100,7 +113,6 @@ const TaskForm = ({ projectId, task = null, onSave, onCancel }) => {
             </label>
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3 pt-4">
             <button
               type="button"
