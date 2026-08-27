@@ -15,6 +15,11 @@ test('canonical platform validation composes governance, application and browser
   assert.match(command, /npm run test:e2e/)
 })
 
+test('lint validation fails on any warning', async () => {
+  const packageJson = JSON.parse(await read('package.json'))
+  assert.equal(packageJson.scripts.lint, 'eslint . --max-warnings=0')
+})
+
 test('project continuity documents and canonical provider configuration are declared', async () => {
   const [project, status, envExample] = await Promise.all([
     read('PROJECT.md'),
