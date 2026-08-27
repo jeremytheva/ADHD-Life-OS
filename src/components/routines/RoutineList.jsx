@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -26,11 +26,7 @@ const RoutineList = () => {
   const [activeRoutine, setActiveRoutine] = useState(null)
   const [statsRoutine, setStatsRoutine] = useState(null)
 
-  useEffect(() => {
-    loadRoutines()
-  }, [currentMode])
-
-  const loadRoutines = async () => {
+  const loadRoutines = useCallback(async () => {
     try {
       setLoading(true)
       setLoadError(false)
@@ -43,7 +39,11 @@ const RoutineList = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filterByMode])
+
+  useEffect(() => {
+    loadRoutines()
+  }, [loadRoutines])
 
   const handleCreateRoutine = async (routineData) => {
     try {
