@@ -6,7 +6,7 @@ const json = (route, body, status = 200) => route.fulfill({
   body: JSON.stringify(body)
 })
 
-const createMockNcb = async (page) => {
+const createMockNcb = async (page, { includeProject = false } = {}) => {
   let currentUser = null
   const preferencesByUser = new Map()
 
@@ -52,6 +52,14 @@ const createMockNcb = async (page) => {
       const record = { ...preferencesByUser.get(userId), ...request.postDataJSON() }
       preferencesByUser.set(userId, record)
       return json(route, record)
+    }
+
+    if (includeProject && path === 'projects' && method === 'GET') {
+      return json(route, [{ id: 'project-accessibility', user_id: userId, title: 'Accessibility Test Project' }])
+    }
+
+    if (includeProject && (path === 'tasks' || path === 'subtasks') && method === 'GET') {
+      return json(route, [])
     }
 
     if (method === 'GET') return json(route, [])
@@ -172,4 +180,27 @@ test('Quick Capture owns focus, exposes optional-panel state, and restores its t
   await page.keyboard.press('Escape')
   await expect(dialog).toHaveCount(0)
   await expect(trigger).toBeFocused()
+})
+
+test('Project Task Form owns focus and restores the Add Task trigger inside Project Detail', async ({ page }) => {
+  await createMockNcb(page, { includeProject: true })
+  await registerAndSkipSetup(page, 'project-task-dialog@example.test')
+  await page.getByRole('link', { name: 'Projects' }).click()
+
+  await page.getByText('View Details', { exact: true }).click()
+  await expect(page.getByText('Accessibility Test Project', { exact: true })).toBeVisible()
+
+  const trigger = page.getByRole('button', { name: 'Add Task', exact: true })
+  await trigger.click()
+
+  const dialog = page.getByRole('dialog', { name: 'Add Task' })
+  await expect(dialog).toBeVisible()
+  await expect(page.getByLabel('Task Title *')).toBeFocused()
+  await expect(page.getByLabel('Description')).toBeVisible()
+  await expect(page.getByLabel('Estimated Time (minutes)')).toBeVisible()
+
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+  await expect(page.getByText('Accessibility Test Project', { exact: true })).toBeVisible()
 })
