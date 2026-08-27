@@ -187,7 +187,10 @@ test('Project Task Form owns focus and restores the Add Task trigger inside Proj
   await registerAndSkipSetup(page, 'project-task-dialog@example.test')
   await page.getByRole('link', { name: 'Projects' }).click()
 
-  await page.getByText('View Details', { exact: true }).click()
+  const detailTrigger = page.getByRole('button', { name: 'View details for Accessibility Test Project' })
+  await detailTrigger.focus()
+  await page.keyboard.press('Enter')
+
   const detailHeading = page.getByRole('heading', { name: 'Accessibility Test Project', level: 2 })
   await expect(detailHeading).toBeVisible()
 
