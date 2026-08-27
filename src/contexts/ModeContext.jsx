@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useCallback, useContext, useState, useEffect } from 'react'
 import { modulePreferencesSchema } from '../domains/schemas'
 
 const ModeContext = createContext()
@@ -148,7 +148,7 @@ export const ModeProvider = ({ children }) => {
     })
   }
 
-  const getModePreferences = (modeId) => {
+  const getModePreferences = useCallback((modeId) => {
     return modePreferences[modeId] || {
       theme: 'default',
       viewMode: 'detailed',
@@ -157,10 +157,10 @@ export const ModeProvider = ({ children }) => {
       sortBy: 'priority',
       hideCompleted: false
     }
-  }
+  }, [modePreferences])
 
   // Filter items based on current mode
-  const filterByMode = (items, itemType = 'task') => {
+  const filterByMode = useCallback((items, itemType = 'task') => {
     if (currentMode.id === 'all') {
       return items
     }
@@ -183,7 +183,7 @@ export const ModeProvider = ({ children }) => {
         )
       )
     })
-  }
+  }, [currentMode])
 
   // Get mode statistics
   const getModeStats = () => {
