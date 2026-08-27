@@ -13,7 +13,7 @@ const getFocusableElements = (container) => Array.from(
   container?.querySelectorAll(FOCUSABLE_SELECTOR) ?? []
 ).filter((element) => !element.hasAttribute('hidden') && element.getAttribute('aria-hidden') !== 'true')
 
-export const useModalDialog = ({ onEscape, initialFocusRef } = {}) => {
+export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {}) => {
   const dialogRef = useRef(null)
   const openerRef = useRef(null)
   const onEscapeRef = useRef(onEscape)
@@ -23,6 +23,8 @@ export const useModalDialog = ({ onEscape, initialFocusRef } = {}) => {
   }, [onEscape])
 
   useEffect(() => {
+    if (!enabled) return undefined
+
     openerRef.current = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null
@@ -79,7 +81,7 @@ export const useModalDialog = ({ onEscape, initialFocusRef } = {}) => {
         window.requestAnimationFrame(() => opener.focus())
       }
     }
-  }, [initialFocusRef])
+  }, [enabled, initialFocusRef])
 
   return dialogRef
 }
