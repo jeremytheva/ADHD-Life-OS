@@ -107,3 +107,22 @@ test('Reward Shop owns focus and restores its shell trigger on Escape', async ({
   await expect(dialog).toHaveCount(0)
   await expect(trigger).toBeFocused()
 })
+
+test('Progress dashboard owns focus and restores its shell trigger on Escape', async ({ page }) => {
+  await createMockNcb(page)
+  await registerAndSkipSetup(page, 'progress-dialog@example.test')
+
+  const trigger = page.getByRole('button', { name: /Level \d+/ })
+  await trigger.click()
+
+  const dialog = page.getByRole('dialog', { name: 'Your Progress' })
+  await expect(dialog).toBeVisible()
+  await expect(dialog).toBeFocused()
+
+  await page.keyboard.press('Tab')
+  await expect(page.getByRole('button', { name: 'Close progress' })).toBeFocused()
+
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+})
