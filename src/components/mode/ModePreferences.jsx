@@ -16,7 +16,7 @@ const ModePreferences = ({ modeId, onClose }) => {
 
   useEffect(() => {
     setPreferences(getModePreferences(modeId))
-  }, [modeId])
+  }, [modeId, getModePreferences])
 
   const handleChange = (key, value) => {
     setPreferences(prev => ({
