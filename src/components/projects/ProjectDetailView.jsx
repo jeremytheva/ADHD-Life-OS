@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -29,11 +29,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
   const [showCelebration, setShowCelebration] = useState(false)
   const [celebrationMessage, setCelebrationMessage] = useState('')
 
-  useEffect(() => {
-    loadProjectDetails()
-  }, [initialProject.id])
-
-  const loadProjectDetails = async () => {
+  const loadProjectDetails = useCallback(async () => {
     try {
       setDetailLoadError(false)
       const [updatedProject, projectStats] = await Promise.all([
@@ -48,7 +44,11 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
       setDetailLoadError(true)
       return false
     }
-  }
+  }, [initialProject.id])
+
+  useEffect(() => {
+    loadProjectDetails()
+  }, [loadProjectDetails])
 
   const refreshAfterWrite = async (partialSuccessMessage) => {
     const refreshed = await loadProjectDetails()

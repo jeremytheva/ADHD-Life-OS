@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -13,11 +13,7 @@ const RoutineStats = ({ routine, onClose }) => {
   const [loading, setLoading] = useState(true)
   const [timeframe, setTimeframe] = useState(30)
 
-  useEffect(() => {
-    loadStats()
-  }, [routine, timeframe])
-
-  const loadStats = async () => {
+  const loadStats = useCallback(async () => {
     try {
       setLoading(true)
       const [statsData, historyData] = await Promise.all([
@@ -31,7 +27,11 @@ const RoutineStats = ({ routine, onClose }) => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [routine.id, timeframe])
+
+  useEffect(() => {
+    loadStats()
+  }, [loadStats])
 
   if (loading) {
     return (

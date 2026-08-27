@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -25,12 +25,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
   const [filter, setFilter] = useState('today')
   const [stats, setStats] = useState(null)
 
-  useEffect(() => {
-    loadTasks()
-    loadStats()
-  }, [filter])
-
-  const loadTasks = async () => {
+  const loadTasks = useCallback(async () => {
     try {
       setLoading(true)
       setLoadError(false)
@@ -44,9 +39,9 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filter])
 
-  const loadStats = async () => {
+  const loadStats = useCallback(async () => {
     try {
       const statsData = await houseworkService.getHouseworkStats(7)
       setStats(statsData)
@@ -54,7 +49,12 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
       console.error('Error loading stats:', error)
       setStats(null)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    loadTasks()
+    loadStats()
+  }, [loadStats, loadTasks])
 
   const retryLoad = () => {
     setOperationError(null)

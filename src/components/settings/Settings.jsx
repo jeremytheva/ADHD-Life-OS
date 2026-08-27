@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -23,15 +23,7 @@ const Settings = () => {
   const [showAccessibility, setShowAccessibility] = useState(false)
   const [selectedModeForPrefs, setSelectedModeForPrefs] = useState(null)
 
-  useEffect(() => {
-    if (user) loadPreferences()
-    else {
-      setPreferences(null)
-      setLoading(false)
-    }
-  }, [user])
-
-  const loadPreferences = async () => {
+  const loadPreferences = useCallback(async () => {
     setLoading(true)
     setLoadError(null)
     try {
@@ -43,7 +35,15 @@ const Settings = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (user) loadPreferences()
+    else {
+      setPreferences(null)
+      setLoading(false)
+    }
+  }, [loadPreferences, user])
 
   const handleUpdatePreferences = async (updates) => {
     setSaveError(null)
