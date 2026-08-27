@@ -3,7 +3,7 @@
 **Snapshot date:** 27 August 2026  
 **Last materially reviewed:** 27 August 2026  
 **Default branch:** `main`  
-**Last verified main implementation commit:** `0d18c88` — PR #105, Accessibility Settings dialog contract  
+**Last verified main implementation commit:** `a256d82` — PR #106, Reward Shop dialog contract  
 **Overall status:** Active development / backend work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
@@ -11,7 +11,7 @@
 
 Continue product and repository improvements that are genuinely independent of unverified backend behaviour while additional NoCodeBackend information is gathered.
 
-The responsive shell is merged and the frontend accessibility/interaction-integrity audit is active. The reusable modal focus contract is now merged for Task Form and Accessibility Settings. The current focused rollout is Reward Shop; the larger Progress dashboard is queued next.
+The responsive shell is merged and the frontend accessibility/interaction-integrity audit is active. The reusable modal focus contract is now verified on Task Form, Accessibility Settings and Reward Shop. The current focused rollout is the globally reachable Your Progress dashboard.
 
 ## AI execution gate
 
@@ -30,12 +30,12 @@ The external provider uncertainty still applies to backend work, but it does not
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Primary implementation thread | Frontend accessibility — shared modal/dialog interaction rollout |
-| Active application PR | PR #106 — `fix: make Reward Shop an accessible dialog` |
-| Last completed outcome | PR #105 merged — Accessibility Settings now uses the reusable semantic dialog/focus contract |
+| Active application PR | PR #107 — `fix: make Progress dashboard an accessible dialog` |
+| Last completed outcome | PR #106 merged — Reward Shop now uses the reusable semantic dialog/focus contract |
 | Current blocker | None for backend-independent frontend work |
 | Deferred dependency | NoCodeBackend/provider certification pending additional provider information |
-| Next action | Validate PR #106, address any CI/review finding, and merge if clean |
-| Next queued outcome | Apply the same dialog/focus contract to the globally reachable Progress dashboard, then continue the modal inventory by workflow priority |
+| Next action | Validate PR #107, address any CI/review finding, and merge if clean |
+| Next queued outcome | Continue the modal inventory through primary workflow overlays, prioritizing the smallest high-value form/detail interaction gap |
 
 If this checkpoint conflicts with GitHub, deployment or later provider evidence, verify the authoritative source and update this file rather than reconstructing state from chat history.
 
@@ -54,25 +54,27 @@ If this checkpoint conflicts with GitHub, deployment or later provider evidence,
 - PR #102 merged — responsive authenticated shell, phone-width navigation drawer, Escape/focus recovery, skip-to-content path and 390×844 Playwright coverage.
 - PR #104 merged — reusable `useModalDialog` focus-management contract introduced and applied to New/Edit Task; semantic dialog naming, initial focus, focus containment, safe Escape handling and trigger focus restoration are browser-tested.
 - PR #105 merged — Accessibility Settings now uses the same dialog contract; Escape follows its existing cancel/rollback path and browser coverage verifies focus ownership/restoration.
+- PR #106 merged — Reward Shop now uses the shared dialog contract, has an accessible close control and browser-tested Escape/focus restoration.
 
 ## Active
 
-### PR #106 — Reward Shop dialog accessibility
+### PR #107 — Progress dashboard dialog accessibility
 
-Current branch: `fix/reward-shop-dialog-accessibility`
+Current branch: `fix/progress-dialog-accessibility`
 
 In scope:
 
-- expose Reward Shop as a semantic, labelled modal dialog;
+- allow the shared modal hook to activate only when modal content exists, preserving compact/non-modal dashboard renders;
+- expose the full Your Progress dashboard as a semantic, labelled modal dialog;
 - reuse `useModalDialog` for focus ownership, Escape dismissal and trigger focus restoration;
 - add an accessible name to the icon-only close control;
-- make Reward Shop action controls explicit buttons;
+- make Progress tab controls explicit buttons with selected-state semantics;
 - extend the focused accessibility Playwright suite;
-- keep reward logic and provider/backend behaviour unchanged.
+- keep scoring, achievements, streaks, tab content and provider/backend behaviour unchanged.
 
 ### Accessibility audit findings
 
-Repository inventory confirms the modal issue is broader than one component. Full-screen overlay patterns also exist in Progress/Gamification, project forms and detail flows, routine flows, housework flows, template flows and other transient surfaces.
+Repository inventory confirms the modal issue is broader than one component. Full-screen overlay patterns also exist in project forms and detail flows, routine flows, housework flows, template flows and other transient surfaces.
 
 The rollout remains deliberately incremental:
 
@@ -114,7 +116,7 @@ No known application defect currently overrides the accessibility/interaction-in
 - ESLint is clean and CI enforces **0 warnings**.
 - Mixed JavaScript/TypeScript checking remains an accepted current constraint.
 - Responsive shell/navigation coverage is merged for both desktop and phone-width paths.
-- A reusable semantic modal/focus contract now exists and is proven on Task Form and Accessibility Settings; remaining overlay surfaces still need prioritized rollout.
+- A reusable semantic modal/focus contract exists and is verified on Task Form, Accessibility Settings and Reward Shop; Progress is the active rollout and remaining workflow overlays still need prioritized review.
 - Production deployment is not configured or verified for ADHD Life OS in the connected Vercel account.
 - `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only; no broad consolidation should occur without a focused outcome and dependency review.
 
@@ -129,10 +131,10 @@ No known application defect currently overrides the accessibility/interaction-in
 
 | System / capability | State | Evidence / implication |
 | --- | --- | --- |
-| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #105 merged as `0d18c88` |
+| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #106 merged as `a256d82` |
 | Canonical validation | VERIFIED | Dependency audit + governance + zero-warning lint + typecheck + Node tests + production build + Playwright |
 | Responsive application shell | VERIFIED | PR #102; phone-width navigation and keyboard dismissal covered in Playwright |
-| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | `useModalDialog` is merged; Task Form and Accessibility Settings are verified; Reward Shop is the active rollout |
+| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | `useModalDialog` is merged; Task Form, Accessibility Settings and Reward Shop are verified; Progress is active |
 | Stable application data API | APPLICATION VERIFIED | Same-origin routes and domain contracts remain deterministic application boundaries |
 | Physical NoCodeBackend adapter | IMPLEMENTED / DEFERRED | Fail-closed registry/adapter is merged; production mapping remains unverified |
 | Target Swagger/OpenAPI intake | IMPLEMENTED / DEFERRED | Candidate-only inspector exists; target evidence has not been supplied |
@@ -157,13 +159,12 @@ No known application defect currently overrides the accessibility/interaction-in
 
 ### While backend remains deferred
 
-1. complete and validate PR #106 Reward Shop dialog accessibility;
-2. apply the proven modal contract to the globally reachable Progress dashboard;
-3. continue the remaining overlay inventory in workflow priority order, with deterministic/browser coverage for material interaction changes;
-4. close the accessibility slice when the high-value shared/core interaction gaps are addressed or explicitly parked;
-5. continue client-side cognitive-load reduction after that accessibility boundary;
-6. preserve zero-warning lint and canonical validation;
-7. preserve provider-dependent Stage 3 work without speculative activation.
+1. complete and validate PR #107 Progress dashboard dialog accessibility;
+2. continue the remaining overlay inventory in primary workflow priority order, with deterministic/browser coverage for material interaction changes;
+3. close the accessibility slice when the high-value shared/core interaction gaps are addressed or explicitly parked;
+4. continue client-side cognitive-load reduction after that accessibility boundary;
+5. preserve zero-warning lint and canonical validation;
+6. preserve provider-dependent Stage 3 work without speculative activation.
 
 ### When backend work is resumed
 
