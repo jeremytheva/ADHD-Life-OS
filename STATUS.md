@@ -3,7 +3,7 @@
 **Snapshot date:** 28 August 2026  
 **Last materially reviewed:** 28 August 2026  
 **Default branch:** `main`  
-**Last verified main implementation commit:** `1e196e5` — PR #107, Progress dashboard dialog contract  
+**Last verified main implementation commit:** `00ccc15` — PR #108, Project Form dialog contract  
 **Overall status:** Active development / backend work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
@@ -11,7 +11,7 @@
 
 Continue product and repository improvements that are genuinely independent of unverified backend behaviour while additional NoCodeBackend information is gathered.
 
-The responsive shell and the globally reachable shell-level modal accessibility rollout are merged. The reusable modal focus contract is verified on Task Form, Accessibility Settings, Reward Shop and Your Progress. The current focused rollout is the primary New/Edit Project form.
+The responsive shell, global modal surfaces and New/Edit Project now use the reusable modal focus contract. The current focused rollout is Projects Quick Capture; Project Detail remains queued because it is larger and nests additional interaction flows.
 
 ## AI execution gate
 
@@ -30,12 +30,12 @@ The external provider uncertainty still applies to backend work, but it does not
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Primary implementation thread | Frontend accessibility — primary workflow modal/dialog rollout |
-| Active application PR | PR #108 — `fix: make Project Form an accessible dialog` |
-| Last completed outcome | PR #107 merged — Your Progress now uses the reusable semantic dialog/focus contract and the hook supports conditional activation for non-modal renders |
+| Active application PR | PR #109 — `fix: make Quick Capture an accessible dialog` |
+| Last completed outcome | PR #108 merged — New/Edit Project now uses the reusable semantic dialog/focus contract with associated field labels and grouped choice semantics |
 | Current blocker | None for backend-independent frontend work |
 | Deferred dependency | NoCodeBackend/provider certification pending additional provider information |
-| Next action | Validate PR #108, address any CI/review finding, and merge if clean |
-| Next queued outcome | Continue the Projects workflow overlay inventory, comparing Quick Capture and Project Detail before choosing the smallest high-value interaction correction |
+| Next action | Validate PR #109, address any CI/review finding, and merge if clean |
+| Next queued outcome | Audit Project Detail as the next Projects overlay, including its nested Task Form and celebration interactions before choosing the smallest safe correction |
 
 If this checkpoint conflicts with GitHub, deployment or later provider evidence, verify the authoritative source and update this file rather than reconstructing state from chat history.
 
@@ -56,27 +56,27 @@ If this checkpoint conflicts with GitHub, deployment or later provider evidence,
 - PR #105 merged — Accessibility Settings now uses the same dialog contract; Escape follows its existing cancel/rollback path and browser coverage verifies focus ownership/restoration.
 - PR #106 merged — Reward Shop now uses the shared dialog contract, has an accessible close control and browser-tested Escape/focus restoration.
 - PR #107 merged — Your Progress now uses the shared dialog contract; the hook supports conditional activation so compact/non-modal renders remain unaffected; browser coverage verifies Escape and trigger-focus restoration.
+- PR #108 merged — New/Edit Project now uses the shared dialog contract; Project fields are programmatically labelled, Color/Icon choices expose grouped and selected semantics, and the real Projects entry path is browser-tested.
 
 ## Active
 
-### PR #108 — Project Form dialog accessibility
+### PR #109 — Quick Capture dialog accessibility
 
-Current branch: `fix/project-form-dialog-accessibility`
+Current branch: `fix/quick-capture-dialog-accessibility`
 
 In scope:
 
-- expose New/Edit Project as a semantic, labelled modal dialog;
+- expose Quick Capture as a semantic, labelled modal dialog;
 - reuse `useModalDialog` for initial focus, focus containment, Escape dismissal and trigger focus restoration;
-- place initial focus on Project Title;
-- add an accessible name to the icon-only close control;
-- programmatically associate Project Title, Description, Project Goal and Target Date labels with their fields;
-- group Color and Icon choices with fieldset/legend semantics and expose selected choices through `aria-pressed`;
-- extend browser coverage through the real Projects → New Project entry point;
-- keep project persistence, project values, project services and provider/backend behaviour unchanged.
+- place initial focus on the task input;
+- make Quick Capture controls explicit buttons;
+- expose Organization Options through `aria-expanded` / `aria-controls` semantics;
+- extend browser coverage through the real Projects → Quick Capture entry point;
+- keep quick-capture persistence, partial-save recovery, task values, project services and provider/backend behaviour unchanged.
 
 ### Accessibility audit findings
 
-Repository inventory confirms the modal issue is broader than one component. Remaining full-screen overlay patterns include Project Detail/Quick Capture, routine flows, housework flows, template flows and other transient surfaces.
+Quick Capture was selected ahead of Project Detail because it is smaller, directly exposed from the primary Projects page and does not require changing nested task/celebration behavior. Project Detail remains a material overlay gap and is queued for focused audit after PR #109 closes.
 
 The rollout remains deliberately incremental:
 
@@ -118,7 +118,8 @@ No known application defect currently overrides the accessibility/interaction-in
 - ESLint is clean and CI enforces **0 warnings**.
 - Mixed JavaScript/TypeScript checking remains an accepted current constraint.
 - Responsive shell/navigation coverage is merged for both desktop and phone-width paths.
-- A reusable semantic modal/focus contract exists and is verified on Task Form, Accessibility Settings, Reward Shop and Your Progress; Project Form is the active primary-workflow rollout and remaining workflow overlays still need prioritized review.
+- A reusable semantic modal/focus contract exists and is verified on Task Form, Accessibility Settings, Reward Shop, Your Progress and Project Form; Quick Capture is the active rollout.
+- Project Detail remains a larger unresolved overlay because it owns nested Task Form and celebration interaction state.
 - Production deployment is not configured or verified for ADHD Life OS in the connected Vercel account.
 - `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only; no broad consolidation should occur without a focused outcome and dependency review.
 
@@ -133,10 +134,10 @@ No known application defect currently overrides the accessibility/interaction-in
 
 | System / capability | State | Evidence / implication |
 | --- | --- | --- |
-| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #107 merged as `1e196e5` |
+| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #108 merged as `00ccc15` |
 | Canonical validation | VERIFIED | Dependency audit + governance + zero-warning lint + typecheck + Node tests + production build + Playwright |
 | Responsive application shell | VERIFIED | PR #102; phone-width navigation and keyboard dismissal covered in Playwright |
-| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | `useModalDialog` is merged; Task Form, Accessibility Settings, Reward Shop and Your Progress are verified; Project Form is active |
+| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | `useModalDialog` is merged; Task Form, Accessibility Settings, Reward Shop, Your Progress and Project Form are verified; Quick Capture is active |
 | Stable application data API | APPLICATION VERIFIED | Same-origin routes and domain contracts remain deterministic application boundaries |
 | Physical NoCodeBackend adapter | IMPLEMENTED / DEFERRED | Fail-closed registry/adapter is merged; production mapping remains unverified |
 | Target Swagger/OpenAPI intake | IMPLEMENTED / DEFERRED | Candidate-only inspector exists; target evidence has not been supplied |
@@ -161,9 +162,9 @@ No known application defect currently overrides the accessibility/interaction-in
 
 ### While backend remains deferred
 
-1. complete and validate PR #108 Project Form dialog accessibility;
-2. compare Quick Capture and Project Detail and implement the smallest high-value Projects interaction correction;
-3. continue the remaining overlay inventory in primary workflow priority order, with deterministic/browser coverage for material interaction changes;
+1. complete and validate PR #109 Quick Capture dialog accessibility;
+2. audit Project Detail and its nested interactions, then implement the smallest safe accessibility correction;
+3. continue remaining workflow overlays in priority order, with deterministic/browser coverage for material interaction changes;
 4. close the accessibility slice when the high-value shared/core interaction gaps are addressed or explicitly parked;
 5. continue client-side cognitive-load reduction after that accessibility boundary;
 6. preserve zero-warning lint and canonical validation;
