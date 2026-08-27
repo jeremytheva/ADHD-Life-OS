@@ -1,39 +1,43 @@
 # ADHD Life OS — Current Status
 
-**Snapshot date:** 26 August 2026  
-**Last materially reviewed:** 26 August 2026  
+**Snapshot date:** 27 August 2026  
+**Last materially reviewed:** 27 August 2026  
 **Default branch:** `main`  
-**Last verified main implementation commit:** `24f5fdc` — PR #94, NoCodeBackend Swagger/OpenAPI evidence intake  
-**Overall status:** Active development / externally blocked  
+**Last verified main implementation commit:** `e8a9dbf` — PR #101, zero-warning lint gate  
+**Overall status:** Active development / backend work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
 ## Current objective
 
-Obtain real target-instance NoCodeBackend evidence for the physical operations ADHD Life OS needs. The repository-side evidence tooling is now complete for the next dependency step: generated Swagger/OpenAPI JSON can be inspected safely and exact read operations can be certified non-destructively. No physical provider operation should be enabled until that target evidence exists.
+Continue product and repository improvements that are genuinely independent of unverified backend behaviour while additional NoCodeBackend information is gathered.
+
+The active outcome is a responsive, keyboard-usable authenticated application shell. Provider-dependent execution persistence remains preserved for later continuation but is not the current implementation thread.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | BLOCKED |
-| Missing evidence | The target ADHD Life OS NoCodeBackend generated API/Swagger or exported JSON specification, target instance identity, and a successful connected certification result for an exact operation. |
+| Gate state | READY for backend-independent work |
+| Backend/provider state | DEFERRED / UNVERIFIED |
+| Current restriction | Do not introduce, infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-The blocker is external provider evidence, not unresolved repository implementation. Do not replace it with guessed routes/methods, another project's provider contract, browser persistence, or speculative execution-session implementation.
+The previous external provider blocker still applies to backend work, but it no longer blocks independent frontend, accessibility, testing and repository-quality outcomes.
 
 ## Re-entry checkpoint
 
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Primary implementation thread | Target-instance NoCodeBackend physical-operation certification |
-| Active application PR | None |
-| Last completed outcome | PR #94 merged — target Swagger/OpenAPI JSON can now be fingerprinted and converted into a redacted `CANDIDATE_ONLY` operation report |
-| Current blocker | No authenticated target ADHD Life OS NoCodeBackend workspace/generated API or exported target specification is available through connected tools |
-| Next action | Export/open the target generated Swagger/OpenAPI JSON and run `npm run inspect:ncb-openapi -- --spec=<target-openapi.json> --collection=tasks` |
-| Next queued outcome | Use the exact target candidate to run connected `certify:ncb-read`, record redacted evidence, then enable only that verified provider mapping |
+| Primary implementation thread | Responsive application shell and narrow-screen navigation |
+| Active application PR | PR #102 — `feat: responsive application shell` |
+| Last completed outcome | PR #101 merged — ESLint warnings now fail the canonical validation gate |
+| Current blocker | None for the active frontend thread |
+| Deferred dependency | NoCodeBackend/provider certification pending additional provider information |
+| Next action | Validate PR #102, address any review/CI finding, then merge if clean |
+| Next queued outcome | Audit the next frontend accessibility/interaction-integrity gap that does not depend on backend behaviour |
 
-If this checkpoint conflicts with GitHub, provider or deployment evidence, verify the authoritative source and update this file rather than reconstructing state from chat history.
+If this checkpoint conflicts with GitHub, deployment or later provider evidence, verify the authoritative source and update this file rather than reconstructing state from chat history.
 
 ## Completed
 
@@ -42,99 +46,117 @@ If this checkpoint conflicts with GitHub, provider or deployment evidence, verif
 - Cognitive-load/execution-continuity controls and master AI-platform standards are merged.
 - `npm run platform:validate` is the canonical repository validation gate.
 - Canonical `NOCODEBACKEND_*` configuration naming is merged.
-- PR #91 separated stable application operations from physical NoCodeBackend operations and made unverified production mappings fail closed.
-- PR #92 added read-only connected provider certification through `npm run certify:ncb-read -- --collection=<collection>`, including exact `Instance`, optional ownership-filter, application-schema and redacted-evidence checks.
-- PR #93 synchronized Stage 3 to the real external provider-evidence blocker.
-- PR #94 added `npm run inspect:ncb-openapi -- --spec=<target-openapi.json> --collection=<collection>` with OpenAPI 3.x / Swagger 2.0 JSON support, source fingerprinting, redacted candidate metadata and deterministic tests.
-- Execution-session logical contract and guarded read/write certification tooling remain available for the later Stage 3 persistence step.
+- Fail-closed physical provider operation boundaries and provider-certification tooling are preserved for later use.
+- PR #98 merged — isolated loader dependencies stabilized; warning count reduced to five.
+- PR #99 merged — `TaskList` preference-first/task-loader dependencies corrected; warning count reduced to three.
+- PR #100 merged — `RoutineProgress` lifecycle effects made dependency-safe; final-step automatic-completion race fixed; lint reached zero warnings.
+- PR #101 merged — `npm run lint` now uses `eslint . --max-warnings=0`, with regression coverage preventing silent weakening of the zero-warning gate.
 
-## Blocked
+## Active
 
-### Existing physical NoCodeBackend operations
+### PR #102 — responsive application shell
 
-**State:** PROVIDER UNVERIFIED.
+Current branch: `feat/responsive-application-shell`
 
-Required target evidence:
+In scope:
+
+- preserve the large-screen desktop sidebar;
+- add a phone-width header and navigation drawer;
+- close mobile navigation on route changes;
+- support Escape dismissal with focus restoration;
+- add a skip-to-main-content path and explicit primary-navigation semantics;
+- add Playwright coverage for phone-width navigation;
+- keep backend/provider behaviour unchanged.
+
+## Backend / provider work — intentionally deferred
+
+**State:** PROVIDER UNVERIFIED / TEMPORARILY DEFERRED.
+
+The following evidence requirements remain preserved and should be resumed later rather than reconstructed:
 
 1. target ADHD Life OS NoCodeBackend generated API/Swagger or exact exported JSON specification;
 2. target instance identity;
-3. exact read/list candidate for a supported existing collection, preferably `tasks`;
-4. configured server-only `NOCODEBACKEND_SECRET_KEY` for connected certification;
-5. optional dedicated certification user/filter where ownership filtering is being checked;
-6. successful `npm run certify:ncb-read -- --collection=tasks` result against the exact target operation;
-7. non-secret path/method/query-key/envelope evidence recorded in `docs/NOCODEBACKEND_OPERATIONS.md`.
+3. exact supported read/write operation evidence;
+4. configured server-only credentials for connected certification;
+5. ownership/filter behaviour;
+6. success and representative failure envelopes;
+7. redacted evidence recorded in `docs/NOCODEBACKEND_OPERATIONS.md`;
+8. execution-session collection/field/read/create/update evidence before durable Start/Continue/Recover activation;
+9. uniqueness/concurrency capability classification.
 
-Only after that evidence should a focused PR update `api/ncb/dataProviderContract.js` with the exact evidenced operation and run connected application verification.
+While this work is deferred:
 
-Write operations remain separately unverified and require target-instance path, HTTP method, body, filtering, success-envelope and representative failure evidence.
-
-### Durable generic execution persistence
-
-`execution-sessions` remains downstream of the general provider contract. It additionally requires:
-
-- collection existence and exact field mappings;
-- read/create/update provider evidence;
-- pause/resume/cancel transition certification;
-- ownership/filter behaviour;
-- uniqueness/concurrency capability classification.
-
-Do not claim durable Start/Continue/Recover or cross-reload recovery until those gates pass.
+- leave fail-closed provider mappings in place;
+- do not substitute another project's NoCodeBackend contract;
+- do not use browser persistence as a fake durable execution fallback;
+- do not claim durable cross-reload/cross-device execution recovery;
+- do not let backend uncertainty prevent unrelated frontend/repository work.
 
 ## Known defects
 
-No known application defect currently overrides the external provider-certification blocker. Fail-closed data operations while the physical provider contract is unverified are intentional trust-boundary behaviour.
+No known application defect currently overrides the active responsive-shell work. Provider-backed data operations remaining unavailable without a verified physical contract are intentional fail-closed behaviour, not a frontend defect to bypass.
 
-## Technical debt
+## Technical debt / quality state
 
+- ESLint is clean and CI now enforces **0 warnings**.
 - Mixed JavaScript/TypeScript checking remains an accepted current constraint.
-- Existing non-blocking lint warnings remain follow-up hygiene unless touched by focused work.
+- The authenticated application shell on `main` is desktop-oriented; PR #102 is addressing the narrow-screen navigation gap.
 - Production deployment is not configured or verified for ADHD Life OS in the connected Vercel account.
+- `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only; no broad consolidation should occur without a focused outcome and dependency review.
 
 ## Partial / planned preserved work
 
 - Closed Stage 3 execution lifecycle/recovery branches remain design evidence only; they are not merged capability.
+- Provider-certification and durable execution-session tooling remain available for later backend resumption.
 - External calendar synchronization, remote AI/LLM assistance, richer analytics, broader background automation and additional productivity integrations remain deferred.
-- See `ROADMAP.md` for intended future direction.
+- See `ROADMAP.md` for intended future direction and the current independent-work sequence.
 
 ## Provider / deployment status
 
 | System / capability | State | Evidence / implication |
 | --- | --- | --- |
-| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #94 implementation merged as `24f5fdc` |
-| Stable application data API | APPLICATION VERIFIED | Same-origin routes and domain contracts are deterministic application boundaries |
-| Physical NoCodeBackend adapter | IMPLEMENTED | Fail-closed registry/adapter is merged; production mapping remains `UNVERIFIED` |
-| Target Swagger/OpenAPI intake | IMPLEMENTED / TARGET EVIDENCE NOT SUPPLIED | Candidate-only inspector is merged and repository-validated; no target spec has been inspected |
-| Existing NoCodeBackend read certification | IMPLEMENTED / PROVIDER UNVERIFIED | Read-only connected harness is merged and repository-validated; it has not been run against the target provider |
-| Existing NoCodeBackend physical operations | PROVIDER UNVERIFIED | No production physical operation is enabled without target evidence |
-| Generic `execution-sessions` | IMPLEMENTED TOOLING / PROVIDER UNVERIFIED | Logical contract and guarded certification harness exist; provider collection/operations remain unverified |
-| Vercel | NOT CONFIGURED / UNVERIFIED | No ADHD Life OS project binding is available in the connected account |
+| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #101 merged as `e8a9dbf` |
+| Canonical validation | VERIFIED | Dependency audit + governance + zero-warning lint + typecheck + Node tests + production build + Playwright |
+| Stable application data API | APPLICATION VERIFIED | Same-origin routes and domain contracts remain deterministic application boundaries |
+| Physical NoCodeBackend adapter | IMPLEMENTED / DEFERRED | Fail-closed registry/adapter is merged; production mapping remains unverified |
+| Target Swagger/OpenAPI intake | IMPLEMENTED / DEFERRED | Candidate-only inspector exists; target evidence has not been supplied |
+| Existing NoCodeBackend read certification | IMPLEMENTED / DEFERRED | Harness exists; target provider has not been certified |
+| Generic `execution-sessions` | IMPLEMENTED TOOLING / DEFERRED | Logical contract and guarded certification harness exist; provider capability remains unverified |
+| Vercel | NOT CONFIGURED / UNVERIFIED | No ADHD Life OS production project binding is currently established |
 
 ## Recent important decisions
 
+- Human-in-the-loop does not mean human-in-every-loop; safe reversible implementation choices are resolved automatically.
+- Backend/provider work is intentionally paused until additional NoCodeBackend information is available.
+- Backend deferral does not pause independent frontend, accessibility, testing or maintainability work.
 - Application routes are not physical provider-route evidence.
-- Physical NoCodeBackend paths/methods are centralized server-side and fail closed until verified.
-- A generated Swagger/OpenAPI operation is **candidate evidence**, not connected provider verification.
-- The spec inspector never infers application CRUD mapping, never calls the provider, and never enables production operations.
-- Provider certification, application verification, deployment and runtime verification are separate evidence states.
-- `Instance` and Bearer credentials are server-owned; auth/session cookies are not generated-data credentials.
-- Evidence reports omit provider secret values, query values and examples that could contain data.
-- One primary implementation thread is maintained; downstream execution persistence is not started while its provider dependency is unresolved.
+- Physical NoCodeBackend paths/methods stay centralized server-side and fail closed until verified.
+- Provider certification, application verification, deployment and runtime verification remain separate evidence states.
+- One primary implementation thread is maintained; discoveries outside the active outcome are parked rather than automatically activated.
+- Zero lint warnings are now a CI contract, not a best-effort hygiene target.
 
 ## Next dependency-correct work
 
-### External provider certification
+### While backend remains deferred
 
-1. export/open the target ADHD Life OS NoCodeBackend generated API/Swagger as JSON;
-2. run `npm run inspect:ncb-openapi -- --spec=<target-openapi.json> --collection=tasks`;
-3. retain the specification SHA-256 and redacted candidate report as source evidence;
-4. identify the exact target list/read candidate without substituting another project's route family;
-5. construct the exact target read URL including the real `Instance` and any evidenced ownership filter;
-6. run `npm run certify:ncb-read -- --collection=tasks` with server-only credentials;
-7. record the command's redacted connected evidence in `docs/NOCODEBACKEND_OPERATIONS.md`;
-8. create a focused provider-mapping PR containing only the evidenced operation;
-9. run deterministic validation plus connected application verification;
-10. certify required write operations separately;
-11. only after the general provider contract is proven, certify and activate `execution-sessions`.
+1. complete and validate PR #102 responsive application shell;
+2. audit core frontend accessibility/interaction integrity across the implemented shell and primary workflows;
+3. choose the smallest high-value shared interaction correction;
+4. add deterministic/browser regression coverage with each material behaviour change;
+5. continue client-side cognitive-load reduction where changes are backend-independent;
+6. preserve provider-dependent Stage 3 work without speculative activation.
+
+### When backend work is resumed
+
+Resume from existing provider evidence tooling rather than redesigning the integration:
+
+1. inspect the target generated Swagger/OpenAPI specification;
+2. certify exact provider operations against the target instance;
+3. record redacted evidence;
+4. enable only evidenced mappings;
+5. certify write operations separately;
+6. certify `execution-sessions` capability;
+7. then implement durable execution integration/recovery/reconciliation.
 
 ## Stage 3 exit conditions
 
@@ -148,3 +170,5 @@ Stage 3 remains open until the platform demonstrates:
 6. explicit source-completion/reconciliation semantics;
 7. deterministic contract and critical browser tests;
 8. documentation aligned with the implemented execution model.
+
+The temporary backend deferral does not remove or weaken these exit conditions.
