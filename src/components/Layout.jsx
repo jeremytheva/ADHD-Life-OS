@@ -298,6 +298,18 @@ const Layout = ({ children, enabledModules = [] }) => {
               closeButtonRef={mobileCloseButtonRef}
               onClose={() => closeMobileNavigation(true)}
               onNavigate={() => closeMobileNavigation(false)}
+              onOpenGamification={() => {
+                closeMobileNavigation(false)
+                setShowGamification(true)
+              }}
+              onOpenRewardShop={() => {
+                closeMobileNavigation(false)
+                setShowRewardShop(true)
+              }}
+              onOpenAccessibility={() => {
+                closeMobileNavigation(false)
+                setShowAccessibility(true)
+              }}
             />
           </aside>
         </div>
