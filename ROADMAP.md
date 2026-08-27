@@ -1,6 +1,6 @@
 # ADHD Life OS — Roadmap
 
-**Last materially reviewed:** 26 August 2026  
+**Last materially reviewed:** 27 August 2026  
 **Current milestone:** Stage 3 — execution and next-action experience
 
 This roadmap records intended direction. Current implementation state and blockers belong in [`STATUS.md`](STATUS.md).
@@ -25,32 +25,48 @@ Objective: move from recommendation to a coherent, durable execution loop that h
 - Today next-action experience;
 - reversible session-local **Not now** feedback;
 - cognitive-load and execution-continuity delivery controls;
-- fail-closed execution-session provider contract and certification harness.
+- fail-closed execution-session provider contract and certification harness;
+- zero-warning ESLint validation enforced by the canonical platform gate.
 
-#### Dependency-correct remaining work
+### Temporary backend deferral
 
-1. **Provider certification**
-   - create the real NoCodeBackend `execution-sessions` structure;
-   - capture exact generated field/route/method/envelope behaviour;
-   - run read and full certification;
-   - classify filtering and uniqueness/concurrency capability.
+Provider-dependent implementation is intentionally paused from 27 August 2026 while additional NoCodeBackend information is gathered.
 
-2. **Durable application integration**
-   - add exact execution-session schemas after certification;
-   - extend the explicit proxy allowlist;
-   - add repository/provider adapter and ownership enforcement;
-   - compose Start/Pause/Continue/Complete/Cancel through the execution runtime.
+This is a **priority deferral**, not evidence that the provider contract is complete. Existing fail-closed provider boundaries remain in place and no speculative backend routes, methods, schemas or persistence behaviour should be introduced while the deferral is active.
 
-3. **Recovery and reconciliation**
-   - recover interrupted execution safely;
-   - distinguish execution-session completion from source-domain completion;
-   - make partial-success and retry/reconciliation behaviour explicit;
-   - handle stale, missing or externally completed source records safely.
+The preserved provider-dependent sequence remains:
 
-4. **Critical-path verification**
-   - add deterministic contract/ownership/lifecycle tests;
-   - add Playwright coverage for Start → Continue/Recover → Complete;
-   - verify the integrated user-visible execution loop.
+1. certify the real provider operations and `execution-sessions` capability;
+2. add exact durable application integration from that evidence;
+3. implement recovery and reconciliation semantics;
+4. verify the integrated durable execution loop.
+
+### Current independent work while backend is deferred
+
+Work may continue where it does not depend on unverified provider behaviour. Current priority order is:
+
+1. **Responsive application shell and navigation**
+   - make core navigation usable on phone-width screens;
+   - preserve desktop navigation behaviour;
+   - maintain keyboard and focus recovery semantics;
+   - add narrow-screen browser coverage.
+
+2. **Frontend accessibility and interaction integrity**
+   - audit keyboard reachability, focus management, labels and transient UI state;
+   - improve shared interaction patterns rather than isolated cosmetic fixes;
+   - add regression coverage for material behaviour changes.
+
+3. **Client-side cognitive-load reduction**
+   - reduce unnecessary choices, visual competition and initiation friction in existing implemented workflows;
+   - prefer clearer defaults and progressive disclosure without restricting user capability;
+   - keep changes independent of provider-specific persistence.
+
+4. **Repository quality and maintainability**
+   - continue focused, evidence-backed cleanup where it reduces future implementation risk;
+   - preserve the zero-warning lint gate and canonical validation contract;
+   - avoid broad refactors without a concrete user or delivery outcome.
+
+These independent improvements do **not** satisfy the durable execution requirements below. Stage 3 remains open until the provider-dependent execution loop can be completed and verified.
 
 #### Stage 3 exit conditions
 
@@ -67,8 +83,9 @@ Stage 3 should not close until the platform demonstrates:
 
 ## Deferred
 
-The following are intentionally deferred until the Stage 3 execution loop is stable:
+The following are intentionally deferred until the Stage 3 execution loop is stable or explicitly reprioritized:
 
+- NoCodeBackend/provider activation work while the temporary backend deferral is active;
 - external calendar/event synchronization;
 - richer analytics and longitudinal insight;
 - remote AI/LLM assistance;
@@ -82,10 +99,10 @@ No later stage is treated as committed merely because a capability appears in th
 
 ## Dependencies
 
-- Real provider-dependent execution work is blocked on verified NoCodeBackend evidence.
+- Real provider-dependent execution work still requires verified NoCodeBackend evidence and is currently intentionally deferred.
 - Production-readiness claims require an actual deployment target, environment configuration and runtime verification; no ADHD Life OS Vercel project is currently linked in the connected account.
 - New external integrations require explicit architecture, privacy, ownership and failure-semantics review before activation.
 
 ## Roadmap rule
 
-Preserve planned/deferred work during cleanup, but do not let it displace the current dependency-correct milestone. Update this file when intended future direction changes materially; update `STATUS.md` when actual current state changes.
+Preserve planned/deferred work during cleanup, but do not let it displace the current active priority. While backend work is deferred, continue only with work that is genuinely independent of unverified provider behaviour. Update this file when intended future direction changes materially; update `STATUS.md` when actual current state changes.
