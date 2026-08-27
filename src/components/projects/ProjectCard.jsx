@@ -33,11 +33,10 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className={`rounded-lg border-2 overflow-hidden cursor-pointer ${bgColorClasses[project.color]}`}
+      className={`rounded-lg border-2 overflow-hidden ${bgColorClasses[project.color]}`}
     >
-      {/* Header */}
       <div
-        className={`bg-gradient-to-r ${colorClasses[project.color]} p-4 text-white`}
+        className={`bg-gradient-to-r ${colorClasses[project.color]} p-4 text-white cursor-pointer`}
         onClick={onClick}
       >
         <div className="flex items-start justify-between mb-2">
@@ -54,10 +53,14 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
           </div>
           <div className="relative">
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation()
                 setShowMenu(!showMenu)
               }}
+              aria-label={`Project actions for ${project.title}`}
+              aria-expanded={showMenu}
+              aria-haspopup="menu"
               className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
             >
               <SafeIcon icon={FiMoreVertical} className="w-5 h-5" />
@@ -73,12 +76,15 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
                   }}
                 />
                 <motion.div
+                  role="menu"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-20"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
+                    type="button"
+                    role="menuitem"
                     onClick={(e) => {
                       e.stopPropagation()
                       onEdit()
@@ -90,6 +96,8 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
                     Edit Project
                   </button>
                   <button
+                    type="button"
+                    role="menuitem"
                     onClick={(e) => {
                       e.stopPropagation()
                       onArchive()
@@ -101,6 +109,8 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
                     Archive
                   </button>
                   <button
+                    type="button"
+                    role="menuitem"
                     onClick={(e) => {
                       e.stopPropagation()
                       onDelete()
@@ -109,7 +119,7 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
                     className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
                   >
                     <SafeIcon icon={FiTrash2} className="w-4 h-4" />
-                    Delete
+                    Delete Project
                   </button>
                 </motion.div>
               </>
@@ -117,7 +127,6 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
           </div>
         </div>
 
-        {/* Progress Bar */}
         {stats && (
           <div className="mt-3">
             <div className="flex items-center justify-between text-sm mb-1">
@@ -136,9 +145,8 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
         )}
       </div>
 
-      {/* Stats */}
       {stats && (
-        <div className="p-4" onClick={onClick}>
+        <div className="p-4 cursor-pointer" onClick={onClick}>
           <div className="grid grid-cols-3 gap-3 text-center">
             <div>
               <div className="text-xl font-bold text-slate-900">{stats.total_tasks}</div>
@@ -164,14 +172,15 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
         </div>
       )}
 
-      {/* View Details */}
-      <div
+      <button
+        type="button"
         onClick={onClick}
-        className="p-3 border-t border-slate-200 hover:bg-white hover:bg-opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium text-slate-700"
+        aria-label={`View details for ${project.title}`}
+        className="w-full p-3 border-t border-slate-200 hover:bg-white hover:bg-opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium text-slate-700"
       >
         <span>View Details</span>
         <SafeIcon icon={FiChevronRight} className="w-4 h-4" />
-      </div>
+      </button>
     </motion.div>
   )
 }
