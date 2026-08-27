@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 
 const { FiX, FiPlus, FiZap, FiChevronDown, FiChevronUp } = FiIcons
 
@@ -10,6 +11,8 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
   const [currentInput, setCurrentInput] = useState('')
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const inputRef = useRef(null)
+  const dialogRef = useModalDialog({ onEscape: onCancel, initialFocusRef: inputRef })
 
   const handleAddItem = () => {
     if (currentInput.trim()) {
@@ -47,6 +50,11 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="quick-capture-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col"
@@ -58,13 +66,14 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
                 <SafeIcon icon={FiZap} className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold">Quick Task Capture</h2>
+                <h2 id="quick-capture-title" className="text-2xl font-bold">Quick Task Capture</h2>
                 <p className="text-green-100 text-sm">
                   Just dump everything out - we'll organize it later!
                 </p>
               </div>
             </div>
             <button
+              type="button"
               onClick={onCancel}
               aria-label="Close quick capture"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
@@ -87,6 +96,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
             </label>
             <div className="flex gap-2">
               <input
+                ref={inputRef}
                 id="quick-capture-input"
                 type="text"
                 value={currentInput}
@@ -94,9 +104,9 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
                 onKeyPress={handleKeyPress}
                 placeholder="e.g., Call dentist, Buy groceries, Fix leaky faucet..."
                 className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-lg"
-                autoFocus
               />
               <button
+                type="button"
                 onClick={handleAddItem}
                 disabled={!currentInput.trim() || isSaving}
                 className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
@@ -141,6 +151,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
                         <p className="text-slate-900">{item}</p>
                       </div>
                       <button
+                        type="button"
                         onClick={() => handleRemoveItem(index)}
                         aria-label={`Remove ${item}`}
                         disabled={isSaving}
@@ -181,7 +192,10 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
           {items.filter(i => i).length > 0 && (
             <div className="mt-6">
               <button
+                type="button"
                 onClick={() => setShowAdvanced(!showAdvanced)}
+                aria-expanded={showAdvanced}
+                aria-controls="quick-capture-organization-options"
                 disabled={isSaving}
                 className="w-full flex items-center justify-between px-4 py-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors disabled:opacity-50"
               >
@@ -197,6 +211,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
               <AnimatePresence>
                 {showAdvanced && (
                   <motion.div
+                    id="quick-capture-organization-options"
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
@@ -231,6 +246,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
         <div className="p-6 border-t border-slate-200 bg-slate-50">
           <div className="flex gap-3">
             <button
+              type="button"
               onClick={onCancel}
               disabled={isSaving}
               className="flex-1 px-4 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition-colors disabled:opacity-50"
@@ -238,6 +254,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
               Cancel
             </button>
             <button
+              type="button"
               onClick={handleSaveAll}
               disabled={items.filter(i => i).length === 0 || isSaving}
               className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
