@@ -254,3 +254,27 @@ test('authenticated shell remains navigable at phone width', async ({ page }) =>
   await expect(page.getByRole('heading', { name: 'Tasks' })).toBeVisible()
   await expect(openNavigation).toBeVisible()
 })
+
+test('task form dialog owns focus and restores its trigger on Escape', async ({ page }) => {
+  surfaceBrowserErrors(page)
+  await createMockNcb(page)
+
+  await registerAndSkipSetup(page, 'task-dialog@example.test')
+  await page.getByRole('link', { name: 'Tasks' }).click()
+
+  const addTask = page.getByRole('button', { name: 'Add Task' })
+  await addTask.click()
+
+  const dialog = page.getByRole('dialog', { name: 'New Task' })
+  await expect(dialog).toBeVisible()
+  await expect(page.getByLabel('Title *')).toBeFocused()
+
+  const closeTaskForm = page.getByRole('button', { name: 'Close task form' })
+  await closeTaskForm.focus()
+  await page.keyboard.press('Shift+Tab')
+  await expect(dialog.getByRole('button', { name: 'Create', exact: true })).toBeFocused()
+
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(addTask).toBeFocused()
+})
