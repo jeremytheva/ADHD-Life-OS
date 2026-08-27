@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 import { useAccessibilityPreferences } from '../../contexts/AccessibilityPreferencesContext'
 import { applyAccessibilityPreferences } from '../../services/accessibilityPreferences'
 
@@ -34,9 +35,16 @@ const AccessibilitySettings = ({ onClose }) => {
     onClose()
   }
 
+  const dialogRef = useModalDialog({ onEscape: handleCancel })
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="accessibility-settings-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
@@ -45,12 +53,13 @@ const AccessibilitySettings = ({ onClose }) => {
         <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-white">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-2xl font-bold mb-2">Accessibility Settings</h2>
+              <h2 id="accessibility-settings-title" className="text-2xl font-bold mb-2">Accessibility Settings</h2>
               <p className="text-blue-100 text-sm">
                 Customize the interface to your needs
               </p>
             </div>
             <button
+              type="button"
               onClick={handleCancel}
               aria-label="Close accessibility settings without saving"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
@@ -78,6 +87,7 @@ const AccessibilitySettings = ({ onClose }) => {
                 { value: 'xlarge', label: 'X-Large' }
               ].map(size => (
                 <button
+                  type="button"
                   key={size.value}
                   onClick={() => handleChange('fontSize', size.value)}
                   className={`
@@ -116,6 +126,7 @@ const AccessibilitySettings = ({ onClose }) => {
                 { value: 'high', label: 'High', desc: 'Enhanced contrast' }
               ].map(contrast => (
                 <button
+                  type="button"
                   key={contrast.value}
                   onClick={() => handleChange('contrast', contrast.value)}
                   className={`
@@ -149,6 +160,7 @@ const AccessibilitySettings = ({ onClose }) => {
                 { value: 'loose', label: 'Loose' }
               ].map(spacing => (
                 <button
+                  type="button"
                   key={spacing.value}
                   onClick={() => handleChange('lineSpacing', spacing.value)}
                   className={`
@@ -181,6 +193,7 @@ const AccessibilitySettings = ({ onClose }) => {
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => handleChange('reduceMotion', !settings.reduceMotion)}
                 aria-label="Reduce motion"
                 aria-pressed={settings.reduceMotion}
@@ -210,6 +223,7 @@ const AccessibilitySettings = ({ onClose }) => {
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => handleChange('focusMode', !settings.focusMode)}
                 aria-label="Focus mode"
                 aria-pressed={settings.focusMode}
@@ -239,6 +253,7 @@ const AccessibilitySettings = ({ onClose }) => {
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => handleChange('dyslexicFont', !settings.dyslexicFont)}
                 aria-label="Dyslexia-friendly font"
                 aria-pressed={settings.dyslexicFont}
@@ -260,12 +275,14 @@ const AccessibilitySettings = ({ onClose }) => {
         <div className="p-6 border-t border-slate-200 bg-slate-50">
           <div className="flex gap-3">
             <button
+              type="button"
               onClick={handleCancel}
               className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition-colors"
             >
               Cancel
             </button>
             <button
+              type="button"
               onClick={handleSave}
               className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
             >
