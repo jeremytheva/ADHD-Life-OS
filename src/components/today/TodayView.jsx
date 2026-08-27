@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect } from 'react'
+import React, { lazy, Suspense, useCallback, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format, parseISO } from 'date-fns'
 import * as FiIcons from 'react-icons/fi'
@@ -32,9 +32,7 @@ const TodayView = () => {
   const [pendingTaskId, setPendingTaskId] = useState(null)
   const [showGamification, setShowGamification] = useState(false)
 
-  useEffect(() => { loadTimeline() }, [currentMode, user])
-
-  const loadTimeline = async () => {
+  const loadTimeline = useCallback(async () => {
     try {
       setLoading(true)
       setLoadError(false)
@@ -61,7 +59,9 @@ const TodayView = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentMode, filterByMode, user])
+
+  useEffect(() => { loadTimeline() }, [loadTimeline])
 
   const handleCompleteTask = async (blockId, taskId) => {
     if (pendingTaskId) return
