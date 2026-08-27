@@ -229,3 +229,28 @@ test('Today surfaces timeline retrieval failure and recovers on retry', async ({
   await page.getByRole('button', { name: 'Try again' }).click()
   await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible()
 })
+
+test('authenticated shell remains navigable at phone width', async ({ page }) => {
+  surfaceBrowserErrors(page)
+  await page.setViewportSize({ width: 390, height: 844 })
+  await createMockNcb(page)
+
+  await registerAndSkipSetup(page, 'mobile-shell@example.test')
+
+  const openNavigation = page.getByRole('button', { name: 'Open navigation' })
+  await expect(openNavigation).toBeVisible()
+  await openNavigation.click()
+
+  const closeNavigation = page.getByRole('button', { name: 'Close navigation', exact: true })
+  await expect(closeNavigation).toBeFocused()
+  await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeVisible()
+
+  await page.keyboard.press('Escape')
+  await expect(openNavigation).toBeFocused()
+
+  await openNavigation.click()
+  await page.getByRole('link', { name: 'Tasks' }).click()
+  await expect(page).toHaveURL(/\/tasks$/)
+  await expect(page.getByRole('heading', { name: 'Tasks' })).toBeVisible()
+  await expect(openNavigation).toBeVisible()
+})
