@@ -26,7 +26,8 @@ Objective: move from recommendation to a coherent, durable execution loop that h
 - reversible session-local **Not now** feedback;
 - cognitive-load and execution-continuity delivery controls;
 - fail-closed execution-session provider contract and certification harness;
-- zero-warning ESLint validation enforced by the canonical platform gate.
+- zero-warning ESLint validation enforced by the canonical platform gate;
+- responsive authenticated application shell with tested phone-width navigation and keyboard dismissal/focus recovery.
 
 ### Temporary backend deferral
 
@@ -45,26 +46,22 @@ The preserved provider-dependent sequence remains:
 
 Work may continue where it does not depend on unverified provider behaviour. Current priority order is:
 
-1. **Responsive application shell and navigation**
-   - make core navigation usable on phone-width screens;
-   - preserve desktop navigation behaviour;
-   - maintain keyboard and focus recovery semantics;
-   - add narrow-screen browser coverage.
-
-2. **Frontend accessibility and interaction integrity**
-   - audit keyboard reachability, focus management, labels and transient UI state;
+1. **Frontend accessibility and interaction integrity**
+   - audit keyboard reachability, focus management, dialog semantics, labels and transient UI state;
    - improve shared interaction patterns rather than isolated cosmetic fixes;
    - add regression coverage for material behaviour changes.
 
-3. **Client-side cognitive-load reduction**
+2. **Client-side cognitive-load reduction**
    - reduce unnecessary choices, visual competition and initiation friction in existing implemented workflows;
    - prefer clearer defaults and progressive disclosure without restricting user capability;
    - keep changes independent of provider-specific persistence.
 
-4. **Repository quality and maintainability**
+3. **Repository quality and maintainability**
    - continue focused, evidence-backed cleanup where it reduces future implementation risk;
    - preserve the zero-warning lint gate and canonical validation contract;
    - avoid broad refactors without a concrete user or delivery outcome.
+
+The responsive application shell/navigation outcome is complete through PR #102 and is now part of the implemented foundation rather than active roadmap work.
 
 These independent improvements do **not** satisfy the durable execution requirements below. Stage 3 remains open until the provider-dependent execution loop can be completed and verified.
 
