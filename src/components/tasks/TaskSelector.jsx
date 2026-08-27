@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -31,11 +31,7 @@ const TaskSelector = ({ onSelectTask }) => {
   const [selectedPath, setSelectedPath] = useState('all')
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadTasksAndRecommendations()
-  }, [userState, selectedPath])
-
-  const loadTasksAndRecommendations = async () => {
+  const loadTasksAndRecommendations = useCallback(async () => {
     try {
       setLoading(true)
       const allTasks = await taskService.getTasks()
@@ -60,7 +56,11 @@ const TaskSelector = ({ onSelectTask }) => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [selectedPath, userState])
+
+  useEffect(() => {
+    loadTasksAndRecommendations()
+  }, [loadTasksAndRecommendations])
 
   const handleUpdateUserState = (field, value) => {
     setUserState(prev => ({ ...prev, [field]: value }))
