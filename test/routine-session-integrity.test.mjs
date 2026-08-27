@@ -35,6 +35,13 @@ test('routine completion is recoverable and only closes after persistence succee
   assert.match(source, /onClose\(\)/)
 })
 
+test('routine auto-completion waits for the final step write before claiming its one automatic attempt', async () => {
+  const source = await read('src/components/routines/RoutineProgress.jsx')
+
+  assert.match(source, /if \(!isFinishingSession \|\| !hasSession \|\| actionPending \|\| completionAttemptedRef\.current\) return/)
+  assert.match(source, /completionAttemptedRef\.current = true\s+void handleCompleteRoutine\(\)/)
+})
+
 test('routine cancellation failure leaves the session active', async () => {
   const source = await read('src/components/routines/RoutineProgress.jsx')
 
@@ -45,6 +52,7 @@ test('routine cancellation failure leaves the session active', async () => {
 test('routine elapsed time is driven by an active one-second timer', async () => {
   const source = await read('src/components/routines/RoutineProgress.jsx')
 
+  assert.match(source, /if \(!hasCurrentStep \|\| !stepStartTime\) return undefined/)
   assert.match(source, /window\.setInterval/)
   assert.match(source, /setElapsedSeconds/)
   assert.match(source, /window\.clearInterval/)
