@@ -3,7 +3,7 @@
 **Snapshot date:** 27 August 2026  
 **Last materially reviewed:** 27 August 2026  
 **Default branch:** `main`  
-**Last verified main implementation commit:** `e8a9dbf` — PR #101, zero-warning lint gate  
+**Last verified main implementation commit:** `69b2893` — PR #102, responsive application shell  
 **Overall status:** Active development / backend work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
@@ -11,7 +11,7 @@
 
 Continue product and repository improvements that are genuinely independent of unverified backend behaviour while additional NoCodeBackend information is gathered.
 
-The active outcome is a responsive, keyboard-usable authenticated application shell. Provider-dependent execution persistence remains preserved for later continuation but is not the current implementation thread.
+The responsive authenticated shell is now merged. The next active outcome is a whole-system frontend accessibility and interaction-integrity audit, followed by the smallest high-value shared correction supported by repository evidence.
 
 ## AI execution gate
 
@@ -22,20 +22,20 @@ The active outcome is a responsive, keyboard-usable authenticated application sh
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not introduce, infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-The previous external provider blocker still applies to backend work, but it no longer blocks independent frontend, accessibility, testing and repository-quality outcomes.
+The external provider uncertainty still applies to backend work, but it does not block independent frontend, accessibility, testing and repository-quality outcomes.
 
 ## Re-entry checkpoint
 
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Primary implementation thread | Responsive application shell and narrow-screen navigation |
-| Active application PR | PR #102 — `feat: responsive application shell` |
-| Last completed outcome | PR #101 merged — ESLint warnings now fail the canonical validation gate |
-| Current blocker | None for the active frontend thread |
+| Primary implementation thread | Frontend accessibility and interaction-integrity audit |
+| Active application PR | None — PR #102 merged cleanly |
+| Last completed outcome | PR #102 merged — responsive desktop/mobile authenticated shell with keyboard-aware navigation |
+| Current blocker | None for backend-independent frontend work |
 | Deferred dependency | NoCodeBackend/provider certification pending additional provider information |
-| Next action | Validate PR #102, address any review/CI finding, then merge if clean |
-| Next queued outcome | Audit the next frontend accessibility/interaction-integrity gap that does not depend on backend behaviour |
+| Next action | Audit keyboard reachability, dialog/focus semantics, labels and transient interaction state across shared/core UI surfaces; choose one focused correction |
+| Next queued outcome | Client-side cognitive-load reduction after the accessibility slice is closed |
 
 If this checkpoint conflicts with GitHub, deployment or later provider evidence, verify the authoritative source and update this file rather than reconstructing state from chat history.
 
@@ -51,22 +51,20 @@ If this checkpoint conflicts with GitHub, deployment or later provider evidence,
 - PR #99 merged — `TaskList` preference-first/task-loader dependencies corrected; warning count reduced to three.
 - PR #100 merged — `RoutineProgress` lifecycle effects made dependency-safe; final-step automatic-completion race fixed; lint reached zero warnings.
 - PR #101 merged — `npm run lint` now uses `eslint . --max-warnings=0`, with regression coverage preventing silent weakening of the zero-warning gate.
+- PR #102 merged — responsive authenticated shell, phone-width navigation drawer, Escape/focus recovery, skip-to-content path and 390×844 Playwright coverage. Exact PR head passed 109 Node tests and 5 browser tests with zero lint warnings.
 
 ## Active
 
-### PR #102 — responsive application shell
+### Frontend accessibility and interaction-integrity audit
 
-Current branch: `feat/responsive-application-shell`
+Scope:
 
-In scope:
-
-- preserve the large-screen desktop sidebar;
-- add a phone-width header and navigation drawer;
-- close mobile navigation on route changes;
-- support Escape dismissal with focus restoration;
-- add a skip-to-main-content path and explicit primary-navigation semantics;
-- add Playwright coverage for phone-width navigation;
-- keep backend/provider behaviour unchanged.
+- inspect shared/core dialogs and transient surfaces for accessible dialog semantics;
+- verify initial focus, Escape dismissal and focus return where appropriate;
+- verify keyboard reachability and meaningful control labels;
+- identify shared patterns before applying isolated fixes;
+- add deterministic/browser regression coverage for material changes;
+- keep provider/backend behaviour unchanged.
 
 ## Backend / provider work — intentionally deferred
 
@@ -94,13 +92,14 @@ While this work is deferred:
 
 ## Known defects
 
-No known application defect currently overrides the active responsive-shell work. Provider-backed data operations remaining unavailable without a verified physical contract are intentional fail-closed behaviour, not a frontend defect to bypass.
+No known application defect currently overrides the accessibility/interaction-integrity audit. Provider-backed data operations remaining unavailable without a verified physical contract are intentional fail-closed behaviour, not a frontend defect to bypass.
 
 ## Technical debt / quality state
 
-- ESLint is clean and CI now enforces **0 warnings**.
+- ESLint is clean and CI enforces **0 warnings**.
 - Mixed JavaScript/TypeScript checking remains an accepted current constraint.
-- The authenticated application shell on `main` is desktop-oriented; PR #102 is addressing the narrow-screen navigation gap.
+- Responsive shell/navigation coverage is merged for both desktop and phone-width paths.
+- Shared dialog/focus semantics have not yet been audited consistently across the application and are the current quality target.
 - Production deployment is not configured or verified for ADHD Life OS in the connected Vercel account.
 - `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only; no broad consolidation should occur without a focused outcome and dependency review.
 
@@ -115,8 +114,9 @@ No known application defect currently overrides the active responsive-shell work
 
 | System / capability | State | Evidence / implication |
 | --- | --- | --- |
-| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #101 merged as `e8a9dbf` |
+| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #102 merged as `69b2893` |
 | Canonical validation | VERIFIED | Dependency audit + governance + zero-warning lint + typecheck + Node tests + production build + Playwright |
+| Responsive application shell | VERIFIED | PR #102; phone-width navigation and keyboard dismissal covered in Playwright |
 | Stable application data API | APPLICATION VERIFIED | Same-origin routes and domain contracts remain deterministic application boundaries |
 | Physical NoCodeBackend adapter | IMPLEMENTED / DEFERRED | Fail-closed registry/adapter is merged; production mapping remains unverified |
 | Target Swagger/OpenAPI intake | IMPLEMENTED / DEFERRED | Candidate-only inspector exists; target evidence has not been supplied |
@@ -133,17 +133,18 @@ No known application defect currently overrides the active responsive-shell work
 - Physical NoCodeBackend paths/methods stay centralized server-side and fail closed until verified.
 - Provider certification, application verification, deployment and runtime verification remain separate evidence states.
 - One primary implementation thread is maintained; discoveries outside the active outcome are parked rather than automatically activated.
-- Zero lint warnings are now a CI contract, not a best-effort hygiene target.
+- Zero lint warnings are a CI contract, not a best-effort hygiene target.
+- Narrow-screen usability is now a tested application-shell requirement rather than an unverified responsive assumption.
 
 ## Next dependency-correct work
 
 ### While backend remains deferred
 
-1. complete and validate PR #102 responsive application shell;
-2. audit core frontend accessibility/interaction integrity across the implemented shell and primary workflows;
-3. choose the smallest high-value shared interaction correction;
-4. add deterministic/browser regression coverage with each material behaviour change;
-5. continue client-side cognitive-load reduction where changes are backend-independent;
+1. audit frontend accessibility/interaction integrity across the implemented shell and primary workflows;
+2. choose and implement the smallest high-value shared correction;
+3. add deterministic/browser regression coverage for the changed interaction contract;
+4. continue client-side cognitive-load reduction after that slice closes;
+5. preserve zero-warning lint and canonical validation;
 6. preserve provider-dependent Stage 3 work without speculative activation.
 
 ### When backend work is resumed
