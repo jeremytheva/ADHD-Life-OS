@@ -4,7 +4,6 @@
 import { getCurrentUserId } from './authStorage'
 import { safeRead, safeWrite } from './storageService'
 
-const TEMPLATES_STORAGE_KEY = 'adhd_lifeos_templates'
 const USER_TEMPLATES_STORAGE_KEY = 'adhd_lifeos_user_templates'
 
 // Master Template Library (Read-only)
