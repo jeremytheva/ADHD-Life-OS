@@ -5,7 +5,6 @@ import { getCurrentUserId } from './authStorage'
 import { safeRead, safeWrite } from './storageService'
 
 const GAMIFICATION_KEY = 'adhd_lifeos_gamification'
-const ACHIEVEMENTS_KEY = 'adhd_lifeos_achievements'
 const CURRENCY_KEY = 'adhd_lifeos_currency'
 const REWARDS_KEY = 'adhd_lifeos_rewards'
 
@@ -457,7 +456,6 @@ export const gamificationService = {
   awardPointsAndCoins(xpAmount, coinAmount, reason) {
     const data = getUserData()
     const currency = getCurrencyData()
-    const oldLevel = data.level
 
     // Add XP
     data.points += xpAmount
@@ -746,10 +744,9 @@ export const gamificationService = {
   },
 
   // Suggest adaptive reward based on task completion
-  suggestAdaptiveReward(task, result) {
+  suggestAdaptiveReward(task, _result) {
     const duration = task.estimated_duration || 30
     const isEssential = task.is_essential
-    const currency = getCurrencyData()
 
     // Big task = bigger reward suggestion
     if (duration >= 90) {
@@ -869,8 +866,7 @@ export const gamificationService = {
   },
 
   // Get personalized task recommendations
-  getPersonalizedRecommendations(tasks, userRoles, enabledModules) {
-    const data = getUserData()
+  getPersonalizedRecommendations(tasks, _userRoles, _enabledModules) {
     const now = new Date()
     const hour = now.getHours()
 
