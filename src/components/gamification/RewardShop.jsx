@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 import { gamificationService } from '../../services/gamificationService'
 
 const { FiX, FiShoppingCart, FiCheck, FiLock, FiStar, FiZap, FiGift } = FiIcons
@@ -11,6 +12,7 @@ const RewardShop = ({ onClose }) => {
   const [currency, setCurrency] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [purchaseSuccess, setPurchaseSuccess] = useState(null)
+  const dialogRef = useModalDialog({ onEscape: onClose })
 
   useEffect(() => {
     loadRewards()
@@ -54,6 +56,11 @@ const RewardShop = ({ onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reward-shop-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
@@ -66,12 +73,14 @@ const RewardShop = ({ onClose }) => {
                 <SafeIcon icon={FiShoppingCart} className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold">Reward Shop</h2>
+                <h2 id="reward-shop-title" className="text-2xl font-bold">Reward Shop</h2>
                 <p className="text-yellow-100">Spend your hard-earned coins!</p>
               </div>
             </div>
             <button
+              type="button"
               onClick={onClose}
+              aria-label="Close Reward Shop"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
             >
               <SafeIcon icon={FiX} className="w-6 h-6" />
@@ -99,6 +108,7 @@ const RewardShop = ({ onClose }) => {
         <div className="flex border-b border-slate-200 px-6 pt-4">
           {categories.map(cat => (
             <button
+              type="button"
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
               className={`flex items-center gap-2 px-4 py-3 transition-colors ${
@@ -150,6 +160,7 @@ const RewardShop = ({ onClose }) => {
                     </div>
                   ) : reward.affordable ? (
                     <button
+                      type="button"
                       onClick={() => handlePurchase(reward.id)}
                       className="px-3 py-1.5 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-sm font-medium"
                     >
