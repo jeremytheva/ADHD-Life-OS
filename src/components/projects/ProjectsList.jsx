@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -38,11 +38,7 @@ const ProjectsList = () => {
 
   getModePreferences(currentMode.id)
 
-  useEffect(() => {
-    loadProjects()
-  }, [currentMode])
-
-  const loadProjects = async () => {
+  const loadProjects = useCallback(async () => {
     try {
       setLoading(true)
       setLoadError(null)
@@ -66,7 +62,11 @@ const ProjectsList = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filterByMode])
+
+  useEffect(() => {
+    loadProjects()
+  }, [loadProjects])
 
   const handleQuickCapture = async (items) => {
     setOperationError(null)
