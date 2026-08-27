@@ -146,3 +146,30 @@ test('Project Form owns focus, exposes grouped choices, and restores its trigger
   await expect(dialog).toHaveCount(0)
   await expect(trigger).toBeFocused()
 })
+
+test('Quick Capture owns focus, exposes optional-panel state, and restores its trigger on Escape', async ({ page }) => {
+  await createMockNcb(page)
+  await registerAndSkipSetup(page, 'quick-capture-dialog@example.test')
+  await page.getByRole('link', { name: 'Projects' }).click()
+
+  const trigger = page.getByRole('button', { name: 'Quick Capture', exact: true })
+  await trigger.click()
+
+  const dialog = page.getByRole('dialog', { name: 'Quick Task Capture' })
+  const taskInput = page.getByLabel('Type a task and press Enter')
+  await expect(dialog).toBeVisible()
+  await expect(taskInput).toBeFocused()
+
+  await taskInput.fill('Call dentist')
+  await taskInput.press('Enter')
+
+  const organizationToggle = page.getByRole('button', { name: 'Organization Options (Optional)' })
+  await expect(organizationToggle).toHaveAttribute('aria-expanded', 'false')
+  await organizationToggle.click()
+  await expect(organizationToggle).toHaveAttribute('aria-expanded', 'true')
+  await expect(page.locator('#quick-capture-organization-options')).toBeVisible()
+
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+})
