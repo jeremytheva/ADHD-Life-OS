@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -16,6 +16,25 @@ import RecommendedTasks from './RecommendedTasks'
 import TemplateLibrary from '../templates/TemplateLibrary'
 
 const { FiPlus, FiFilter, FiTrendingUp, FiBookOpen } = FiIcons
+
+const sortTasks = (items, sortType) => {
+  switch (sortType) {
+    case 'priority':
+      return [...items].sort((a, b) => b.priorityScore - a.priorityScore)
+    case 'due_date':
+      return [...items].sort((a, b) => {
+        if (!a.due_date) return 1
+        if (!b.due_date) return -1
+        return new Date(a.due_date) - new Date(b.due_date)
+      })
+    case 'created':
+      return [...items].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    case 'alphabetical':
+      return [...items].sort((a, b) => a.title.localeCompare(b.title))
+    default:
+      return items
+  }
+}
 
 const TaskList = () => {
   const { user } = useAuth()
@@ -35,17 +54,7 @@ const TaskList = () => {
 
   const modePrefs = getModePreferences(currentMode.id)
 
-  useEffect(() => {
-    if (user) loadPreferences()
-  }, [user])
-
-  useEffect(() => {
-    if (preferences) {
-      loadTasks()
-    }
-  }, [filter, preferences, currentMode])
-
-  const loadPreferences = async () => {
+  const loadPreferences = useCallback(async () => {
     try {
       setLoading(true)
       setLoadError(null)
@@ -58,9 +67,9 @@ const TaskList = () => {
       setLoading(false)
       return false
     }
-  }
+  }, [user])
 
-  const loadTasks = async () => {
+  const loadTasks = useCallback(async () => {
     try {
       setLoading(true)
       setLoadError(null)
@@ -91,7 +100,17 @@ const TaskList = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentMode.id, filter, filterByMode, modePrefs.hideCompleted, modePrefs.sortBy, preferences, sortBy])
+
+  useEffect(() => {
+    if (user) loadPreferences()
+  }, [loadPreferences, user])
+
+  useEffect(() => {
+    if (preferences) {
+      loadTasks()
+    }
+  }, [loadTasks, preferences])
 
   const retryLoad = () => {
     setOperationError(null)
@@ -99,25 +118,6 @@ const TaskList = () => {
       loadTasks()
     } else {
       loadPreferences()
-    }
-  }
-
-  const sortTasks = (items, sortType) => {
-    switch (sortType) {
-      case 'priority':
-        return [...items].sort((a, b) => b.priorityScore - a.priorityScore)
-      case 'due_date':
-        return [...items].sort((a, b) => {
-          if (!a.due_date) return 1
-          if (!b.due_date) return -1
-          return new Date(a.due_date) - new Date(b.due_date)
-        })
-      case 'created':
-        return [...items].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-      case 'alphabetical':
-        return [...items].sort((a, b) => a.title.localeCompare(b.title))
-      default:
-        return items
     }
   }
 
