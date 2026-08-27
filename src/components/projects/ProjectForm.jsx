@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 
 const { FiX, FiSave } = FiIcons
 
@@ -27,6 +28,8 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
     goal: project?.goal || '',
     target_date: project?.target_date || ''
   })
+  const titleInputRef = useRef(null)
+  const dialogRef = useModalDialog({ onEscape: onCancel, initialFocusRef: titleInputRef })
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -37,33 +40,42 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
     onSave(formData)
   }
 
+  const dialogTitle = project ? 'Edit Project' : 'New Project'
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-form-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-lg max-h-[90vh] overflow-y-auto"
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-200 sticky top-0 bg-white z-10">
-          <h3 className="text-lg font-bold text-slate-900">
-            {project ? 'Edit Project' : 'New Project'}
+          <h3 id="project-form-title" className="text-lg font-bold text-slate-900">
+            {dialogTitle}
           </h3>
           <button
+            type="button"
             onClick={onCancel}
+            aria-label="Close project form"
             className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
           >
             <SafeIcon icon={FiX} className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="project-title" className="block text-sm font-medium text-slate-700 mb-2">
               Project Title *
             </label>
             <input
+              ref={titleInputRef}
+              id="project-title"
               type="text"
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
@@ -74,10 +86,11 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="project-description" className="block text-sm font-medium text-slate-700 mb-2">
               Description
             </label>
             <textarea
+              id="project-description"
               value={formData.description}
               onChange={(e) => handleChange('description', e.target.value)}
               rows={3}
@@ -87,10 +100,11 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="project-goal" className="block text-sm font-medium text-slate-700 mb-2">
               Project Goal
             </label>
             <textarea
+              id="project-goal"
               value={formData.goal}
               onChange={(e) => handleChange('goal', e.target.value)}
               rows={2}
@@ -100,10 +114,11 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="project-target-date" className="block text-sm font-medium text-slate-700 mb-2">
               Target Date (Optional)
             </label>
             <input
+              id="project-target-date"
               type="date"
               value={formData.target_date}
               onChange={(e) => handleChange('target_date', e.target.value)}
@@ -111,16 +126,17 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
+          <fieldset>
+            <legend className="block text-sm font-medium text-slate-700 mb-3">
               Choose Color
-            </label>
+            </legend>
             <div className="grid grid-cols-4 gap-2">
               {PROJECT_COLORS.map((color) => (
                 <button
                   key={color.value}
                   type="button"
                   onClick={() => handleChange('color', color.value)}
+                  aria-pressed={formData.color === color.value}
                   className={`p-3 rounded-lg border-2 transition-all ${
                     formData.color === color.value
                       ? 'border-slate-900 ring-2 ring-slate-300'
@@ -134,18 +150,20 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
+          <fieldset>
+            <legend className="block text-sm font-medium text-slate-700 mb-3">
               Choose Icon
-            </label>
+            </legend>
             <div className="grid grid-cols-6 gap-2">
               {ICONS.map((icon) => (
                 <button
                   key={icon}
                   type="button"
                   onClick={() => handleChange('icon', icon)}
+                  aria-label={`Choose ${icon} project icon`}
+                  aria-pressed={formData.icon === icon}
                   className={`p-3 rounded-lg border-2 text-2xl transition-all ${
                     formData.icon === icon
                       ? 'border-purple-500 bg-purple-50'
@@ -156,9 +174,8 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
 
-          {/* Actions */}
           <div className="flex gap-3 pt-4 border-t border-slate-200">
             <button
               type="button"
