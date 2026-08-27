@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 
 const { FiX } = FiIcons
 
@@ -12,6 +13,11 @@ const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
     due_date: task?.due_date || '',
     estimated_duration: task?.estimated_duration || 60,
     is_essential: task?.is_essential || false
+  })
+  const titleInputRef = useRef(null)
+  const dialogRef = useModalDialog({
+    onEscape: saving ? null : onCancel,
+    initialFocusRef: titleInputRef
   })
 
   const handleSubmit = (e) => {
@@ -31,12 +37,17 @@ const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="task-form-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-md"
       >
         <div className="flex justify-between items-center p-6 border-b border-slate-200">
-          <h2 className="text-lg font-medium text-slate-900">
+          <h2 id="task-form-title" className="text-lg font-medium text-slate-900">
             {task ? 'Edit Task' : 'New Task'}
           </h2>
           <button
@@ -56,6 +67,7 @@ const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
               Title *
             </label>
             <input
+              ref={titleInputRef}
               id="task-title"
               type="text"
               value={formData.title}
