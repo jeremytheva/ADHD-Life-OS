@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 import { gamificationService } from '../../services/gamificationService'
 
 const { FiTrendingUp, FiAward, FiZap, FiTarget, FiStar, FiX } = FiIcons
@@ -10,6 +11,10 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
   const [stats, setStats] = useState(null)
   const [achievements, setAchievements] = useState([])
   const [selectedTab, setSelectedTab] = useState('overview')
+  const dialogRef = useModalDialog({
+    onEscape: onClose,
+    enabled: !compact && Boolean(stats)
+  })
 
   useEffect(() => {
     loadStats()
@@ -43,7 +48,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
         className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg border border-purple-200 p-4"
       >
         <div className="grid grid-cols-4 gap-3">
-          {/* Level */}
           <div className="bg-white rounded-lg p-3 text-center">
             <div className="text-2xl font-bold text-purple-600">
               {stats.level}
@@ -51,7 +55,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
             <div className="text-xs text-slate-600">Level</div>
           </div>
 
-          {/* Points */}
           <div className="bg-white rounded-lg p-3 text-center">
             <div className="text-2xl font-bold text-yellow-600">
               {stats.points}
@@ -59,7 +62,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
             <div className="text-xs text-slate-600">Points</div>
           </div>
 
-          {/* Streak */}
           <div className="bg-white rounded-lg p-3 text-center">
             <div className="text-2xl font-bold text-orange-600 flex items-center justify-center gap-1">
               {stats.current_streak}
@@ -68,7 +70,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
             <div className="text-xs text-slate-600">Day Streak</div>
           </div>
 
-          {/* Achievements */}
           <div className="bg-white rounded-lg p-3 text-center">
             <div className="text-2xl font-bold text-green-600">
               {earnedAchievements.length}
@@ -77,7 +78,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
           </div>
         </div>
 
-        {/* Level Progress Bar */}
         <div className="mt-3">
           <div className="flex items-center justify-between text-xs text-slate-600 mb-1">
             <span>Level {stats.level}</span>
@@ -99,11 +99,15 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="gamification-progress-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
       >
-        {/* Header */}
         <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-6 text-white">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -111,19 +115,20 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
                 <SafeIcon icon={FiAward} className="w-8 h-8" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold mb-1">Your Progress</h2>
+                <h2 id="gamification-progress-title" className="text-2xl font-bold mb-1">Your Progress</h2>
                 <p className="text-purple-100">Level {stats.level} • {stats.points} Points</p>
               </div>
             </div>
             <button
+              type="button"
               onClick={onClose}
+              aria-label="Close progress"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
             >
               <SafeIcon icon={FiX} className="w-6 h-6" />
             </button>
           </div>
 
-          {/* Level Progress */}
           <div>
             <div className="flex items-center justify-between text-sm mb-2">
               <span>Level Progress</span>
@@ -140,12 +145,13 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
           </div>
         </div>
 
-        {/* Tabs */}
         <div className="flex border-b border-slate-200">
           {['overview', 'achievements', 'stats'].map(tab => (
             <button
+              type="button"
               key={tab}
               onClick={() => setSelectedTab(tab)}
+              aria-pressed={selectedTab === tab}
               className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
                 selectedTab === tab
                   ? 'text-purple-600 border-b-2 border-purple-600'
@@ -157,11 +163,9 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
           ))}
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
           {selectedTab === 'overview' && (
             <div className="space-y-6">
-              {/* Key Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
                   <div className="flex items-center gap-2 mb-2">
@@ -204,7 +208,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
                 </div>
               </div>
 
-              {/* Streak Message */}
               {stats.current_streak > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -217,7 +220,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
                 </motion.div>
               )}
 
-              {/* Recent Achievements */}
               {earnedAchievements.length > 0 && (
                 <div>
                   <h3 className="text-lg font-medium text-slate-900 mb-3">
@@ -248,7 +250,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
 
           {selectedTab === 'achievements' && (
             <div className="space-y-6">
-              {/* Earned Achievements */}
               {earnedAchievements.length > 0 && (
                 <div>
                   <h3 className="text-lg font-medium text-slate-900 mb-3">
@@ -281,7 +282,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
                 </div>
               )}
 
-              {/* Locked Achievements */}
               {lockedAchievements.length > 0 && (
                 <div>
                   <h3 className="text-lg font-medium text-slate-900 mb-3">
@@ -336,7 +336,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
 
           {selectedTab === 'stats' && (
             <div className="space-y-6">
-              {/* Lifetime Stats */}
               <div>
                 <h3 className="text-lg font-medium text-slate-900 mb-3">
                   Lifetime Statistics
@@ -372,7 +371,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
                 </div>
               </div>
 
-              {/* Today's Progress */}
               <div>
                 <h3 className="text-lg font-medium text-slate-900 mb-3">
                   Today's Activity
@@ -394,7 +392,6 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
                 </div>
               </div>
 
-              {/* Motivational Message */}
               <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 border-2 border-purple-200 text-center">
                 <div className="text-4xl mb-3">✨</div>
                 <p className="text-purple-900 font-medium mb-2">
