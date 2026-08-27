@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -18,49 +18,27 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
   const [stepStartTime, setStepStartTime] = useState(null)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const completionAttemptedRef = useRef(false)
+  const routineRef = useRef(routine)
+  routineRef.current = routine
 
-  useEffect(() => {
-    initializeSession()
-  }, [routine.id])
+  const routineId = routine.id
+  const routineSteps = routine.routine_steps
+  const currentStepIndex = session?.current_step_index
+  const hasSession = Boolean(session)
+  const isFinishingSession = currentStepIndex != null && currentStepIndex >= routineSteps.length
+  const hasCurrentStep = Boolean(currentStep)
 
-  useEffect(() => {
-    if (!session) return
-
-    if (session.current_step_index < routine.routine_steps.length) {
-      setCurrentStep(routine.routine_steps[session.current_step_index])
-      setStepStartTime(Date.now())
-      setElapsedSeconds(0)
-      completionAttemptedRef.current = false
-      return
-    }
-
-    setCurrentStep(null)
-    if (!completionAttemptedRef.current) {
-      completionAttemptedRef.current = true
-      handleCompleteRoutine()
-    }
-  }, [session?.current_step_index, routine.routine_steps])
-
-  useEffect(() => {
-    if (!currentStep || !stepStartTime) return undefined
-
-    const timer = window.setInterval(() => {
-      setElapsedSeconds(Math.floor((Date.now() - stepStartTime) / 1000))
-    }, 1000)
-
-    return () => window.clearInterval(timer)
-  }, [currentStep?.id, stepStartTime])
-
-  const initializeSession = async () => {
+  const initializeSession = useCallback(async () => {
     try {
       setLoading(true)
       setLoadError(false)
       setOperationError('')
       completionAttemptedRef.current = false
 
-      let activeSession = await routineProgressService.getActiveSession(routine.id)
+      const activeRoutine = routineRef.current
+      let activeSession = await routineProgressService.getActiveSession(routineId)
       if (!activeSession) {
-        activeSession = await routineProgressService.startRoutine(routine.id, routine)
+        activeSession = await routineProgressService.startRoutine(routineId, activeRoutine)
       }
       setSession(activeSession)
     } catch (error) {
@@ -69,7 +47,59 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [routineId])
+
+  const handleCompleteRoutine = useCallback(async () => {
+    if (!session || actionPending) return
+
+    setActionPending(true)
+    setOperationError('')
+    try {
+      await routineProgressService.completeRoutine(session.id)
+      if (onComplete) onComplete()
+      onClose()
+    } catch (error) {
+      console.error('Error completing routine:', error)
+      setOperationError('All steps are recorded, but we couldn’t save the routine as finished. Your session remains open; try finishing again.')
+    } finally {
+      setActionPending(false)
+    }
+  }, [actionPending, onClose, onComplete, session])
+
+  useEffect(() => {
+    initializeSession()
+  }, [initializeSession])
+
+  useEffect(() => {
+    if (currentStepIndex == null) return
+
+    if (currentStepIndex < routineSteps.length) {
+      setCurrentStep(routineSteps[currentStepIndex])
+      setStepStartTime(Date.now())
+      setElapsedSeconds(0)
+      completionAttemptedRef.current = false
+      return
+    }
+
+    setCurrentStep(null)
+  }, [currentStepIndex, routineSteps])
+
+  useEffect(() => {
+    if (!isFinishingSession || !hasSession || actionPending || completionAttemptedRef.current) return
+
+    completionAttemptedRef.current = true
+    void handleCompleteRoutine()
+  }, [actionPending, handleCompleteRoutine, hasSession, isFinishingSession])
+
+  useEffect(() => {
+    if (!hasCurrentStep || !stepStartTime) return undefined
+
+    const timer = window.setInterval(() => {
+      setElapsedSeconds(Math.floor((Date.now() - stepStartTime) / 1000))
+    }, 1000)
+
+    return () => window.clearInterval(timer)
+  }, [hasCurrentStep, stepStartTime])
 
   const handleCompleteStep = async () => {
     if (actionPending) return
@@ -106,23 +136,6 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
     } catch (error) {
       console.error('Error skipping step:', error)
       setOperationError('We couldn’t save this step as skipped. The routine has not advanced, so you can safely try again.')
-    } finally {
-      setActionPending(false)
-    }
-  }
-
-  const handleCompleteRoutine = async () => {
-    if (!session || actionPending) return
-
-    setActionPending(true)
-    setOperationError('')
-    try {
-      await routineProgressService.completeRoutine(session.id)
-      if (onComplete) onComplete()
-      onClose()
-    } catch (error) {
-      console.error('Error completing routine:', error)
-      setOperationError('All steps are recorded, but we couldn’t save the routine as finished. Your session remains open; try finishing again.')
     } finally {
       setActionPending(false)
     }
