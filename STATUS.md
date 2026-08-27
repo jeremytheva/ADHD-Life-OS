@@ -3,7 +3,7 @@
 **Snapshot date:** 28 August 2026  
 **Last materially reviewed:** 28 August 2026  
 **Default branch:** `main`  
-**Last verified main implementation commit:** `1479764` — PR #109, Quick Capture dialog contract  
+**Last verified main implementation commit:** `00780ff` — PR #110, Projects Task Form dialog contract  
 **Overall status:** Active development / backend work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
@@ -11,7 +11,7 @@
 
 Continue product and repository improvements that are genuinely independent of unverified backend behaviour while additional NoCodeBackend information is gathered.
 
-The responsive shell, global modal surfaces, New/Edit Project and Quick Capture now use the reusable modal focus contract. Project Detail has been audited before adding an outer focus trap; its nested Projects-specific Task Form is the current dependency-correct accessibility slice.
+The Projects nested Task Form is now merged and browser-proven. Before adding outer Project Detail focus restoration, the current focused prerequisite is a semantic keyboard-operable ProjectCard detail trigger so the parent dialog has a valid opener to restore focus to.
 
 ## AI execution gate
 
@@ -22,20 +22,18 @@ The responsive shell, global modal surfaces, New/Edit Project and Quick Capture 
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not introduce, infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-The external provider uncertainty still applies to backend work, but it does not block independent frontend, accessibility, testing and repository-quality outcomes.
-
 ## Re-entry checkpoint
 
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Primary implementation thread | Frontend accessibility — primary workflow modal/dialog rollout |
-| Active application PR | PR #110 — `fix: make Project Task Form an accessible dialog` |
-| Last completed outcome | PR #109 merged — Projects Quick Capture now uses the reusable semantic dialog/focus contract and exposes optional-panel state |
+| Primary implementation thread | Frontend accessibility — Projects interaction integrity |
+| Active application PR | PR #111 — `fix: make Project Detail entry keyboard accessible` |
+| Last completed outcome | PR #110 merged — Projects-specific Add/Edit Task now uses the shared dialog/focus contract and nested focus restoration is browser-tested |
 | Current blocker | None for backend-independent frontend work |
 | Deferred dependency | NoCodeBackend/provider certification pending additional provider information |
-| Next action | Validate PR #110, address any CI/review finding, and merge if clean |
-| Next queued outcome | Add the outer Project Detail dialog contract only after nested Task Form behavior is proven; separately address ProjectCard keyboard reachability as its own focused interaction issue |
+| Next action | Validate PR #111, address any CI/review finding, and merge if clean |
+| Next queued outcome | Implement Project Detail semantic dialog/focus ownership with nested-dialog-safe modal stacking and verify focus restoration to the ProjectCard detail trigger |
 
 If this checkpoint conflicts with GitHub, deployment or later provider evidence, verify the authoritative source and update this file rather than reconstructing state from chat history.
 
@@ -50,156 +48,102 @@ If this checkpoint conflicts with GitHub, deployment or later provider evidence,
 - PR #98 merged — isolated loader dependencies stabilized; warning count reduced to five.
 - PR #99 merged — `TaskList` preference-first/task-loader dependencies corrected; warning count reduced to three.
 - PR #100 merged — `RoutineProgress` lifecycle effects made dependency-safe; final-step automatic-completion race fixed; lint reached zero warnings.
-- PR #101 merged — `npm run lint` now uses `eslint . --max-warnings=0`, with regression coverage preventing silent weakening of the zero-warning gate.
-- PR #102 merged — responsive authenticated shell, phone-width navigation drawer, Escape/focus recovery, skip-to-content path and 390×844 Playwright coverage.
-- PR #104 merged — reusable `useModalDialog` focus-management contract introduced and applied to New/Edit Task; semantic dialog naming, initial focus, focus containment, safe Escape handling and trigger focus restoration are browser-tested.
-- PR #105 merged — Accessibility Settings now uses the same dialog contract; Escape follows its existing cancel/rollback path and browser coverage verifies focus ownership/restoration.
-- PR #106 merged — Reward Shop now uses the shared dialog contract, has an accessible close control and browser-tested Escape/focus restoration.
-- PR #107 merged — Your Progress now uses the shared dialog contract; the hook supports conditional activation so compact/non-modal renders remain unaffected; browser coverage verifies Escape and trigger-focus restoration.
-- PR #108 merged — New/Edit Project now uses the shared dialog contract; Project fields are programmatically labelled, Color/Icon choices expose grouped and selected semantics, and the real Projects entry path is browser-tested.
-- PR #109 merged — Quick Capture now uses the shared dialog contract; initial task-input focus, Escape/focus restoration and Organization Options expanded state are browser-tested.
+- PR #101 merged — zero-warning lint is enforced by CI.
+- PR #102 merged — responsive authenticated shell, phone-width navigation drawer, Escape/focus recovery and skip-to-content coverage.
+- PR #104 merged — reusable `useModalDialog` contract introduced and applied to New/Edit Task.
+- PR #105 merged — Accessibility Settings uses the shared dialog contract.
+- PR #106 merged — Reward Shop uses the shared dialog contract.
+- PR #107 merged — Your Progress uses the shared dialog contract and conditional hook activation.
+- PR #108 merged — New/Edit Project uses the shared dialog contract with associated fields/grouped choices.
+- PR #109 merged — Quick Capture uses the shared dialog contract with optional-panel state.
+- PR #110 merged — Projects-specific Add/Edit Task uses the shared dialog contract; Project Detail → Add Task → Escape restores focus inside the still-open detail view.
 
 ## Active
 
-### PR #110 — Projects Task Form dialog accessibility
+### PR #111 — ProjectCard keyboard detail entry
 
-Current branch: `fix/project-task-form-dialog-accessibility`
+Current branch: `fix/project-card-keyboard-details`
 
 In scope:
 
-- expose the Projects-specific Add/Edit Task form as a semantic, labelled modal dialog;
-- reuse `useModalDialog` for initial focus, focus containment, Escape dismissal and focus restoration;
-- place initial focus on Task Title;
-- add an accessible name to the icon-only close control;
-- programmatically associate Task Title, Description and Estimated Time labels with their fields;
-- add a minimal valid Project fixture to browser tests without changing default mock behavior;
-- verify Project Detail → Add Task → Escape closes only the nested Task Form and restores focus to Add Task;
-- keep Project Detail outer-dialog behavior, task persistence, celebration behavior and provider/backend behaviour unchanged.
+- replace the explicit View Details footer container with a semantic button;
+- provide a project-specific accessible name for the detail trigger;
+- make existing ProjectCard menu controls explicit buttons and expose menu state;
+- update the Project Detail browser path to open through keyboard activation;
+- keep Project Detail parent-modal behavior, project persistence, card data and provider/backend behaviour unchanged.
 
 ### Accessibility audit findings
 
-Project Detail requires ordered treatment because it contains nested overlays. The Projects-specific Task Form did not yet use the shared dialog contract, so it is being corrected before the outer Project Detail focus trap. `CelebrationModal` is a transient non-modal toast and does not own keyboard focus, so it does not require modal focus management.
+Project Detail has two prerequisites for safe parent modal ownership. The nested Projects Task Form is now corrected and validated. The remaining prerequisite is a keyboard-focusable ProjectCard detail opener; without it, parent dialog focus restoration cannot return keyboard users to a meaningful trigger.
 
-A separate keyboard-reachability issue was found in `ProjectCard`: View Details activation is attached to non-interactive container regions. That issue is parked for a dedicated correction rather than being mixed into PR #110.
+`CelebrationModal` remains classified as a transient non-modal toast and does not require modal focus ownership.
 
-The rollout remains deliberately incremental:
-
-1. prove the shared interaction contract on global and primary workflow surfaces;
-2. correct nested modal dependencies before parent modal ownership;
-3. apply the smallest high-value change at a time;
-4. run the canonical gate after each material slice;
-5. avoid a broad overlay refactor that mixes unrelated workflow behaviour.
+The next parent-dialog implementation should make `useModalDialog` nested-dialog safe through top-most modal ownership rather than disabling/re-enabling a parent hook, because the current `enabled` cleanup restores focus and would be unsuitable as a temporary child-modal suspension mechanism.
 
 ## Backend / provider work — intentionally deferred
 
 **State:** PROVIDER UNVERIFIED / TEMPORARILY DEFERRED.
 
-The following evidence requirements remain preserved and should be resumed later rather than reconstructed:
-
-1. target ADHD Life OS NoCodeBackend generated API/Swagger or exact exported JSON specification;
-2. target instance identity;
-3. exact supported read/write operation evidence;
-4. configured server-only credentials for connected certification;
-5. ownership/filter behaviour;
-6. success and representative failure envelopes;
-7. redacted evidence recorded in `docs/NOCODEBACKEND_OPERATIONS.md`;
-8. execution-session collection/field/read/create/update evidence before durable Start/Continue/Recover activation;
-9. uniqueness/concurrency capability classification.
-
-While this work is deferred:
-
-- leave fail-closed provider mappings in place;
-- do not substitute another project's NoCodeBackend contract;
-- do not use browser persistence as a fake durable execution fallback;
-- do not claim durable cross-reload/cross-device execution recovery;
-- do not let backend uncertainty prevent unrelated frontend/repository work.
+Required provider evidence remains preserved in repository documentation. While deferred, keep fail-closed provider mappings, do not substitute another project's contract, do not use browser persistence as fake durable execution, and do not let provider uncertainty block independent frontend work.
 
 ## Known defects
 
-No known application defect currently overrides the accessibility/interaction-integrity audit. Provider-backed data operations remaining unavailable without a verified physical contract are intentional fail-closed behaviour, not a frontend defect to bypass.
+No known application defect currently overrides the accessibility/interaction-integrity audit. Provider-backed operations unavailable without a verified physical contract remain intentional fail-closed behaviour.
 
 ## Technical debt / quality state
 
 - ESLint is clean and CI enforces **0 warnings**.
 - Mixed JavaScript/TypeScript checking remains an accepted current constraint.
-- Responsive shell/navigation coverage is merged for both desktop and phone-width paths.
-- A reusable semantic modal/focus contract exists and is verified on Task Form, Accessibility Settings, Reward Shop, Your Progress, Project Form and Quick Capture; the nested Projects Task Form is the active rollout.
-- Project Detail still lacks outer semantic dialog/focus ownership and must account for nested modal ownership before correction.
-- ProjectCard View Details is not yet keyboard-operable and is parked as a separate accessibility issue.
+- Responsive shell/navigation coverage is merged for desktop and phone-width paths.
+- The shared modal/focus contract is verified across Task Form, Accessibility Settings, Reward Shop, Your Progress, Project Form, Quick Capture and Projects Task Form.
+- Project Detail still lacks outer semantic dialog/focus ownership; PR #111 is its opener prerequisite.
 - Production deployment is not configured or verified for ADHD Life OS in the connected Vercel account.
-- `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only; no broad consolidation should occur without a focused outcome and dependency review.
+- `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only.
 
 ## Partial / planned preserved work
 
 - Closed Stage 3 execution lifecycle/recovery branches remain design evidence only; they are not merged capability.
 - Provider-certification and durable execution-session tooling remain available for later backend resumption.
 - External calendar synchronization, remote AI/LLM assistance, richer analytics, broader background automation and additional productivity integrations remain deferred.
-- See `ROADMAP.md` for intended future direction and the current independent-work sequence.
 
 ## Provider / deployment status
 
 | System / capability | State | Evidence / implication |
 | --- | --- | --- |
-| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #109 merged as `1479764` |
+| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #110 merged as `00780ff` |
 | Canonical validation | VERIFIED | Dependency audit + governance + zero-warning lint + typecheck + Node tests + production build + Playwright |
-| Responsive application shell | VERIFIED | PR #102; phone-width navigation and keyboard dismissal covered in Playwright |
-| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | `useModalDialog` is merged; Task Form, Accessibility Settings, Reward Shop, Your Progress, Project Form and Quick Capture are verified; Projects Task Form is active |
+| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | Global and major Projects child dialogs are verified; Project Detail parent ownership is queued |
 | Stable application data API | APPLICATION VERIFIED | Same-origin routes and domain contracts remain deterministic application boundaries |
 | Physical NoCodeBackend adapter | IMPLEMENTED / DEFERRED | Fail-closed registry/adapter is merged; production mapping remains unverified |
-| Target Swagger/OpenAPI intake | IMPLEMENTED / DEFERRED | Candidate-only inspector exists; target evidence has not been supplied |
-| Existing NoCodeBackend read certification | IMPLEMENTED / DEFERRED | Harness exists; target provider has not been certified |
-| Generic `execution-sessions` | IMPLEMENTED TOOLING / DEFERRED | Logical contract and guarded certification harness exist; provider capability remains unverified |
+| Generic `execution-sessions` | IMPLEMENTED TOOLING / DEFERRED | Provider capability remains unverified |
 | Vercel | NOT CONFIGURED / UNVERIFIED | No ADHD Life OS production project binding is currently established |
 
 ## Recent important decisions
 
-- Human-in-the-loop does not mean human-in-every-loop; safe reversible implementation choices are resolved automatically.
+- Human-in-the-loop does not mean human-in-every-loop; safe reversible choices are resolved automatically.
 - Backend/provider work is intentionally paused until additional NoCodeBackend information is available.
-- Backend deferral does not pause independent frontend, accessibility, testing or maintainability work.
-- Application routes are not physical provider-route evidence.
-- Physical NoCodeBackend paths/methods stay centralized server-side and fail closed until verified.
-- Provider certification, application verification, deployment and runtime verification remain separate evidence states.
-- One primary implementation thread is maintained; discoveries outside the active outcome are parked rather than automatically activated.
-- Zero lint warnings are a CI contract, not a best-effort hygiene target.
-- Narrow-screen usability is a tested application-shell requirement rather than an unverified responsive assumption.
-- Modal accessibility is being corrected through a reusable contract and focused workflow-by-workflow rollout rather than a risky application-wide overlay rewrite.
+- One primary implementation thread is maintained; discoveries outside active scope are parked.
+- Zero lint warnings are a CI contract.
+- Modal accessibility is being corrected through focused workflow-by-workflow rollout.
+- Nested modal dependencies and keyboard opener semantics must be resolved before parent focus ownership is added.
 
 ## Next dependency-correct work
 
 ### While backend remains deferred
 
-1. complete and validate PR #110 Projects Task Form dialog accessibility;
-2. implement Project Detail outer semantic dialog/focus ownership with nested-dialog-safe behavior;
-3. correct ProjectCard keyboard reachability as a separate focused interaction slice;
-4. continue remaining workflow overlays in priority order, with deterministic/browser coverage for material interaction changes;
-5. close the accessibility slice when the high-value shared/core interaction gaps are addressed or explicitly parked;
-6. continue client-side cognitive-load reduction after that accessibility boundary;
-7. preserve zero-warning lint and canonical validation;
-8. preserve provider-dependent Stage 3 work without speculative activation.
+1. complete and validate PR #111 ProjectCard keyboard detail entry;
+2. implement nested-dialog-safe modal stack ownership in `useModalDialog` and apply the parent dialog contract to Project Detail;
+3. continue remaining workflow overlays in priority order with browser coverage;
+4. close the accessibility slice when high-value shared/core gaps are addressed or explicitly parked;
+5. continue client-side cognitive-load reduction;
+6. preserve zero-warning lint and canonical validation.
 
 ### When backend work is resumed
 
-Resume from existing provider evidence tooling rather than redesigning the integration:
-
-1. inspect the target generated Swagger/OpenAPI specification;
-2. certify exact provider operations against the target instance;
-3. record redacted evidence;
-4. enable only evidenced mappings;
-5. certify write operations separately;
-6. certify `execution-sessions` capability;
-7. then implement durable execution integration/recovery/reconciliation.
+Resume from existing provider evidence tooling: inspect target Swagger/OpenAPI, certify exact operations, record redacted evidence, enable only evidenced mappings, certify writes and `execution-sessions`, then implement durable execution recovery/reconciliation.
 
 ## Stage 3 exit conditions
 
-Stage 3 remains open until the platform demonstrates:
-
-1. one authoritative execution eligibility/recommendation policy;
-2. a clear next-action experience;
-3. reversible lightweight recommendation feedback;
-4. a low-friction durable start/continue path;
-5. interruption and recovery behaviour;
-6. explicit source-completion/reconciliation semantics;
-7. deterministic contract and critical browser tests;
-8. documentation aligned with the implemented execution model.
+Stage 3 remains open until the platform demonstrates authoritative execution policy, a clear next-action experience, reversible feedback, durable start/continue, interruption/recovery, source reconciliation, deterministic/browser tests and aligned documentation.
 
 The temporary backend deferral does not remove or weaken these exit conditions.
