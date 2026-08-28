@@ -2,7 +2,7 @@
 
 **Status:** Active development  
 **Repository:** `jeremytheva/ADHD-Life-OS`  
-**Last materially reviewed:** 26 August 2026
+**Last materially reviewed:** 28 August 2026
 
 ## Purpose
 
@@ -39,6 +39,7 @@ The platform should enable a user to:
 - Runtime schema validation with structured upstream error handling.
 - Unified execution-engine foundation and Stage 3 next-action experience.
 - Automated static, unit/contract, build, governance and Playwright validation.
+- Repository-managed PR lifecycle controller separating implementation completion, current-head validation, review/mergeability and repository merge.
 
 ## Out of scope for the current milestone
 
@@ -56,12 +57,14 @@ This project inherits the current master sources supplied by the product owner, 
 
 - `AI_FIRST_PLATFORM_DEVELOPMENT_FRAMEWORK.md`;
 - `AI_PLATFORM_DEVELOPMENT_STANDARD.md`;
-- `PLATFORM_ENGINEERING_STANDARD.md`;
-- `PLATFORM_DESIGN_PRINCIPLES.md`;
+- `PR_LIFECYCLE_STANDARD.md`;
+- `PLATFORM_ENGINEERING_STANDARD.md` where separately available;
+- `PLATFORM_DESIGN_PRINCIPLES.md` where separately available;
 - `PROJECT_DOCUMENTATION_STANDARD.md`;
 - `TESTING_VALIDATION_RELEASE_STANDARD.md`;
-- `DATA_MODELLING_AND_MIGRATION_STANDARD.md`;
-- applicable provider guides for GitHub, Vercel and NoCodeBackend.
+- `DATA_MODELLING_AND_MIGRATION_STANDARD.md` where separately available;
+- applicable provider guides for GitHub, Vercel and NoCodeBackend;
+- the current GitHub–Codex software delivery operating standard where it does not conflict with newer master lifecycle governance.
 
 The repository stores project-specific facts, decisions, implementation state and deviations rather than copying the master standards wholesale. If a project-specific rule intentionally differs from a master default, the difference must be explicit and documented before it is treated as authoritative.
 
@@ -69,13 +72,16 @@ The repository stores project-specific facts, decisions, implementation state an
 
 | Provider/system | Project role | Current state source |
 | --- | --- | --- |
-| GitHub | Repository, pull requests, CI and implementation history | GitHub + `STATUS.md` summary |
+| GitHub | Repository, PR lifecycle, CI and implementation history | GitHub + `docs/GITHUB_CONFIGURATION.md` + `STATUS.md` |
 | NoCodeBackend | Authentication and persisted domain data | provider evidence + project contract/docs |
 | Vercel | Intended deployment platform | Vercel provider state + `STATUS.md`; no project binding currently verified |
 
-## Project-specific exceptions
+## Project-specific exceptions and configuration gaps
 
-- GitHub Issues are currently unavailable for this repository, so focused pull-request bodies may serve as implementation contracts where an issue cannot be created.
+- GitHub Issues are currently disabled at repository level, so focused PR bodies remain the implementation-contract fallback until that external setting is enabled.
+- `main` branch protection/rulesets are currently disabled; `.github/workflows/pr-lifecycle.yml` manages repository-enforceable transitions but cannot prevent every administrative/direct-push bypass. This is an explicit GitHub configuration gap, not an accepted substitute for branch protection.
+- Repository auto-merge is disabled. The lifecycle controller instead performs a guarded merge mutation only after current-head validation, implementation-complete evidence, review/thread checks and clean mergeability are satisfied.
+- Update-branch support is disabled; stale branches are blocked from lifecycle merge until brought current.
 - The source tree is mixed JavaScript with TypeScript checking rather than a fully TypeScript codebase.
 - The current generic NoCodeBackend proxy contract predates certification of future generic execution sessions; new provider behaviour must not be inferred from that existing contract.
 
@@ -87,6 +93,8 @@ The repository stores project-specific facts, decisions, implementation state an
 4. One unified execution engine should own recommendation/execution policy rather than screen-specific alternatives.
 5. Durable generic execution remains fail-closed until the real provider contract is certified.
 6. Accessibility, interruption recovery and low cognitive load are normal quality requirements, not optional polish.
+7. Repository merge is permitted only from current evidence; a new commit invalidates prior implementation-complete/validation evidence.
+8. Repository merge does not imply deployment, provider certification or runtime verification.
 
 ## Technology baseline
 
@@ -105,13 +113,14 @@ The repository stores project-specific facts, decisions, implementation state an
 | End-to-end testing | Playwright |
 | Package manager | npm with committed `package-lock.json` |
 | Canonical full validation | `npm run platform:validate` |
+| PR lifecycle | Draft + lifecycle labels + GitHub Actions controller |
 
 ## Source-of-truth hierarchy
 
 Use the real current system rather than chat memory. For this project:
 
 1. repository code/configuration — implemented behaviour;
-2. provider/deployment state where the fact is external;
+2. provider/deployment/GitHub configuration state where the fact is external;
 3. `AGENTS.md` — persistent repository implementation rules;
 4. `PROJECT.md` — project identity, scope, inheritance and constraints;
 5. `STATUS.md` — actual current delivery state, active gate and next action;
@@ -120,16 +129,16 @@ Use the real current system rather than chat memory. For this project:
 8. `ROADMAP.md` — intended future direction;
 9. `SYSTEM_MAP.md` — compact system navigation map;
 10. `docs/DECISIONS/` — consequential accepted decisions;
-11. GitHub PRs/CI — implementation contracts and detailed validation evidence;
+11. GitHub PRs/CI/lifecycle state — implementation contracts and detailed validation/merge evidence;
 12. prior chat/context — supporting context only.
 
 When sources disagree, investigate and correct the stale/incorrect source rather than silently choosing one.
 
 ## Delivery model
 
-Implementation follows the inherited master standards and the repository-specific workflow in `AGENTS.md` and `docs/CODEX_WORKFLOW.md`.
+Implementation follows the inherited master standards and the repository-specific workflow in `AGENTS.md`, `docs/CODEX_WORKFLOW.md`, and `docs/GITHUB_CONFIGURATION.md`.
 
-The normal unit of work is one focused outcome producing one focused pull request. Significant changes pass the relevant project-entry, change, integration, release and completion gates. `STATUS.md` records the current material gate when evidence remains outstanding.
+The normal unit of work is one focused outcome producing one focused Draft PR. Significant changes pass the relevant project-entry, change, integration, release and completion gates. PRs progress through `DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED`; the project/agent supplies the implementation-complete evidence and GitHub enforces the repository-observable gates it can verify. `STATUS.md` records the current material project gate when evidence remains outstanding.
 
 ## Current delivery direction
 
@@ -151,6 +160,7 @@ The live delivery snapshot and immediate dependency-correct work are maintained 
 - [`docs/TESTING.md`](docs/TESTING.md) — project validation strategy.
 - [`docs/DELIVERY.md`](docs/DELIVERY.md) — project delivery/release details.
 - [`docs/CODEX_WORKFLOW.md`](docs/CODEX_WORKFLOW.md) — continuation, gate and execution workflow.
+- [`docs/GITHUB_CONFIGURATION.md`](docs/GITHUB_CONFIGURATION.md) — real GitHub capabilities, lifecycle mapping and remaining enforcement gaps.
 - [`docs/DECISIONS/README.md`](docs/DECISIONS/README.md) — decision register.
 
 ## Project-level completion rule
