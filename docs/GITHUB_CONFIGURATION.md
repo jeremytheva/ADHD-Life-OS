@@ -9,15 +9,75 @@ Current repository evidence shows:
 - GitHub Issues: disabled;
 - GitHub Projects: disabled;
 - squash, merge-commit and rebase merge methods: available;
-- auto-merge: disabled.
+- repository auto-merge setting: disabled;
+- `main` branch protection: disabled;
+- repository rulesets: none;
+- update-branch support: disabled.
 
-Issue-form files may remain in `.github/ISSUE_TEMPLATE/` as reusable configuration, but they are not an active intake mechanism while repository Issues are disabled.
+These are real external GitHub settings and must not be inferred from repository files. Where a setting remains disabled, this document records it as an explicit configuration gap rather than claiming repository automation replaces it.
 
-## Pull requests
+## Canonical pull-request lifecycle
 
-`.github/pull_request_template.md` is the normal implementation-contract surface when no issue exists. Pull requests should record the outcome, contained scope, validation/evidence, security/data/accessibility impact, documentation changes, parked follow-up work and next action.
+Repository implementation work follows:
 
-Keep one focused implementation outcome per pull request. Do not use a pull request's merge state as evidence of deployment or runtime verification.
+```text
+DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
+```
+
+The lifecycle combines native GitHub PR state, labels, the read-only application-validation workflow and the privileged base-branch lifecycle controller.
+
+| Lifecycle state | Repository evidence |
+| --- | --- |
+| DRAFT | Native GitHub draft PR. New implementation PRs are created as Draft. |
+| IMPLEMENTING | `state:implementing`; implementation/audit is not yet declared complete. |
+| VALIDATING | `state:validating`; current-head `Application validation` is missing, running or failed. |
+| READY | `state:ready`; `lifecycle:implementation-complete` is present and validation passed for the exact current head. |
+| MERGEABLE | `state:mergeable`; no blocking review state/thread, merge conflict or stale-base state remains and GitHub reports a clean merge. |
+| MERGED | PR merged using an expected-head guard; `state:merged` records the terminal repository state. |
+
+### Implementation-complete signal
+
+`lifecycle:implementation-complete` is not a convenience label. It is the explicit evidence that the implementing agent/project has:
+
+1. audited each in-scope acceptance criterion;
+2. completed required implementation and regression coverage;
+3. updated the PR evidence and affected project state;
+4. confirmed there is no known in-scope implementation work remaining.
+
+Any new commit removes this signal automatically. This prevents a validation pass from turning a partially implemented Draft PR into a merge candidate.
+
+## Lifecycle controller
+
+`.github/workflows/pr-lifecycle.yml` runs from trusted default-branch workflow code using `pull_request_target` and `workflow_run`. It does not check out or execute PR code with its write-capable token.
+
+It is responsible for repository-enforceable transitions and guards:
+
+- enforce Draft status for newly opened/reopened implementation PRs;
+- invalidate `lifecycle:implementation-complete` after any new commit;
+- prevent manual Ready transitions from bypassing the implementation-complete signal;
+- require a successful `Application validation` run for the exact current head;
+- inspect current review decision and unresolved review threads;
+- detect GitHub merge conflicts and a base branch that is behind;
+- require GitHub's merge state to be clean;
+- merge only with GraphQL `expectedHeadOid` protection so a moved head cannot be merged from stale evidence;
+- keep provider/deployment/runtime verification outside repository-merge claims.
+
+The controller deliberately does not infer product acceptance from CI. The implementation-complete label is the project/agent handoff from implementation to automated repository enforcement.
+
+## Pull-request implementation contract
+
+GitHub Issues are currently disabled, so `.github/pull_request_template.md` is the normal implementation-contract surface until that external setting is changed. Each implementation PR must record:
+
+- one observable outcome;
+- in-scope and out-of-scope boundaries;
+- acceptance-criterion evidence;
+- actual validation performed;
+- security/data/accessibility implications;
+- documentation changes;
+- parked follow-up work;
+- provider/deployment limitations where applicable.
+
+If GitHub Issues are enabled later, issues should become the normal implementation contracts and PRs should link them using `Closes #<issue-number>` rather than duplicating the full issue body.
 
 ## Continuous integration
 
@@ -37,11 +97,24 @@ npm run platform:validate
 
 A successful CI run is repository-validation evidence only. Provider contracts, deployment configuration, exact deployed commit and runtime behaviour require their own evidence.
 
+## External GitHub settings still required
+
+The workflow controller improves repository-managed delivery but cannot prevent every bypass while the following GitHub settings remain disabled:
+
+1. **Enable branch protection or an equivalent ruleset for `main`.** Require pull requests and the `Validate application` check; prevent direct pushes/bypass except narrowly defined recovery administration.
+2. **Enable GitHub Issues** if the project wants issue-level implementation contracts rather than the current PR-contract fallback.
+3. **Enable repository auto-merge** if native GitHub auto-merge is preferred later. The current controller does not depend on this setting; it uses a guarded merge mutation after all repository-enforceable gates pass.
+4. **Enable/update branch support or equivalent up-to-date-branch enforcement** if GitHub should update stale PR branches automatically. Until then, `blocked:base-update` deliberately prevents lifecycle auto-merge when the PR is behind `main`.
+
+Branch protection/rulesets are the highest-priority external gap because workflow automation alone cannot prohibit an administrator or direct push from bypassing the PR path.
+
 ## Branch/review rule
 
 Before merge:
 
-- resolve required CI/review findings at root cause;
-- confirm the pull request remains within its implementation contract;
-- update project state when delivery meaning changed;
-- do not bypass an unsatisfied external/provider/release gate by relabelling work complete.
+- the implementation-complete signal must represent a current criterion audit;
+- validation must have passed for the exact current head;
+- required review findings/conversations must be resolved;
+- the PR must remain cleanly mergeable against `main`;
+- project state must be updated when delivery meaning changed;
+- no external/provider/release gate may be bypassed by relabelling repository integration as production completion.

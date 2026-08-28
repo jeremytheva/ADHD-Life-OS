@@ -27,6 +27,54 @@ Before editing:
 
 Whole-system analysis is required; speculative unrelated changes are not.
 
+## Pull-request lifecycle
+
+The normal implementation state machine is:
+
+```text
+DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
+```
+
+### DRAFT / IMPLEMENTING
+
+- Open the PR as Draft.
+- Keep the PR body as the implementation contract while repository Issues remain disabled.
+- Continue all in-scope implementation and review corrections on the same PR.
+- Keep scope singular and park separate discoveries.
+- Do not add `lifecycle:implementation-complete` while known in-scope work remains.
+
+### VALIDATING
+
+- Every new commit invalidates prior implementation-complete evidence.
+- Run `npm run platform:validate`; GitHub `Application validation` must pass for the exact current head.
+- Failed validation is active implementation work, not a reason to weaken checks or open a replacement PR.
+
+### Implementation-complete handoff
+
+Only after a criterion-by-criterion audit confirms the implementation is complete:
+
+1. update the PR body with current acceptance and validation evidence;
+2. update affected project documentation/status;
+3. confirm no known blocking in-scope review finding remains;
+4. add `lifecycle:implementation-complete`.
+
+That label authorizes the repository lifecycle controller to evaluate automated progression. It is not proof by itself that the PR is mergeable.
+
+### READY / MERGEABLE / MERGED
+
+`.github/workflows/pr-lifecycle.yml` may:
+
+- mark a Draft PR Ready only when the implementation-complete signal exists and validation passed for the exact current head;
+- hold READY when review decisions/threads still block;
+- reject automatic merge when the branch conflicts with or is behind `main`;
+- move to MERGEABLE only when GitHub reports a clean current-head merge state;
+- merge with an `expectedHeadOid` guard so stale evidence cannot merge a changed head;
+- record MERGED after repository integration.
+
+Do not manually force Ready/Mergeable/Merged to bypass these gates. If the controller blocks, diagnose the blocking evidence and fix the underlying state.
+
+Repository merge is not deployment/provider/runtime completion.
+
 ## Continuation protocol
 
 When asked to `Continue` or `Next`, resume in this order:
@@ -34,7 +82,8 @@ When asked to `Continue` or `Next`, resume in this order:
 1. fix blocking review or required-check failures on the active pull request;
 2. satisfy remaining acceptance criteria;
 3. finish remaining in-scope branch work;
-4. if no implementation is active, select the next dependency-correct outcome from `STATUS.md` and `ROADMAP.md`.
+4. if implementation is complete but the PR has not progressed, reconcile lifecycle evidence/labels/checks rather than starting new work;
+5. if no implementation is active, select the next dependency-correct outcome from `STATUS.md` and `ROADMAP.md`.
 
 Do not restart solved planning, reopen accepted decisions, or ask the product owner to choose routine implementation steps when the repository determines the answer.
 
@@ -110,7 +159,9 @@ A passing `platform:validate` does **not** prove deployment/provider/runtime sta
 4. resolve blocking review/CI findings at root cause;
 5. update only project documents whose meaning changed;
 6. ensure `STATUS.md` records the correct gate/evidence/next action;
-7. open/update one focused pull request with outcome, scope, evidence, risk, parked work and next action;
-8. mark COMPLETE only when acceptance and required real-system evidence support it.
+7. update one focused Draft PR with outcome, scope, evidence, risk, parked work and next action;
+8. add `lifecycle:implementation-complete` only after the in-scope audit is complete;
+9. allow GitHub lifecycle automation to evaluate Ready → Mergeable → Merged from current repository evidence;
+10. mark project/capability COMPLETE only when all applicable repository, provider, deployment and runtime evidence supports it.
 
 For perceptible UI changes, include appropriate visual/manual accessibility evidence in addition to automated checks.
