@@ -246,7 +246,8 @@ test('Routine Form owns focus, labels dynamic steps, and restores its trigger on
 test('Housework Setup owns focus, exposes room-filter state, and restores its trigger on Escape', async ({ page }) => {
   await createMockNcb(page)
   await registerAndSkipSetup(page, 'housework-setup-dialog@example.test')
-  await page.getByRole('link', { name: 'Housework' }).click()
+  await page.goto('/housework')
+  await expect(page).toHaveURL(/\/housework$/)
 
   const trigger = page.getByRole('button', { name: 'Add Chores' })
   await trigger.click()
