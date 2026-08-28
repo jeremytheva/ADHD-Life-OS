@@ -38,9 +38,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          owner="${REPO%%/*}"
-          name="${REPO#*/}"
-
           ensure_label() {
             local label="$1"
             local color="$2"
@@ -62,10 +59,6 @@ jobs:
             done
           }
 
-          add_label() {
-            gh api --method POST "repos/$REPO/issues/$pr_number/labels" -f "labels[]=$1" >/dev/null
-          }
-
           for spec in \
             'state:implementing 8a2be2' \
             'state:validating fbca04' \
@@ -81,18 +74,14 @@ jobs:
 
           pr_number="$EVENT_PR_NUMBER"
           if [[ "$EVENT_NAME" == "workflow_run" ]]; then
-            if [[ "$WORKFLOW_CONCLUSION" != "success" ]]; then
-              pr_number=$(gh api "repos/$REPO/commits/$WORKFLOW_HEAD_SHA/pulls" \
-                --jq 'map(select(.state == "open" and .base.ref == "main")) | .[0].number // empty')
-              if [[ -n "$pr_number" ]]; then
-                set_state state:validating
-              fi
-              exit 0
-            fi
-
             pr_number=$(gh api "repos/$REPO/commits/$WORKFLOW_HEAD_SHA/pulls" \
               --jq 'map(select(.state == "open" and .base.ref == "main")) | .[0].number // empty')
             [[ -n "$pr_number" ]] || exit 0
+
+            if [[ "$WORKFLOW_CONCLUSION" != "success" ]]; then
+              set_state state:validating
+              exit 0
+            fi
           fi
 
           pr_json=$(gh api "repos/$REPO/pulls/$pr_number")
@@ -138,8 +127,8 @@ jobs:
                     -f query='mutation($id:ID!){convertPullRequestToDraft(input:{pullRequestId:$id}){pullRequest{isDraft}}}' \
                     -F id="$pr_id" >/dev/null
                   set_state state:implementing
-                  exit 0
                 fi
+                exit 0
                 ;;
             esac
           fi
@@ -171,49 +160,12 @@ jobs:
           clear_blockers
           set_state state:ready
 
-          details=$(gh api graphql \
-            -f query='query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){id state isDraft headRefOid mergeable mergeStateStatus reviewDecision reviewThreads(first:100){nodes{isResolved} pageInfo{hasNextPage}}}}}' \
-            -F owner="$owner" -F name="$name" -F number="$pr_number")
-
-          review_decision=$(jq -r '.data.repository.pullRequest.reviewDecision // ""' <<<"$details")
-          unresolved=$(jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false)] | length' <<<"$details")
-          more_threads=$(jq -r '.data.repository.pullRequest.reviewThreads.pageInfo.hasNextPage' <<<"$details")
-
-          if [[ "$review_decision" == "CHANGES_REQUESTED" || "$review_decision" == "REVIEW_REQUIRED" || "$unresolved" -gt 0 || "$more_threads" == "true" ]]; then
-            add_label blocked:review
-            exit 0
-          fi
-
-          for attempt in 1 2 3 4 5 6; do
-            details=$(gh api graphql \
-              -f query='query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){id state isDraft headRefOid mergeable mergeStateStatus}}}' \
-              -F owner="$owner" -F name="$name" -F number="$pr_number")
-            mergeable=$(jq -r '.data.repository.pullRequest.mergeable' <<<"$details")
-            merge_state=$(jq -r '.data.repository.pullRequest.mergeStateStatus' <<<"$details")
-            current_head=$(jq -r '.data.repository.pullRequest.headRefOid' <<<"$details")
-            [[ "$current_head" == "$head_sha" ]] || exit 0
-            [[ "$mergeable" != "UNKNOWN" ]] && break
-            sleep 5
-          done
-
-          if [[ "$mergeable" == "CONFLICTING" || "$merge_state" == "DIRTY" ]]; then
-            add_label blocked:merge-conflict
-            exit 0
-          fi
-
-          if [[ "$merge_state" == "BEHIND" ]]; then
-            add_label blocked:base-update
-            exit 0
-          fi
-
-          if [[ "$mergeable" != "MERGEABLE" || "$merge_state" != "CLEAN" ]]; then
-            exit 0
-          fi
-
-          set_state state:mergeable
-
-          gh api graphql \
-            -f query='mutation($id:ID!,$head:GitObjectID!){mergePullRequest(input:{pullRequestId:$id,expectedHeadOid:$head,mergeMethod:MERGE}){pullRequest{merged state}}}' \
-            -F id="$pr_id" -F head="$head_sha" >/dev/null
-
-          set_state state:merged
+          gh api --method POST "repos/$REPO/dispatches" --input - >/dev/null <<JSON
+          {
+            "event_type": "pr-lifecycle-ready",
+            "client_payload": {
+              "pr_number": $pr_number,
+              "head_sha": "$head_sha"
+            }
+          }
+          JSON

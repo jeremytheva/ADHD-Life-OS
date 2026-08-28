@@ -17,6 +17,7 @@ const requiredFiles = [
   'docs/DECISIONS/README.md',
   '.github/workflows/pull-request-validation.yml',
   '.github/workflows/pr-lifecycle.yml',
+  '.github/workflows/pr-merge-finalizer.yml',
   'api/ncb/dataProvider.js',
   'api/ncb/dataProviderContract.js'
 ]
@@ -80,8 +81,19 @@ for (const requiredFragment of ['DRAFT', 'IMPLEMENTING', 'VALIDATING', 'READY', 
 }
 
 const lifecycleWorkflow = await readFile(path.join(root, '.github/workflows/pr-lifecycle.yml'), 'utf8')
-for (const requiredFragment of ['pull_request_target', 'workflow_run', 'lifecycle:implementation-complete', 'reviewThreads', 'expectedHeadOid', 'pull-request-validation.yml']) {
-  if (!lifecycleWorkflow.includes(requiredFragment)) failures.push(`PR lifecycle workflow is missing enforcement marker ${requiredFragment}`)
+for (const requiredFragment of ['pull_request_target', 'workflow_run', 'lifecycle:implementation-complete', 'repos/$REPO/dispatches', 'pr-lifecycle-ready', 'pull-request-validation.yml']) {
+  if (!lifecycleWorkflow.includes(requiredFragment)) failures.push(`PR lifecycle workflow is missing readiness marker ${requiredFragment}`)
+}
+if (lifecycleWorkflow.includes('mergePullRequest')) {
+  failures.push('PR lifecycle readiness workflow must not merge directly; merge finalization must run separately.')
+}
+
+const mergeFinalizer = await readFile(path.join(root, '.github/workflows/pr-merge-finalizer.yml'), 'utf8')
+for (const requiredFragment of ['repository_dispatch', 'pr-lifecycle-ready', 'lifecycle:implementation-complete', 'pull-request-validation.yml', 'reviewThreads', 'compare/main...', 'git/ref/heads/main', 'expectedHeadOid', 'mergePullRequest']) {
+  if (!mergeFinalizer.includes(requiredFragment)) failures.push(`PR merge finalizer is missing enforcement marker ${requiredFragment}`)
+}
+if (mergeFinalizer.includes('mergeStateStatus')) {
+  failures.push('PR merge finalizer must not depend on aggregate mergeStateStatus because its own pending check can self-block finalization.')
 }
 
 const providerContract = await readFile(path.join(root, 'api/ncb/dataProviderContract.js'), 'utf8')
