@@ -216,3 +216,29 @@ test('Project Detail and nested Task Form preserve top-most modal ownership and 
   await expect(detailDialog).toHaveCount(0)
   await expect(detailTrigger).toBeFocused()
 })
+
+test('Routine Form owns focus, labels dynamic steps, and restores its trigger on Escape', async ({ page }) => {
+  await createMockNcb(page)
+  await registerAndSkipSetup(page, 'routine-form-dialog@example.test')
+  await page.getByRole('link', { name: 'Routines' }).click()
+
+  const trigger = page.getByRole('button', { name: 'Add Routine' })
+  await trigger.click()
+
+  const dialog = page.getByRole('dialog', { name: 'New Routine' })
+  await expect(dialog).toBeVisible()
+  await expect(page.getByLabel('Name *')).toBeFocused()
+  await expect(page.getByLabel('Description')).toBeVisible()
+  await expect(page.getByLabel('Repeat Pattern')).toBeVisible()
+  await expect(page.getByLabel('Step 1 name')).toBeVisible()
+  await expect(page.getByLabel('Step 1 duration in minutes')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Add Step' }).click()
+  await expect(page.getByLabel('Step 2 name')).toBeVisible()
+  await expect(page.getByLabel('Step 2 duration in minutes')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Remove step 2' })).toBeVisible()
+
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+})

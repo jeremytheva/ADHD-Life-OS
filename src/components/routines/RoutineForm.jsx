@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 import { routineService } from '../../services/routineService'
 
 const { FiX, FiPlus, FiTrash2 } = FiIcons
 
 const RoutineForm = ({ routine = null, onSave, onCancel }) => {
+  const nameInputRef = useRef(null)
+  const dialogRef = useModalDialog({ onEscape: onCancel, initialFocusRef: nameInputRef })
   const [formData, setFormData] = useState({
     name: routine?.name || '',
     description: routine?.description || '',
@@ -20,14 +23,11 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     try {
-      // Save routine
       const savedRoutine = await onSave(formData)
-      
-      // If editing existing routine, handle steps separately
+
       if (routine) {
-        // Update steps
         for (const step of steps) {
           if (step.id) {
             await routineService.updateRoutineStep(step.id, step)
@@ -39,7 +39,6 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
           }
         }
       } else if (savedRoutine) {
-        // Create new steps for new routine
         for (const step of steps) {
           await routineService.createRoutineStep({
             ...step,
@@ -57,16 +56,16 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
   }
 
   const handleStepChange = (index, field, value) => {
-    setSteps(prev => prev.map((step, i) => 
+    setSteps(prev => prev.map((step, i) =>
       i === index ? { ...step, [field]: value, order_index: i } : step
     ))
   }
 
   const addStep = () => {
-    setSteps(prev => [...prev, { 
-      name: '', 
-      duration_minutes: 30, 
-      order_index: prev.length 
+    setSteps(prev => [...prev, {
+      name: '',
+      duration_minutes: 30,
+      order_index: prev.length
     }])
   }
 
@@ -74,35 +73,43 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
     setSteps(prev => prev.filter((_, i) => i !== index))
   }
 
+  const title = routine ? 'Edit Routine' : 'New Routine'
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="routine-form-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto"
       >
-        {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-slate-200">
-          <h2 className="text-lg font-medium text-slate-900">
-            {routine ? 'Edit Routine' : 'New Routine'}
+          <h2 id="routine-form-title" className="text-lg font-medium text-slate-900">
+            {title}
           </h2>
           <button
+            type="button"
             onClick={onCancel}
+            aria-label={`Close ${title}`}
             className="p-1 text-slate-400 hover:text-slate-600"
           >
             <SafeIcon icon={FiX} className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          {/* Basic Info */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="routine-name" className="block text-sm font-medium text-slate-700 mb-2">
                 Name *
               </label>
               <input
+                ref={nameInputRef}
+                id="routine-name"
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
@@ -112,10 +119,11 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="routine-description" className="block text-sm font-medium text-slate-700 mb-2">
                 Description
               </label>
               <textarea
+                id="routine-description"
                 value={formData.description}
                 onChange={(e) => handleChange('description', e.target.value)}
                 rows={2}
@@ -124,10 +132,11 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="routine-repeat-pattern" className="block text-sm font-medium text-slate-700 mb-2">
                 Repeat Pattern
               </label>
               <select
+                id="routine-repeat-pattern"
                 value={formData.repeat_pattern}
                 onChange={(e) => handleChange('repeat_pattern', e.target.value)}
                 className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -152,7 +161,6 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
             </div>
           </div>
 
-          {/* Steps */}
           <div>
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-sm font-medium text-slate-700">Steps</h3>
@@ -170,28 +178,31 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
               {steps.map((step, index) => (
                 <div key={index} className="flex items-center space-x-3 p-3 bg-slate-50 rounded-md">
                   <span className="text-sm text-slate-500 w-6">{index + 1}.</span>
-                  
+
                   <input
                     type="text"
+                    aria-label={`Step ${index + 1} name`}
                     placeholder="Step name"
                     value={step.name}
                     onChange={(e) => handleStepChange(index, 'name', e.target.value)}
                     className="flex-1 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
-                  
+
                   <input
                     type="number"
+                    aria-label={`Step ${index + 1} duration in minutes`}
                     placeholder="Minutes"
                     value={step.duration_minutes}
                     onChange={(e) => handleStepChange(index, 'duration_minutes', parseInt(e.target.value))}
                     min="1"
                     className="w-20 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
-                  
+
                   {steps.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeStep(index)}
+                      aria-label={`Remove step ${index + 1}`}
                       className="p-1 text-slate-400 hover:text-red-600 transition-colors"
                     >
                       <SafeIcon icon={FiTrash2} className="w-4 h-4" />
@@ -202,7 +213,6 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex space-x-3 pt-4">
             <button
               type="button"
