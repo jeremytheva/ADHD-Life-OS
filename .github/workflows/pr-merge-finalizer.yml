@@ -1,0 +1,134 @@
+name: PR merge finalizer
+
+on:
+  repository_dispatch:
+    types: [pr-lifecycle-ready]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: pr-merge-finalizer-${{ github.event.client_payload.pr_number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    name: Finalize mergeable PR
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      EVENT_PR_NUMBER: ${{ github.event.client_payload.pr_number }}
+      EVENT_HEAD_SHA: ${{ github.event.client_payload.head_sha }}
+    steps:
+      - name: Re-check repository gates and merge exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          owner="${REPO%%/*}"
+          name="${REPO#*/}"
+          pr_number="$EVENT_PR_NUMBER"
+
+          [[ -n "$pr_number" ]] || exit 0
+
+          set_state() {
+            local target="$1"
+            for label in state:implementing state:validating state:ready state:mergeable state:merged; do
+              gh api --method DELETE "repos/$REPO/issues/$pr_number/labels/$label" >/dev/null 2>&1 || true
+            done
+            gh api --method POST "repos/$REPO/issues/$pr_number/labels" -f "labels[]=$target" >/dev/null
+          }
+
+          clear_blockers() {
+            for label in blocked:review blocked:merge-conflict blocked:base-update; do
+              gh api --method DELETE "repos/$REPO/issues/$pr_number/labels/$label" >/dev/null 2>&1 || true
+            done
+          }
+
+          add_label() {
+            gh api --method POST "repos/$REPO/issues/$pr_number/labels" -f "labels[]=$1" >/dev/null
+          }
+
+          pr_json=$(gh api "repos/$REPO/pulls/$pr_number")
+          state=$(jq -r '.state' <<<"$pr_json")
+          base_ref=$(jq -r '.base.ref' <<<"$pr_json")
+          head_sha=$(jq -r '.head.sha' <<<"$pr_json")
+          head_ref=$(jq -r '.head.ref' <<<"$pr_json")
+          head_repo=$(jq -r '.head.repo.full_name // ""' <<<"$pr_json")
+          pr_id=$(jq -r '.node_id' <<<"$pr_json")
+
+          [[ "$state" == "open" && "$base_ref" == "main" ]] || exit 0
+          [[ -z "$EVENT_HEAD_SHA" || "$head_sha" == "$EVENT_HEAD_SHA" ]] || exit 0
+
+          if ! gh api "repos/$REPO/issues/$pr_number/labels" --jq '.[].name' | grep -Fxq 'lifecycle:implementation-complete'; then
+            exit 0
+          fi
+
+          validation_state=$(gh api "repos/$REPO/actions/workflows/pull-request-validation.yml/runs?event=pull_request&head_sha=$head_sha&per_page=20" \
+            --jq '[.workflow_runs[] | select(.head_sha == "'"$head_sha"'")] | sort_by(.created_at) | reverse | .[0] | if . == null then "missing" elif .status != "completed" then "running" else (.conclusion // "unknown") end')
+
+          if [[ "$validation_state" != "success" ]]; then
+            set_state state:validating
+            exit 0
+          fi
+
+          clear_blockers
+
+          details=$(gh api graphql \
+            -f query='query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){id state isDraft headRefOid mergeable reviewDecision reviewThreads(first:100){nodes{isResolved} pageInfo{hasNextPage}}}}}' \
+            -F owner="$owner" -F name="$name" -F number="$pr_number")
+
+          current_head=$(jq -r '.data.repository.pullRequest.headRefOid' <<<"$details")
+          review_decision=$(jq -r '.data.repository.pullRequest.reviewDecision // ""' <<<"$details")
+          unresolved=$(jq '[.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false)] | length' <<<"$details")
+          more_threads=$(jq -r '.data.repository.pullRequest.reviewThreads.pageInfo.hasNextPage' <<<"$details")
+
+          [[ "$current_head" == "$head_sha" ]] || exit 0
+
+          if [[ "$review_decision" == "CHANGES_REQUESTED" || "$review_decision" == "REVIEW_REQUIRED" || "$unresolved" -gt 0 || "$more_threads" == "true" ]]; then
+            add_label blocked:review
+            exit 0
+          fi
+
+          behind_by=$(gh api "repos/$REPO/compare/main...$head_sha" --jq '.behind_by')
+          if [[ "$behind_by" -gt 0 ]]; then
+            add_label blocked:base-update
+            exit 0
+          fi
+
+          mergeable="UNKNOWN"
+          for attempt in 1 2 3 4 5 6; do
+            details=$(gh api graphql \
+              -f query='query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid mergeable}}}' \
+              -F owner="$owner" -F name="$name" -F number="$pr_number")
+            current_head=$(jq -r '.data.repository.pullRequest.headRefOid' <<<"$details")
+            mergeable=$(jq -r '.data.repository.pullRequest.mergeable' <<<"$details")
+            [[ "$current_head" == "$head_sha" ]] || exit 0
+            [[ "$mergeable" != "UNKNOWN" ]] && break
+            sleep 5
+          done
+
+          if [[ "$mergeable" == "CONFLICTING" ]]; then
+            add_label blocked:merge-conflict
+            exit 0
+          fi
+
+          [[ "$mergeable" == "MERGEABLE" ]] || exit 0
+
+          set_state state:mergeable
+
+          gh api graphql \
+            -f query='mutation($id:ID!,$head:GitObjectID!){mergePullRequest(input:{pullRequestId:$id,expectedHeadOid:$head,mergeMethod:MERGE}){pullRequest{merged state}}}' \
+            -F id="$pr_id" -F head="$head_sha" >/dev/null
+
+          set_state state:merged
+
+          if [[ "$head_repo" == "$REPO" && "$head_ref" != "main" ]]; then
+            encoded_ref=$(jq -rn --arg v "heads/$head_ref" '$v|@uri')
+            if ! gh api --method DELETE "repos/$REPO/git/refs/$encoded_ref" >/dev/null 2>&1; then
+              echo "warning: merged PR branch could not be deleted automatically: $head_ref"
+            fi
+          fi
