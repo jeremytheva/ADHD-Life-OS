@@ -57,10 +57,13 @@ Apply it as follows:
 - Any new commit invalidates prior implementation-complete evidence and returns the PR to Draft/validation.
 - `npm run platform:validate` is the mandatory repository validation gate for the current head.
 - Do not add `lifecycle:implementation-complete` until the implementation has been audited criterion by criterion, the PR evidence is current, and no known in-scope implementation work remains.
-- `.github/workflows/pr-lifecycle.yml` may move a completed Draft PR to Ready only when `lifecycle:implementation-complete` is present and `Application validation` succeeded for the exact current head.
-- READY means implementation and current-head validation passed; it does not itself authorize merge when review, conflict, stale-base or provider/release evidence still blocks the change.
-- MERGEABLE requires the current head to remain validated, no unresolved required review conversation, no changes-requested/review-required state, no merge conflict and a clean merge state against `main`.
-- The lifecycle controller may merge automatically using an expected-head guard once all repository-enforceable mandatory gates are satisfied.
+- `.github/workflows/pr-lifecycle.yml` owns Draft/Implementing/Validating/Ready. It may move a completed Draft PR to Ready only when `lifecycle:implementation-complete` is present and `Application validation` succeeded for the exact current head.
+- The readiness workflow must stop at READY and dispatch `pr-lifecycle-ready`; it must not call the merge API directly.
+- `.github/workflows/pr-merge-finalizer.yml` independently re-reads the live PR before MERGEABLE/MERGED and re-checks the implementation-complete signal, exact-head validation, review/thread state, base freshness and conflict-free mergeability.
+- The finalizer must not depend on aggregate `mergeStateStatus == CLEAN`, because its own pending workflow can become part of that aggregate state and create a circular dependency.
+- MERGEABLE requires the current head to remain validated, no unresolved required review conversation, no changes-requested/review-required state, no merge conflict and no commits missing from current `main`.
+- The merge finalizer may merge automatically using an expected-head guard once all repository-enforceable mandatory gates are satisfied.
+- After successful same-repository merge, source-branch cleanup should be attempted where safe.
 - A merged PR proves repository integration only. Deployment/provider/runtime gates remain separate.
 - If repository settings such as branch protection, Issues, auto-merge or update-branch are unavailable or disabled, record that as a configuration gap; do not describe workflow automation as equivalent to controls it cannot enforce.
 
@@ -70,6 +73,7 @@ Apply it as follows:
 
 - Do not rely on chat/model memory or an unstated plan as the only record of current work.
 - Use repository files, accepted decisions, pull requests, checks and `STATUS.md` as durable state.
+- Before implementation-complete handoff, update `STATUS.md` to the checkpoint that should be true after the PR merges. Do not leave a soon-to-be-closed PR as the default branch's active re-entry target.
 - After a material delivery-state change, ensure the next action is explicit.
 
 ### Continuation protocol
@@ -79,7 +83,8 @@ On `Continue` or `Next`, resume in this order:
 1. blocking review/CI findings on the active PR;
 2. unsatisfied acceptance criteria;
 3. remaining in-scope active-branch work;
-4. the next dependency-correct item in `STATUS.md`/`ROADMAP.md`.
+4. lifecycle evidence required to progress an otherwise complete PR;
+5. the next dependency-correct item in `STATUS.md`/`ROADMAP.md`.
 
 Do not restart solved planning, reopen accepted decisions, or ask the product owner to choose routine technical work when repository evidence determines the answer.
 
@@ -134,4 +139,4 @@ Proceed autonomously for low-risk, reversible, technically clear choices consist
 - Add/maintain Playwright coverage for critical cross-layer user journeys.
 - GitHub Issues are currently disabled at repository level. Until that setting is changed, use one focused PR body as the implementation contract; do not pretend an issue exists.
 - Before declaring implementation complete, ensure the full validation gate passes and the PR explains outcome, scope, risk, validation, documentation and parked follow-up work.
-- Add `lifecycle:implementation-complete` only after the final in-scope audit. The lifecycle controller owns subsequent Ready/Mergeable/Merged transitions where GitHub can enforce them.
+- Add `lifecycle:implementation-complete` only after the final in-scope audit. The readiness controller and separate merge finalizer own subsequent Ready/Mergeable/Merged transitions where GitHub can enforce them.
