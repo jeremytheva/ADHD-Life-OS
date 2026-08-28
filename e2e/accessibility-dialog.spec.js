@@ -182,7 +182,7 @@ test('Quick Capture owns focus, exposes optional-panel state, and restores its t
   await expect(trigger).toBeFocused()
 })
 
-test('Project Task Form owns focus and restores the Add Task trigger inside Project Detail', async ({ page }) => {
+test('Project Detail and nested Task Form preserve top-most modal ownership and focus restoration', async ({ page }) => {
   await createMockNcb(page, { includeProject: true })
   await registerAndSkipSetup(page, 'project-task-dialog@example.test')
   await page.getByRole('link', { name: 'Projects' }).click()
@@ -191,20 +191,28 @@ test('Project Task Form owns focus and restores the Add Task trigger inside Proj
   await detailTrigger.focus()
   await page.keyboard.press('Enter')
 
-  const detailHeading = page.getByRole('heading', { name: 'Accessibility Test Project', level: 2 })
-  await expect(detailHeading).toBeVisible()
+  const detailDialog = page.getByRole('dialog', { name: 'Accessibility Test Project' })
+  const detailShell = page.locator('[role="dialog"][aria-labelledby="project-detail-title"]')
+  await expect(detailDialog).toBeVisible()
+  await expect(detailDialog).toBeFocused()
 
-  const trigger = page.getByRole('button', { name: 'Add Task', exact: true })
-  await trigger.click()
+  const taskTrigger = page.getByRole('button', { name: 'Add Task', exact: true })
+  await taskTrigger.click()
 
-  const dialog = page.getByRole('dialog', { name: 'Add Task' })
-  await expect(dialog).toBeVisible()
+  const taskDialog = page.getByRole('dialog', { name: 'Add Task' })
+  await expect(taskDialog).toBeVisible()
   await expect(page.getByLabel('Task Title *')).toBeFocused()
   await expect(page.getByLabel('Description')).toBeVisible()
   await expect(page.getByLabel('Estimated Time (minutes)')).toBeVisible()
+  await expect(detailShell).toHaveAttribute('aria-hidden', 'true')
 
   await page.keyboard.press('Escape')
-  await expect(dialog).toHaveCount(0)
-  await expect(trigger).toBeFocused()
-  await expect(detailHeading).toBeVisible()
+  await expect(taskDialog).toHaveCount(0)
+  await expect(detailDialog).toBeVisible()
+  await expect(detailShell).not.toHaveAttribute('aria-hidden', 'true')
+  await expect(taskTrigger).toBeFocused()
+
+  await page.keyboard.press('Escape')
+  await expect(detailDialog).toHaveCount(0)
+  await expect(detailTrigger).toBeFocused()
 })

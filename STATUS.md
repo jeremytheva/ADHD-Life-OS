@@ -3,7 +3,7 @@
 **Snapshot date:** 28 August 2026  
 **Last materially reviewed:** 28 August 2026  
 **Default branch:** `main`  
-**Last verified main implementation commit:** `00780ff` — PR #110, Projects Task Form dialog contract  
+**Last verified main implementation commit:** `6510b9a` — PR #111, keyboard-accessible Project Detail entry  
 **Overall status:** Active development / backend work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
@@ -11,7 +11,7 @@
 
 Continue product and repository improvements that are genuinely independent of unverified backend behaviour while additional NoCodeBackend information is gathered.
 
-The Projects nested Task Form is now merged and browser-proven. Before adding outer Project Detail focus restoration, the current focused prerequisite is a semantic keyboard-operable ProjectCard detail trigger so the parent dialog has a valid opener to restore focus to.
+The Project Detail prerequisites are complete: its nested Projects Task Form uses the shared dialog contract and ProjectCard now provides a keyboard-operable detail opener. The active slice is the parent Project Detail modal contract with nested-dialog-safe top-most focus ownership.
 
 ## AI execution gate
 
@@ -27,13 +27,13 @@ The Projects nested Task Form is now merged and browser-proven. Before adding ou
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Primary implementation thread | Frontend accessibility — Projects interaction integrity |
-| Active application PR | PR #111 — `fix: make Project Detail entry keyboard accessible` |
-| Last completed outcome | PR #110 merged — Projects-specific Add/Edit Task now uses the shared dialog/focus contract and nested focus restoration is browser-tested |
+| Primary implementation thread | Frontend accessibility — Projects nested modal integrity |
+| Active application PR | PR #112 — `fix: make Project Detail a nested-safe accessible dialog` |
+| Last completed outcome | PR #111 merged — ProjectCard now exposes a uniquely named keyboard-operable Project Detail trigger and semantic project-action controls |
 | Current blocker | None for backend-independent frontend work |
 | Deferred dependency | NoCodeBackend/provider certification pending additional provider information |
-| Next action | Validate PR #111, address any CI/review finding, and merge if clean |
-| Next queued outcome | Implement Project Detail semantic dialog/focus ownership with nested-dialog-safe modal stacking and verify focus restoration to the ProjectCard detail trigger |
+| Next action | Validate PR #112, address any CI/review finding, and merge if clean |
+| Next queued outcome | Audit remaining high-value workflow overlays and select the next smallest independently verifiable accessibility gap before deciding whether the current accessibility slice is complete |
 
 If this checkpoint conflicts with GitHub, deployment or later provider evidence, verify the authoritative source and update this file rather than reconstructing state from chat history.
 
@@ -57,34 +57,47 @@ If this checkpoint conflicts with GitHub, deployment or later provider evidence,
 - PR #108 merged — New/Edit Project uses the shared dialog contract with associated fields/grouped choices.
 - PR #109 merged — Quick Capture uses the shared dialog contract with optional-panel state.
 - PR #110 merged — Projects-specific Add/Edit Task uses the shared dialog contract; Project Detail → Add Task → Escape restores focus inside the still-open detail view.
+- PR #111 merged — ProjectCard now provides a semantic keyboard-operable Project Detail entry point with project-specific accessible naming; the real browser path opens details with keyboard activation.
 
 ## Active
 
-### PR #111 — ProjectCard keyboard detail entry
+### PR #112 — Project Detail nested-safe dialog accessibility
 
-Current branch: `fix/project-card-keyboard-details`
+Current branch: `fix/project-detail-dialog-accessibility`
 
 In scope:
 
-- replace the explicit View Details footer container with a semantic button;
-- provide a project-specific accessible name for the detail trigger;
-- make existing ProjectCard menu controls explicit buttons and expose menu state;
-- update the Project Detail browser path to open through keyboard activation;
-- keep Project Detail parent-modal behavior, project persistence, card data and provider/backend behaviour unchanged.
+- make `useModalDialog` stack-aware so only the top-most mounted modal handles Tab/Escape;
+- prevent background modal cleanup from stealing focus while a child modal remains active;
+- expose Project Detail as a semantic modal named by the project title;
+- focus Project Detail on entry and restore focus to the ProjectCard trigger on exit;
+- hide the parent detail dialog from the accessibility tree while the nested Task Form is active;
+- preserve child → parent focus restoration when Task Form closes;
+- extend the existing Projects browser regression through parent → child → parent → opener ownership;
+- keep project/task persistence, celebration behaviour, recommendation logic and provider/backend behaviour unchanged.
 
 ### Accessibility audit findings
 
-Project Detail has two prerequisites for safe parent modal ownership. The nested Projects Task Form is now corrected and validated. The remaining prerequisite is a keyboard-focusable ProjectCard detail opener; without it, parent dialog focus restoration cannot return keyboard users to a meaningful trigger.
+Project Detail required two prerequisites before safe parent modal ownership. Both are now merged:
 
-`CelebrationModal` remains classified as a transient non-modal toast and does not require modal focus ownership.
+1. the nested Projects Task Form has independent semantic/focus ownership;
+2. ProjectCard has a meaningful keyboard-focusable opener for parent focus restoration.
 
-The next parent-dialog implementation should make `useModalDialog` nested-dialog safe through top-most modal ownership rather than disabling/re-enabling a parent hook, because the current `enabled` cleanup restores focus and would be unsuitable as a temporary child-modal suspension mechanism.
+`CelebrationModal` remains classified as a transient non-modal status surface and does not require modal focus ownership.
+
+PR #112 implements top-most modal stacking in the shared hook instead of disabling/re-enabling the parent hook. This preserves the original parent opener while allowing a nested child to temporarily own keyboard handling and then restore focus inside the still-mounted parent.
 
 ## Backend / provider work — intentionally deferred
 
 **State:** PROVIDER UNVERIFIED / TEMPORARILY DEFERRED.
 
-Required provider evidence remains preserved in repository documentation. While deferred, keep fail-closed provider mappings, do not substitute another project's contract, do not use browser persistence as fake durable execution, and do not let provider uncertainty block independent frontend work.
+Required provider evidence remains preserved in repository documentation. While deferred:
+
+- keep fail-closed provider mappings in place;
+- do not substitute another project's NoCodeBackend contract;
+- do not use browser persistence as fake durable execution;
+- do not claim durable cross-reload/cross-device execution recovery;
+- do not let provider uncertainty block independent frontend, accessibility, testing or maintainability work.
 
 ## Known defects
 
@@ -96,7 +109,7 @@ No known application defect currently overrides the accessibility/interaction-in
 - Mixed JavaScript/TypeScript checking remains an accepted current constraint.
 - Responsive shell/navigation coverage is merged for desktop and phone-width paths.
 - The shared modal/focus contract is verified across Task Form, Accessibility Settings, Reward Shop, Your Progress, Project Form, Quick Capture and Projects Task Form.
-- Project Detail still lacks outer semantic dialog/focus ownership; PR #111 is its opener prerequisite.
+- Project Detail parent focus ownership and nested top-most handling are active in PR #112 and not yet production capability until merged.
 - Production deployment is not configured or verified for ADHD Life OS in the connected Vercel account.
 - `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only.
 
@@ -110,9 +123,9 @@ No known application defect currently overrides the accessibility/interaction-in
 
 | System / capability | State | Evidence / implication |
 | --- | --- | --- |
-| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #110 merged as `00780ff` |
+| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #111 merged as `6510b9a` |
 | Canonical validation | VERIFIED | Dependency audit + governance + zero-warning lint + typecheck + Node tests + production build + Playwright |
-| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | Global and major Projects child dialogs are verified; Project Detail parent ownership is queued |
+| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | Global and major Projects child dialogs are merged; nested-safe Project Detail parent ownership is active in PR #112 |
 | Stable application data API | APPLICATION VERIFIED | Same-origin routes and domain contracts remain deterministic application boundaries |
 | Physical NoCodeBackend adapter | IMPLEMENTED / DEFERRED | Fail-closed registry/adapter is merged; production mapping remains unverified |
 | Generic `execution-sessions` | IMPLEMENTED TOOLING / DEFERRED | Provider capability remains unverified |
@@ -125,18 +138,18 @@ No known application defect currently overrides the accessibility/interaction-in
 - One primary implementation thread is maintained; discoveries outside active scope are parked.
 - Zero lint warnings are a CI contract.
 - Modal accessibility is being corrected through focused workflow-by-workflow rollout.
-- Nested modal dependencies and keyboard opener semantics must be resolved before parent focus ownership is added.
+- Nested modal dependencies and keyboard opener semantics are resolved before parent focus ownership.
+- Nested modal keyboard handling belongs to the top-most mounted modal; parent opener state must survive child ownership.
 
 ## Next dependency-correct work
 
 ### While backend remains deferred
 
-1. complete and validate PR #111 ProjectCard keyboard detail entry;
-2. implement nested-dialog-safe modal stack ownership in `useModalDialog` and apply the parent dialog contract to Project Detail;
-3. continue remaining workflow overlays in priority order with browser coverage;
-4. close the accessibility slice when high-value shared/core gaps are addressed or explicitly parked;
-5. continue client-side cognitive-load reduction;
-6. preserve zero-warning lint and canonical validation.
+1. complete, validate and merge PR #112 Project Detail nested-safe dialog accessibility;
+2. audit remaining high-value workflow overlays and select the next smallest material interaction gap;
+3. close the current accessibility slice when shared/core high-value gaps are addressed or explicitly parked;
+4. continue client-side cognitive-load reduction after the accessibility boundary;
+5. preserve zero-warning lint and canonical validation.
 
 ### When backend work is resumed
 

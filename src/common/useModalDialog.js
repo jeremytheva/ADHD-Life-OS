@@ -9,9 +9,18 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])'
 ].join(',')
 
+const modalStack = []
+
 const getFocusableElements = (container) => Array.from(
   container?.querySelectorAll(FOCUSABLE_SELECTOR) ?? []
 ).filter((element) => !element.hasAttribute('hidden') && element.getAttribute('aria-hidden') !== 'true')
+
+const isTopModal = (dialogRef) => modalStack[modalStack.length - 1] === dialogRef
+
+const removeModal = (dialogRef) => {
+  const index = modalStack.lastIndexOf(dialogRef)
+  if (index >= 0) modalStack.splice(index, 1)
+}
 
 export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {}) => {
   const dialogRef = useRef(null)
@@ -28,8 +37,11 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
     openerRef.current = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null
+    modalStack.push(dialogRef)
 
     const focusFrame = window.requestAnimationFrame(() => {
+      if (!isTopModal(dialogRef)) return
+
       const initialTarget = initialFocusRef?.current
       if (initialTarget && !initialTarget.disabled) {
         initialTarget.focus()
@@ -40,7 +52,7 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
 
     const handleKeyDown = (event) => {
       const dialog = dialogRef.current
-      if (!dialog) return
+      if (!dialog || !isTopModal(dialogRef)) return
 
       if (event.key === 'Escape' && onEscapeRef.current) {
         event.preventDefault()
@@ -75,10 +87,14 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
     return () => {
       window.cancelAnimationFrame(focusFrame)
       document.removeEventListener('keydown', handleKeyDown)
+      removeModal(dialogRef)
 
       const opener = openerRef.current
       if (opener?.isConnected) {
-        window.requestAnimationFrame(() => opener.focus())
+        window.requestAnimationFrame(() => {
+          const activeDialog = modalStack[modalStack.length - 1]?.current
+          if (!activeDialog || activeDialog.contains(opener)) opener.focus()
+        })
       }
     }
   }, [enabled, initialFocusRef])
