@@ -57,3 +57,26 @@ test('routine elapsed time is driven by an active one-second timer', async () =>
   assert.match(source, /setElapsedSeconds/)
   assert.match(source, /window\.clearInterval/)
 })
+
+test('routine progress keeps one semantic dialog shell across transient states', async () => {
+  const source = await read('src/components/routines/RoutineProgress.jsx')
+
+  assert.match(source, /import useModalDialog from '\.\.\/\.\.\/common\/useModalDialog'/)
+  assert.match(source, /const dialogRef = useModalDialog\(\{ onEscape: handleEscape \}\)/)
+  assert.equal((source.match(/role="dialog"/g) ?? []).length, 1)
+  assert.match(source, /aria-modal="true"/)
+  assert.match(source, /aria-labelledby=\{dialogTitleId\}/)
+  assert.match(source, /aria-busy=\{loading \|\| actionPending\}/)
+  assert.match(source, /tabIndex=\{-1\}/)
+  assert.match(source, /Preparing the next routine step…/)
+})
+
+test('routine progress Escape follows cancellation semantics and write lockouts', async () => {
+  const source = await read('src/components/routines/RoutineProgress.jsx')
+
+  assert.match(source, /const handleEscape = useCallback\(\(\) => \{\s+if \(loading \|\| actionPending\) return/)
+  assert.match(source, /if \(loadError \|\| !session\) \{\s+onClose\(\)\s+return\s+\}/)
+  assert.match(source, /void handleCancel\(\)/)
+  assert.match(source, /if \(!window\.confirm\('Are you sure you want to cancel this routine\?'\)\) return/)
+  assert.match(source, /await routineProgressService\.cancelRoutine\(session\.id\)/)
+})
