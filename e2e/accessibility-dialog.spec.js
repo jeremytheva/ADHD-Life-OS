@@ -242,3 +242,26 @@ test('Routine Form owns focus, labels dynamic steps, and restores its trigger on
   await expect(dialog).toHaveCount(0)
   await expect(trigger).toBeFocused()
 })
+
+test('Housework Setup owns focus, exposes room-filter state, and restores its trigger on Escape', async ({ page }) => {
+  await createMockNcb(page)
+  await registerAndSkipSetup(page, 'housework-setup-dialog@example.test')
+  await page.goto('/housework')
+  await expect(page).toHaveURL(/\/housework$/)
+
+  const trigger = page.getByRole('button', { name: 'Add Chores' })
+  await trigger.click()
+
+  const dialog = page.getByRole('dialog', { name: 'Set Up Your Housework Routine' })
+  await expect(dialog).toBeVisible()
+  await expect(dialog).toBeFocused()
+  await expect(dialog).toHaveAttribute('aria-busy', 'false')
+
+  const roomFilters = page.getByRole('group', { name: 'Filter chores by room' })
+  await expect(roomFilters).toBeVisible()
+  await expect(page.getByRole('button', { name: 'All Rooms' })).toHaveAttribute('aria-pressed', 'true')
+
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+})
