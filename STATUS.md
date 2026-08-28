@@ -103,6 +103,13 @@ No known application defect currently overrides the accessibility/interaction-in
 - Production deployment is not configured or verified for ADHD Life OS in the connected Vercel account.
 - `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only.
 
+## Partial / planned preserved work
+
+- Closed Stage 3 execution lifecycle/recovery branches remain design evidence only; they are not merged capability.
+- Provider-certification and durable execution-session tooling remain available for later backend resumption.
+- External calendar synchronization, remote AI/LLM assistance, richer analytics, broader background automation and additional productivity integrations remain deferred.
+- See `ROADMAP.md` for intended future direction and the independent-work sequence.
+
 ## Provider / deployment status
 
 | System / capability | State | Evidence / implication |
