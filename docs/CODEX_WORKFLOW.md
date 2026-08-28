@@ -54,24 +54,38 @@ DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 Only after a criterion-by-criterion audit confirms the implementation is complete:
 
 1. update the PR body with current acceptance and validation evidence;
-2. update affected project documentation/status;
+2. update affected project documentation/status so it describes the post-merge re-entry state;
 3. confirm no known blocking in-scope review finding remains;
 4. add `lifecycle:implementation-complete`.
 
-That label authorizes the repository lifecycle controller to evaluate automated progression. It is not proof by itself that the PR is mergeable.
+That label authorizes repository lifecycle automation to evaluate automated progression. It is not proof by itself that the PR is mergeable.
 
-### READY / MERGEABLE / MERGED
+### READY
 
-`.github/workflows/pr-lifecycle.yml` may:
+`.github/workflows/pr-lifecycle.yml` owns readiness. It may:
 
-- mark a Draft PR Ready only when the implementation-complete signal exists and validation passed for the exact current head;
-- hold READY when review decisions/threads still block;
-- reject automatic merge when the branch conflicts with or is behind `main`;
-- move to MERGEABLE only when GitHub reports a clean current-head merge state;
-- merge with an `expectedHeadOid` guard so stale evidence cannot merge a changed head;
-- record MERGED after repository integration.
+- keep a PR Draft while implementation-complete evidence is absent;
+- move a completed Draft PR to Ready only when `lifecycle:implementation-complete` exists and `Application validation` passed for the exact current head;
+- invalidate prior completion/readiness evidence after a new commit;
+- dispatch `pr-lifecycle-ready` with the PR number and exact head SHA for separate finalization.
 
-Do not manually force Ready/Mergeable/Merged to bypass these gates. If the controller blocks, diagnose the blocking evidence and fix the underlying state.
+The readiness workflow stops at READY and must not call the merge API.
+
+### MERGEABLE / MERGED
+
+`.github/workflows/pr-merge-finalizer.yml` receives the trusted repository dispatch and independently re-reads the live PR. Before merge it re-confirms:
+
+- the PR is still open against `main`;
+- the dispatch head still equals the current PR head;
+- implementation-complete evidence is still present;
+- exact-head `Application validation` is successful;
+- no required review decision or unresolved review thread blocks;
+- the PR is not behind current `main`;
+- GitHub reports conflict-free mergeability.
+
+The finalizer deliberately does not require aggregate `mergeStateStatus == CLEAN`, because its own pending workflow would become part of that aggregate state and could self-block. Once the explicit gates pass, it records MERGEABLE and merges with `expectedHeadOid` so stale evidence cannot merge a changed head. It then records MERGED and attempts same-repository source-branch cleanup.
+
+Do not manually force Ready/Mergeable/Merged to bypass these gates. If automation blocks, diagnose the blocking evidence and fix the underlying state.
 
 Repository merge is not deployment/provider/runtime completion.
 
@@ -85,7 +99,7 @@ When asked to `Continue` or `Next`, resume in this order:
 4. if implementation is complete but the PR has not progressed, reconcile lifecycle evidence/labels/checks rather than starting new work;
 5. if no implementation is active, select the next dependency-correct outcome from `STATUS.md` and `ROADMAP.md`.
 
-Do not restart solved planning, reopen accepted decisions, or ask the product owner to choose routine implementation steps when the repository determines the answer.
+Do not restart solved planning, reopen accepted decisions, or ask the product owner to choose routine implementation steps when repository evidence determines the answer.
 
 ## Decision escalation
 
@@ -127,15 +141,17 @@ No required layer should remain only mocked, placeholder, disconnected or assume
 
 ## Re-entry and state handoff
 
-After a material delivery-state change, `STATUS.md` should identify:
+`STATUS.md` should identify:
 
 - current phase/stage;
 - current execution gate/state and material missing evidence;
-- current implementation thread/PR;
+- current implementation thread or next primary thread;
 - last completed outcome;
-- blocker;
+- blocker/deferred dependency;
 - next dependency-correct action;
 - next queued outcome.
+
+Before adding `lifecycle:implementation-complete`, update `STATUS.md` to the state that should be true **after the PR merges**. This prevents the default branch from immediately treating a closed PR as the active checkpoint.
 
 If GitHub/provider/deployment evidence conflicts with `STATUS.md`, verify the real system and correct the stale document.
 
@@ -158,10 +174,10 @@ A passing `platform:validate` does **not** prove deployment/provider/runtime sta
 3. run `npm run platform:validate`;
 4. resolve blocking review/CI findings at root cause;
 5. update only project documents whose meaning changed;
-6. ensure `STATUS.md` records the correct gate/evidence/next action;
+6. ensure `STATUS.md` records the truthful post-merge gate/evidence/next action;
 7. update one focused Draft PR with outcome, scope, evidence, risk, parked work and next action;
 8. add `lifecycle:implementation-complete` only after the in-scope audit is complete;
-9. allow GitHub lifecycle automation to evaluate Ready → Mergeable → Merged from current repository evidence;
+9. allow readiness automation and the separate merge finalizer to evaluate Ready → Mergeable → Merged from current repository evidence;
 10. mark project/capability COMPLETE only when all applicable repository, provider, deployment and runtime evidence supports it.
 
 For perceptible UI changes, include appropriate visual/manual accessibility evidence in addition to automated checks.
