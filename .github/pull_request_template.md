@@ -1,29 +1,78 @@
-## Summary
+## Outcome
 
-<!-- What changed and why? Link the issue(s) with Fixes #123 when applicable. -->
+<!-- State the single observable user/system result delivered by this PR. -->
+
+## Related issue
+
+<!-- Use `Closes #123` when GitHub Issues are enabled and this PR implements an issue. Repository Issues are currently disabled, so this may be N/A. -->
 
 ## Scope
 
-- In scope:
-- Intentionally out of scope:
+### In scope
 
-## Validation
+- 
 
-- [ ] `npm run lint`
-- [ ] `npm run typecheck`
-- [ ] `npm test`
-- [ ] `npm run build`
-- [ ] Added or updated focused tests where behavior or contracts changed.
+### Intentionally out of scope
 
-## Security, data, and accessibility
+- 
+
+## Acceptance criteria evidence
+
+| Criterion | Status | Evidence |
+| --- | --- | --- |
+|  | Pass / Partial / Fail / N/A | Test, file, screenshot, check or explanation |
+
+## Validation performed
+
+- [ ] `npm run platform:validate`
+- [ ] Dependency audit passed.
+- [ ] Governance validation passed.
+- [ ] ESLint passed with zero warnings.
+- [ ] Typecheck passed.
+- [ ] Node/unit/contract tests passed.
+- [ ] Production build passed.
+- [ ] Critical Playwright coverage passed.
+- [ ] Added or updated focused tests where behaviour or contracts changed.
+
+Record the exact current-head validation result/run:
+
+```text
+<commit SHA + command/workflow run + result>
+```
+
+## Security, data, accessibility and release impact
 
 - [ ] No secrets, credentials, cookies, or personal data are included in this PR.
 - [ ] Browser code does not access server-only NoCodeBackend credentials; proxy allowlists and validation remain intact.
-- [ ] Considered keyboard access, labels, focus behavior, motion, contrast, and low-stimulation UX as applicable.
+- [ ] Data/migration/ownership effects are documented or N/A.
+- [ ] Keyboard access, labels, focus behaviour, motion, contrast and low-stimulation UX were considered where applicable.
+- [ ] Provider/deployment/runtime state is not overstated from repository validation alone.
 
-## Documentation and rollout
+## Documentation and project state
 
-- [ ] Updated README and/or `docs/` where current behavior, planned work, configuration, or contributor workflow changed.
+- [ ] Updated only the repository documents whose meaning changed.
+- [ ] `STATUS.md` reflects material delivery-state changes and the next dependency-correct action.
 - [ ] No migration or rollout is required, or rollout/rollback steps are described below.
 
-<!-- Add screenshots for perceptible UI changes and note follow-up work or risks. -->
+## Known limitations and parked follow-up work
+
+- 
+
+## Reviewer / audit focus
+
+<!-- Identify the highest-risk logic or decisions requiring attention. -->
+
+## Lifecycle handoff
+
+This PR must remain Draft while known in-scope implementation work remains.
+
+Before adding `lifecycle:implementation-complete`:
+
+- [ ] Every in-scope acceptance criterion has been audited.
+- [ ] Required implementation and regression coverage are complete.
+- [ ] Current-head validation evidence is recorded.
+- [ ] No known blocking in-scope review finding remains.
+- [ ] Documentation/project state is current.
+- [ ] Further improvements are either out of scope or separately parked.
+
+After that label is added, GitHub lifecycle automation owns the repository-observable transition through Ready → Mergeable → Merged. Any new commit invalidates the handoff.
