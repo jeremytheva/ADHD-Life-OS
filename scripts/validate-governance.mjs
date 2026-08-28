@@ -81,7 +81,7 @@ for (const requiredFragment of ['DRAFT', 'IMPLEMENTING', 'VALIDATING', 'READY', 
 }
 
 const lifecycleWorkflow = await readFile(path.join(root, '.github/workflows/pr-lifecycle.yml'), 'utf8')
-for (const requiredFragment of ['pull_request_target', 'workflow_run', 'lifecycle:implementation-complete', 'repository_dispatch', 'pr-lifecycle-ready', 'pull-request-validation.yml']) {
+for (const requiredFragment of ['pull_request_target', 'workflow_run', 'lifecycle:implementation-complete', 'repos/$REPO/dispatches', 'pr-lifecycle-ready', 'pull-request-validation.yml']) {
   if (!lifecycleWorkflow.includes(requiredFragment)) failures.push(`PR lifecycle workflow is missing readiness marker ${requiredFragment}`)
 }
 if (lifecycleWorkflow.includes('mergePullRequest')) {
