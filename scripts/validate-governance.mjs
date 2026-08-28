@@ -15,6 +15,8 @@ const requiredFiles = [
   'docs/DATA_MODEL.md',
   'docs/NOCODEBACKEND_OPERATIONS.md',
   'docs/DECISIONS/README.md',
+  '.github/workflows/pull-request-validation.yml',
+  '.github/workflows/pr-lifecycle.yml',
   'api/ncb/dataProvider.js',
   'api/ncb/dataProviderContract.js'
 ]
@@ -71,6 +73,16 @@ for (const name of canonicalEnvironmentNames) {
 const status = await readFile(path.join(root, 'STATUS.md'), 'utf8')
 if (!/Current gate\s*[:|]/i.test(status)) failures.push('STATUS.md must expose the current execution gate.')
 if (!/Gate state\s*[:|]/i.test(status)) failures.push('STATUS.md must expose the current gate state.')
+
+const agentGuidance = await readFile(path.join(root, 'AGENTS.md'), 'utf8')
+for (const requiredFragment of ['DRAFT', 'IMPLEMENTING', 'VALIDATING', 'READY', 'MERGEABLE', 'MERGED', 'lifecycle:implementation-complete']) {
+  if (!agentGuidance.includes(requiredFragment)) failures.push(`AGENTS.md must document PR lifecycle control ${requiredFragment}`)
+}
+
+const lifecycleWorkflow = await readFile(path.join(root, '.github/workflows/pr-lifecycle.yml'), 'utf8')
+for (const requiredFragment of ['pull_request_target', 'workflow_run', 'lifecycle:implementation-complete', 'reviewThreads', 'expectedHeadOid', 'pull-request-validation.yml']) {
+  if (!lifecycleWorkflow.includes(requiredFragment)) failures.push(`PR lifecycle workflow is missing enforcement marker ${requiredFragment}`)
+}
 
 const providerContract = await readFile(path.join(root, 'api/ncb/dataProviderContract.js'), 'utf8')
 if (!providerContract.includes("UNVERIFIED: 'UNVERIFIED'")) {
