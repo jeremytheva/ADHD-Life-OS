@@ -2,7 +2,7 @@
 
 ## Definition of done
 
-A change is ready when it has one clear implementation outcome, focused coverage for changed behaviour, updated documentation where meaning changed, and the relevant execution gates satisfied with evidence.
+A change is ready for repository merge when it has one clear implementation outcome, focused coverage for changed behaviour, updated documentation where meaning changed, and the relevant execution gates satisfied with evidence.
 
 The canonical full repository check is:
 
@@ -25,6 +25,25 @@ A change is complete enough to stop expanding when:
 
 Once these conditions are met, further refinement is new scope unless necessary to correct a discovered root cause or make the implementation safe.
 
+## Pull-request delivery lifecycle
+
+Implementation delivery follows:
+
+```text
+DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
+```
+
+- **DRAFT:** the PR exists but is not eligible for merge.
+- **IMPLEMENTING:** in-scope work or completion audit remains.
+- **VALIDATING:** current-head canonical validation is missing, running or failed.
+- **READY:** implementation-complete evidence exists and current-head validation passed.
+- **MERGEABLE:** review/thread, conflict and base-state checks are clear and GitHub reports a clean merge state.
+- **MERGED:** GitHub integrated the exact validated head.
+
+The project/implementing agent owns the semantic decision that the implementation contract is complete. It records that handoff with `lifecycle:implementation-complete` only after a criterion-by-criterion audit. GitHub owns the repository-observable checks after that point through `.github/workflows/pr-lifecycle.yml`.
+
+Any new commit removes the implementation-complete signal and invalidates prior Ready/Mergeable evidence.
+
 ## Work-in-progress and scope control
 
 Default to one primary implementation thread for this repository. Parallel implementation is appropriate only when dependency analysis shows the work is genuinely independent and will not conflict in shared architecture, state, schema, routing, provider or trust-boundary code.
@@ -38,7 +57,7 @@ When new work is discovered:
 
 ## Continuation and re-entry
 
-A continuation request resumes current delivery state rather than restarting planning. Prefer, in order: blocking PR/CI findings, incomplete acceptance criteria, remaining active-branch scope, then the next dependency-correct outcome in `STATUS.md`/`ROADMAP.md`.
+A continuation request resumes current delivery state rather than restarting planning. Prefer, in order: blocking PR/CI findings, incomplete acceptance criteria, remaining active-branch scope, lifecycle evidence required to progress an otherwise complete PR, then the next dependency-correct outcome in `STATUS.md`/`ROADMAP.md`.
 
 `STATUS.md` is the compact re-entry source and must expose the material current execution gate when evidence is outstanding.
 
@@ -58,16 +77,29 @@ If a gate cannot pass, do not advance the work state beyond evidence. Record the
 
 Resolve low-risk reversible technical choices autonomously from repository evidence, accepted architecture and inherited standards. Require product-owner direction only for genuinely unresolved consequential choices such as product scope/behaviour, future-constraining architecture, destructive data, privacy/security posture, external commitments/cost or comparable material trade-offs.
 
-## Local delivery loop
+Routine PR state transitions, validation retries, mergeability checks and repository merge do not require product-owner intervention when the implementation contract and mandatory gates are already satisfied.
 
-1. Install with `npm ci`.
-2. Read `PROJECT.md`, `STATUS.md` and relevant system/architecture/data context.
-3. Confirm the active implementation contract and overlap state.
+## Repository delivery loop
+
+1. Read `PROJECT.md`, `STATUS.md` and relevant system/architecture/data context.
+2. Confirm the active implementation contract and overlap state.
+3. Create/reuse one focused Draft PR.
 4. Implement the smallest complete correction/slice.
 5. Use narrow checks while diagnosing.
-6. Run `npm run platform:validate` before completion/review.
+6. Run `npm run platform:validate` before implementation-complete handoff.
 7. Update only project documents whose meaning changed.
-8. Record gate evidence, risks, parked work and next action in the pull request/status handoff.
+8. Audit every acceptance criterion and update PR evidence.
+9. Add `lifecycle:implementation-complete` only when no in-scope work remains.
+10. Let GitHub lifecycle automation evaluate Ready, review/thread state, merge conflicts, stale-base state and exact-head merge.
+11. If automation blocks, correct the underlying evidence/state in the same PR.
+
+## GitHub configuration boundary
+
+Repository workflow automation currently exists alongside external GitHub configuration gaps documented in `docs/GITHUB_CONFIGURATION.md`.
+
+Most importantly, `main` has no branch protection/ruleset at present. The lifecycle controller can govern its own merge path, but it cannot guarantee that every administrator/direct push uses that path. Branch protection or an equivalent ruleset remains the preferred independent enforcement boundary.
+
+GitHub Issues, repository auto-merge and update-branch support are also currently disabled. These are tracked as explicit configuration states rather than being inferred from repository code.
 
 ## Environments and configuration
 
@@ -88,7 +120,7 @@ The connected Vercel account currently has no ADHD Life OS project binding. Ther
 
 ## Release and rollback
 
-A release is not complete at merge or build. Where deployment applies:
+A repository merge is not a release. Where deployment applies:
 
 1. identify the exact intended commit/version;
 2. verify provider/configuration/migration prerequisites;
