@@ -2,7 +2,7 @@
 
 ## Authority and inheritance
 
-This repository inherits the current master AI-first platform development, engineering, design, documentation, testing/release and provider standards supplied by the product owner. This file records only repository-specific execution rules and constraints.
+This repository inherits the current master AI-first platform development, engineering, design, documentation, testing/release, pull-request lifecycle and provider standards supplied by the product owner. This file records only repository-specific execution rules and constraints.
 
 Authoritative project state is in `PROJECT.md`, `STATUS.md`, `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `docs/NOCODEBACKEND_OPERATIONS.md`, `ROADMAP.md`, `SYSTEM_MAP.md`, accepted decisions, current GitHub state, and current provider/deployment evidence where applicable. Chat history is supporting context, not project state.
 
@@ -40,6 +40,29 @@ Do not call work deployed or production-ready without the applicable automated v
 Do not mark a capability/stage complete until acceptance is satisfied, real-system evidence supports the claim, remaining work is explicitly classified, project documentation is current, and the next dependency-correct action is known.
 
 If a gate cannot pass, record the missing evidence/dependency, continue safe independent work, keep `STATUS.md` current when material, and do not advance the work state beyond the evidence.
+
+## Pull-request lifecycle
+
+GitHub is the enforcement layer for implementation delivery. The repository lifecycle is:
+
+```text
+DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
+```
+
+Apply it as follows:
+
+- Create implementation pull requests as Draft.
+- Keep one focused outcome per PR. When GitHub Issues are unavailable, the PR body is the implementation contract and must contain explicit scope, exclusions and observable acceptance criteria.
+- Continue implementation and corrective commits on the same PR while they remain in scope.
+- Any new commit invalidates prior implementation-complete evidence and returns the PR to Draft/validation.
+- `npm run platform:validate` is the mandatory repository validation gate for the current head.
+- Do not add `lifecycle:implementation-complete` until the implementation has been audited criterion by criterion, the PR evidence is current, and no known in-scope implementation work remains.
+- `.github/workflows/pr-lifecycle.yml` may move a completed Draft PR to Ready only when `lifecycle:implementation-complete` is present and `Application validation` succeeded for the exact current head.
+- READY means implementation and current-head validation passed; it does not itself authorize merge when review, conflict, stale-base or provider/release evidence still blocks the change.
+- MERGEABLE requires the current head to remain validated, no unresolved required review conversation, no changes-requested/review-required state, no merge conflict and a clean merge state against `main`.
+- The lifecycle controller may merge automatically using an expected-head guard once all repository-enforceable mandatory gates are satisfied.
+- A merged PR proves repository integration only. Deployment/provider/runtime gates remain separate.
+- If repository settings such as branch protection, Issues, auto-merge or update-branch are unavailable or disabled, record that as a configuration gap; do not describe workflow automation as equivalent to controls it cannot enforce.
 
 ## Cognitive load and execution continuity
 
@@ -109,5 +132,6 @@ Proceed autonomously for low-risk, reversible, technically clear choices consist
 
 - Add focused deterministic `node:test` coverage for behaviour/contracts. Tests must not require real provider credentials or mutable production data.
 - Add/maintain Playwright coverage for critical cross-layer user journeys.
-- GitHub Issues are currently unavailable; when no issue can be created, use one focused pull-request body as the implementation contract.
-- Before review, ensure the full validation gate passes and the PR explains outcome, scope, risk, validation, documentation and parked follow-up work.
+- GitHub Issues are currently disabled at repository level. Until that setting is changed, use one focused PR body as the implementation contract; do not pretend an issue exists.
+- Before declaring implementation complete, ensure the full validation gate passes and the PR explains outcome, scope, risk, validation, documentation and parked follow-up work.
+- Add `lifecycle:implementation-complete` only after the final in-scope audit. The lifecycle controller owns subsequent Ready/Mergeable/Merged transitions where GitHub can enforce them.
