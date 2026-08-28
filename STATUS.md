@@ -3,22 +3,22 @@
 **Snapshot date:** 28 August 2026  
 **Last materially reviewed:** 28 August 2026  
 **Default branch:** `main`  
-**Last verified main implementation commit:** `7d5cb06` — PR #114, Housework Setup dialog accessibility  
+**Last verified main implementation commit:** `2e33767` — PR #115, repository-managed PR lifecycle  
 **Overall status:** Active development / backend work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
 ## Current objective
 
-Complete the repository delivery-control migration before starting the next product/accessibility slice. This aligns ADHD Life OS with the current autonomous pull-request lifecycle while preserving the deliberate NoCodeBackend deferral.
+Continue backend-independent accessibility and interaction-integrity work while using the newly merged repository lifecycle controller for normal PR progression.
 
-PR #114 is merged. Housework Setup now uses the shared modal interaction contract with its write-in-progress close lockout preserved. The active implementation thread is PR #115, which establishes repository-managed `DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED` progression and records the GitHub settings that still require external configuration.
+PR #115 is merged and the repository now contains the `DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED` lifecycle controller. PR #116 is the first live verification of that controller and applies the shared modal interaction contract to Chore Detail without allowing Escape to bypass completion or celebration lockouts.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | ACTIVE — repository delivery-control migration |
+| Gate state | ACTIVE — Chore Detail accessibility / lifecycle live verification |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not introduce, infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -27,13 +27,13 @@ PR #114 is merged. Housework Setup now uses the shared modal interaction contrac
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Primary implementation thread | Repository governance — autonomous PR lifecycle |
-| Active application PR | PR #115 — `chore: enforce repository-managed PR lifecycle` |
-| Last completed outcome | PR #114 merged — Housework Setup now has semantic dialog/focus ownership, selected-state room filters, current write lockout preservation and browser regression coverage |
-| Current blocker | None for repository-file implementation; external GitHub settings remain configuration gaps |
+| Primary implementation thread | Frontend accessibility — Chore Detail modal ownership |
+| Active application PR | PR #116 — `fix: make Chore Detail an accessible dialog` |
+| Last completed outcome | PR #115 merged — repository-managed PR lifecycle controller, governance checks and delivery documentation are active on `main` |
+| Current blocker | None for backend-independent frontend work; external GitHub branch protection remains a configuration gap |
 | Deferred dependency | NoCodeBackend/provider certification pending additional provider information |
-| Next action | Complete, validate and merge PR #115 under the current manual lifecycle, then verify the new controller from the next Draft implementation PR |
-| Next queued outcome | Correct Chore Detail with completion/celebration-safe Escape ownership, then address multi-state Routine Progress / Statistics with a stable dialog-shell design |
+| Next action | Complete and validate PR #116, then add `lifecycle:implementation-complete` and verify automated Ready → Mergeable → Merged progression |
+| Next queued outcome | Implement stable dialog ownership for multi-state Routine Progress / Routine Statistics |
 
 If this checkpoint conflicts with GitHub, deployment or later provider evidence, verify the authoritative source and update this file rather than reconstructing state from chat history.
 
@@ -51,28 +51,44 @@ If this checkpoint conflicts with GitHub, deployment or later provider evidence,
 - PR #108–#112 merged — Project Form, Quick Capture, nested Project Task Form, keyboard Project Detail entry and nested-safe Project Detail ownership.
 - PR #113 merged — New/Edit Routine uses the shared dialog contract; dynamic step fields/removal controls are accessible and the real Routines entry path is browser-tested.
 - PR #114 merged — Housework Setup uses the shared dialog contract while preserving saving lockout semantics; room filters expose selected-state semantics and the real Housework entry path is browser-tested.
+- PR #115 merged — autonomous repository PR lifecycle controller, implementation-complete handoff, current-head validation requirement, review/thread/conflict/base-state gates and guarded merge path are now on `main`.
 
 ## Active
 
-### PR #115 — repository-managed PR lifecycle
+### PR #116 — Chore Detail dialog accessibility
 
-Current branch: `chore/pr-lifecycle-governance`
+Current branch: `fix/chore-detail-dialog-accessibility`
 
 In scope:
 
-- add `.github/workflows/pr-lifecycle.yml` using trusted default-branch workflow code;
-- require explicit `lifecycle:implementation-complete` evidence before automated readiness/merge evaluation;
-- invalidate that evidence after any new commit;
-- require successful `Application validation` for the exact current head;
-- block on required review state, unresolved review threads, merge conflicts, stale base or non-clean GitHub merge state;
-- merge only with an expected-head guard;
-- extend executable governance validation to require lifecycle controls;
-- align repository agent/project/delivery/Codex/GitHub/README/PR-template guidance;
-- preserve GitHub settings that cannot be changed through current connected actions as explicit external configuration gaps rather than falsely describing them as enforced.
+- expose Chore Detail as a semantic dialog named by the chore title;
+- reuse stack-aware `useModalDialog` for initial focus, containment, Escape and opener restoration;
+- preserve both `completing` and celebration close lockouts for keyboard dismissal;
+- return focus to the dialog when the celebration overlay takes over the interaction surface;
+- expose completion busy state;
+- keep buttons explicit and preserve existing checklist selected-state semantics;
+- verify Housework → Chore Detail → Escape → opener restoration in Playwright;
+- verify Escape cannot dismiss completion-in-progress or celebration states;
+- keep chore persistence, completion timing, failure recovery and provider/backend behaviour unchanged.
 
-### GitHub external configuration gaps
+### PR lifecycle live verification
 
-Verified current repository settings remain:
+PR #116 is the first normal Draft PR created after PR #115 reached `main`.
+
+Expected controller behaviour:
+
+1. opened PR remains Draft and is labelled implementing;
+2. each new commit invalidates any prior implementation-complete signal and returns lifecycle state to validation;
+3. CI must pass for the exact final head;
+4. only after criterion audit is complete is `lifecycle:implementation-complete` added;
+5. the controller then evaluates Ready, review threads/decision, merge conflicts, stale base and clean merge state;
+6. the exact validated head is merged using an expected-head guard when all repository-observable gates pass.
+
+A successful live progression closes the implementation portion of the PR-lifecycle migration. Branch protection remains a separate external GitHub configuration requirement.
+
+## GitHub external configuration gaps
+
+Verified repository settings remain:
 
 - GitHub Issues: disabled;
 - GitHub Projects: disabled;
@@ -81,18 +97,15 @@ Verified current repository settings remain:
 - repository rulesets: none;
 - update-branch support: disabled.
 
-The lifecycle controller improves repository-managed delivery but does not make those external settings true. Branch protection or an equivalent ruleset is the highest-priority remaining GitHub enforcement gap because repository workflow automation cannot prohibit every administrator/direct-push bypass.
+Branch protection or an equivalent ruleset remains the highest-priority external GitHub enforcement gap because repository workflow automation cannot prohibit every administrator/direct-push bypass.
 
 ## Accessibility audit findings
 
-The remaining high-value core modal surfaces are:
+After Chore Detail, the remaining high-value core modal surfaces are:
 
-- **Chore Detail:** stable shell; Escape must not bypass `completing` or celebration lockouts.
 - **Routine Progress:** multi-state overlay with loading, error, finishing and active-step shells; should receive one stable dialog ownership model rather than a superficial hook attachment.
 - **Routine Statistics:** loading/content shell transition requires the same deliberate stable-shell treatment.
 - Secondary Template and Mode overlays remain lower priority until core workflow surfaces are complete or explicitly parked.
-
-The accessibility sequence resumes after PR #115 is merged.
 
 ## Backend / provider work — intentionally deferred
 
@@ -108,16 +121,16 @@ Required provider evidence remains preserved in repository documentation. While 
 
 ## Known defects
 
-No known application defect currently overrides the delivery-control migration or queued accessibility/interaction-integrity work. Provider-backed operations unavailable without a verified physical contract remain intentional fail-closed behaviour.
+No known application defect currently overrides the active accessibility/interaction-integrity work. Provider-backed operations unavailable without a verified physical contract remain intentional fail-closed behaviour.
 
 ## Technical debt / quality state
 
 - ESLint is clean and CI enforces **0 warnings**.
 - Mixed JavaScript/TypeScript checking remains an accepted current constraint.
 - Responsive shell/navigation coverage is merged for desktop and phone-width paths.
-- The shared modal/focus contract is verified across global, Tasks, Projects, Routine Form and Housework Setup surfaces.
+- The shared modal/focus contract is verified across global, Tasks, Projects, Routine Form and Housework Setup surfaces; Chore Detail is active in PR #116.
 - Canonical application validation runs on pull requests and `main`.
-- PR #115 adds a separate privileged lifecycle controller that does not checkout or execute PR code with its write-capable token.
+- The separate privileged lifecycle controller uses trusted default-branch workflow code and does not checkout or execute PR code with its write-capable token.
 - Production deployment is not configured or verified for ADHD Life OS in the connected Vercel account.
 - `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only.
 
@@ -132,12 +145,12 @@ No known application defect currently overrides the delivery-control migration o
 
 | System / capability | State | Evidence / implication |
 | --- | --- | --- |
-| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #114 merged as `7d5cb06` |
+| GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main`; PR #115 merged as `2e33767` |
 | Canonical validation | VERIFIED | Dependency audit + governance + zero-warning lint + typecheck + Node tests + production build + Playwright |
-| PR lifecycle controller | IMPLEMENTING in PR #115 | Repository automation and docs are being aligned; not active on `main` until PR #115 merges |
+| PR lifecycle controller | IMPLEMENTED / LIVE VERIFYING | Merged in PR #115; PR #116 is first end-to-end lifecycle verification |
 | Branch protection/ruleset | NOT CONFIGURED | External GitHub setting remains required for independent direct-push/bypass enforcement |
 | GitHub Issues | DISABLED | Focused PR body remains implementation-contract fallback |
-| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | Projects/global/Routine Form/Housework Setup verified; Chore Detail is queued |
+| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | Projects/global/Routine Form/Housework Setup verified; Chore Detail active |
 | Stable application data API | APPLICATION VERIFIED | Same-origin routes and domain contracts remain deterministic application boundaries |
 | Physical NoCodeBackend adapter | IMPLEMENTED / DEFERRED | Fail-closed registry/adapter is merged; production mapping remains unverified |
 | Generic `execution-sessions` | IMPLEMENTED TOOLING / DEFERRED | Provider capability remains unverified |
@@ -153,21 +166,20 @@ No known application defect currently overrides the delivery-control migration o
 - Nested modal keyboard handling belongs to the top-most mounted modal.
 - Existing mutation lockouts must also constrain keyboard dismissal; accessibility work must not create a bypass around write/reconciliation safeguards.
 - Multi-state overlays should receive stable ownership design rather than per-render ref patches.
-- PR lifecycle semantic completion belongs to the implementing project/agent; GitHub should independently enforce current-head validation, review/thread state, mergeability and guarded merge where repository capabilities permit.
-- Passing CI alone must never be treated as proof that implementation is complete.
+- PR lifecycle semantic completion belongs to the implementing project/agent; GitHub independently evaluates current-head validation, review/thread state, mergeability and guarded merge where repository capabilities permit.
+- Passing CI alone is not proof that implementation is complete.
 - A new commit invalidates previous implementation-complete and validation evidence.
 
 ## Next dependency-correct work
 
 ### Current
 
-1. complete, validate and merge PR #115 repository PR lifecycle governance;
-2. verify the lifecycle controller on the next Draft PR;
-3. correct Chore Detail while preserving completion/celebration close lockouts;
-4. implement stable dialog ownership for Routine Progress / Routine Statistics;
-5. close the current accessibility slice when high-value core interaction gaps are addressed or explicitly parked;
-6. continue client-side cognitive-load reduction after that boundary;
-7. preserve zero-warning lint and canonical validation.
+1. complete and validate PR #116 Chore Detail accessibility;
+2. verify automatic Ready → Mergeable → Merged lifecycle progression from the implementation-complete handoff;
+3. implement stable dialog ownership for Routine Progress / Routine Statistics;
+4. close the current accessibility slice when high-value core interaction gaps are addressed or explicitly parked;
+5. continue client-side cognitive-load reduction after that boundary;
+6. preserve zero-warning lint and canonical validation.
 
 ### External GitHub configuration
 

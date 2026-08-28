@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useId, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 import OperationErrorState from '../../common/OperationErrorState'
+import useModalDialog from '../../common/useModalDialog'
 import { houseworkService } from '../../services/houseworkService'
 import { format, parseISO } from 'date-fns'
 
@@ -16,18 +17,25 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
   const [completing, setCompleting] = useState(false)
   const [operationError, setOperationError] = useState(null)
   const closeTimerRef = useRef(null)
+  const titleId = useId()
+  const closeLocked = completing || showCelebration
+  const dialogRef = useModalDialog({ onEscape: closeLocked ? undefined : onClose })
 
   useEffect(() => () => {
     if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current)
   }, [])
 
+  useEffect(() => {
+    if (showCelebration) dialogRef.current?.focus()
+  }, [dialogRef, showCelebration])
+
   const handleToggleChecklistItem = (index) => {
-    if (completing || showCelebration) return
+    if (closeLocked) return
     setChecklistState(prev => ({ ...prev, [index]: !prev[index] }))
   }
 
   const handleComplete = async () => {
-    if (completing || showCelebration) return
+    if (closeLocked) return
     setOperationError(null)
     setCompleting(true)
 
@@ -61,14 +69,24 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col relative">
+      <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-busy={completing ? 'true' : 'false'}
+        tabIndex={-1}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col relative"
+      >
         <div className="bg-gradient-to-r from-purple-500 to-indigo-600 p-6 text-white">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-start gap-3 flex-1">
               <span className="text-4xl">{getRoomIcon(task.room)}</span>
-              <div className="flex-1"><h2 className="text-2xl font-bold mb-2">{task.title}</h2>{task.description && <p className="text-purple-100">{task.description}</p>}</div>
+              <div className="flex-1"><h2 id={titleId} className="text-2xl font-bold mb-2">{task.title}</h2>{task.description && <p className="text-purple-100">{task.description}</p>}</div>
             </div>
-            <button onClick={onClose} disabled={completing || showCelebration} aria-label="Close chore details" className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:opacity-50"><SafeIcon icon={FiX} className="w-6 h-6" /></button>
+            <button type="button" onClick={onClose} disabled={closeLocked} aria-label="Close chore details" className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:opacity-50"><SafeIcon icon={FiX} className="w-6 h-6" /></button>
           </div>
           {totalCount > 0 && <div><div className="flex items-center justify-between text-sm mb-2"><span>Progress</span><span>{completedCount} of {totalCount} steps</span></div><div className="w-full bg-purple-700 rounded-full h-3 overflow-hidden"><motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.5 }} className="h-full bg-white rounded-full" /></div></div>}
         </div>
@@ -82,14 +100,14 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
 
           {task.required_items?.length > 0 && <div className="mb-6"><div className="flex items-center gap-2 mb-3"><SafeIcon icon={FiPackage} className="w-5 h-5 text-slate-600" /><h3 className="font-medium text-slate-900">What You'll Need</h3></div><div className="flex flex-wrap gap-2">{task.required_items.map((item, index) => <span key={index} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">{item}</span>)}</div></div>}
 
-          {task.checklist?.length > 0 && <div><div className="flex items-center gap-2 mb-3"><SafeIcon icon={FiList} className="w-5 h-5 text-slate-600" /><h3 className="font-medium text-slate-900">Steps</h3></div><div className="space-y-2">{task.checklist.map((item, index) => <motion.button key={index} onClick={() => handleToggleChecklistItem(index)} disabled={completing || showCelebration} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} aria-pressed={Boolean(checklistState[index])} className={`w-full text-left p-4 rounded-lg border-2 transition-all disabled:cursor-not-allowed ${checklistState[index] ? 'bg-green-50 border-green-300' : 'bg-white border-slate-200 hover:border-purple-300'}`}><div className="flex items-center gap-3"><div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${checklistState[index] ? 'bg-green-500' : 'bg-slate-200'}`}>{checklistState[index] && <SafeIcon icon={FiCheck} className="w-4 h-4 text-white" />}</div><div className="flex items-center gap-2 flex-1"><span className="text-slate-400 font-medium">{index + 1}.</span><span className={checklistState[index] ? 'text-green-900 line-through' : 'text-slate-900'}>{item}</span></div></div></motion.button>)}</div></div>}
+          {task.checklist?.length > 0 && <div><div className="flex items-center gap-2 mb-3"><SafeIcon icon={FiList} className="w-5 h-5 text-slate-600" /><h3 className="font-medium text-slate-900">Steps</h3></div><div className="space-y-2">{task.checklist.map((item, index) => <motion.button type="button" key={index} onClick={() => handleToggleChecklistItem(index)} disabled={closeLocked} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} aria-pressed={Boolean(checklistState[index])} className={`w-full text-left p-4 rounded-lg border-2 transition-all disabled:cursor-not-allowed ${checklistState[index] ? 'bg-green-50 border-green-300' : 'bg-white border-slate-200 hover:border-purple-300'}`}><div className="flex items-center gap-3"><div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${checklistState[index] ? 'bg-green-500' : 'bg-slate-200'}`}>{checklistState[index] && <SafeIcon icon={FiCheck} className="w-4 h-4 text-white" />}</div><div className="flex items-center gap-2 flex-1"><span className="text-slate-400 font-medium">{index + 1}.</span><span className={checklistState[index] ? 'text-green-900 line-through' : 'text-slate-900'}>{item}</span></div></div></motion.button>)}</div></div>}
 
           {task.completion_count > 0 && <div className="mt-6 p-4 bg-purple-50 rounded-lg border border-purple-200"><div className="flex items-center gap-2 mb-2"><SafeIcon icon={FiTrendingUp} className="w-4 h-4 text-purple-600" /><span className="text-sm font-medium text-purple-900">Your Progress</span></div><p className="text-sm text-purple-800">You've completed this {task.completion_count} time{task.completion_count !== 1 ? 's' : ''}! {task.last_completed && <> Last done {format(parseISO(task.last_completed), 'MMM d')}.</>}</p></div>}
         </div>
 
-        <div className="p-6 border-t border-slate-200 bg-slate-50"><button onClick={handleComplete} disabled={completing || showCelebration} className="w-full px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">{completing ? <><div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>Confirming completion...</> : <><SafeIcon icon={FiCheck} className="w-5 h-5" />Mark as Complete</>}</button></div>
+        <div className="p-6 border-t border-slate-200 bg-slate-50"><button type="button" onClick={handleComplete} disabled={closeLocked} className="w-full px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">{completing ? <><div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>Confirming completion...</> : <><SafeIcon icon={FiCheck} className="w-5 h-5" />Mark as Complete</>}</button></div>
 
-        <AnimatePresence>{showCelebration && <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-95 z-10"><div className="text-center"><motion.div initial={{ scale: 0 }} animate={{ scale: [0, 1.2, 1] }} transition={{ duration: 0.5 }} className="text-8xl mb-4">✨</motion.div><h3 className="text-3xl font-bold text-purple-600 mb-2">Great job!</h3><p className="text-slate-600">Completion confirmed.</p></div></motion.div>}</AnimatePresence>
+        <AnimatePresence>{showCelebration && <motion.div role="status" aria-live="polite" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-95 z-10"><div className="text-center"><motion.div initial={{ scale: 0 }} animate={{ scale: [0, 1.2, 1] }} transition={{ duration: 0.5 }} className="text-8xl mb-4">✨</motion.div><h3 className="text-3xl font-bold text-purple-600 mb-2">Great job!</h3><p className="text-slate-600">Completion confirmed.</p></div></motion.div>}</AnimatePresence>
       </motion.div>
     </div>
   )

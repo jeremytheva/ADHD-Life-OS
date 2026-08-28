@@ -6,9 +6,39 @@ const json = (route, body, status = 200) => route.fulfill({
   body: JSON.stringify(body)
 })
 
-const createMockNcb = async (page, { includeProject = false } = {}) => {
+const createMockNcb = async (page, {
+  includeProject = false,
+  includeHousework = false,
+  delayHouseworkCompletion = false
+} = {}) => {
   let currentUser = null
   const preferencesByUser = new Map()
+  let releaseHouseworkCompletion
+  const houseworkCompletionGate = delayHouseworkCompletion
+    ? new Promise((resolve) => { releaseHouseworkCompletion = resolve })
+    : null
+
+  const houseworkTask = (userId, overrides = {}) => ({
+    id: 'housework-dialog-task',
+    user_id: userId,
+    task_type: 'housework',
+    title: 'Reset kitchen counters',
+    description: 'Clear and wipe the kitchen counters.',
+    room: 'kitchen',
+    frequency: 'daily',
+    estimated_duration: 10,
+    prep_time: 0,
+    cleanup_time: 0,
+    checklist: ['Clear the counters', 'Wipe the counters'],
+    required_items: ['Cleaning cloth'],
+    is_essential: false,
+    is_active: true,
+    mode: 'home',
+    next_due_date: new Date().toISOString(),
+    last_completed: null,
+    completion_count: 0,
+    ...overrides
+  })
 
   await page.route('**/api/ncb/auth/**', async (route) => {
     const request = route.request()
@@ -62,10 +92,35 @@ const createMockNcb = async (page, { includeProject = false } = {}) => {
       return json(route, [])
     }
 
+    if (includeHousework && path === 'housework-tasks' && method === 'GET') {
+      return json(route, [houseworkTask(userId)])
+    }
+
+    if (includeHousework && path === 'housework-tasks/housework-dialog-task' && method === 'GET') {
+      return json(route, houseworkTask(userId))
+    }
+
+    if (includeHousework && path === 'housework-completions' && method === 'GET') {
+      return json(route, [])
+    }
+
+    if (includeHousework && path === 'housework-completions' && method === 'POST') {
+      if (houseworkCompletionGate) await houseworkCompletionGate
+      return json(route, { id: 'housework-dialog-completion', ...request.postDataJSON() })
+    }
+
+    if (includeHousework && path === 'housework-tasks/housework-dialog-task' && method === 'PATCH') {
+      return json(route, houseworkTask(userId, request.postDataJSON()))
+    }
+
     if (method === 'GET') return json(route, [])
 
     return json(route, { error: { code: 'MOCK_DATA_ROUTE_NOT_FOUND', path, method } }, 404)
   })
+
+  return {
+    releaseHouseworkCompletion: () => releaseHouseworkCompletion?.()
+  }
 }
 
 const registerAndSkipSetup = async (page, email) => {
@@ -264,4 +319,50 @@ test('Housework Setup owns focus, exposes room-filter state, and restores its tr
   await page.keyboard.press('Escape')
   await expect(dialog).toHaveCount(0)
   await expect(trigger).toBeFocused()
+})
+
+test('Chore Detail owns focus and restores its real Housework trigger on Escape', async ({ page }) => {
+  await createMockNcb(page, { includeHousework: true })
+  await registerAndSkipSetup(page, 'chore-detail-dialog@example.test')
+  await page.goto('/housework')
+  await expect(page).toHaveURL(/\/housework$/)
+
+  const trigger = page.getByRole('button', { name: 'Open Reset kitchen counters' })
+  await trigger.click()
+
+  const dialog = page.getByRole('dialog', { name: 'Reset kitchen counters' })
+  await expect(dialog).toBeVisible()
+  await expect(dialog).toBeFocused()
+  await expect(dialog).toHaveAttribute('aria-busy', 'false')
+
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(trigger).toBeFocused()
+})
+
+test('Chore Detail keeps Escape locked during completion and celebration', async ({ page }) => {
+  const mock = await createMockNcb(page, { includeHousework: true, delayHouseworkCompletion: true })
+  await registerAndSkipSetup(page, 'chore-detail-lockout@example.test')
+  await page.goto('/housework')
+  await expect(page).toHaveURL(/\/housework$/)
+
+  await page.getByRole('button', { name: 'Open Reset kitchen counters' }).click()
+  const dialog = page.getByRole('dialog', { name: 'Reset kitchen counters' })
+  await expect(dialog).toBeFocused()
+
+  await dialog.getByRole('button', { name: 'Mark as Complete' }).click()
+  await expect(dialog).toHaveAttribute('aria-busy', 'true')
+
+  await page.keyboard.press('Escape')
+  await expect(dialog).toBeVisible()
+
+  mock.releaseHouseworkCompletion()
+  const celebration = page.getByRole('status')
+  await expect(celebration).toContainText('Completion confirmed.')
+  await expect(dialog).toBeFocused()
+  await expect(dialog).toHaveAttribute('aria-busy', 'false')
+
+  await page.keyboard.press('Escape')
+  await expect(dialog).toBeVisible()
+  await expect(dialog).toHaveCount(0, { timeout: 3000 })
 })
