@@ -9,6 +9,7 @@ ADHD Life-OS is a React and Vite life-management platform designed for supportiv
 - **Personalisation:** onboarding roles/modules plus accessibility preferences including font size, contrast, reduced motion, focus mode, dyslexic font and line spacing.
 - **Execution direction:** one unified execution/recommendation policy feeds the Today next-action experience. Durable generic Start/Continue/Recover remains provider-blocked until the real NoCodeBackend execution-session contract is certified.
 - **Provider boundary:** browser requests use stable same-origin auth/data application routes. Physical NoCodeBackend data operations are isolated server-side and currently fail closed until the target ADHD Life OS generated API is certified; deterministic tests do not count as provider evidence.
+- **Delivery control:** implementation PRs are Draft-first and progress through repository-managed implementation, validation, Ready, Mergeable and Merged gates. A new commit invalidates prior completion evidence.
 
 ## Planned integrations and limits
 
@@ -27,8 +28,9 @@ External calendar/event synchronisation, background synchronisation, remote AI/L
 - [Execution-session provider contract](docs/NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md) — Stage 3 durable execution provider requirements.
 - [Security guide](docs/SECURITY.md) — project-specific trusted boundary and secret handling.
 - [Testing guide](docs/TESTING.md) — validation layers and canonical command.
-- [Delivery guide](docs/DELIVERY.md) — project delivery/release details.
-- [Codex workflow](docs/CODEX_WORKFLOW.md) — gates, continuation and completion workflow.
+- [Delivery guide](docs/DELIVERY.md) — project delivery, lifecycle and release details.
+- [Codex workflow](docs/CODEX_WORKFLOW.md) — gates, continuation and PR lifecycle workflow.
+- [GitHub configuration](docs/GITHUB_CONFIGURATION.md) — real GitHub capabilities, lifecycle automation and remaining external enforcement gaps.
 - [Decision register](docs/DECISIONS/README.md) — consequential accepted decisions.
 
 ## Getting started
@@ -106,9 +108,11 @@ npm run validate
 
 ## Contributing
 
-Read [`AGENTS.md`](AGENTS.md), [`docs/CODEX_WORKFLOW.md`](docs/CODEX_WORKFLOW.md) and [`docs/TESTING.md`](docs/TESTING.md). Keep one focused implementation outcome per pull request, preserve project documentation/state, add regression coverage for meaningful defects and never include secrets or user data.
+Read [`AGENTS.md`](AGENTS.md), [`docs/CODEX_WORKFLOW.md`](docs/CODEX_WORKFLOW.md), [`docs/GITHUB_CONFIGURATION.md`](docs/GITHUB_CONFIGURATION.md) and [`docs/TESTING.md`](docs/TESTING.md).
 
-GitHub Issues are currently unavailable for this repository, so a focused pull-request body may serve as the implementation contract when no issue can be created.
+Keep one focused implementation outcome per Draft PR, preserve project documentation/state, add regression coverage for meaningful defects and never include secrets or user data. Repository Issues are currently disabled, so the PR body is the implementation-contract fallback. Do not mark implementation complete merely because CI passes: after the criterion audit, add `lifecycle:implementation-complete` and allow the lifecycle controller to evaluate current-head validation, review state, merge conflicts and clean mergeability.
+
+The repository currently has no `main` branch protection/ruleset. This is an explicit external GitHub configuration gap documented in [`docs/GITHUB_CONFIGURATION.md`](docs/GITHUB_CONFIGURATION.md); workflow automation should not be treated as equivalent to branch protection.
 
 ## License and support
 
