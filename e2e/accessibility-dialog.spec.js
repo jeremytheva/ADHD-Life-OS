@@ -192,6 +192,7 @@ test('Project Detail and nested Task Form preserve top-most modal ownership and 
   await page.keyboard.press('Enter')
 
   const detailDialog = page.getByRole('dialog', { name: 'Accessibility Test Project' })
+  const detailShell = page.locator('[role="dialog"][aria-labelledby="project-detail-title"]')
   await expect(detailDialog).toBeVisible()
   await expect(detailDialog).toBeFocused()
 
@@ -203,12 +204,12 @@ test('Project Detail and nested Task Form preserve top-most modal ownership and 
   await expect(page.getByLabel('Task Title *')).toBeFocused()
   await expect(page.getByLabel('Description')).toBeVisible()
   await expect(page.getByLabel('Estimated Time (minutes)')).toBeVisible()
-  await expect(detailDialog).toHaveAttribute('aria-hidden', 'true')
+  await expect(detailShell).toHaveAttribute('aria-hidden', 'true')
 
   await page.keyboard.press('Escape')
   await expect(taskDialog).toHaveCount(0)
   await expect(detailDialog).toBeVisible()
-  await expect(detailDialog).not.toHaveAttribute('aria-hidden', 'true')
+  await expect(detailShell).not.toHaveAttribute('aria-hidden', 'true')
   await expect(taskTrigger).toBeFocused()
 
   await page.keyboard.press('Escape')
