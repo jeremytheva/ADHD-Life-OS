@@ -4,6 +4,7 @@ import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 import LoadErrorState from '../../common/LoadErrorState'
 import OperationErrorState from '../../common/OperationErrorState'
+import useModalDialog from '../../common/useModalDialog'
 import { projectService } from '../../services/projectService'
 import TaskItem from './TaskItem'
 import TaskForm from './TaskForm'
@@ -28,6 +29,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
   const [editingTask, setEditingTask] = useState(null)
   const [showCelebration, setShowCelebration] = useState(false)
   const [celebrationMessage, setCelebrationMessage] = useState('')
+  const detailDialogRef = useModalDialog({ onEscape: onClose })
 
   const loadProjectDetails = useCallback(async () => {
     try {
@@ -155,6 +157,12 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <motion.div
+        ref={detailDialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-detail-title"
+        aria-hidden={showTaskForm ? 'true' : undefined}
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
@@ -165,13 +173,14 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
             <div className="flex items-center gap-3 flex-1">
               <span className="text-4xl">{project.icon}</span>
               <div className="flex-1">
-                <h2 className="text-2xl font-bold mb-2">{project.title}</h2>
+                <h2 id="project-detail-title" className="text-2xl font-bold mb-2">{project.title}</h2>
                 {project.description && (
                   <p className="text-white text-opacity-90">{project.description}</p>
                 )}
               </div>
             </div>
             <button
+              type="button"
               onClick={onClose}
               aria-label="Close project details"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
@@ -268,6 +277,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
 
           <div className="mb-4">
             <button
+              type="button"
               onClick={() => {
                 setOperationError('')
                 setShowTaskForm(true)
@@ -334,6 +344,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
               <h3 className="text-lg font-medium text-slate-900 mb-2">No tasks yet</h3>
               <p className="text-slate-600 mb-4">Break this project down into smaller, manageable tasks</p>
               <button
+                type="button"
                 onClick={() => setShowTaskForm(true)}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
