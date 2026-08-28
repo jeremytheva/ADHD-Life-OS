@@ -55,6 +55,7 @@ jobs:
           pr_json=$(gh api "repos/$REPO/pulls/$pr_number")
           state=$(jq -r '.state' <<<"$pr_json")
           base_ref=$(jq -r '.base.ref' <<<"$pr_json")
+          base_sha=$(jq -r '.base.sha' <<<"$pr_json")
           head_sha=$(jq -r '.head.sha' <<<"$pr_json")
           head_ref=$(jq -r '.head.ref' <<<"$pr_json")
           head_repo=$(jq -r '.head.repo.full_name // ""' <<<"$pr_json")
@@ -99,6 +100,12 @@ jobs:
             exit 0
           fi
 
+          latest_base_sha=$(gh api "repos/$REPO/git/ref/heads/main" --jq '.object.sha')
+          if [[ "$latest_base_sha" != "$base_sha" ]]; then
+            add_label blocked:base-update
+            exit 0
+          fi
+
           mergeable="UNKNOWN"
           for attempt in 1 2 3 4 5 6; do
             details=$(gh api graphql \
@@ -117,6 +124,15 @@ jobs:
           fi
 
           [[ "$mergeable" == "MERGEABLE" ]] || exit 0
+
+          pr_json=$(gh api "repos/$REPO/pulls/$pr_number")
+          current_head=$(jq -r '.head.sha' <<<"$pr_json")
+          current_base=$(jq -r '.base.sha' <<<"$pr_json")
+          [[ "$current_head" == "$head_sha" ]] || exit 0
+          if [[ "$current_base" != "$base_sha" ]]; then
+            add_label blocked:base-update
+            exit 0
+          fi
 
           set_state state:mergeable
 
