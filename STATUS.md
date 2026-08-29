@@ -6,15 +6,15 @@ stage: execution and next-action experience
 gate: Change
 execution_state: READY
 current_work:
-  objective: Mode Switcher dropdown/menu interaction ownership
+  objective: Today unscheduled-task progressive disclosure
   issue: null
   pr: null
   branch: null
 next_actions:
-  - Inspect Mode Switcher trigger, menu, backdrop, keyboard, focus and selected-state behaviour as one focused interaction slice.
-  - Apply the existing accessible menu/dropdown conventions without mixing modal semantics into the control.
-  - Add deterministic and browser regression coverage for open/close, Escape, focus restoration and selection behaviour.
-  - Continue client-side cognitive-load reduction after the remaining interaction findings are closed or explicitly parked.
+  - Inspect the Today unscheduled-task panel as the next client-side cognitive-load reduction slice.
+  - Reduce visual competition from potentially unbounded unscheduled tasks while preserving access to every task.
+  - Prefer a small useful default with explicit progressive disclosure and clear item counts.
+  - Add deterministic and browser regression coverage for collapsed and expanded states before lifecycle completion.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -27,11 +27,11 @@ validation:
   typecheck: PASS
   tests: PASS
   build: PASS
-  ci: PASS
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #122 implementation/test head 9e6ed862263bbad438e1ccf89f537e24e44f4135 passed exact-head Application validation run 33262375234; this STATUS-only checkpoint commit requires its own exact-head CI before PR completion.
-last_verified_commit: 9e6ed862263bbad438e1ccf89f537e24e44f4135
-last_updated: 2026-08-30T03:20:00+10:00
+validation_basis: PR #123 Mode Switcher implementation is under exact-head canonical validation after repairing a zero-warning lint failure; this STATUS-only checkpoint commit requires fresh exact-head CI before lifecycle completion.
+last_verified_commit: 63cf88561845eb14e50347fb762069a4d06e919f
+last_updated: 2026-08-30T03:24:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -39,23 +39,23 @@ last_updated: 2026-08-30T03:20:00+10:00
 **Snapshot date:** 30 August 2026  
 **Last materially reviewed:** 30 August 2026  
 **Default branch:** `main`  
-**Last verified product outcome:** PR #122 — Template Library and nested Preview/Edit stack-safe modal ownership, once this post-merge checkpoint reaches `main`  
+**Last verified product outcome:** PR #122 — Template Library and nested Preview/Edit stack-safe modal ownership  
 **Overall status:** Active development / backend work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
 ## Current objective
 
-Continue the dependency-correct frontend accessibility/reliability sequence at Mode Switcher after completing Template Library and its nested Preview/Edit modal stack.
+Complete PR #123 for Mode Switcher keyboard/focus ownership, then continue immediately with **Today unscheduled-task progressive disclosure** as the next evidence-backed client-side cognitive-load reduction slice.
 
-PR #122 applies the shared stack-aware modal contract to Template Library, Preview and Edit; preserves connected nested/direct-edit openers for deterministic focus restoration; adds semantic labels and selected-state controls; and adds deterministic plus real-browser regression coverage. The implementation/test head `9e6ed862...` passed exact-head canonical Application validation before this durable-state-only checkpoint commit.
+The next slice is grounded in the current Today implementation: the unscheduled-task panel renders every matching task directly beneath the primary next-action and scheduled-day experience. That list can grow without a display bound, creating avoidable visual competition with the execution path. The intended correction is progressive disclosure: show a small useful default and an explicit count/control for the remainder without hiding capability or changing task data.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | READY — Mode Switcher dropdown/menu interaction ownership |
-| Execution state | READY — inspect live GitHub before creating/reusing the next focused Draft PR; no prior-chat reconstruction is required |
+| Gate state | READY — Today unscheduled-task progressive disclosure after PR #123 merges |
+| Execution state | READY — finish/reconcile PR #123 first, then inspect live GitHub and create or reuse one focused Draft PR for the Today slice |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not introduce, infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -64,15 +64,15 @@ PR #122 applies the shared stack-aware modal contract to Template Library, Previ
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Primary implementation thread | Frontend accessibility/reliability — Mode Switcher dropdown/menu interaction |
-| Active application PR | None at this post-merge checkpoint; inspect live GitHub before creating work |
+| Primary implementation thread | Client-side cognitive-load reduction — Today unscheduled-task progressive disclosure after Mode Switcher completion |
+| Active application PR | PR #123 — Mode Switcher keyboard/focus ownership until merged; inspect live GitHub before creating follow-on work |
 | Last completed product outcome | PR #122 — Template Library parent/nested semantic dialog ownership, stack-aware Escape/focus restoration, connected direct-edit opener and selected-state semantics with deterministic/browser coverage |
 | Last completed delivery-control outcome | PR #120 merged through the repository lifecycle after exact-head canonical validation; autonomous continuation controls are on `main` |
 | Autonomous continuation support | IMPLEMENTED — `AGENTS.md` defines scheduled/continuous execution semantics, stop conditions, duplicate-work protection and durable state requirements; governance validation enforces the machine-readable handoff |
 | Current blocker | None for backend-independent frontend work; external GitHub branch protection/ruleset remains a configuration gap rather than a blocker |
 | Deferred dependency | NoCodeBackend/provider certification pending additional provider information |
-| Next action | Inspect and repair Mode Switcher as a focused dropdown/menu interaction slice, including trigger semantics, top-level dismissal, keyboard/focus ownership and selected-state behaviour |
-| Next queued outcome | Continue client-side cognitive-load reduction after Mode Switcher is closed or explicitly parked |
+| Next action | Finish PR #123 through canonical validation and guarded lifecycle merge; then limit the default visual footprint of Today’s unscheduled-task list with explicit progressive disclosure |
+| Next queued outcome | Continue evidence-backed client-side cognitive-load reduction after the Today unscheduled-task slice |
 
 If this checkpoint conflicts with GitHub, deployment or later provider evidence, verify the authoritative source and correct this file rather than reconstructing state from chat history.
 
@@ -83,11 +83,11 @@ A scheduled or newly-entering agent should be able to answer immediately:
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3, Change gate, execution state READY. |
-| What is already happening? | No application PR is assumed active after this checkpoint reaches `main`; inspect live GitHub first. |
-| What is the current objective? | Mode Switcher dropdown/menu interaction ownership. |
-| What has already been validated? | PR #122 implementation/test head `9e6ed862...` passed exact-head canonical Application validation; this STATUS-only checkpoint commit must also pass exact-head CI before lifecycle completion. |
-| What failed? | The earlier direct Edit regression exposed opener disconnection caused by recreating the local dropdown component; PR #122 repaired it by preserving the dropdown subtree identity. No current implementation defect remains known. |
-| What is next? | Mode Switcher trigger/menu/backdrop keyboard and focus ownership with deterministic/browser regression coverage. |
+| What is already happening? | PR #123 is the Mode Switcher interaction thread until it merges; do not create competing Mode Switcher work. |
+| What is the current objective? | Finish Mode Switcher, then Today unscheduled-task progressive disclosure. |
+| What has already been validated? | PR #122 merged after exact-head canonical validation. PR #123 initially failed the zero-warning lint gate because `focusModeItem` was omitted from an effect dependency list; that defect has been repaired and the latest head must pass fresh exact-head CI. |
+| What failed? | PR #123 validation run 224 failed only at ESLint on a missing `focusModeItem` hook dependency before later validation stages could run. |
+| What is next? | After PR #123 merges, reduce the Today unscheduled-task panel’s unbounded visual competition using progressive disclosure while preserving access to all tasks. |
 | Can I proceed autonomously? | Yes, after reconciling live PR/branch/check state; no owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency that blocks all dependency-correct work, or no actionable work. |
 
@@ -110,7 +110,7 @@ A scheduled or newly-entering agent should be able to answer immediately:
 - PR #119 merged — Routine Progress stable dialog ownership, loading/write Escape lockouts, persisted cancellation semantics, accessible progressbar and deterministic/browser regression coverage.
 - PR #120 merged — repository-level autonomous project continuation contract, machine-readable state handoff and executable governance enforcement.
 - PR #121 merged — Routine Statistics stable dialog ownership, explicit retrieval failure/retry, accessible close/timeframe/progress semantics and deterministic/browser regression coverage.
-- PR #122 completed for post-merge state — Template Library, Preview and Edit share stack-aware modal ownership; nested/direct-edit focus restoration and selected-state semantics are protected by deterministic and browser regression coverage.
+- PR #122 merged — Template Library, Preview and Edit share stack-aware modal ownership; nested/direct-edit focus restoration and selected-state semantics are protected by deterministic and browser regression coverage.
 
 ## Delivery-control verification
 
@@ -185,9 +185,29 @@ The split workflow governs the normal repository path but cannot prohibit every 
 - category and grid/list controls expose selected state with `aria-pressed`;
 - deterministic source-contract and real-browser coverage protect nested/direct-edit focus restoration.
 
-### Remaining modal/menu findings
+### Mode Switcher — PR #123 in validation
 
-- **Mode Switcher:** dropdown/backdrop behaviour remains the next separate menu interaction problem. Treat it as a menu/dropdown slice rather than extending modal semantics into it.
+- trigger exposes explicit button/popup/expanded/control semantics and an icon-only accessible name;
+- opening moves focus to the current mode choice;
+- choices use single-selection menu semantics and expose selected state;
+- Arrow Up/Down, Home and End provide predictable keyboard movement;
+- Escape owns the top-most switcher interaction, stops propagation to mobile navigation and restores the trigger;
+- selection and outside dismissal restore trigger focus;
+- the statistics toggle is explicitly named and stateful;
+- deterministic source-contract and browser coverage include desktop keyboard selection/restoration and nested mobile-navigation Escape ownership.
+
+### Remaining recorded interaction findings
+
+- No additional named modal/menu defect is currently recorded after Mode Switcher. Continue with roadmap-priority client-side cognitive-load reduction rather than inventing further modal work.
+
+## Client-side cognitive-load findings
+
+### Today unscheduled tasks — next
+
+- `TodayView` renders every unscheduled task directly in the amber panel beneath the primary execution experience;
+- the current list has no default display bound or progressive-disclosure control;
+- the next focused correction should keep all tasks reachable while showing a small default subset, the hidden-item count, and an explicit show-more/show-less control;
+- do not alter task scheduling, completion, persistence or recommendation policy as part of this UI-only slice.
 
 ## Backend / provider work — intentionally deferred
 
@@ -203,8 +223,8 @@ While deferred:
 
 ## Quality / technical state
 
-- No known application defect currently overrides the queued Mode Switcher interaction work.
-- ESLint is clean and CI enforces **0 warnings** on the last verified implementation head.
+- No known application defect currently overrides PR #123 and the queued Today cognitive-load slice.
+- ESLint enforces **0 warnings**; PR #123’s first validation attempt correctly blocked a missing hook dependency and the repair requires exact-head revalidation.
 - Mixed JavaScript/TypeScript checking remains an accepted current constraint.
 - Responsive shell/navigation coverage is merged for desktop and phone-width paths.
 - Shared modal/focus behaviour is verified across global dialogs, Tasks, Projects, Routine Form, Housework Setup, Chore Detail, Routine Progress, Routine Statistics and Template Library/Preview/Edit.
@@ -223,7 +243,7 @@ While deferred:
 | Autonomous continuation contract | IMPLEMENTED / VALIDATED | Repository entry order, continuation semantics, stop conditions, duplicate-work protection, scheduled-entry requirements and state schema are executable controls |
 | Branch protection/ruleset | NOT CONFIGURED | External setting still required for independent direct-push/bypass enforcement |
 | GitHub Issues | DISABLED | Focused PR body remains implementation-contract fallback |
-| Shared modal interaction contract | IMPLEMENTED / ROLLED OUT TO CURRENT FINDINGS | Template Library/Preview/Edit completes the recorded modal slices; Mode Switcher remains a separate menu interaction slice |
+| Shared modal interaction contract | IMPLEMENTED / ROLLED OUT TO RECORDED MODAL FINDINGS | Template Library/Preview/Edit completes the recorded modal slices; Mode Switcher is being closed separately as a menu interaction |
 | Physical NoCodeBackend adapter | IMPLEMENTED / DEFERRED | Fail-closed production mapping remains unverified |
 | Generic `execution-sessions` | IMPLEMENTED TOOLING / DEFERRED | Provider capability remains unverified |
 | Vercel | NOT CONFIGURED / UNVERIFIED | No ADHD Life OS production project binding is currently established |
@@ -232,14 +252,15 @@ While deferred:
 
 ### Current
 
-1. inspect live GitHub state for any active/overlapping work before creating a branch;
-2. create or reuse one focused Draft PR for Mode Switcher interaction ownership;
-3. inspect trigger, popup/menu, backdrop dismissal, keyboard paths, focus movement/restoration and current selection semantics as one integration path;
-4. use accessible menu/dropdown semantics consistent with existing application conventions and avoid modal semantics for this control;
-5. add deterministic source-contract coverage for trigger/menu ownership and selected state;
-6. add real-browser coverage for open, selection, Escape/outside dismissal and opener focus restoration;
-7. update durable state to the next evidence-backed client-side cognitive-load reduction slice before lifecycle completion;
-8. continue dependency-correct client-side work until a real escalation condition is reached.
+1. reconcile live PR #123 head/check/review state and finish the existing Mode Switcher thread before creating any new work;
+2. require exact-head canonical validation after the hook-dependency repair and this durable-state update;
+3. audit PR #123 against its full acceptance contract, then apply `lifecycle:implementation-complete` only if no in-scope work remains;
+4. allow the repository lifecycle to progress Ready → Mergeable → Merged through the guarded finalizer;
+5. after merge, create or reuse one focused Draft PR for Today unscheduled-task progressive disclosure;
+6. render a small default subset of unscheduled tasks with explicit total/hidden count and show-more/show-less control while preserving access to every item;
+7. add deterministic and browser regression coverage for collapsed/expanded behaviour and ensure no scheduling/persistence semantics change;
+8. update durable state to the next evidence-backed client-side cognitive-load reduction slice before lifecycle completion;
+9. continue dependency-correct client-side work until a real escalation condition is reached.
 
 ### External GitHub configuration
 

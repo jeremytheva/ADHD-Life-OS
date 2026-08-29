@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -10,13 +10,82 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
   const { currentMode, allModes, switchMode, getModeStats } = useMode()
   const [isOpen, setIsOpen] = useState(false)
   const [showStats, setShowStats] = useState(false)
+  const triggerRef = useRef(null)
+  const modeItemRefs = useRef([])
 
   const stats = getModeStats()
+  const menuId = 'mode-switcher-menu'
+
+  const focusModeItem = useCallback((index) => {
+    const itemCount = allModes.length
+    if (!itemCount) return
+    const nextIndex = (index + itemCount) % itemCount
+    modeItemRefs.current[nextIndex]?.focus()
+  }, [allModes.length])
+
+  const restoreTriggerFocus = () => {
+    window.requestAnimationFrame(() => triggerRef.current?.focus())
+  }
+
+  const closeMenu = ({ restoreFocus = true } = {}) => {
+    setIsOpen(false)
+    if (restoreFocus) restoreTriggerFocus()
+  }
+
+  const openMenu = () => {
+    setIsOpen(true)
+  }
+
+  const handleTriggerClick = () => {
+    if (isOpen) {
+      closeMenu()
+      return
+    }
+    openMenu()
+  }
 
   const handleModeSelect = (modeId) => {
     switchMode(modeId)
-    setIsOpen(false)
+    closeMenu()
   }
+
+  const handleMenuKeyDown = (event) => {
+    const activeIndex = Math.max(0, allModes.findIndex((mode) => mode.id === document.activeElement?.dataset?.modeId))
+
+    switch (event.key) {
+      case 'Escape':
+        event.preventDefault()
+        event.stopPropagation()
+        closeMenu()
+        break
+      case 'ArrowDown':
+        event.preventDefault()
+        focusModeItem(activeIndex + 1)
+        break
+      case 'ArrowUp':
+        event.preventDefault()
+        focusModeItem(activeIndex - 1)
+        break
+      case 'Home':
+        event.preventDefault()
+        focusModeItem(0)
+        break
+      case 'End':
+        event.preventDefault()
+        focusModeItem(allModes.length - 1)
+        break
+      default:
+        break
+    }
+  }
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const activeIndex = Math.max(0, allModes.findIndex((mode) => mode.id === currentMode.id))
+    const frame = window.requestAnimationFrame(() => focusModeItem(activeIndex))
+    return () => window.cancelAnimationFrame(frame)
+  }, [isOpen, allModes, currentMode.id, focusModeItem])
 
   const sizeClasses = {
     small: 'text-sm px-3 py-1.5',
@@ -28,7 +97,13 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
     <div className="relative">
       {/* Current Mode Button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        ref={triggerRef}
+        type="button"
+        onClick={handleTriggerClick}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? menuId : undefined}
+        aria-label={showLabel ? undefined : `Switch context. Current context: ${currentMode.label}`}
         className={`
           bg-gradient-to-r ${currentMode.gradient}
           text-white rounded-lg
@@ -37,12 +112,13 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
           ${sizeClasses[size]}
         `}
       >
-        <span className="text-lg">{currentMode.icon}</span>
+        <span className="text-lg" aria-hidden="true">{currentMode.icon}</span>
         {showLabel && (
           <>
             <span className="font-medium">{currentMode.label}</span>
-            <SafeIcon 
-              icon={FiChevronDown} 
+            <SafeIcon
+              icon={FiChevronDown}
+              aria-hidden="true"
               className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
             />
           </>
@@ -54,27 +130,32 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
         {isOpen && (
           <>
             {/* Backdrop */}
-            <div 
-              className="fixed inset-0 z-40" 
-              onClick={() => setIsOpen(false)}
+            <div
+              className="fixed inset-0 z-40"
+              aria-hidden="true"
+              onClick={() => closeMenu()}
             />
 
-            {/* Menu */}
+            {/* Popup */}
             <motion.div
               initial={{ opacity: 0, y: -10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               className="absolute top-full mt-2 right-0 w-80 bg-white rounded-lg shadow-2xl border border-slate-200 overflow-hidden z-50"
+              onKeyDown={handleMenuKeyDown}
             >
               {/* Header */}
               <div className="bg-gradient-to-r from-slate-50 to-slate-100 px-4 py-3 border-b border-slate-200">
                 <div className="flex items-center justify-between">
                   <h3 className="font-medium text-slate-900">Switch Context</h3>
                   <button
+                    type="button"
                     onClick={() => setShowStats(!showStats)}
+                    aria-label="Toggle context statistics"
+                    aria-pressed={showStats}
                     className="p-1 text-slate-600 hover:text-slate-900 rounded transition-colors"
                   >
-                    <SafeIcon icon={FiSettings} className="w-4 h-4" />
+                    <SafeIcon icon={FiSettings} aria-hidden="true" className="w-4 h-4" />
                   </button>
                 </div>
                 <p className="text-xs text-slate-600 mt-1">
@@ -89,6 +170,7 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   className="bg-blue-50 px-4 py-3 border-b border-blue-200"
+                  aria-live="polite"
                 >
                   <div className="text-xs text-blue-900">
                     <div className="font-medium mb-1">Last 24 hours:</div>
@@ -105,7 +187,12 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
               )}
 
               {/* Mode List */}
-              <div className="max-h-96 overflow-y-auto">
+              <div
+                id={menuId}
+                role="menu"
+                aria-label="Available contexts"
+                className="max-h-96 overflow-y-auto"
+              >
                 {allModes.map((mode, index) => {
                   const isActive = currentMode.id === mode.id
                   const usageCount = stats.modeCounts[mode.id] || 0
@@ -113,6 +200,12 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
                   return (
                     <motion.button
                       key={mode.id}
+                      ref={(element) => { modeItemRefs.current[index] = element }}
+                      type="button"
+                      role="menuitemradio"
+                      aria-checked={isActive}
+                      tabIndex={isActive ? 0 : -1}
+                      data-mode-id={mode.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.03 }}
@@ -130,18 +223,19 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
                           bg-gradient-to-br ${mode.gradient}
                           flex items-center justify-center
                           text-xl
-                        `}>
+                        `} aria-hidden="true">
                           {mode.icon}
                         </div>
-                        
+
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-slate-900">
                               {mode.label}
                             </span>
                             {isActive && (
-                              <SafeIcon 
-                                icon={FiCheck} 
+                              <SafeIcon
+                                icon={FiCheck}
+                                aria-hidden="true"
                                 className="w-4 h-4 text-green-600"
                               />
                             )}
