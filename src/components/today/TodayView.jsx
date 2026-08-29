@@ -15,6 +15,7 @@ import NextActionPanel from './NextActionPanel'
 const GamificationDashboard = lazy(() => import('../gamification/GamificationDashboard'))
 
 const { FiRefreshCw, FiAward } = FiIcons
+const DEFAULT_UNSCHEDULED_LIMIT = 3
 
 const ModalLoadingFallback = () => (
   <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black bg-opacity-40" role="status" aria-live="polite">
@@ -31,6 +32,7 @@ const TodayView = () => {
   const [operationError, setOperationError] = useState(null)
   const [pendingTaskId, setPendingTaskId] = useState(null)
   const [showGamification, setShowGamification] = useState(false)
+  const [showAllUnscheduled, setShowAllUnscheduled] = useState(false)
 
   const loadTimeline = useCallback(async () => {
     try {
@@ -47,6 +49,7 @@ const TodayView = () => {
             }
             return true
           })
+      setShowAllUnscheduled(false)
       setTimeline({
         blocks: filteredBlocks,
         unscheduledTasks: filterByMode(schedule.unscheduledTasks, 'task')
@@ -106,6 +109,12 @@ const TodayView = () => {
     { name: 'Afternoon', key: 'afternoon', blocks: groupedBlocks.afternoon },
     { name: 'Evening', key: 'evening', blocks: groupedBlocks.evening }
   ]
+  const unscheduledTaskCount = timeline.unscheduledTasks.length
+  const visibleUnscheduledTasks = showAllUnscheduled
+    ? timeline.unscheduledTasks
+    : timeline.unscheduledTasks.slice(0, DEFAULT_UNSCHEDULED_LIMIT)
+  const hiddenUnscheduledCount = Math.max(0, unscheduledTaskCount - visibleUnscheduledTasks.length)
+  const hasAdditionalUnscheduledTasks = unscheduledTaskCount > DEFAULT_UNSCHEDULED_LIMIT
 
   return (
     <div className="p-6 space-y-6">
@@ -134,12 +143,28 @@ const TodayView = () => {
         ))}
       </div>
 
-      {timeline.unscheduledTasks.length > 0 && (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-amber-50 border border-amber-200 rounded-lg p-6">
-          <h2 className="text-lg font-medium text-amber-900 mb-4">Unscheduled Tasks</h2>
-          <div className="space-y-2">{timeline.unscheduledTasks.map((task) => <div key={task.id} className="text-amber-800">• {task.title}</div>)}</div>
+      {unscheduledTaskCount > 0 && (
+        <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-amber-50 border border-amber-200 rounded-lg p-6" aria-labelledby="unscheduled-tasks-title">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <h2 id="unscheduled-tasks-title" className="text-lg font-medium text-amber-900">Unscheduled Tasks</h2>
+            <span className="text-sm font-medium text-amber-800">{unscheduledTaskCount} total</span>
+          </div>
+          <ul id="today-unscheduled-task-list" className="space-y-2">
+            {visibleUnscheduledTasks.map((task) => <li key={task.id} className="text-amber-800">• {task.title}</li>)}
+          </ul>
+          {hasAdditionalUnscheduledTasks && (
+            <button
+              type="button"
+              onClick={() => setShowAllUnscheduled((current) => !current)}
+              aria-expanded={showAllUnscheduled}
+              aria-controls="today-unscheduled-task-list"
+              className="mt-4 rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100"
+            >
+              {showAllUnscheduled ? 'Show less' : `Show ${hiddenUnscheduledCount} more`}
+            </button>
+          )}
           <p className="text-sm text-amber-700 mt-4">These tasks couldn't fit in today's schedule. Consider moving some to tomorrow or adjusting their duration.</p>
-        </motion.div>
+        </motion.section>
       )}
 
       <Suspense fallback={<ModalLoadingFallback />}><AnimatePresence>{showGamification && <GamificationDashboard onClose={() => setShowGamification(false)} />}</AnimatePresence></Suspense>
