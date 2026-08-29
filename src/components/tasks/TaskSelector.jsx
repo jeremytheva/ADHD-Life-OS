@@ -5,9 +5,9 @@ import SafeIcon from '../../common/SafeIcon'
 import { taskRecommender } from '../../services/taskRecommender'
 import { taskService } from '../../services/taskService'
 
-const { 
-  FiZap, 
-  FiTarget, 
+const {
+  FiZap,
+  FiTarget,
   FiCoffee,
   FiSliders,
   FiMapPin,
@@ -43,9 +43,9 @@ const TaskSelector = ({ onSelectTask }) => {
         recs = taskRecommender.getRecommendations(allTasks, userState)
       } else {
         recs = taskRecommender.getPathRecommendations(
-          allTasks, 
-          selectedPath, 
-          userState, 
+          allTasks,
+          selectedPath,
+          userState,
           3
         )
       }
@@ -94,29 +94,29 @@ const TaskSelector = ({ onSelectTask }) => {
   }
 
   const pathOptions = [
-    { 
-      value: 'all', 
-      label: 'Smart Mix', 
+    {
+      value: 'all',
+      label: 'Smart Mix',
       icon: FiSliders,
-      description: 'Best tasks across all paths' 
+      description: 'Best tasks across all paths'
     },
-    { 
-      value: 'quick_win', 
-      label: 'Quick Wins', 
+    {
+      value: 'quick_win',
+      label: 'Quick Wins',
       icon: FiZap,
-      description: 'Fast & easy dopamine hits' 
+      description: 'Fast & easy dopamine hits'
     },
-    { 
-      value: 'momentum', 
-      label: 'Momentum', 
+    {
+      value: 'momentum',
+      label: 'Momentum',
       icon: FiTarget,
-      description: 'Build productive flow' 
+      description: 'Build productive flow'
     },
-    { 
-      value: 'brave_frog', 
-      label: 'Brave Frog', 
+    {
+      value: 'brave_frog',
+      label: 'Brave Frog',
       icon: FiCoffee,
-      description: 'Tackle the tough stuff' 
+      description: 'Tackle the tough stuff'
     }
   ]
 
@@ -135,17 +135,21 @@ const TaskSelector = ({ onSelectTask }) => {
       <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg border border-purple-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-xl font-bold text-slate-900">What should I do next?</h2>
+            <h2 id="task-selector-heading" className="text-xl font-bold text-slate-900">What should I do next?</h2>
             <p className="text-sm text-slate-600 mt-1">
               Smart recommendations based on your current state
             </p>
           </div>
           <button
+            type="button"
+            aria-label={showFilters ? 'Hide recommendation filters' : 'Show recommendation filters'}
+            aria-expanded={showFilters}
+            aria-controls="task-selector-filters"
             onClick={() => setShowFilters(!showFilters)}
             className={`
               p-2 rounded-lg transition-colors
-              ${showFilters 
-                ? 'bg-purple-600 text-white' 
+              ${showFilters
+                ? 'bg-purple-600 text-white'
                 : 'text-purple-600 hover:bg-purple-100'
               }
             `}
@@ -155,10 +159,16 @@ const TaskSelector = ({ onSelectTask }) => {
         </div>
 
         {/* Path Selection Tabs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+        <div
+          role="group"
+          aria-label="Recommendation path"
+          className="grid grid-cols-2 md:grid-cols-4 gap-2"
+        >
           {pathOptions.map(option => (
             <button
+              type="button"
               key={option.value}
+              aria-pressed={selectedPath === option.value}
               onClick={() => setSelectedPath(option.value)}
               className={`
                 p-3 rounded-lg text-left transition-all
@@ -169,11 +179,11 @@ const TaskSelector = ({ onSelectTask }) => {
               `}
             >
               <div className="flex items-center gap-2 mb-1">
-                <SafeIcon 
-                  icon={option.icon} 
+                <SafeIcon
+                  icon={option.icon}
                   className={`w-4 h-4 ${
                     selectedPath === option.value ? 'text-purple-600' : 'text-slate-600'
-                  }`} 
+                  }`}
                 />
                 <span className={`text-sm font-medium ${
                   selectedPath === option.value ? 'text-purple-900' : 'text-slate-700'
@@ -191,6 +201,7 @@ const TaskSelector = ({ onSelectTask }) => {
       <AnimatePresence>
         {showFilters && (
           <motion.div
+            id="task-selector-filters"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -199,6 +210,8 @@ const TaskSelector = ({ onSelectTask }) => {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-medium text-slate-900">Your Current State</h3>
               <button
+                type="button"
+                aria-label="Hide recommendation filters"
                 onClick={() => setShowFilters(false)}
                 className="p-1 text-slate-400 hover:text-slate-600"
               >
@@ -209,14 +222,16 @@ const TaskSelector = ({ onSelectTask }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Energy Level */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <div id="task-selector-energy-label" className="block text-sm font-medium text-slate-700 mb-2">
                   <SafeIcon icon={FiZap} className="w-4 h-4 inline mr-1" />
                   Energy Level
-                </label>
-                <div className="flex gap-2">
+                </div>
+                <div role="group" aria-labelledby="task-selector-energy-label" className="flex gap-2">
                   {['low', 'medium', 'high'].map(level => (
                     <button
+                      type="button"
                       key={level}
+                      aria-pressed={userState.current_energy === level}
                       onClick={() => handleUpdateUserState('current_energy', level)}
                       className={`
                         flex-1 px-3 py-2 rounded-lg text-sm transition-colors
@@ -234,14 +249,16 @@ const TaskSelector = ({ onSelectTask }) => {
 
               {/* Available Time */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <div id="task-selector-time-label" className="block text-sm font-medium text-slate-700 mb-2">
                   <SafeIcon icon={FiClock} className="w-4 h-4 inline mr-1" />
                   Available Time
-                </label>
-                <div className="flex gap-2">
+                </div>
+                <div role="group" aria-labelledby="task-selector-time-label" className="flex gap-2">
                   {[15, 30, 60, 90].map(time => (
                     <button
+                      type="button"
                       key={time}
+                      aria-pressed={userState.available_time === time}
                       onClick={() => handleUpdateUserState('available_time', time)}
                       className={`
                         flex-1 px-3 py-2 rounded-lg text-sm transition-colors
@@ -259,11 +276,12 @@ const TaskSelector = ({ onSelectTask }) => {
 
               {/* Location */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="task-selector-location" className="block text-sm font-medium text-slate-700 mb-2">
                   <SafeIcon icon={FiMapPin} className="w-4 h-4 inline mr-1" />
                   Location (optional)
                 </label>
                 <input
+                  id="task-selector-location"
                   type="text"
                   value={userState.current_location}
                   onChange={(e) => handleUpdateUserState('current_location', e.target.value)}
@@ -274,18 +292,20 @@ const TaskSelector = ({ onSelectTask }) => {
 
               {/* Mood */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <div id="task-selector-mood-label" className="block text-sm font-medium text-slate-700 mb-2">
                   <SafeIcon icon={FiHeart} className="w-4 h-4 inline mr-1" />
                   Mood
-                </label>
-                <div className="flex gap-2">
+                </div>
+                <div role="group" aria-labelledby="task-selector-mood-label" className="flex gap-2">
                   {[
                     { value: 'motivated', emoji: '🚀' },
                     { value: 'neutral', emoji: '😊' },
                     { value: 'struggling', emoji: '😓' }
                   ].map(mood => (
                     <button
+                      type="button"
                       key={mood.value}
+                      aria-pressed={userState.mood === mood.value}
                       onClick={() => handleUpdateUserState('mood', mood.value)}
                       className={`
                         flex-1 px-3 py-2 rounded-lg text-sm transition-colors
@@ -398,6 +418,7 @@ const TaskSelector = ({ onSelectTask }) => {
 
                 {/* Action Button */}
                 <button
+                  type="button"
                   onClick={() => onSelectTask && onSelectTask(rec.task)}
                   className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
                 >
