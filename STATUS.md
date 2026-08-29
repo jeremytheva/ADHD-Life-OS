@@ -6,15 +6,14 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Tasks sort-state integrity and control-density reduction
+  objective: Project card keyboard and menu interaction integrity
   issue: null
-  pr: 125
-  branch: fix/task-sort-state-integrity
+  pr: 126
+  branch: fix/project-card-keyboard-menu
 next_actions:
-  - Require fresh exact-head canonical validation for this status-bearing PR #125 head.
-  - Audit PR #125 against its acceptance contract and confirm no blocking review finding remains.
-  - Advance PR #125 through Ready, Mergeable and Merged only if exact-head evidence remains green.
-  - After merge, inspect the remaining Stage 3 frontend surfaces and select the next evidence-backed dependency-correct slice rather than inventing new work.
+  - Require fresh exact-head canonical validation for this final PR #126 status-bearing head.
+  - Advance PR #126 through Ready, Mergeable and Merged only when exact-head evidence remains green.
+  - After merge, continue with Template Apply menu keyboard and focus ownership as the next evidence-backed Stage 3 slice.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -29,9 +28,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #125 implementation/test head c39e3f6199412446801603a869037438c74cd129 passed exact-head Validate application and lifecycle reconciliation; this STATUS checkpoint commit invalidates that exact-head evidence and requires a fresh canonical run before lifecycle completion.
-last_verified_commit: c39e3f6199412446801603a869037438c74cd129
-last_updated: 2026-08-30T04:10:00+10:00
+validation_basis: Exact-head application validation and lifecycle reconciliation passed on implementation/status-repair head 9c212f853413fd1f5b78ab3afaaa276daf3ac346, with no unresolved review threads. This final durable-handoff commit invalidates that exact-head evidence and requires one fresh canonical run before lifecycle completion.
+last_verified_commit: 9c212f853413fd1f5b78ab3afaaa276daf3ac346
+last_updated: 2026-08-30T05:22:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,19 +42,21 @@ last_updated: 2026-08-30T04:10:00+10:00
 
 ## Current objective
 
-Finish **PR #125 — Tasks sort-state integrity and control-density reduction** through exact-head lifecycle validation and merge.
+Finish **PR #126 — Project card keyboard and menu interaction integrity** through its final exact-head lifecycle validation.
 
-PR #124 is merged. PR #125 repairs the established Tasks sorting defect where mode preferences could keep the actual list priority-sorted while the UI displayed another selected sort. The branch now uses one authoritative `sortBy` state for both ordering and presentation, synchronizes that state when the active mode preference context changes, and replaces four simultaneous sort buttons with one labelled accessible select while preserving Priority, Due Date, Recently Added and A–Z.
+PR #125 merged successfully and corrected Tasks sort-state divergence. Post-merge inspection found the next evidence-backed Stage 3 accessibility defect in `ProjectCard`: the header and statistics regions used pointer-only `onClick` navigation despite an existing native View Details control, while the actions popover claimed `menu` semantics without the corresponding keyboard/focus behaviour.
 
-Deterministic source-contract coverage and Playwright browser coverage verify selected value and actual task order stay aligned. The implementation/test head `c39e3f6199412446801603a869037438c74cd129` passed the canonical application validation and lifecycle reconciliation. This documentation checkpoint is a new commit, so fresh exact-head validation is required before lifecycle completion.
+PR #126 removes those redundant pointer-only activation regions, preserves the explicit View Details button, focuses the first project action when the menu opens, supports Arrow Up/Down plus Home/End navigation, closes on Escape, and restores focus to the trigger after Escape. Edit, Archive and Delete remain available and provider/data behaviour is unchanged. Deterministic regression coverage protects the interaction contract.
+
+The repaired implementation/status head `9c212f853413fd1f5b78ab3afaaa276daf3ac346` passed exact-head canonical application validation and lifecycle reconciliation, and the PR has no unresolved review threads. This checkpoint records the truthful next post-merge objective, so it creates a new head and requires one fresh exact-head canonical run before lifecycle completion.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — PR #125 implementation complete; fresh exact-head evidence required after durable-state checkpoint |
-| Execution state | VALIDATING — do not merge until the current status-bearing head passes canonical validation and the acceptance audit remains clean |
+| Gate state | VALIDATING — implementation and acceptance audit are complete; final exact-head evidence is required after the durable handoff checkpoint |
+| Execution state | VALIDATING — keep PR #126 Draft until the current status-bearing head passes canonical validation |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -64,67 +65,56 @@ Deterministic source-contract coverage and Playwright browser coverage verify se
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Active application PR | PR #125 — Tasks sort-state integrity and control-density reduction |
-| Current implementation outcome | One authoritative sort state drives order and visible selection; four sort buttons are consolidated into one accessible select; deterministic and real-browser coverage protect the contract |
-| Last completed product outcome on `main` | PR #124 — Today unscheduled-task progressive disclosure |
-| Autonomous continuation support | IMPLEMENTED / VALIDATED through `AGENTS.md`, machine-readable `STATUS.md`, governance checks and guarded PR lifecycle workflows |
-| Current blocker | None for backend-independent frontend work |
+| Active application PR | PR #126 — Project card keyboard and menu interaction integrity |
+| Current implementation outcome | One explicit native project-opening control; project actions menu has initial focus, arrow/Home/End navigation, Escape dismissal and trigger focus restoration |
+| Last completed product outcome on `main` | PR #125 — Tasks sort-state integrity and control-density reduction |
+| Current blocker | None for backend-independent frontend work; final exact-head validation is pending for this documentation checkpoint |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Obtain exact-head validation for this checkpoint, complete the PR #125 acceptance audit, then allow the guarded lifecycle to merge it if evidence remains green |
-
-If this checkpoint conflicts with live GitHub state, later deployment evidence or later provider evidence, verify the authoritative source and correct this file rather than reconstructing state from chat history.
+| Next post-merge objective | Template Apply menu keyboard and focus ownership: the existing `role="menu"` Apply dropdown exposes menu semantics but currently lacks initial item focus, Arrow/Home/End navigation and Escape-to-trigger focus restoration. |
+| Next action | Obtain exact-head canonical validation for this checkpoint, then advance PR #126 only if evidence remains green |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3, Change gate, execution state VALIDATING. |
-| What is already happening? | PR #125 is the active application thread. |
-| What has been validated? | PR #125 implementation/test head `c39e3f619...` passed exact-head application validation and lifecycle reconciliation; this status-bearing head still requires fresh exact-head validation. |
-| What changed? | Tasks sorting now has one authoritative state and one accessible sort control, so visible selection and actual ordering cannot diverge through the prior mode-preference precedence path. |
-| What is next? | Finish PR #125 lifecycle, then inspect the remaining Stage 3 frontend surfaces for the next evidence-backed dependency-correct slice. |
+| What is already happening? | PR #126 is the active application thread and remains Draft pending final exact-head evidence. |
+| What has been validated? | Head `9c212f853413fd1f5b78ab3afaaa276daf3ac346` passed canonical application validation and lifecycle reconciliation; no review threads remain. This checkpoint requires fresh exact-head validation because it is a new commit. |
+| What changed? | Project-card activation and actions-menu keyboard/focus ownership are implemented and validated on the preceding exact head. |
+| What is next? | Finish PR #126 lifecycle; after merge, harden the Template Apply menu's keyboard and focus ownership without reopening the completed modal-stack work. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
-| Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
+| Why should I stop? | Only for a stop/escalation condition defined in AGENTS.md, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-- PR #119 — Routine Progress stable dialog ownership, write lockouts, cancellation semantics and browser coverage.
-- PR #120 — repository-level autonomous continuation contract, machine-readable state handoff and executable governance enforcement.
-- PR #121 — Routine Statistics dialog ownership, explicit retrieval failure/retry and accessible timeframe/progress semantics.
-- PR #122 — Template Library / Preview / Edit stack-safe modal ownership and nested/direct-edit focus restoration.
-- PR #123 — Mode Switcher accessible menu semantics, keyboard navigation, nested Escape ownership and focus restoration.
-- PR #124 — Today unscheduled-task progressive disclosure with bounded default presentation and browser regression coverage.
-- PR #125 — implementation complete on its implementation/test head; merge remains pending until the final status-bearing head passes exact-head lifecycle validation.
-
-## Delivery-control state
-
-The verified repository lifecycle remains:
-
-```text
-DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
-```
-
-`npm run platform:validate` is the canonical validation gate and includes dependency audit, governance, zero-warning lint, typecheck, deterministic tests, production build and Playwright coverage. A new commit invalidates earlier exact-head evidence. `lifecycle:implementation-complete` is applied only after the full acceptance contract and post-merge status checkpoint are satisfied.
-
-Known external GitHub configuration gaps remain branch protection/ruleset enforcement, Issues disabled, Projects disabled, native auto-merge disabled and update-branch support disabled. The repository workflows govern the normal path but do not replace independent branch protection.
+- PR #120 — repository-level autonomous continuation contract and executable governance enforcement.
+- PR #121 — Routine Statistics dialog ownership and accessible retrieval/progress semantics.
+- PR #122 — Template Library / Preview / Edit stack-safe modal ownership and focus restoration.
+- PR #123 — Mode Switcher keyboard/menu semantics and focus restoration.
+- PR #124 — Today unscheduled-task progressive disclosure.
+- PR #125 — Tasks sort-state integrity and one accessible sort control.
 
 ## Interaction and cognitive-load state
 
-### Completed interaction slices
+### Completed
 
-- Routine Progress, Routine Statistics, Template Library / Preview / Edit, and Mode Switcher have explicit focus/keyboard/selected-state contracts with deterministic and browser coverage.
+- Routine Progress, Routine Statistics, Template Library / Preview / Edit modal stack and Mode Switcher have explicit focus/keyboard contracts with regression coverage.
 - Today progressively discloses unscheduled work rather than rendering an unbounded competing list by default.
-- No additional named modal/menu defect is currently recorded; do not invent more modal work without evidence.
+- Tasks sorting uses one authoritative state and one accessible sort control.
 
-### Tasks sorting — PR #125
+### Active — Project cards / PR #126
 
-- One `sortBy` state drives both actual list ordering and the visible selected value.
-- Active mode preference initializes/synchronizes the local authoritative state when mode context changes without overriding later local selection on each render.
-- One labelled native select replaces four simultaneous sort buttons.
-- Priority, Due Date, Recently Added and A–Z remain available.
-- Browser coverage proves A–Z, Due Date and Recently Added selections produce corresponding real task ordering.
-- Priority-card presentation remains tied to the authoritative Priority selection.
-- Task data, filtering, completion, persistence, recommendation and mode-preference storage semantics are unchanged.
+- Remove duplicate pointer-only project-opening regions.
+- Preserve native View Details activation.
+- Keep project actions trigger labelled with expanded/menu semantics.
+- Focus the first menu item when opened.
+- Support Arrow Up/Down, Home and End among menu items.
+- Escape dismisses the menu and restores trigger focus.
+- Preserve Edit, Archive and Delete actions.
+
+### Next evidence-backed slice — Template Apply menu
+
+Repository inspection confirms `TemplateCard` exposes its Apply dropdown as `role="menu"` with `menuitem` children but does not yet implement the keyboard/focus ownership expected by that semantic contract. The next slice should add initial item focus, Arrow Up/Down, Home/End navigation, Escape dismissal and trigger focus restoration while preserving the already-completed Preview/Edit modal-stack behaviour from PR #122.
 
 ## Backend / provider work — intentionally deferred
 
@@ -136,14 +126,12 @@ While deferred:
 - do not substitute another project’s NoCodeBackend contract;
 - do not use browser persistence as fake durable execution;
 - do not claim durable cross-reload/cross-device execution recovery;
-- do not let provider uncertainty block independent frontend, accessibility, testing or maintainability work.
+- continue independent frontend, accessibility, testing and maintainability work.
 
 ## Quality / technical state
 
-- No known source defect currently outranks completing PR #125 through its evidence-controlled lifecycle.
-- ESLint enforces zero warnings; typecheck, deterministic tests, build and Playwright are part of the canonical gate.
+- `npm run platform:validate` remains the canonical validation gate and includes dependency audit, governance, zero-warning lint, typecheck, deterministic tests, production build and critical Playwright coverage.
 - Mixed JavaScript/TypeScript checking remains an accepted current constraint.
-- Responsive shell/navigation coverage is merged for desktop and phone-width paths.
 - Production deployment is not configured or verified for ADHD Life OS in the connected Vercel account.
 - `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only.
 
@@ -159,17 +147,14 @@ While deferred:
 | Decisions/register | `docs/DECISIONS/` |
 | CI/lifecycle workflows | `.github/workflows/` |
 
-Root-level duplicate architecture/data/decision documents are intentionally not created.
-
 ## Next dependency-correct work
 
-1. require exact-head canonical validation on the current PR #125 status-bearing head;
-2. audit PR #125 criterion by criterion and confirm no blocking review/thread remains;
-3. apply `lifecycle:implementation-complete` only if all acceptance criteria remain satisfied;
-4. allow the guarded lifecycle to progress Ready → Mergeable → Merged;
-5. inspect live `main`, open PRs and Stage 3 product surfaces after merge;
-6. select the next evidence-backed dependency-correct Stage 3 frontend slice from actual repository/product evidence rather than inventing new scope;
-7. continue implementation autonomously while backend/provider work remains intentionally deferred.
+1. require fresh exact-head canonical validation on the final PR #126 status-bearing head;
+2. apply `lifecycle:implementation-complete` only if that evidence remains green;
+3. allow the guarded lifecycle to progress Ready → Mergeable → Merged;
+4. after merge, begin the already-identified Template Apply menu keyboard/focus ownership slice;
+5. preserve the completed Template Preview/Edit modal-stack contract and provider deferral while making that focused correction;
+6. continue autonomously with evidence-backed backend-independent Stage 3 work.
 
 ## Stage 3 exit conditions
 
