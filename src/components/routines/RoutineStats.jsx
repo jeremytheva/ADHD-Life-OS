@@ -2,6 +2,8 @@ import React, { useCallback, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import LoadErrorState from '../../common/LoadErrorState'
+import useModalDialog from '../../common/useModalDialog'
 import { routineProgressService } from '../../services/routineProgressService'
 import { format, parseISO } from 'date-fns'
 
@@ -11,11 +13,15 @@ const RoutineStats = ({ routine, onClose }) => {
   const [stats, setStats] = useState(null)
   const [history, setHistory] = useState([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
   const [timeframe, setTimeframe] = useState(30)
+  const dialogTitleId = `routine-stats-title-${routine.id}`
+  const routineNameId = `routine-stats-name-${routine.id}`
 
   const loadStats = useCallback(async () => {
     try {
       setLoading(true)
+      setLoadError(false)
       const [statsData, historyData] = await Promise.all([
         routineProgressService.getRoutineStats(routine.id, timeframe),
         routineProgressService.getRoutineHistory(routine.id, 10)
@@ -24,6 +30,9 @@ const RoutineStats = ({ routine, onClose }) => {
       setHistory(historyData)
     } catch (error) {
       console.error('Error loading stats:', error)
+      setStats(null)
+      setHistory([])
+      setLoadError(true)
     } finally {
       setLoading(false)
     }
@@ -33,20 +42,22 @@ const RoutineStats = ({ routine, onClose }) => {
     loadStats()
   }, [loadStats])
 
-  if (loading) {
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-lg p-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
-          <p className="text-slate-600 mt-4">Loading statistics...</p>
-        </div>
-      </div>
-    )
+  const handleTimeframeChange = (days) => {
+    if (loading || days === timeframe) return
+    setTimeframe(days)
   }
+
+  const dialogRef = useModalDialog({ onEscape: onClose })
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={`${dialogTitleId} ${routineNameId}`}
+        aria-busy={loading}
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col"
@@ -54,13 +65,15 @@ const RoutineStats = ({ routine, onClose }) => {
         {/* Header */}
         <div className="flex items-start justify-between p-6 border-b border-slate-200">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">
+            <h2 id={dialogTitleId} className="text-2xl font-bold text-slate-900">
               Routine Statistics
             </h2>
-            <p className="text-slate-600 mt-1">{routine.name}</p>
+            <p id={routineNameId} className="text-slate-600 mt-1">{routine.name}</p>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close routine statistics"
             className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
           >
             <SafeIcon icon={FiX} className="w-6 h-6" />
@@ -74,9 +87,13 @@ const RoutineStats = ({ routine, onClose }) => {
             {[7, 30, 90].map(days => (
               <button
                 key={days}
-                onClick={() => setTimeframe(days)}
+                type="button"
+                onClick={() => handleTimeframeChange(days)}
+                aria-pressed={timeframe === days}
+                aria-disabled={loading}
                 className={`
                   px-3 py-1.5 rounded-lg text-sm transition-colors
+                  ${loading ? 'opacity-60 cursor-wait' : ''}
                   ${timeframe === days
                     ? 'bg-purple-600 text-white'
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -91,7 +108,18 @@ const RoutineStats = ({ routine, onClose }) => {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
-          {stats && stats.total_completions > 0 ? (
+          {loading ? (
+            <div className="py-12 text-center" role="status">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+              <p className="text-slate-600 mt-4">Loading statistics...</p>
+            </div>
+          ) : loadError ? (
+            <LoadErrorState
+              title="We couldn’t load routine statistics"
+              message="Your routine history has not been changed. Check your connection and try again."
+              onRetry={loadStats}
+            />
+          ) : stats && stats.total_completions > 0 ? (
             <div className="space-y-6">
               {/* Key Metrics */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -156,6 +184,9 @@ const RoutineStats = ({ routine, onClose }) => {
                       const completedSteps = session.completed_steps.filter(s => !s.skipped).length
                       const skippedSteps = session.completed_steps.filter(s => s.skipped).length
                       const totalSteps = session.total_steps
+                      const completionPercent = totalSteps > 0
+                        ? Math.round((completedSteps / totalSteps) * 100)
+                        : 0
 
                       return (
                         <motion.div
@@ -173,7 +204,7 @@ const RoutineStats = ({ routine, onClose }) => {
                               {format(parseISO(session.completed_at), 'h:mm a')}
                             </span>
                           </div>
-                          
+
                           <div className="flex items-center gap-4 text-xs text-slate-600">
                             <span>
                               ✅ {completedSteps}/{totalSteps} steps completed
@@ -186,10 +217,17 @@ const RoutineStats = ({ routine, onClose }) => {
                           </div>
 
                           {/* Progress Bar */}
-                          <div className="mt-2 w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                          <div
+                            className="mt-2 w-full bg-slate-200 rounded-full h-2 overflow-hidden"
+                            role="progressbar"
+                            aria-label={`Completion progress for ${format(parseISO(session.completed_at), 'MMM d, yyyy')}`}
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow={completionPercent}
+                          >
                             <div
                               className="h-full bg-green-500 rounded-full"
-                              style={{ width: `${(completedSteps / totalSteps) * 100}%` }}
+                              style={{ width: `${completionPercent}%` }}
                             />
                           </div>
                         </motion.div>
