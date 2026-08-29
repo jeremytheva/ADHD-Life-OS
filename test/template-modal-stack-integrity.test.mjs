@@ -41,7 +41,7 @@ test('Preview stays mounted when Edit opens and direct Edit preserves its connec
   const library = await read('src/components/templates/TemplateLibrary.jsx')
   const card = await read('src/components/templates/TemplateCard.jsx')
 
-  const editHandler = library.match(/const handleEditBeforeApply = \(template, type\) => \{([\s\S]*?)\n  \}/)?.[1] ?? ''
+  const editHandler = library.match(/const handleEditBeforeApply = \(template, type\) => \{([\s\S]*?)\n {2}\}/)?.[1] ?? ''
   assert.match(editHandler, /setEditingTemplate\(\{ \.\.\.template, type \}\)/)
   assert.doesNotMatch(editHandler, /setPreviewTemplate\(null\)/)
   assert.match(library, /setEditingTemplate\(null\)\s+setPreviewTemplate\(null\)/)
