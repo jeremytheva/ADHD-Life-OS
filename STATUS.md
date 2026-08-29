@@ -11,10 +11,9 @@ current_work:
   pr: 129
   branch: fix/reward-shop-filter-semantics
 next_actions:
-  - Run exact-head canonical validation for PR #129.
-  - Audit PR #129 against its acceptance contract and repair any in-scope finding on the same branch.
-  - Update durable validation evidence before implementation-complete lifecycle transition.
+  - Require fresh exact-head canonical validation for this final PR #129 status-bearing head.
   - Advance PR #129 through Ready, Mergeable and Merged only when exact-head evidence and review state remain clean.
+  - After merge, inspect live main and remaining Stage 3 frontend surfaces before selecting the next evidence-backed backend-independent slice.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -22,16 +21,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #127 merged at 03247848d67ac8666201ad7c8ce04c70324e770d after exact-head Application validation run 240 passed. PR #129 is implemented with deterministic regression coverage but its current status-bearing head still requires canonical validation.
-last_verified_commit: 015ed7797abb9deed30c4937eee5fdc1e5d964e7
-last_updated: 2026-08-30T06:27:00+10:00
+validation_basis: Exact-head Application validation run 242 passed on PR #129 checkpoint head 39543ae106cfa034ae88445baca9f4548af33a31, including canonical platform validation. No submitted reviews or unresolved review threads were present. This final durable-handoff documentation commit creates a new head and therefore requires one fresh exact-head canonical run before lifecycle completion.
+last_verified_commit: 39543ae106cfa034ae88445baca9f4548af33a31
+last_updated: 2026-08-30T06:31:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,19 +42,19 @@ last_updated: 2026-08-30T06:27:00+10:00
 
 ## Current objective
 
-Validate and complete **PR #129 — Reward Shop category filter semantics**.
+Finish **PR #129 — Reward Shop category filter semantics** through its final exact-head guarded lifecycle.
 
-PR #127 merged successfully and completed Template Apply-menu keyboard/focus ownership. Post-merge inspection of the next roadmap-priority accessibility surfaces found that Reward Shop category filters showed the selected category only through colour/border styling. The buttons changed filtering correctly but exposed neither a labelled grouping nor programmatic selected state.
+PR #127 merged successfully and completed Template Apply-menu keyboard/focus ownership. Post-merge inspection found that Reward Shop category filters showed selected state only visually. PR #129 preserves the existing All, Appearance, Boosts and Breaks filtering behaviour while exposing the controls as a labelled group and binding `aria-pressed` to authoritative `selectedCategory` state. Deterministic regression coverage protects that semantic contract. No gamification data, currency, purchasing, provider or persistence behaviour changes.
 
-PR #129 keeps the existing All, Appearance, Boosts and Breaks filter behaviour and visual styling, adds a labelled filter group, binds `aria-pressed` to the authoritative `selectedCategory` state, and adds deterministic regression coverage. No gamification data, currency, purchasing, provider or persistence behaviour changes.
+Checkpoint head `39543ae106cfa034ae88445baca9f4548af33a31` passed exact-head Application validation run 242, including the full canonical `npm run platform:validate` gate. The PR has no submitted reviews or unresolved review threads. This evidence checkpoint is a new commit, so one fresh exact-head run is required before implementation-complete lifecycle transition.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — implementation exists; exact-head canonical evidence is pending |
-| Execution state | VALIDATING — keep PR #129 Draft until current-head validation and acceptance audit pass |
+| Gate state | VALIDATING — implementation and acceptance audit are complete; final exact-head evidence is required after this durable handoff checkpoint |
+| Execution state | VALIDATING — keep PR #129 Draft until the current status-bearing head passes canonical validation |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -67,19 +66,20 @@ PR #129 keeps the existing All, Appearance, Boosts and Breaks filter behaviour a
 | Active application PR | PR #129 — Reward Shop category filter semantics |
 | Current implementation outcome | Reward category filters expose a labelled group and selected-state semantics while preserving existing filtering |
 | Last completed product outcome on `main` | PR #127 — Template Apply menu keyboard and focus ownership |
-| Current blocker | None; canonical validation is pending |
+| Current blocker | None; final exact-head validation is pending only because this evidence checkpoint is a new commit |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Run exact-head canonical validation, repair any in-scope finding, then complete the guarded lifecycle only on green evidence |
+| Next action | Obtain exact-head canonical validation for this checkpoint, then advance PR #129 only if evidence remains green |
+| Post-merge continuation | Inspect live `main`, open PRs and remaining Stage 3 frontend surfaces; select only an evidence-backed accessibility, cognitive-load or maintainability slice consistent with the roadmap. |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3, Change gate, execution state VALIDATING. |
-| What is already happening? | PR #129 is the active Draft implementation thread. |
-| What has been validated? | PR #127 passed final exact-head validation and merged; PR #129 has not yet completed canonical validation on its current head. |
+| What is already happening? | PR #129 is the active Draft implementation thread and is awaiting final exact-head evidence on this documentation checkpoint. |
+| What has been validated? | Checkpoint head `39543ae106cfa034ae88445baca9f4548af33a31` passed Application validation run 242 and the full canonical gate; reviews and review threads are clear. |
 | What changed? | Reward Shop category-selection state is now programmatically exposed through a labelled group and `aria-pressed`. |
-| What is next? | Run exact-head validation for PR #129, fix any in-scope failure, complete acceptance audit, then advance lifecycle if clean. |
+| What is next? | Finish PR #129 lifecycle; after merge, inspect remaining Stage 3 frontend evidence before opening another implementation thread. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -102,10 +102,10 @@ PR #129 keeps the existing All, Appearance, Boosts and Breaks filter behaviour a
 
 ### Active — Reward Shop / PR #129
 
-- Expose category filters as one labelled control group.
-- Bind selected state to `aria-pressed` on the existing filter buttons.
-- Preserve existing filter behaviour and visual selection.
-- Preserve all gamification service/data behaviour.
+- Category filters are one labelled control group.
+- Selected category state is bound to `aria-pressed` on the existing filter buttons.
+- Existing filtering and visual selection are preserved.
+- Gamification service/data behaviour is unchanged.
 
 ## Backend / provider work — intentionally deferred
 
@@ -142,12 +142,12 @@ While deferred:
 
 ## Next dependency-correct work
 
-1. run exact-head canonical validation for PR #129;
-2. repair any in-scope validation or acceptance finding on the existing branch;
-3. update durable validation evidence without opening a competing thread;
-4. apply `lifecycle:implementation-complete` only after the final exact-head status-bearing commit passes validation and no blocking review finding remains;
-5. allow the guarded lifecycle to progress Ready → Mergeable → Merged;
-6. after merge, inspect live `main` and remaining Stage 3 frontend evidence before selecting another slice.
+1. require fresh exact-head canonical validation on the final PR #129 status-bearing head;
+2. apply `lifecycle:implementation-complete` only if that evidence remains green and review state remains clear;
+3. allow the guarded lifecycle to progress Ready → Mergeable → Merged;
+4. after merge, inspect live `main`, current PRs and remaining Stage 3 frontend surfaces;
+5. select the next evidence-backed backend-independent slice from the roadmap priority order rather than inventing scope;
+6. continue autonomously while provider-dependent execution work remains intentionally deferred.
 
 ## Stage 3 exit conditions
 
