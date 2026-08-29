@@ -104,13 +104,18 @@ const RewardShop = ({ onClose }) => {
           </div>
         </div>
 
-        {/* Category Tabs */}
-        <div className="flex border-b border-slate-200 px-6 pt-4">
+        {/* Category Filters */}
+        <div
+          role="group"
+          aria-label="Filter rewards by category"
+          className="flex border-b border-slate-200 px-6 pt-4"
+        >
           {categories.map(cat => (
             <button
               type="button"
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
+              aria-pressed={selectedCategory === cat.id}
               className={`flex items-center gap-2 px-4 py-3 transition-colors ${
                 selectedCategory === cat.id
                   ? 'text-yellow-600 border-b-2 border-yellow-600'
