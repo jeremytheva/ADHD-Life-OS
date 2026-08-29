@@ -44,10 +44,11 @@ const DaySetup = ({ preferences, onUpdate }) => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="day-setup-wake-time" className="block text-sm font-medium text-slate-700 mb-2">
               Wake Time
             </label>
             <input
+              id="day-setup-wake-time"
               type="time"
               value={formData.wake_time}
               onChange={(e) => handleChange('wake_time', e.target.value)}
@@ -57,10 +58,11 @@ const DaySetup = ({ preferences, onUpdate }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label htmlFor="day-setup-sleep-time" className="block text-sm font-medium text-slate-700 mb-2">
               Sleep Time
             </label>
             <input
+              id="day-setup-sleep-time"
               type="time"
               value={formData.sleep_time}
               onChange={(e) => handleChange('sleep_time', e.target.value)}
@@ -76,10 +78,11 @@ const DaySetup = ({ preferences, onUpdate }) => {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="day-setup-work-start-time" className="block text-sm font-medium text-slate-700 mb-2">
                 Work Start Time
               </label>
               <input
+                id="day-setup-work-start-time"
                 type="time"
                 value={formData.work_start_time}
                 onChange={(e) => handleChange('work_start_time', e.target.value)}
@@ -88,10 +91,11 @@ const DaySetup = ({ preferences, onUpdate }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="day-setup-work-end-time" className="block text-sm font-medium text-slate-700 mb-2">
                 Work End Time
               </label>
               <input
+                id="day-setup-work-end-time"
                 type="time"
                 value={formData.work_end_time}
                 onChange={(e) => handleChange('work_end_time', e.target.value)}
