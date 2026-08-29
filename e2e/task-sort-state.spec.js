@@ -52,18 +52,18 @@ const createTaskSortMock = async (page) => {
     if (path === 'tasks' && method === 'GET') {
       return json(route, [
         {
-          id: 'task-zulu', user_id: userId, title: 'Zulu task', description: '', due_date: '2026-09-05',
-          created_at: '2026-08-01T00:00:00.000Z', estimated_duration: 30, is_essential: true,
+          id: 'task-zulu', user_id: userId, title: 'Zulu task', description: '', due_date: '2026-09-01',
+          created_at: '2026-08-02T00:00:00.000Z', estimated_duration: 30, is_essential: true,
           completed: false, mode: null, project_id: null, category: null, tags: []
         },
         {
-          id: 'task-alpha', user_id: userId, title: 'Alpha task', description: '', due_date: '2026-09-01',
-          created_at: '2026-08-03T00:00:00.000Z', estimated_duration: 30, is_essential: false,
+          id: 'task-alpha', user_id: userId, title: 'Alpha task', description: '', due_date: '2026-09-05',
+          created_at: '2026-08-01T00:00:00.000Z', estimated_duration: 30, is_essential: false,
           completed: false, mode: null, project_id: null, category: null, tags: []
         },
         {
           id: 'task-mike', user_id: userId, title: 'Mike task', description: '', due_date: '2026-09-03',
-          created_at: '2026-08-02T00:00:00.000Z', estimated_duration: 30, is_essential: false,
+          created_at: '2026-08-03T00:00:00.000Z', estimated_duration: 30, is_essential: false,
           completed: false, mode: null, project_id: null, category: null, tags: []
         }
       ])
@@ -100,9 +100,9 @@ test('Tasks selected sort value and actual ordering stay aligned', async ({ page
 
   await sort.selectOption('due_date')
   await expect(sort).toHaveValue('due_date')
-  await expect(taskTitles(page)).toHaveText(['Alpha task', 'Mike task', 'Zulu task'])
+  await expect(taskTitles(page)).toHaveText(['Zulu task', 'Mike task', 'Alpha task'])
 
   await sort.selectOption('created')
   await expect(sort).toHaveValue('created')
-  await expect(taskTitles(page)).toHaveText(['Alpha task', 'Mike task', 'Zulu task'])
+  await expect(taskTitles(page)).toHaveText(['Mike task', 'Zulu task', 'Alpha task'])
 })
