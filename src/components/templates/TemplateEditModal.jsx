@@ -2,12 +2,15 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 
 const { FiX, FiSave, FiPlus, FiTrash2, FiRefreshCw, FiCheckSquare } = FiIcons
 
 const TemplateEditModal = ({ template, onClose, onSave }) => {
   const isRoutine = template.type === 'routine'
-  
+  const dialogTitleId = `template-edit-title-${template.id}`
+  const dialogRef = useModalDialog({ onEscape: onClose })
+
   const [formData, setFormData] = useState(() => {
     if (isRoutine) {
       return {
@@ -34,7 +37,7 @@ const TemplateEditModal = ({ template, onClose, onSave }) => {
   const handleStepChange = (index, field, value) => {
     setFormData(prev => ({
       ...prev,
-      steps: prev.steps.map((step, i) => 
+      steps: prev.steps.map((step, i) =>
         i === index ? { ...step, [field]: value } : step
       )
     }))
@@ -83,6 +86,11 @@ const TemplateEditModal = ({ template, onClose, onSave }) => {
       onClick={onClose}
     >
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={dialogTitleId}
+        tabIndex={-1}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
@@ -96,13 +104,13 @@ const TemplateEditModal = ({ template, onClose, onSave }) => {
               p-3 rounded-lg
               ${isRoutine ? 'bg-purple-100' : 'bg-green-100'}
             `}>
-              <SafeIcon 
-                icon={isRoutine ? FiRefreshCw : FiCheckSquare} 
+              <SafeIcon
+                icon={isRoutine ? FiRefreshCw : FiCheckSquare}
                 className={`w-6 h-6 ${isRoutine ? 'text-purple-600' : 'text-green-600'}`}
               />
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-slate-900 mb-1">
+              <h3 id={dialogTitleId} className="text-xl font-bold text-slate-900 mb-1">
                 Edit Template Before Applying
               </h3>
               <p className="text-sm text-slate-600">
@@ -111,7 +119,9 @@ const TemplateEditModal = ({ template, onClose, onSave }) => {
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close template editor"
             className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
           >
             <SafeIcon icon={FiX} className="w-5 h-5" />
@@ -286,6 +296,7 @@ const TemplateEditModal = ({ template, onClose, onSave }) => {
                         <button
                           type="button"
                           onClick={() => removeStep(index)}
+                          aria-label={`Remove step ${index + 1}`}
                           className="p-2 text-slate-400 hover:text-red-600 transition-colors"
                         >
                           <SafeIcon icon={FiTrash2} className="w-4 h-4" />

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 import { templateService } from '../../services/templateService'
 import TemplateCard from './TemplateCard'
 import TemplatePreview from './TemplatePreview'
@@ -16,6 +17,8 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
   const [viewMode, setViewMode] = useState('grid')
   const [previewTemplate, setPreviewTemplate] = useState(null)
   const [editingTemplate, setEditingTemplate] = useState(null)
+  const dialogTitleId = 'template-library-title'
+  const dialogRef = useModalDialog({ onEscape: onClose })
 
   const categories = templateService.getCategories()
   const allCategories = ['all', ...categories.all]
@@ -56,7 +59,6 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
 
   const handleEditBeforeApply = (template, type) => {
     setEditingTemplate({ ...template, type })
-    setPreviewTemplate(null)
   }
 
   const handleSaveEditedTemplate = async (editedTemplate, type) => {
@@ -64,6 +66,7 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
       await onApplyTemplate(editedTemplate, type)
       templateService.markTemplateAsApplied(editedTemplate.id)
       setEditingTemplate(null)
+      setPreviewTemplate(null)
     }
   }
 
@@ -74,6 +77,11 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={dialogTitleId}
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col"
@@ -81,13 +89,15 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-slate-200">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Template Library</h2>
+            <h2 id={dialogTitleId} className="text-2xl font-bold text-slate-900">Template Library</h2>
             <p className="text-sm text-slate-600 mt-1">
               Choose from pre-built templates to get started quickly
             </p>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close template library"
             className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
           >
             <SafeIcon icon={FiX} className="w-6 h-6" />
@@ -97,14 +107,15 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
         {/* Filters */}
         <div className="p-6 border-b border-slate-200 space-y-4">
           <div className="relative">
-            <SafeIcon 
-              icon={FiSearch} 
+            <SafeIcon
+              icon={FiSearch}
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5"
             />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search templates"
               placeholder="Search templates..."
               className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -116,6 +127,7 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
               <select
                 value={selectedType}
                 onChange={(e) => setSelectedType(e.target.value)}
+                aria-label="Template type"
                 className="px-3 py-1.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="all">All Types</option>
@@ -124,11 +136,13 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
               </select>
             </div>
 
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap" aria-label="Template category filters">
               {allCategories.map(category => (
                 <button
+                  type="button"
                   key={category}
                   onClick={() => setSelectedCategory(category)}
+                  aria-pressed={selectedCategory === category}
                   className={`
                     px-3 py-1.5 rounded-full text-sm transition-colors
                     ${selectedCategory === category
@@ -142,9 +156,12 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
               ))}
             </div>
 
-            <div className="flex items-center gap-1 ml-auto bg-slate-100 rounded-lg p-1">
+            <div className="flex items-center gap-1 ml-auto bg-slate-100 rounded-lg p-1" aria-label="Template view">
               <button
+                type="button"
                 onClick={() => setViewMode('grid')}
+                aria-label="Grid view"
+                aria-pressed={viewMode === 'grid'}
                 className={`
                   p-2 rounded transition-colors
                   ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-slate-200'}
@@ -153,7 +170,10 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
                 <SafeIcon icon={FiGrid} className="w-4 h-4" />
               </button>
               <button
+                type="button"
                 onClick={() => setViewMode('list')}
+                aria-label="List view"
+                aria-pressed={viewMode === 'list'}
                 className={`
                   p-2 rounded transition-colors
                   ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-slate-200'}
@@ -164,7 +184,7 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
             </div>
           </div>
 
-          <div className="text-sm text-slate-600">
+          <div className="text-sm text-slate-600" role="status">
             Found {totalResults} template{totalResults !== 1 ? 's' : ''}
           </div>
         </div>
@@ -177,11 +197,10 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
                 Routine Templates ({routines.length})
               </h3>
               <div className={`
-                ${viewMode === 'grid' 
-                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' 
+                ${viewMode === 'grid'
+                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
                   : 'space-y-3'
-                }
-              `}>
+                }`}>
                 {routines.map((routine, index) => (
                   <TemplateCard
                     key={routine.id}
@@ -205,11 +224,10 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
                 Task Templates ({tasks.length})
               </h3>
               <div className={`
-                ${viewMode === 'grid' 
-                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' 
+                ${viewMode === 'grid'
+                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'
                   : 'space-y-3'
-                }
-              `}>
+                }`}>
                 {tasks.map((task, index) => (
                   <TemplateCard
                     key={task.id}
