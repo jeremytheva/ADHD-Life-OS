@@ -1,9 +1,44 @@
+---
+project: ADHD Life OS
+portfolio_state: ACTIVE
+phase: Stage 3
+stage: execution and next-action experience
+gate: Change
+execution_state: READY
+current_work:
+  objective: Routine Statistics stable dialog/error-state ownership
+  issue: null
+  pr: null
+  branch: null
+next_actions:
+  - Implement one stable loading/error/content dialog shell for Routine Statistics with explicit retryable load failure distinct from genuine empty data.
+  - Add accessible close naming, timeframe selected-state semantics, deterministic coverage and real Routines-to-Stats browser regression coverage.
+  - Close or explicitly park remaining lower-priority modal accessibility findings, then continue client-side cognitive-load reduction.
+blockers: []
+requires_owner_decision: false
+owner_decision:
+  question: null
+  options: []
+  recommendation: null
+validation:
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
+  runtime: UNVERIFIED
+validation_basis: PR #119 exact head 4dcb0d15d402f17306736f927367c9c5c8232c7d passed canonical Application validation; deployment/runtime remain separately unverified.
+last_verified_commit: 4dcb0d15d402f17306736f927367c9c5c8232c7d
+last_updated: 2026-08-30T00:18:00+10:00
+---
+
 # ADHD Life OS — Current Status
 
-**Snapshot date:** 29 August 2026  
-**Last materially reviewed:** 29 August 2026  
+**Snapshot date:** 30 August 2026  
+**Last materially reviewed:** 30 August 2026  
 **Default branch:** `main`  
-**Last verified product outcome:** PR #119 — Routine Progress stable dialog ownership, once this post-merge checkpoint reaches `main`  
+**Last verified product outcome:** PR #119 — Routine Progress stable dialog ownership, merged to `main` in `9259b1925f1bbd91f1a18bf96878495e6ec89e72`  
 **Overall status:** Active development / backend work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
@@ -11,16 +46,15 @@
 
 Continue the dependency-correct frontend accessibility sequence at Routine Statistics after completing stable multi-state dialog ownership for Routine Progress.
 
-PR #118 verified the repository-managed `DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED` lifecycle end to end. PR #119 applies the shared modal interaction contract to Routine Progress while preserving cancellation confirmation, authoritative session cancellation and pending-write lockouts.
-
-This file is intentionally written as the **post-merge handoff for PR #119**. Once #119 reaches `main`, Routine Statistics becomes the next primary product thread rather than leaving the closed Routine Progress PR as the active checkpoint.
+PR #118 verified the repository-managed `DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED` lifecycle end to end. PR #119 then completed Routine Progress dialog ownership and merged through that lifecycle. The autonomous continuation framework is now integrated into the repository operating contract and machine-readable status handoff so a future agent can resume from repository/GitHub evidence rather than previous chat history.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | ACTIVE — Routine Statistics stable dialog/error-state ownership |
+| Gate state | READY — Routine Statistics stable dialog/error-state ownership |
+| Execution state | READY — no application implementation PR is required to be reconstructed from chat; create/reuse the next focused Draft PR only after checking current GitHub state |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not introduce, infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -29,22 +63,39 @@ This file is intentionally written as the **post-merge handoff for PR #119**. On
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Primary implementation thread | Frontend accessibility — Routine Statistics stable loading/error/content dialog ownership |
-| Active application PR | None after PR #119 merges; create Routine Statistics as a new Draft PR |
-| Last completed product outcome | PR #119 — Routine Progress uses one stable semantic dialog across loading, load-error, finishing/retry and active-step states while preserving cancellation/write safeguards |
-| Last completed delivery-control outcome | PR #118 automatically progressed through the full repository-managed lifecycle to MERGED and cleaned up its branch |
-| Current blocker | None for backend-independent frontend work; external GitHub branch protection/ruleset remains a configuration gap |
+| Primary implementation thread | Frontend accessibility/reliability — Routine Statistics stable loading/error/content dialog ownership |
+| Active application PR | None at this checkpoint; inspect live GitHub before creating work |
+| Last completed product outcome | PR #119 merged — Routine Progress uses one stable semantic dialog across loading, load-error, finishing/retry and active-step states while preserving cancellation/write safeguards |
+| Last completed delivery-control outcome | PR #119 progressed through the repository-managed lifecycle to MERGED after exact-head canonical validation |
+| Autonomous continuation support | IMPLEMENTED — `AGENTS.md` defines scheduled/continuous execution semantics, stop conditions, duplicate-work protection and durable state requirements; governance validation enforces the machine-readable handoff |
+| Current blocker | None for backend-independent frontend work; external GitHub branch protection/ruleset remains a configuration gap rather than a blocker to the next frontend slice |
 | Deferred dependency | NoCodeBackend/provider certification pending additional provider information |
 | Next action | Correct Routine Statistics with one stable loading/error/content dialog shell and explicit load-error recovery distinct from genuine empty data |
 | Next queued outcome | Close or explicitly park remaining lower-priority modal accessibility findings, then continue client-side cognitive-load reduction |
 
 If this checkpoint conflicts with GitHub, deployment or later provider evidence, verify the authoritative source and correct this file rather than reconstructing state from chat history.
 
+## Autonomous continuation entry answers
+
+A scheduled or newly-entering agent should be able to answer immediately:
+
+| Question | Durable answer |
+| --- | --- |
+| Where am I? | Stage 3, Change gate, execution state READY. |
+| What is already happening? | No application PR is assumed active; live GitHub must be inspected before creating one. PR #119 is merged. |
+| What is the current objective? | Routine Statistics stable dialog/error-state ownership. |
+| What has already been validated? | PR #119 exact head passed canonical `platform:validate` through GitHub `Application validation`; repository lifecycle is proven end to end. |
+| What failed? | No current frontend validation failure is recorded. Provider/runtime capability remains intentionally unverified/deferred. |
+| What is next? | Routine Statistics loading/error/content ownership, retry semantics, accessible close/timeframe controls and regression coverage. |
+| Can I proceed autonomously? | Yes, after reconciling live PR/branch/check state; no owner decision is currently required. |
+| Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency that blocks all dependency-correct work, or no actionable work. |
+
 ## Completed
 
 - Stage 2 core workflow integrity formally closed.
 - Stage 3 unified recommendation policy, Today next-action experience and transient **Not now** feedback are merged.
 - Cognitive-load/execution-continuity controls and master AI-platform standards are merged.
+- Repository-level autonomous continuation semantics and machine-readable `STATUS.md` handoff are implemented.
 - `npm run platform:validate` is the canonical repository validation gate.
 - Canonical `NOCODEBACKEND_*` configuration naming and fail-closed provider-certification boundaries are merged.
 - PR #98–#102 merged — quality cleanup, zero-warning CI and responsive shell/keyboard recovery.
@@ -55,7 +106,7 @@ If this checkpoint conflicts with GitHub, deployment or later provider evidence,
 - PR #116 merged — Chore Detail shared dialog ownership with completion/celebration close lockouts preserved.
 - PR #117 merged — readiness and merge finalization separated; finalizer rechecks exact head, validation, reviews, base freshness and conflict-free mergeability before guarded merge.
 - PR #118 merged automatically — the normal repository lifecycle was verified end to end, including source-branch cleanup.
-- PR #119 — Routine Progress stable dialog ownership, loading/write Escape lockouts, persisted cancellation semantics, accessible progressbar and deterministic/browser regression coverage; this status file records its post-merge handoff.
+- PR #119 merged — Routine Progress stable dialog ownership, loading/write Escape lockouts, persisted cancellation semantics, accessible progressbar and deterministic/browser regression coverage.
 
 ## Delivery-control verification
 
@@ -65,9 +116,25 @@ The verified repository lifecycle is:
 DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 ```
 
-PR #118 proved that normal implementation PRs can remain Draft while incomplete, require exact-head Application validation, use explicit `lifecycle:implementation-complete` as the semantic handoff, transition to Ready through the readiness controller, and then be independently rechecked and merged by the separate finalizer without a manual merge.
+PR #118 proved that normal implementation PRs can remain Draft while incomplete, require exact-head Application validation, use explicit `lifecycle:implementation-complete` as the semantic handoff, transition to Ready through the readiness controller, and then be independently rechecked and merged by the separate finalizer without a manual merge. PR #119 subsequently used the same lifecycle for real application work.
 
 A later lifecycle regression should be treated as delivery-control work before normal implementation continues. Executable governance validation prevents reintroducing direct merge logic into the readiness workflow or aggregate `mergeStateStatus` self-dependency into the finalizer.
+
+## Documentation baseline mapping
+
+The repository intentionally preserves its established documentation layout rather than duplicating working documents:
+
+| Required concept | Canonical repository location |
+| --- | --- |
+| Agent operating contract | `AGENTS.md` |
+| Project identity/control | `PROJECT.md` |
+| Durable current execution state | `STATUS.md` |
+| Architecture | `docs/ARCHITECTURE.md` |
+| Data model | `docs/DATA_MODEL.md` |
+| Decisions/register | `docs/DECISIONS/` and `docs/DECISIONS/README.md` |
+| CI/workflows | `.github/workflows/` |
+
+Root-level duplicate architecture/data/decision documents are intentionally not created.
 
 ## GitHub external configuration gaps
 
@@ -80,7 +147,7 @@ Current known external gaps remain:
 - update-branch support: disabled;
 - independent branch protection/ruleset enforcement still needs configuration when settings access is available.
 
-The split workflow governs the normal repository path but cannot prohibit every administrator/direct-push bypass. Branch protection or an equivalent ruleset remains the highest-priority external enforcement gap.
+The split workflow governs the normal repository path but cannot prohibit every administrator/direct-push bypass. Branch protection or an equivalent ruleset remains the highest-priority external enforcement gap, but it does not prevent backend-independent frontend work from continuing.
 
 ## Accessibility audit findings
 
@@ -114,10 +181,10 @@ While deferred:
 ## Quality / technical state
 
 - No known application defect currently overrides the queued Routine Statistics accessibility/reliability work.
-- ESLint is clean and CI enforces **0 warnings**.
+- ESLint is clean and CI enforces **0 warnings** on the last verified product head.
 - Mixed JavaScript/TypeScript checking remains an accepted current constraint.
 - Responsive shell/navigation coverage is merged for desktop and phone-width paths.
-- Shared modal/focus behaviour is verified across global dialogs, Tasks, Projects, Routine Form, Housework Setup, Chore Detail and Routine Progress once PR #119 merges.
+- Shared modal/focus behaviour is verified across global dialogs, Tasks, Projects, Routine Form, Housework Setup, Chore Detail and Routine Progress.
 - Canonical application validation runs on pull requests and `main`.
 - Production deployment is not configured or verified for ADHD Life OS in the connected Vercel account.
 - `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only.
@@ -129,10 +196,11 @@ While deferred:
 | GitHub repository | VERIFIED | `jeremytheva/ADHD-Life-OS`, default branch `main` |
 | Canonical validation | VERIFIED | Dependency audit + governance + zero-warning lint + typecheck + Node tests + production build + Playwright |
 | PR readiness controller | VERIFIED | Owns Draft through Ready and dispatches exact-head finalization |
-| PR merge finalizer | VERIFIED | PR #118 provides end-to-end automatic MERGEABLE → MERGED proof |
+| PR merge finalizer | VERIFIED | PR #118 end-to-end proof; PR #119 real application use |
+| Autonomous continuation contract | IMPLEMENTED | Repository entry order, continuation semantics, stop conditions, duplicate-work protection and scheduled-entry requirements are durable in `AGENTS.md`/`STATUS.md` |
 | Branch protection/ruleset | NOT CONFIGURED | External setting still required for independent direct-push/bypass enforcement |
 | GitHub Issues | DISABLED | Focused PR body remains implementation-contract fallback |
-| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | Routine Progress completed by PR #119; Routine Statistics next |
+| Shared modal interaction contract | IMPLEMENTED / ROLLING OUT | Routine Progress complete; Routine Statistics next |
 | Physical NoCodeBackend adapter | IMPLEMENTED / DEFERRED | Fail-closed production mapping remains unverified |
 | Generic `execution-sessions` | IMPLEMENTED TOOLING / DEFERRED | Provider capability remains unverified |
 | Vercel | NOT CONFIGURED / UNVERIFIED | No ADHD Life OS production project binding is currently established |
@@ -141,8 +209,8 @@ While deferred:
 
 ### Current
 
-1. complete PR #119 through exact-head canonical validation and automated lifecycle merge;
-2. create Routine Statistics accessibility/reliability work as a new Draft PR;
+1. inspect live GitHub state for any newly active/overlapping work before creating a branch;
+2. create or reuse Routine Statistics accessibility/reliability work as a focused Draft PR;
 3. keep one semantic dialog shell across loading, failure and loaded/empty statistics content;
 4. distinguish retrieval failure from genuine no-completion data and provide retry without losing dialog ownership;
 5. add an accessible close name and `aria-pressed` selected-state semantics to 7/30/90-day timeframe controls;
