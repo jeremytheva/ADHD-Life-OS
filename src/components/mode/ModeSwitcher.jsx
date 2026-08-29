@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -16,12 +16,12 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
   const stats = getModeStats()
   const menuId = 'mode-switcher-menu'
 
-  const focusModeItem = (index) => {
+  const focusModeItem = useCallback((index) => {
     const itemCount = allModes.length
     if (!itemCount) return
     const nextIndex = (index + itemCount) % itemCount
     modeItemRefs.current[nextIndex]?.focus()
-  }
+  }, [allModes.length])
 
   const restoreTriggerFocus = () => {
     window.requestAnimationFrame(() => triggerRef.current?.focus())
@@ -85,7 +85,7 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
     const activeIndex = Math.max(0, allModes.findIndex((mode) => mode.id === currentMode.id))
     const frame = window.requestAnimationFrame(() => focusModeItem(activeIndex))
     return () => window.cancelAnimationFrame(frame)
-  }, [isOpen, allModes, currentMode.id])
+  }, [isOpen, allModes, currentMode.id, focusModeItem])
 
   const sizeClasses = {
     small: 'text-sm px-3 py-1.5',
