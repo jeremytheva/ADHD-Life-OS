@@ -15,7 +15,7 @@ import TaskLoadAnalysis from './TaskLoadAnalysis'
 import RecommendedTasks from './RecommendedTasks'
 import TemplateLibrary from '../templates/TemplateLibrary'
 
-const { FiPlus, FiFilter, FiTrendingUp, FiBookOpen } = FiIcons
+const { FiPlus, FiFilter, FiBookOpen } = FiIcons
 
 const sortTasks = (items, sortType) => {
   switch (sortType) {
@@ -54,6 +54,10 @@ const TaskList = () => {
 
   const modePrefs = getModePreferences(currentMode.id)
 
+  useEffect(() => {
+    setSortBy(modePrefs.sortBy || 'priority')
+  }, [currentMode.id, modePrefs.sortBy])
+
   const loadPreferences = useCallback(async () => {
     try {
       setLoading(true)
@@ -88,7 +92,7 @@ const TaskList = () => {
         displayTasks = displayTasks.filter(t => !t.completed)
       }
 
-      const sorted = sortTasks(displayTasks, modePrefs.sortBy || sortBy)
+      const sorted = sortTasks(displayTasks, sortBy)
       setTasks(sorted)
       setAnalysis(adhdPriorityService.analyzeTaskLoad(filteredData, preferences))
       setRecommendedTasks(adhdPriorityService.getRecommendedTasks(filteredData, preferences, 3))
@@ -100,7 +104,7 @@ const TaskList = () => {
     } finally {
       setLoading(false)
     }
-  }, [currentMode.id, filter, filterByMode, modePrefs.hideCompleted, modePrefs.sortBy, preferences, sortBy])
+  }, [currentMode.id, filter, filterByMode, modePrefs.hideCompleted, preferences, sortBy])
 
   useEffect(() => {
     if (user) loadPreferences()
@@ -223,10 +227,10 @@ const TaskList = () => {
   ]
 
   const sortOptions = [
-    { key: 'priority', label: 'Priority', icon: FiTrendingUp },
-    { key: 'due_date', label: 'Due Date', icon: FiFilter },
-    { key: 'created', label: 'Recently Added', icon: FiFilter },
-    { key: 'alphabetical', label: 'A-Z', icon: FiFilter }
+    { key: 'priority', label: 'Priority' },
+    { key: 'due_date', label: 'Due Date' },
+    { key: 'created', label: 'Recently Added' },
+    { key: 'alphabetical', label: 'A-Z' }
   ]
 
   if (loading) {
@@ -326,19 +330,18 @@ const TaskList = () => {
           ))}
         </div>
 
-        <div className="flex items-center space-x-2 ml-auto">
-          <span className="text-sm text-slate-600">Sort by:</span>
-          {sortOptions.map((option) => (
-            <button
-              type="button"
-              key={option.key}
-              onClick={() => setSortBy(option.key)}
-              className={`px-3 py-2 rounded-md text-sm transition-colors flex items-center gap-1 ${sortBy === option.key ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-slate-100'}`}
-            >
-              <SafeIcon icon={option.icon} className="w-4 h-4" />
-              {option.label}
-            </button>
-          ))}
+        <div className="flex items-center gap-2 ml-auto">
+          <label htmlFor="task-sort" className="text-sm text-slate-600">Sort by:</label>
+          <select
+            id="task-sort"
+            value={sortBy}
+            onChange={(event) => setSortBy(event.target.value)}
+            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+          >
+            {sortOptions.map((option) => (
+              <option key={option.key} value={option.key}>{option.label}</option>
+            ))}
+          </select>
         </div>
       </div>
 
