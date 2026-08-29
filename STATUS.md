@@ -11,7 +11,7 @@ current_work:
   pr: 126
   branch: fix/project-card-keyboard-menu
 next_actions:
-  - Require exact-head canonical validation for PR #126.
+  - Re-run exact-head canonical validation for PR #126 after repairing the STATUS governance contract.
   - Audit PR #126 against its acceptance contract and resolve any in-scope findings.
   - Update this checkpoint to the truthful post-merge next objective before implementation-complete.
   - Advance PR #126 through Ready, Mergeable and Merged only when exact-head evidence remains green.
@@ -22,16 +22,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
-  ci: PENDING
+  governance: FAIL
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: FAIL
   runtime: UNVERIFIED
-validation_basis: PR #126 has implementation and deterministic regression coverage on its current branch, but this status-bearing head requires fresh canonical validation before lifecycle completion.
+validation_basis: Application validation run 234 failed before application checks because STATUS.md used unsupported PENDING values for governance/lint/typecheck/tests/build and omitted the required autonomous continuation entry answers section. This commit repairs that governance contract; fresh exact-head validation is required.
 last_verified_commit: null
-last_updated: 2026-08-30T04:18:00+10:00
+last_updated: 2026-08-30T05:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -48,6 +48,8 @@ Complete **PR #126 — Project card keyboard and menu interaction integrity**.
 PR #125 merged successfully and corrected Tasks sort-state divergence. Post-merge inspection found the next evidence-backed Stage 3 accessibility defect in `ProjectCard`: the header and statistics regions used pointer-only `onClick` navigation despite an existing native View Details control, while the actions popover claimed `menu` semantics without the corresponding keyboard/focus behaviour.
 
 PR #126 removes those redundant pointer-only activation regions, preserves the explicit View Details button, focuses the first project action when the menu opens, supports Arrow Up/Down plus Home/End navigation, closes on Escape, and restores focus to the trigger after Escape. Edit, Archive and Delete remain available and provider/data behaviour is unchanged. Deterministic regression coverage protects the interaction contract.
+
+Application validation run 234 failed at governance before lint/typecheck/tests/build/e2e because this branch's STATUS checkpoint used unsupported `PENDING` values for five validation fields and omitted the required autonomous re-entry section. That durable-state defect is now corrected on the same PR; all validation evidence must be refreshed for the new head.
 
 ## AI execution gate
 
@@ -67,9 +69,21 @@ PR #126 removes those redundant pointer-only activation regions, preserves the e
 | Active application PR | PR #126 — Project card keyboard and menu interaction integrity |
 | Current implementation outcome | One explicit native project-opening control; project actions menu has initial focus, arrow/Home/End navigation, Escape dismissal and trigger focus restoration |
 | Last completed product outcome on `main` | PR #125 — Tasks sort-state integrity and control-density reduction |
-| Current blocker | None for backend-independent frontend work |
+| Current blocker | None for backend-independent frontend work; current PR needs fresh exact-head validation after the governance checkpoint repair |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Run exact-head canonical validation, audit acceptance, then checkpoint the next evidence-backed post-merge Stage 3 objective before lifecycle completion |
+| Next action | Obtain exact-head canonical validation, audit acceptance, then checkpoint the next evidence-backed post-merge Stage 3 objective before lifecycle completion |
+
+## Autonomous continuation entry answers
+
+| Question | Durable answer |
+| --- | --- |
+| Where am I? | Stage 3, Change gate, execution state IMPLEMENTING. |
+| What is already happening? | PR #126 is the active application thread and remains Draft. |
+| What has been validated? | Run 234 did not validate application behaviour; it failed at governance because the prior STATUS checkpoint violated the repository's machine-readable contract. |
+| What changed? | Project-card activation and actions-menu keyboard/focus ownership are implemented; this commit repairs the durable STATUS governance defect exposed by CI. |
+| What is next? | Re-run canonical validation for the exact current PR #126 head, then perform the acceptance/review audit and lifecycle handoff if green. |
+| Can I proceed autonomously? | Yes. No owner decision is currently required. |
+| Why should I stop? | Only for a stop/escalation condition defined in AGENTS.md, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
@@ -131,7 +145,7 @@ While deferred:
 
 ## Next dependency-correct work
 
-1. require exact-head canonical validation on PR #126;
+1. require fresh exact-head canonical validation on PR #126 after the STATUS governance repair;
 2. audit PR #126 criterion by criterion and confirm no blocking review/thread remains;
 3. inspect remaining Stage 3 frontend surfaces and record the next evidence-backed post-merge objective in this file;
 4. apply `lifecycle:implementation-complete` only after acceptance, validation and durable handoff are all current;
