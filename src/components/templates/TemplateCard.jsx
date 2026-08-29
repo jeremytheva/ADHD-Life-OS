@@ -42,7 +42,7 @@ const TemplateCard = ({
     ? template.steps?.reduce((sum, step) => sum + step.duration_minutes, 0)
     : template.estimated_duration
 
-  const ApplyDropdown = () => (
+  const renderApplyDropdown = () => (
     <div className="relative">
       <button
         type="button"
@@ -174,7 +174,7 @@ const TemplateCard = ({
             >
               <SafeIcon icon={FiEye} className="w-4 h-4" />
             </button>
-            <ApplyDropdown />
+            {renderApplyDropdown()}
           </div>
         </div>
       </motion.div>
@@ -242,7 +242,7 @@ const TemplateCard = ({
           Preview
         </button>
         <div className="flex-1">
-          <ApplyDropdown />
+          {renderApplyDropdown()}
         </div>
       </div>
     </motion.div>
