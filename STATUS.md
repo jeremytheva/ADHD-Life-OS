@@ -6,14 +6,14 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Accessibility Settings selection semantics
+  objective: Day Setup label associations
   issue: null
-  pr: 130
-  branch: fix/accessibility-settings-selection-semantics
+  pr: 132
+  branch: fix/day-setup-label-associations
 next_actions:
-  - Require fresh exact-head canonical validation for this final PR #130 status-bearing head.
-  - Reconfirm PR #130 review/thread state after validation.
-  - Apply lifecycle:implementation-complete only when the current head remains green and no in-scope work remains.
+  - Require fresh exact-head canonical validation for PR #132 current status-bearing head.
+  - Audit PR #132 acceptance criteria and review/thread state after validation.
+  - Apply lifecycle:implementation-complete only when exact-head evidence is green and no in-scope work remains.
   - After merge, inspect live main and remaining Stage 3 frontend surfaces before selecting another slice.
 blockers: []
 requires_owner_decision: false
@@ -22,16 +22,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Exact-head Application validation run 245 passed on PR #130 checkpoint head 2bdc242a0005df10843fc9eb96461cb01231162c, including the canonical platform validation gate. No submitted reviews or unresolved review threads were present. This durable evidence checkpoint creates a new head and therefore requires one fresh exact-head run before lifecycle completion.
-last_verified_commit: 2bdc242a0005df10843fc9eb96461cb01231162c
-last_updated: 2026-08-30T07:20:00+10:00
+validation_basis: PR #130 merged at 044f2deb1a25e06cfb643c0c09042a5d69f6e5f4 after exact-head Application validation run 247 passed on head ff6819177fd0d2972aec2390cbcee82aa121164c. Concurrent duplicate PR #131 was closed without merge as superseded. PR #132 is the sole active implementation thread and requires fresh exact-head canonical validation.
+last_verified_commit: ff6819177fd0d2972aec2390cbcee82aa121164c
+last_updated: 2026-08-30T07:27:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,21 +43,19 @@ last_updated: 2026-08-30T07:20:00+10:00
 
 ## Current objective
 
-Finish **PR #130 — Accessibility Settings selection semantics** through its final exact-head guarded lifecycle.
+Finish **PR #132 — Day Setup label associations** through canonical validation and the guarded PR lifecycle.
 
-PR #129 merged successfully and completed Reward Shop category-filter selection semantics. Post-merge inspection found the next evidence-backed accessibility defect in Accessibility Settings: Text Size, Contrast and Line Spacing were visually selected button sets, but their active state depended on styling alone and the headings were not programmatically associated with the option sets. Existing boolean toggle controls already expose `aria-pressed`, so this was a local semantic inconsistency rather than a new interaction model.
+PR #130 merged successfully and completed Accessibility Settings option-group selection semantics. A concurrent pre-merge duplicate, PR #131, was detected after #130 merged and closed without merge as superseded so the repository returns to one authoritative implementation thread.
 
-PR #130 exposes each option set as a labelled `role="group"`, binds `aria-pressed` to the authoritative preview state, preserves the existing options and visual styling, and leaves preview, Save, Cancel, modal/focus, schema, persistence and provider behaviour unchanged. Deterministic regression coverage protects the semantic contract.
-
-Checkpoint head `2bdc242a0005df10843fc9eb96461cb01231162c` passed exact-head Application validation run 245, including `npm run platform:validate`. Acceptance criteria were audited against that head and no submitted reviews or unresolved review threads were present. This documentation checkpoint is now the final status-bearing head and requires one fresh exact-head validation before implementation-complete.
+Post-merge inspection found the next evidence-backed accessibility defect in `DaySetup`: Wake Time, Sleep Time, Work Start Time and Work End Time displayed visible labels without explicit programmatic association to their time inputs. PR #132 adds stable input IDs and matching `htmlFor` values, preserving existing field values, required/optional behaviour, submission flow, preference schema and persistence. Deterministic regression coverage protects all four associations.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — implementation and acceptance audit are complete; final exact-head evidence is required after this durable handoff checkpoint |
-| Execution state | VALIDATING — keep PR #130 Draft until the current status-bearing head passes canonical validation |
+| Gate state | VALIDATING — implementation and deterministic coverage are present; exact-head canonical evidence is outstanding |
+| Execution state | VALIDATING — PR #132 remains Draft until current-head validation and acceptance audit are complete |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -66,12 +64,12 @@ Checkpoint head `2bdc242a0005df10843fc9eb96461cb01231162c` passed exact-head App
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Active application PR | PR #130 — Accessibility Settings selection semantics |
-| Current implementation outcome | Text Size, Contrast and Line Spacing expose labelled groups and authoritative selected-state semantics |
-| Last completed product outcome on `main` | PR #129 — Reward Shop category filter semantics |
-| Current blocker | None; one final exact-head validation is pending because this evidence checkpoint is a new commit |
+| Active application PR | PR #132 — Day Setup label associations |
+| Current implementation outcome | All four Day Setup time labels are explicitly associated with their existing inputs |
+| Last completed product outcome on `main` | PR #130 — Accessibility Settings selection semantics |
+| Current blocker | None; exact-head canonical validation is pending |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Obtain exact-head canonical validation for the current checkpoint, reconfirm review state, then apply implementation-complete only if evidence remains green |
+| Next action | Inspect PR #132 exact-head validation, then audit acceptance/reviews and advance lifecycle only when evidence is green |
 | Post-merge continuation | Inspect live `main`, open PRs and remaining Stage 3 frontend surfaces; select only an evidence-backed accessibility, cognitive-load or maintainability slice consistent with the roadmap. |
 
 ## Autonomous continuation entry answers
@@ -79,21 +77,22 @@ Checkpoint head `2bdc242a0005df10843fc9eb96461cb01231162c` passed exact-head App
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3, Change gate, execution state VALIDATING. |
-| What is already happening? | PR #130 is the sole active Draft implementation thread and is awaiting final exact-head evidence on this documentation checkpoint. |
-| What has been validated? | Checkpoint head `2bdc242a0005df10843fc9eb96461cb01231162c` passed Application validation run 245 and the full canonical gate; reviews and review threads were clear. |
-| What changed? | Accessibility Settings stateful option sets expose labelled grouping and `aria-pressed` selection semantics with deterministic regression coverage. |
-| What is next? | Revalidate the final status-bearing head, reconfirm review state, and advance PR #130 only if all evidence remains clean. |
+| What is already happening? | PR #132 is the sole active Draft implementation thread. PR #131 was closed as a superseded duplicate of merged PR #130. |
+| What has been validated? | PR #130 final head `ff6819177fd0d2972aec2390cbcee82aa121164c` passed Application validation run 247; PR #132 has not yet passed canonical validation on its status-bearing head. |
+| What changed? | Day Setup's four visible time labels now have explicit `htmlFor`/`id` associations with deterministic regression coverage. |
+| What is next? | Require exact-head canonical validation, audit acceptance/review state, then advance PR #132 through the guarded lifecycle if clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-- PR #123 — Mode Switcher keyboard/menu semantics and focus restoration.
 - PR #124 — Today unscheduled-task progressive disclosure.
 - PR #125 — Tasks sort-state integrity and one accessible sort control.
 - PR #126 — Project card keyboard and menu interaction integrity.
 - PR #127 — Template Apply menu keyboard and focus ownership.
 - PR #129 — Reward Shop category filter semantics.
+- PR #130 — Accessibility Settings selection semantics.
+- PR #131 — closed unmerged as a concurrent duplicate superseded by PR #130.
 
 ## Interaction and cognitive-load state
 
@@ -103,13 +102,15 @@ Checkpoint head `2bdc242a0005df10843fc9eb96461cb01231162c` passed exact-head App
 - Today progressively discloses unscheduled work rather than rendering an unbounded competing list by default.
 - Tasks sorting uses one authoritative state and one accessible sort control.
 - Reward Shop category filters expose labelled grouping and selected-state semantics.
+- Accessibility Settings Text Size, Contrast and Line Spacing options expose labelled grouping and selected-state semantics.
 
-### Active — Accessibility Settings / PR #130
+### Active — Day Setup / PR #132
 
-- Text Size options use one labelled group and `aria-pressed` state.
-- Contrast options use one labelled group and `aria-pressed` state.
-- Line Spacing options use one labelled group and `aria-pressed` state.
-- Preview, Save, Cancel and existing toggle behaviour are preserved.
+- Wake Time label is explicitly associated with its input.
+- Sleep Time label is explicitly associated with its input.
+- Work Start Time label is explicitly associated with its input.
+- Work End Time label is explicitly associated with its input.
+- Existing field values, required/optional semantics and submit behaviour are preserved.
 - Preference persistence/provider behaviour is unchanged.
 
 ## Backend / provider work — intentionally deferred
@@ -147,12 +148,13 @@ While deferred:
 
 ## Next dependency-correct work
 
-1. require fresh exact-head canonical validation on the final PR #130 status-bearing head;
-2. reconfirm submitted reviews and unresolved review threads;
-3. apply `lifecycle:implementation-complete` only when exact-head evidence remains green and no in-scope work remains;
-4. allow the guarded lifecycle to progress Ready → Mergeable → Merged;
-5. after merge, inspect live `main` and remaining Stage 3 frontend evidence before opening another implementation thread;
-6. continue autonomously while provider-dependent execution work remains intentionally deferred.
+1. require fresh exact-head canonical validation on PR #132;
+2. inspect submitted reviews and unresolved review threads;
+3. audit every acceptance criterion against the exact current head;
+4. apply `lifecycle:implementation-complete` only when evidence remains green and no in-scope work remains;
+5. allow the guarded lifecycle to progress Ready → Mergeable → Merged;
+6. after merge, inspect live `main` and remaining Stage 3 frontend evidence before opening another implementation thread;
+7. continue autonomously while provider-dependent execution work remains intentionally deferred.
 
 ## Stage 3 exit conditions
 
