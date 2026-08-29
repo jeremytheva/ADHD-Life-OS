@@ -72,13 +72,13 @@ const AccessibilitySettings = ({ onClose }) => {
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Font Size */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
+          <div role="group" aria-labelledby="accessibility-text-size-label">
+            <div id="accessibility-text-size-label" className="block text-sm font-medium text-slate-700 mb-3">
               <div className="flex items-center gap-2">
                 <SafeIcon icon={FiType} className="w-4 h-4" />
                 <span>Text Size</span>
               </div>
-            </label>
+            </div>
             <div className="grid grid-cols-4 gap-2">
               {[
                 { value: 'small', label: 'Small' },
@@ -90,6 +90,7 @@ const AccessibilitySettings = ({ onClose }) => {
                   type="button"
                   key={size.value}
                   onClick={() => handleChange('fontSize', size.value)}
+                  aria-pressed={settings.fontSize === size.value}
                   className={`
                     px-4 py-2 rounded-lg border-2 transition-all
                     ${settings.fontSize === size.value
@@ -113,13 +114,13 @@ const AccessibilitySettings = ({ onClose }) => {
           </div>
 
           {/* Contrast */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
+          <div role="group" aria-labelledby="accessibility-contrast-label">
+            <div id="accessibility-contrast-label" className="block text-sm font-medium text-slate-700 mb-3">
               <div className="flex items-center gap-2">
                 <SafeIcon icon={FiEye} className="w-4 h-4" />
                 <span>Contrast</span>
               </div>
-            </label>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               {[
                 { value: 'normal', label: 'Normal', desc: 'Standard contrast' },
@@ -129,6 +130,7 @@ const AccessibilitySettings = ({ onClose }) => {
                   type="button"
                   key={contrast.value}
                   onClick={() => handleChange('contrast', contrast.value)}
+                  aria-pressed={settings.contrast === contrast.value}
                   className={`
                     p-4 rounded-lg border-2 transition-all text-left
                     ${settings.contrast === contrast.value
@@ -149,10 +151,10 @@ const AccessibilitySettings = ({ onClose }) => {
           </div>
 
           {/* Line Spacing */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
+          <div role="group" aria-labelledby="accessibility-line-spacing-label">
+            <div id="accessibility-line-spacing-label" className="block text-sm font-medium text-slate-700 mb-3">
               Line Spacing
-            </label>
+            </div>
             <div className="grid grid-cols-3 gap-2">
               {[
                 { value: 'normal', label: 'Normal' },
@@ -163,6 +165,7 @@ const AccessibilitySettings = ({ onClose }) => {
                   type="button"
                   key={spacing.value}
                   onClick={() => handleChange('lineSpacing', spacing.value)}
+                  aria-pressed={settings.lineSpacing === spacing.value}
                   className={`
                     px-4 py-2 rounded-lg border-2 transition-all
                     ${settings.lineSpacing === spacing.value
