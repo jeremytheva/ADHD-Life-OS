@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -16,8 +16,42 @@ const TemplateCard = ({
   index
 }) => {
   const [showApplyMenu, setShowApplyMenu] = useState(false)
+  const applyMenuTriggerRef = useRef(null)
+  const applyMenuItemRefs = useRef([])
   const isRoutine = type === 'routine'
   const templateName = isRoutine ? template.name : template.title
+
+  useEffect(() => {
+    if (showApplyMenu && !isApplied) applyMenuItemRefs.current[0]?.focus()
+  }, [showApplyMenu, isApplied])
+
+  const closeApplyMenu = ({ restoreFocus = false } = {}) => {
+    setShowApplyMenu(false)
+    if (restoreFocus) requestAnimationFrame(() => applyMenuTriggerRef.current?.focus())
+  }
+
+  const handleApplyMenuKeyDown = (event) => {
+    const items = applyMenuItemRefs.current.filter(Boolean)
+    const currentIndex = items.indexOf(document.activeElement)
+
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      event.stopPropagation()
+      closeApplyMenu({ restoreFocus: true })
+      return
+    }
+
+    let nextIndex = null
+    if (event.key === 'ArrowDown') nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % items.length
+    if (event.key === 'ArrowUp') nextIndex = currentIndex < 0 ? items.length - 1 : (currentIndex - 1 + items.length) % items.length
+    if (event.key === 'Home') nextIndex = 0
+    if (event.key === 'End') nextIndex = items.length - 1
+
+    if (nextIndex !== null) {
+      event.preventDefault()
+      items[nextIndex]?.focus()
+    }
+  }
 
   const getCategoryColor = (category) => {
     const colors = {
@@ -45,11 +79,13 @@ const TemplateCard = ({
   const renderApplyDropdown = () => (
     <div className="relative">
       <button
+        ref={applyMenuTriggerRef}
         type="button"
-        onClick={() => setShowApplyMenu(!showApplyMenu)}
+        onClick={() => setShowApplyMenu((open) => !open)}
         disabled={isApplied}
         aria-haspopup="menu"
         aria-expanded={showApplyMenu && !isApplied}
+        aria-label={`${isApplied ? 'Applied' : 'Apply'} ${templateName}`}
         className={`
           px-4 py-2 rounded-lg flex items-center gap-2 transition-colors
           ${isApplied
@@ -67,7 +103,7 @@ const TemplateCard = ({
         <>
           <div
             className="fixed inset-0 z-10"
-            onClick={() => setShowApplyMenu(false)}
+            onClick={() => closeApplyMenu()}
           />
           <motion.div
             role="menu"
@@ -75,13 +111,15 @@ const TemplateCard = ({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-20"
+            onKeyDown={handleApplyMenuKeyDown}
           >
             <button
+              ref={(element) => { applyMenuItemRefs.current[0] = element }}
               type="button"
               role="menuitem"
               onClick={() => {
                 onDirectApply()
-                setShowApplyMenu(false)
+                closeApplyMenu()
               }}
               className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-2"
             >
@@ -89,6 +127,7 @@ const TemplateCard = ({
               <span>Apply Directly</span>
             </button>
             <button
+              ref={(element) => { applyMenuItemRefs.current[1] = element }}
               type="button"
               role="menuitem"
               onClick={() => {
