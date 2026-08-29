@@ -6,14 +6,15 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Reward Shop category filter semantics
+  objective: Accessibility Settings selection semantics
   issue: null
-  pr: 129
-  branch: fix/reward-shop-filter-semantics
+  pr: 130
+  branch: fix/accessibility-settings-selection-semantics
 next_actions:
-  - Require fresh exact-head canonical validation for this final PR #129 status-bearing head.
-  - Advance PR #129 through Ready, Mergeable and Merged only when exact-head evidence and review state remain clean.
-  - After merge, inspect live main and remaining Stage 3 frontend surfaces before selecting the next evidence-backed backend-independent slice.
+  - Require fresh exact-head canonical validation for this final PR #130 status-bearing head.
+  - Reconfirm PR #130 review/thread state after validation.
+  - Apply lifecycle:implementation-complete only when the current head remains green and no in-scope work remains.
+  - After merge, inspect live main and remaining Stage 3 frontend surfaces before selecting another slice.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -28,9 +29,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Exact-head Application validation run 242 passed on PR #129 checkpoint head 39543ae106cfa034ae88445baca9f4548af33a31, including canonical platform validation. No submitted reviews or unresolved review threads were present. This final durable-handoff documentation commit creates a new head and therefore requires one fresh exact-head canonical run before lifecycle completion.
-last_verified_commit: 39543ae106cfa034ae88445baca9f4548af33a31
-last_updated: 2026-08-30T06:31:00+10:00
+validation_basis: Exact-head Application validation run 245 passed on PR #130 checkpoint head 2bdc242a0005df10843fc9eb96461cb01231162c, including the canonical platform validation gate. No submitted reviews or unresolved review threads were present. This durable evidence checkpoint creates a new head and therefore requires one fresh exact-head run before lifecycle completion.
+last_verified_commit: 2bdc242a0005df10843fc9eb96461cb01231162c
+last_updated: 2026-08-30T07:20:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -42,11 +43,13 @@ last_updated: 2026-08-30T06:31:00+10:00
 
 ## Current objective
 
-Finish **PR #129 — Reward Shop category filter semantics** through its final exact-head guarded lifecycle.
+Finish **PR #130 — Accessibility Settings selection semantics** through its final exact-head guarded lifecycle.
 
-PR #127 merged successfully and completed Template Apply-menu keyboard/focus ownership. Post-merge inspection found that Reward Shop category filters showed selected state only visually. PR #129 preserves the existing All, Appearance, Boosts and Breaks filtering behaviour while exposing the controls as a labelled group and binding `aria-pressed` to authoritative `selectedCategory` state. Deterministic regression coverage protects that semantic contract. No gamification data, currency, purchasing, provider or persistence behaviour changes.
+PR #129 merged successfully and completed Reward Shop category-filter selection semantics. Post-merge inspection found the next evidence-backed accessibility defect in Accessibility Settings: Text Size, Contrast and Line Spacing were visually selected button sets, but their active state depended on styling alone and the headings were not programmatically associated with the option sets. Existing boolean toggle controls already expose `aria-pressed`, so this was a local semantic inconsistency rather than a new interaction model.
 
-Checkpoint head `39543ae106cfa034ae88445baca9f4548af33a31` passed exact-head Application validation run 242, including the full canonical `npm run platform:validate` gate. The PR has no submitted reviews or unresolved review threads. This evidence checkpoint is a new commit, so one fresh exact-head run is required before implementation-complete lifecycle transition.
+PR #130 exposes each option set as a labelled `role="group"`, binds `aria-pressed` to the authoritative preview state, preserves the existing options and visual styling, and leaves preview, Save, Cancel, modal/focus, schema, persistence and provider behaviour unchanged. Deterministic regression coverage protects the semantic contract.
+
+Checkpoint head `2bdc242a0005df10843fc9eb96461cb01231162c` passed exact-head Application validation run 245, including `npm run platform:validate`. Acceptance criteria were audited against that head and no submitted reviews or unresolved review threads were present. This documentation checkpoint is now the final status-bearing head and requires one fresh exact-head validation before implementation-complete.
 
 ## AI execution gate
 
@@ -54,7 +57,7 @@ Checkpoint head `39543ae106cfa034ae88445baca9f4548af33a31` passed exact-head App
 | --- | --- |
 | Current gate | CHANGE |
 | Gate state | VALIDATING — implementation and acceptance audit are complete; final exact-head evidence is required after this durable handoff checkpoint |
-| Execution state | VALIDATING — keep PR #129 Draft until the current status-bearing head passes canonical validation |
+| Execution state | VALIDATING — keep PR #130 Draft until the current status-bearing head passes canonical validation |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -63,12 +66,12 @@ Checkpoint head `39543ae106cfa034ae88445baca9f4548af33a31` passed exact-head App
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Active application PR | PR #129 — Reward Shop category filter semantics |
-| Current implementation outcome | Reward category filters expose a labelled group and selected-state semantics while preserving existing filtering |
-| Last completed product outcome on `main` | PR #127 — Template Apply menu keyboard and focus ownership |
-| Current blocker | None; final exact-head validation is pending only because this evidence checkpoint is a new commit |
+| Active application PR | PR #130 — Accessibility Settings selection semantics |
+| Current implementation outcome | Text Size, Contrast and Line Spacing expose labelled groups and authoritative selected-state semantics |
+| Last completed product outcome on `main` | PR #129 — Reward Shop category filter semantics |
+| Current blocker | None; one final exact-head validation is pending because this evidence checkpoint is a new commit |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Obtain exact-head canonical validation for this checkpoint, then advance PR #129 only if evidence remains green |
+| Next action | Obtain exact-head canonical validation for the current checkpoint, reconfirm review state, then apply implementation-complete only if evidence remains green |
 | Post-merge continuation | Inspect live `main`, open PRs and remaining Stage 3 frontend surfaces; select only an evidence-backed accessibility, cognitive-load or maintainability slice consistent with the roadmap. |
 
 ## Autonomous continuation entry answers
@@ -76,21 +79,21 @@ Checkpoint head `39543ae106cfa034ae88445baca9f4548af33a31` passed exact-head App
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3, Change gate, execution state VALIDATING. |
-| What is already happening? | PR #129 is the active Draft implementation thread and is awaiting final exact-head evidence on this documentation checkpoint. |
-| What has been validated? | Checkpoint head `39543ae106cfa034ae88445baca9f4548af33a31` passed Application validation run 242 and the full canonical gate; reviews and review threads are clear. |
-| What changed? | Reward Shop category-selection state is now programmatically exposed through a labelled group and `aria-pressed`. |
-| What is next? | Finish PR #129 lifecycle; after merge, inspect remaining Stage 3 frontend evidence before opening another implementation thread. |
+| What is already happening? | PR #130 is the sole active Draft implementation thread and is awaiting final exact-head evidence on this documentation checkpoint. |
+| What has been validated? | Checkpoint head `2bdc242a0005df10843fc9eb96461cb01231162c` passed Application validation run 245 and the full canonical gate; reviews and review threads were clear. |
+| What changed? | Accessibility Settings stateful option sets expose labelled grouping and `aria-pressed` selection semantics with deterministic regression coverage. |
+| What is next? | Revalidate the final status-bearing head, reconfirm review state, and advance PR #130 only if all evidence remains clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-- PR #122 — Template Library / Preview / Edit stack-safe modal ownership and focus restoration.
 - PR #123 — Mode Switcher keyboard/menu semantics and focus restoration.
 - PR #124 — Today unscheduled-task progressive disclosure.
 - PR #125 — Tasks sort-state integrity and one accessible sort control.
 - PR #126 — Project card keyboard and menu interaction integrity.
 - PR #127 — Template Apply menu keyboard and focus ownership.
+- PR #129 — Reward Shop category filter semantics.
 
 ## Interaction and cognitive-load state
 
@@ -99,13 +102,15 @@ Checkpoint head `39543ae106cfa034ae88445baca9f4548af33a31` passed exact-head App
 - Routine Progress, Routine Statistics, Template Preview/Edit and Apply flows, Mode Switcher and Project-card menus have explicit focus/keyboard contracts with regression coverage.
 - Today progressively discloses unscheduled work rather than rendering an unbounded competing list by default.
 - Tasks sorting uses one authoritative state and one accessible sort control.
+- Reward Shop category filters expose labelled grouping and selected-state semantics.
 
-### Active — Reward Shop / PR #129
+### Active — Accessibility Settings / PR #130
 
-- Category filters are one labelled control group.
-- Selected category state is bound to `aria-pressed` on the existing filter buttons.
-- Existing filtering and visual selection are preserved.
-- Gamification service/data behaviour is unchanged.
+- Text Size options use one labelled group and `aria-pressed` state.
+- Contrast options use one labelled group and `aria-pressed` state.
+- Line Spacing options use one labelled group and `aria-pressed` state.
+- Preview, Save, Cancel and existing toggle behaviour are preserved.
+- Preference persistence/provider behaviour is unchanged.
 
 ## Backend / provider work — intentionally deferred
 
@@ -142,11 +147,11 @@ While deferred:
 
 ## Next dependency-correct work
 
-1. require fresh exact-head canonical validation on the final PR #129 status-bearing head;
-2. apply `lifecycle:implementation-complete` only if that evidence remains green and review state remains clear;
-3. allow the guarded lifecycle to progress Ready → Mergeable → Merged;
-4. after merge, inspect live `main`, current PRs and remaining Stage 3 frontend surfaces;
-5. select the next evidence-backed backend-independent slice from the roadmap priority order rather than inventing scope;
+1. require fresh exact-head canonical validation on the final PR #130 status-bearing head;
+2. reconfirm submitted reviews and unresolved review threads;
+3. apply `lifecycle:implementation-complete` only when exact-head evidence remains green and no in-scope work remains;
+4. allow the guarded lifecycle to progress Ready → Mergeable → Merged;
+5. after merge, inspect live `main` and remaining Stage 3 frontend evidence before opening another implementation thread;
 6. continue autonomously while provider-dependent execution work remains intentionally deferred.
 
 ## Stage 3 exit conditions

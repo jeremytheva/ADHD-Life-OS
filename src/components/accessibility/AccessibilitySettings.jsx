@@ -73,13 +73,15 @@ const AccessibilitySettings = ({ onClose }) => {
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Font Size */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
-              <div className="flex items-center gap-2">
-                <SafeIcon icon={FiType} className="w-4 h-4" />
-                <span>Text Size</span>
-              </div>
-            </label>
-            <div className="grid grid-cols-4 gap-2">
+            <div id="accessibility-text-size-label" className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-3">
+              <SafeIcon icon={FiType} className="w-4 h-4" />
+              <span>Text Size</span>
+            </div>
+            <div
+              role="group"
+              aria-labelledby="accessibility-text-size-label"
+              className="grid grid-cols-4 gap-2"
+            >
               {[
                 { value: 'small', label: 'Small' },
                 { value: 'medium', label: 'Medium' },
@@ -90,6 +92,7 @@ const AccessibilitySettings = ({ onClose }) => {
                   type="button"
                   key={size.value}
                   onClick={() => handleChange('fontSize', size.value)}
+                  aria-pressed={settings.fontSize === size.value}
                   className={`
                     px-4 py-2 rounded-lg border-2 transition-all
                     ${settings.fontSize === size.value
@@ -114,13 +117,15 @@ const AccessibilitySettings = ({ onClose }) => {
 
           {/* Contrast */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
-              <div className="flex items-center gap-2">
-                <SafeIcon icon={FiEye} className="w-4 h-4" />
-                <span>Contrast</span>
-              </div>
-            </label>
-            <div className="grid grid-cols-2 gap-3">
+            <div id="accessibility-contrast-label" className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-3">
+              <SafeIcon icon={FiEye} className="w-4 h-4" />
+              <span>Contrast</span>
+            </div>
+            <div
+              role="group"
+              aria-labelledby="accessibility-contrast-label"
+              className="grid grid-cols-2 gap-3"
+            >
               {[
                 { value: 'normal', label: 'Normal', desc: 'Standard contrast' },
                 { value: 'high', label: 'High', desc: 'Enhanced contrast' }
@@ -129,6 +134,7 @@ const AccessibilitySettings = ({ onClose }) => {
                   type="button"
                   key={contrast.value}
                   onClick={() => handleChange('contrast', contrast.value)}
+                  aria-pressed={settings.contrast === contrast.value}
                   className={`
                     p-4 rounded-lg border-2 transition-all text-left
                     ${settings.contrast === contrast.value
@@ -150,10 +156,14 @@ const AccessibilitySettings = ({ onClose }) => {
 
           {/* Line Spacing */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
+            <div id="accessibility-line-spacing-label" className="text-sm font-medium text-slate-700 mb-3">
               Line Spacing
-            </label>
-            <div className="grid grid-cols-3 gap-2">
+            </div>
+            <div
+              role="group"
+              aria-labelledby="accessibility-line-spacing-label"
+              className="grid grid-cols-3 gap-2"
+            >
               {[
                 { value: 'normal', label: 'Normal' },
                 { value: 'relaxed', label: 'Relaxed' },
@@ -163,6 +173,7 @@ const AccessibilitySettings = ({ onClose }) => {
                   type="button"
                   key={spacing.value}
                   onClick={() => handleChange('lineSpacing', spacing.value)}
+                  aria-pressed={settings.lineSpacing === spacing.value}
                   className={`
                     px-4 py-2 rounded-lg border-2 transition-all
                     ${settings.lineSpacing === spacing.value
