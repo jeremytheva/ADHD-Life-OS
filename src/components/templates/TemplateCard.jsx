@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -16,8 +16,71 @@ const TemplateCard = ({
   index
 }) => {
   const [showApplyMenu, setShowApplyMenu] = useState(false)
+  const applyTriggerRef = useRef(null)
+  const applyMenuItemRefs = useRef([])
   const isRoutine = type === 'routine'
   const templateName = isRoutine ? template.name : template.title
+
+  const focusApplyMenuItem = useCallback((indexToFocus) => {
+    const itemCount = applyMenuItemRefs.current.length
+    if (!itemCount) return
+    const nextIndex = (indexToFocus + itemCount) % itemCount
+    applyMenuItemRefs.current[nextIndex]?.focus()
+  }, [])
+
+  const restoreApplyTriggerFocus = () => {
+    window.requestAnimationFrame(() => applyTriggerRef.current?.focus())
+  }
+
+  const closeApplyMenu = ({ restoreFocus = true } = {}) => {
+    setShowApplyMenu(false)
+    if (restoreFocus) restoreApplyTriggerFocus()
+  }
+
+  const handleApplyTriggerClick = () => {
+    if (showApplyMenu) {
+      closeApplyMenu()
+      return
+    }
+    setShowApplyMenu(true)
+  }
+
+  const handleApplyMenuKeyDown = (event) => {
+    const activeIndex = Math.max(0, applyMenuItemRefs.current.findIndex((item) => item === document.activeElement))
+
+    switch (event.key) {
+      case 'Escape':
+        event.preventDefault()
+        event.stopPropagation()
+        closeApplyMenu()
+        break
+      case 'ArrowDown':
+        event.preventDefault()
+        focusApplyMenuItem(activeIndex + 1)
+        break
+      case 'ArrowUp':
+        event.preventDefault()
+        focusApplyMenuItem(activeIndex - 1)
+        break
+      case 'Home':
+        event.preventDefault()
+        focusApplyMenuItem(0)
+        break
+      case 'End':
+        event.preventDefault()
+        focusApplyMenuItem(applyMenuItemRefs.current.length - 1)
+        break
+      default:
+        break
+    }
+  }
+
+  useEffect(() => {
+    if (!showApplyMenu || isApplied) return
+
+    const frame = window.requestAnimationFrame(() => focusApplyMenuItem(0))
+    return () => window.cancelAnimationFrame(frame)
+  }, [showApplyMenu, isApplied, focusApplyMenuItem])
 
   const getCategoryColor = (category) => {
     const colors = {
@@ -45,8 +108,9 @@ const TemplateCard = ({
   const renderApplyDropdown = () => (
     <div className="relative">
       <button
+        ref={applyTriggerRef}
         type="button"
-        onClick={() => setShowApplyMenu(!showApplyMenu)}
+        onClick={handleApplyTriggerClick}
         disabled={isApplied}
         aria-haspopup="menu"
         aria-expanded={showApplyMenu && !isApplied}
@@ -67,21 +131,24 @@ const TemplateCard = ({
         <>
           <div
             className="fixed inset-0 z-10"
-            onClick={() => setShowApplyMenu(false)}
+            aria-hidden="true"
+            onClick={() => closeApplyMenu()}
           />
           <motion.div
             role="menu"
             aria-label={`Apply ${templateName}`}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
+            onKeyDown={handleApplyMenuKeyDown}
             className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-20"
           >
             <button
+              ref={(element) => { applyMenuItemRefs.current[0] = element }}
               type="button"
               role="menuitem"
               onClick={() => {
                 onDirectApply()
-                setShowApplyMenu(false)
+                closeApplyMenu({ restoreFocus: false })
               }}
               className="w-full px-4 py-2 text-left text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-700 flex items-center gap-2"
             >
@@ -89,6 +156,7 @@ const TemplateCard = ({
               <span>Apply Directly</span>
             </button>
             <button
+              ref={(element) => { applyMenuItemRefs.current[1] = element }}
               type="button"
               role="menuitem"
               onClick={() => {
