@@ -59,9 +59,9 @@ const createModeMock = async (page) => {
   })
 }
 
-const register = async (page) => {
+const register = async (page, email = 'mode-switcher@example.test') => {
   await page.goto('/register')
-  await page.getByLabel('Email').fill('mode-switcher@example.test')
+  await page.getByLabel('Email').fill(email)
   await page.getByLabel('Password').fill('browser-test-password')
   await page.getByRole('button', { name: 'Create Account' }).click()
   await expect(page.getByRole('button', { name: 'Skip Setup' })).toBeVisible()
@@ -99,4 +99,30 @@ test('Mode Switcher supports keyboard navigation, selection and focus restoratio
 
   await expect(reopenedMenu).toHaveCount(0)
   await expect(workTrigger).toBeFocused()
+})
+
+test('Mode Switcher Escape closes the nested menu before mobile navigation', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await createModeMock(page)
+  await register(page, 'mode-switcher-mobile@example.test')
+
+  const openNavigation = page.getByRole('button', { name: 'Open navigation' })
+  await openNavigation.click()
+
+  const mobileNavigation = page.getByRole('complementary', { name: 'Mobile application navigation' })
+  await expect(mobileNavigation).toBeVisible()
+
+  const modeTrigger = mobileNavigation.getByRole('button', { name: 'All', exact: true })
+  await modeTrigger.click()
+  const menu = mobileNavigation.getByRole('menu', { name: 'Available contexts' })
+  await expect(menu).toBeVisible()
+
+  await page.keyboard.press('Escape')
+  await expect(menu).toHaveCount(0)
+  await expect(mobileNavigation).toBeVisible()
+  await expect(modeTrigger).toBeFocused()
+
+  await page.keyboard.press('Escape')
+  await expect(mobileNavigation).toHaveCount(0)
+  await expect(openNavigation).toBeFocused()
 })
