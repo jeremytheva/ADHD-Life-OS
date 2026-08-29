@@ -73,7 +73,7 @@ const registerAndOpenTemplates = async (page, email) => {
   await page.getByRole('link', { name: 'Tasks' }).click()
   await expect(page.getByRole('heading', { name: 'Tasks' })).toBeVisible()
 
-  const templatesTrigger = page.getByRole('button', { name: 'Templates' })
+  const templatesTrigger = page.getByRole('button', { name: 'Templates', exact: true })
   await templatesTrigger.click()
 
   const library = page.getByRole('dialog', { name: 'Template Library' })
