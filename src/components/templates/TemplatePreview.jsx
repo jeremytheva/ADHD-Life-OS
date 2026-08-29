@@ -2,11 +2,14 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 
 const { FiX, FiRefreshCw, FiCheckSquare, FiClock, FiTag, FiPlus, FiEdit3 } = FiIcons
 
 const TemplatePreview = ({ template, onClose, onDirectApply, onEditBeforeApply }) => {
   const isRoutine = template.type === 'routine'
+  const dialogTitleId = `template-preview-title-${template.id}`
+  const dialogRef = useModalDialog({ onEscape: onClose })
 
   const totalDuration = isRoutine
     ? template.steps?.reduce((sum, step) => sum + step.duration_minutes, 0)
@@ -21,6 +24,11 @@ const TemplatePreview = ({ template, onClose, onDirectApply, onEditBeforeApply }
       onClick={onClose}
     >
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={dialogTitleId}
+        tabIndex={-1}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
@@ -34,20 +42,22 @@ const TemplatePreview = ({ template, onClose, onDirectApply, onEditBeforeApply }
               p-3 rounded-lg
               ${isRoutine ? 'bg-purple-100' : 'bg-green-100'}
             `}>
-              <SafeIcon 
-                icon={isRoutine ? FiRefreshCw : FiCheckSquare} 
+              <SafeIcon
+                icon={isRoutine ? FiRefreshCw : FiCheckSquare}
                 className={`w-6 h-6 ${isRoutine ? 'text-purple-600' : 'text-green-600'}`}
               />
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-slate-900 mb-1">
+              <h3 id={dialogTitleId} className="text-xl font-bold text-slate-900 mb-1">
                 {isRoutine ? template.name : template.title}
               </h3>
               <p className="text-slate-600">{template.description}</p>
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close template preview"
             className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
           >
             <SafeIcon icon={FiX} className="w-5 h-5" />
@@ -180,12 +190,14 @@ const TemplatePreview = ({ template, onClose, onDirectApply, onEditBeforeApply }
         <div className="p-6 border-t border-slate-200 bg-slate-50">
           <div className="flex gap-3">
             <button
+              type="button"
               onClick={onClose}
               className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition-colors"
             >
               Close
             </button>
             <button
+              type="button"
               onClick={onEditBeforeApply}
               className="flex-1 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
             >
@@ -193,6 +205,7 @@ const TemplatePreview = ({ template, onClose, onDirectApply, onEditBeforeApply }
               Edit First
             </button>
             <button
+              type="button"
               onClick={onDirectApply}
               className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
             >
