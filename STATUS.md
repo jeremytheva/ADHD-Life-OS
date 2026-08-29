@@ -4,17 +4,17 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Change
-execution_state: READY
+execution_state: VALIDATING
 current_work:
   objective: Tasks sort-state integrity and control-density reduction
   issue: null
-  pr: null
-  branch: null
+  pr: 125
+  branch: fix/task-sort-state-integrity
 next_actions:
-  - Inspect TaskList sorting as one focused integrity and cognitive-load slice.
-  - Repair the precedence conflict where default mode sort preferences can override a user-selected local sort while the UI indicates the local selection.
-  - Consolidate the four simultaneous sort buttons into one explicit accessible sort control while preserving every existing sort option.
-  - Add deterministic and browser regression coverage proving visible selection and actual task order stay aligned.
+  - Require fresh exact-head canonical validation for this status-bearing PR #125 head.
+  - Audit PR #125 against its acceptance contract and confirm no blocking review finding remains.
+  - Advance PR #125 through Ready, Mergeable and Merged only if exact-head evidence remains green.
+  - After merge, inspect the remaining Stage 3 frontend surfaces and select the next evidence-backed dependency-correct slice rather than inventing new work.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -29,9 +29,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #124 implementation/test head f1f681e4c020339a83484b349f61f9e42e8d6e36 passed canonical Application validation run 229; this STATUS-only checkpoint commit requires fresh exact-head CI before lifecycle completion.
-last_verified_commit: f1f681e4c020339a83484b349f61f9e42e8d6e36
-last_updated: 2026-08-30T03:34:00+10:00
+validation_basis: PR #125 implementation/test head c39e3f6199412446801603a869037438c74cd129 passed exact-head Validate application and lifecycle reconciliation; this STATUS checkpoint commit invalidates that exact-head evidence and requires a fresh canonical run before lifecycle completion.
+last_verified_commit: c39e3f6199412446801603a869037438c74cd129
+last_updated: 2026-08-30T04:10:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,19 +43,19 @@ last_updated: 2026-08-30T03:34:00+10:00
 
 ## Current objective
 
-Finish PR #124 through exact-head lifecycle validation and merge, then correct **Tasks sort-state integrity and control density**.
+Finish **PR #125 — Tasks sort-state integrity and control-density reduction** through exact-head lifecycle validation and merge.
 
-PR #124 reduces Today’s unscheduled-task visual footprint without changing task data or scheduling policy. It shows the first three unscheduled tasks by default, exposes the total and hidden count, preserves full ordering, provides explicit Show more / Show less controls, resets to the low-load default on timeline reload, and is protected by deterministic and browser regression coverage.
+PR #124 is merged. PR #125 repairs the established Tasks sorting defect where mode preferences could keep the actual list priority-sorted while the UI displayed another selected sort. The branch now uses one authoritative `sortBy` state for both ordering and presentation, synchronizes that state when the active mode preference context changes, and replaces four simultaneous sort buttons with one labelled accessible select while preserving Priority, Due Date, Recently Added and A–Z.
 
-The next queued defect is evidence-backed in `TaskList.jsx`: `getModePreferences()` supplies `sortBy: 'priority'` by default, `loadTasks()` chooses `modePrefs.sortBy || sortBy`, while the visible sort controls set and highlight local `sortBy`. A user can therefore select another sort control while the actual task order remains priority-sorted. The page also exposes four simultaneous sort buttons, adding avoidable control density. The follow-on slice should make one authoritative sort state drive both order and visible selection, using one explicit accessible sort control while preserving all four choices.
+Deterministic source-contract coverage and Playwright browser coverage verify selected value and actual task order stay aligned. The implementation/test head `c39e3f6199412446801603a869037438c74cd129` passed the canonical application validation and lifecycle reconciliation. This documentation checkpoint is a new commit, so fresh exact-head validation is required before lifecycle completion.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | READY — Tasks sort-state integrity after PR #124 merges |
-| Execution state | READY — reconcile PR #124 first; after merge inspect live GitHub and create or reuse one focused Tasks sorting PR |
+| Gate state | VALIDATING — PR #125 implementation complete; fresh exact-head evidence required after durable-state checkpoint |
+| Execution state | VALIDATING — do not merge until the current status-bearing head passes canonical validation and the acceptance audit remains clean |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -64,13 +64,13 @@ The next queued defect is evidence-backed in `TaskList.jsx`: `getModePreferences
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Active application PR | PR #124 — Today unscheduled-task progressive disclosure until merged |
-| Current implementation outcome | Three-item default, total/hidden counts, Show more/less, reload reset, deterministic contract tests and real-browser coverage |
-| Last completed product outcome on `main` | PR #123 — Mode Switcher keyboard/menu semantics, roving focus, Escape ownership and trigger restoration |
+| Active application PR | PR #125 — Tasks sort-state integrity and control-density reduction |
+| Current implementation outcome | One authoritative sort state drives order and visible selection; four sort buttons are consolidated into one accessible select; deterministic and real-browser coverage protect the contract |
+| Last completed product outcome on `main` | PR #124 — Today unscheduled-task progressive disclosure |
 | Autonomous continuation support | IMPLEMENTED / VALIDATED through `AGENTS.md`, machine-readable `STATUS.md`, governance checks and guarded PR lifecycle workflows |
 | Current blocker | None for backend-independent frontend work |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Finish PR #124 through the guarded lifecycle; then repair Tasks sorting state/ordering alignment and reduce sort-control density |
+| Next action | Obtain exact-head validation for this checkpoint, complete the PR #125 acceptance audit, then allow the guarded lifecycle to merge it if evidence remains green |
 
 If this checkpoint conflicts with live GitHub state, later deployment evidence or later provider evidence, verify the authoritative source and correct this file rather than reconstructing state from chat history.
 
@@ -78,11 +78,11 @@ If this checkpoint conflicts with live GitHub state, later deployment evidence o
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3, Change gate, execution state READY. |
-| What is already happening? | PR #124 is the only active application thread until it merges. |
-| What has been validated? | PR #124 implementation/test head `f1f681e4...` passed canonical Application validation run 229. This status-bearing head still requires exact-head validation. |
-| What changed? | Today now progressively discloses unscheduled tasks rather than rendering an unbounded list by default. |
-| What is next? | Repair Tasks sort-state divergence and consolidate sorting into one accessible control. |
+| Where am I? | Stage 3, Change gate, execution state VALIDATING. |
+| What is already happening? | PR #125 is the active application thread. |
+| What has been validated? | PR #125 implementation/test head `c39e3f619...` passed exact-head application validation and lifecycle reconciliation; this status-bearing head still requires fresh exact-head validation. |
+| What changed? | Tasks sorting now has one authoritative state and one accessible sort control, so visible selection and actual ordering cannot diverge through the prior mode-preference precedence path. |
+| What is next? | Finish PR #125 lifecycle, then inspect the remaining Stage 3 frontend surfaces for the next evidence-backed dependency-correct slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -93,7 +93,8 @@ If this checkpoint conflicts with live GitHub state, later deployment evidence o
 - PR #121 — Routine Statistics dialog ownership, explicit retrieval failure/retry and accessible timeframe/progress semantics.
 - PR #122 — Template Library / Preview / Edit stack-safe modal ownership and nested/direct-edit focus restoration.
 - PR #123 — Mode Switcher accessible menu semantics, keyboard navigation, nested Escape ownership and focus restoration.
-- PR #124 — implementation is complete and validated on its implementation/test head; merge remains pending until this final status-bearing head passes exact-head lifecycle validation.
+- PR #124 — Today unscheduled-task progressive disclosure with bounded default presentation and browser regression coverage.
+- PR #125 — implementation complete on its implementation/test head; merge remains pending until the final status-bearing head passes exact-head lifecycle validation.
 
 ## Delivery-control state
 
@@ -111,28 +112,19 @@ Known external GitHub configuration gaps remain branch protection/ruleset enforc
 
 ### Completed interaction slices
 
-- Routine Progress, Routine Statistics, Template Library / Preview / Edit, and Mode Switcher now have explicit focus/keyboard/selected-state contracts with deterministic and browser coverage.
+- Routine Progress, Routine Statistics, Template Library / Preview / Edit, and Mode Switcher have explicit focus/keyboard/selected-state contracts with deterministic and browser coverage.
+- Today progressively discloses unscheduled work rather than rendering an unbounded competing list by default.
 - No additional named modal/menu defect is currently recorded; do not invent more modal work without evidence.
 
-### Today unscheduled tasks — PR #124
+### Tasks sorting — PR #125
 
-- Default visible subset is three tasks.
-- Total task count remains visible.
-- Hidden count is explicit in the Show more control.
-- Show more exposes every remaining task in the existing order; Show less restores the low-load default.
-- Timeline reload resets disclosure to the default.
-- The disclosure control exposes `aria-expanded` and `aria-controls`.
-- Scheduling, completion, persistence, filtering and recommendation semantics remain unchanged.
-- Deterministic source-contract and Playwright integration coverage protect the behaviour.
-
-### Tasks sorting — next
-
-- `getModePreferences()` supplies default `sortBy: 'priority'`.
-- `TaskList.loadTasks()` currently sorts with `modePrefs.sortBy || sortBy`.
-- The four visible sort buttons update/highlight local `sortBy`.
-- Therefore visible selection can diverge from actual ordering whenever the mode preference is truthy, including the default case.
-- Four simultaneous sort buttons also add avoidable control density.
-- Next correction: one authoritative active sort value plus one accessible select/menu control preserving Priority, Due Date, Recently Added and A–Z.
+- One `sortBy` state drives both actual list ordering and the visible selected value.
+- Active mode preference initializes/synchronizes the local authoritative state when mode context changes without overriding later local selection on each render.
+- One labelled native select replaces four simultaneous sort buttons.
+- Priority, Due Date, Recently Added and A–Z remain available.
+- Browser coverage proves A–Z, Due Date and Recently Added selections produce corresponding real task ordering.
+- Priority-card presentation remains tied to the authoritative Priority selection.
+- Task data, filtering, completion, persistence, recommendation and mode-preference storage semantics are unchanged.
 
 ## Backend / provider work — intentionally deferred
 
@@ -148,7 +140,7 @@ While deferred:
 
 ## Quality / technical state
 
-- No known defect currently outranks the queued Tasks sort-state divergence after PR #124.
+- No known source defect currently outranks completing PR #125 through its evidence-controlled lifecycle.
 - ESLint enforces zero warnings; typecheck, deterministic tests, build and Playwright are part of the canonical gate.
 - Mixed JavaScript/TypeScript checking remains an accepted current constraint.
 - Responsive shell/navigation coverage is merged for desktop and phone-width paths.
@@ -171,15 +163,13 @@ Root-level duplicate architecture/data/decision documents are intentionally not 
 
 ## Next dependency-correct work
 
-1. require exact-head canonical validation on this PR #124 status-bearing head;
-2. audit PR #124 against its acceptance contract and confirm no blocking reviews;
+1. require exact-head canonical validation on the current PR #125 status-bearing head;
+2. audit PR #125 criterion by criterion and confirm no blocking review/thread remains;
 3. apply `lifecycle:implementation-complete` only if all acceptance criteria remain satisfied;
 4. allow the guarded lifecycle to progress Ready → Mergeable → Merged;
-5. inspect live GitHub after merge and create or reuse one focused PR for Tasks sort-state integrity;
-6. make one authoritative sort state drive both task ordering and visible selection;
-7. consolidate four sort buttons into one explicit accessible sort control while preserving all existing options;
-8. add deterministic and browser regression coverage for actual order and visible selected sort;
-9. update this durable checkpoint before lifecycle completion and continue with the next evidence-backed Stage 3 slice.
+5. inspect live `main`, open PRs and Stage 3 product surfaces after merge;
+6. select the next evidence-backed dependency-correct Stage 3 frontend slice from actual repository/product evidence rather than inventing new scope;
+7. continue implementation autonomously while backend/provider work remains intentionally deferred.
 
 ## Stage 3 exit conditions
 
