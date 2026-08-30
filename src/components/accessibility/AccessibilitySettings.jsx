@@ -49,103 +49,257 @@ const AccessibilitySettings = ({ onClose }) => {
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
       >
+        {/* Header */}
         <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-white">
           <div className="flex items-start justify-between">
             <div>
               <h2 id="accessibility-settings-title" className="text-2xl font-bold mb-2">Accessibility Settings</h2>
-              <p className="text-blue-100 text-sm">Customize the interface to your needs</p>
+              <p className="text-blue-100 text-sm">
+                Customize the interface to your needs
+              </p>
             </div>
-            <button type="button" onClick={handleCancel} aria-label="Close accessibility settings without saving" className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors">
+            <button
+              type="button"
+              onClick={handleCancel}
+              aria-label="Close accessibility settings without saving"
+              className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+            >
               <SafeIcon icon={FiX} className="w-6 h-6" />
             </button>
           </div>
         </div>
 
+        {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* Font Size */}
           <div>
             <div id="accessibility-text-size-label" className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-3">
               <SafeIcon icon={FiType} className="w-4 h-4" />
               <span>Text Size</span>
             </div>
-            <div role="group" aria-labelledby="accessibility-text-size-label" className="grid grid-cols-4 gap-2">
-              {[{ value: 'small', label: 'Small' }, { value: 'medium', label: 'Medium' }, { value: 'large', label: 'Large' }, { value: 'xlarge', label: 'X-Large' }].map(size => (
-                <button type="button" key={size.value} onClick={() => handleChange('fontSize', size.value)} aria-pressed={settings.fontSize === size.value} className={`px-4 py-2 rounded-lg border-2 transition-all ${settings.fontSize === size.value ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-slate-300'}`}>
-                  <div className={`font-medium ${size.value === 'small' ? 'text-xs' : ''} ${size.value === 'medium' ? 'text-sm' : ''} ${size.value === 'large' ? 'text-base' : ''} ${size.value === 'xlarge' ? 'text-lg' : ''}`}>{size.label}</div>
+            <div
+              role="group"
+              aria-labelledby="accessibility-text-size-label"
+              className="grid grid-cols-4 gap-2"
+            >
+              {[
+                { value: 'small', label: 'Small' },
+                { value: 'medium', label: 'Medium' },
+                { value: 'large', label: 'Large' },
+                { value: 'xlarge', label: 'X-Large' }
+              ].map(size => (
+                <button
+                  type="button"
+                  key={size.value}
+                  onClick={() => handleChange('fontSize', size.value)}
+                  aria-pressed={settings.fontSize === size.value}
+                  className={`
+                    px-4 py-2 rounded-lg border-2 transition-all
+                    ${settings.fontSize === size.value
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-slate-200 hover:border-slate-300'
+                    }
+                  `}
+                >
+                  <div className={`
+                    font-medium
+                    ${size.value === 'small' ? 'text-xs' : ''}
+                    ${size.value === 'medium' ? 'text-sm' : ''}
+                    ${size.value === 'large' ? 'text-base' : ''}
+                    ${size.value === 'xlarge' ? 'text-lg' : ''}
+                  `}>
+                    {size.label}
+                  </div>
                 </button>
               ))}
             </div>
           </div>
 
+          {/* Contrast */}
           <div>
             <div id="accessibility-contrast-label" className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-3">
               <SafeIcon icon={FiEye} className="w-4 h-4" />
               <span>Contrast</span>
             </div>
-            <div role="group" aria-labelledby="accessibility-contrast-label" className="grid grid-cols-2 gap-3">
-              {[{ value: 'normal', label: 'Normal', desc: 'Standard contrast' }, { value: 'high', label: 'High', desc: 'Enhanced contrast' }].map(contrast => (
-                <button type="button" key={contrast.value} onClick={() => handleChange('contrast', contrast.value)} aria-pressed={settings.contrast === contrast.value} className={`p-4 rounded-lg border-2 transition-all text-left ${settings.contrast === contrast.value ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-slate-300'}`}>
-                  <div className="font-medium text-slate-900 mb-1">{contrast.label}</div>
-                  <div className="text-xs text-slate-600">{contrast.desc}</div>
+            <div
+              role="group"
+              aria-labelledby="accessibility-contrast-label"
+              className="grid grid-cols-2 gap-3"
+            >
+              {[
+                { value: 'normal', label: 'Normal', desc: 'Standard contrast' },
+                { value: 'high', label: 'High', desc: 'Enhanced contrast' }
+              ].map(contrast => (
+                <button
+                  type="button"
+                  key={contrast.value}
+                  onClick={() => handleChange('contrast', contrast.value)}
+                  aria-pressed={settings.contrast === contrast.value}
+                  className={`
+                    p-4 rounded-lg border-2 transition-all text-left
+                    ${settings.contrast === contrast.value
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-slate-200 hover:border-slate-300'
+                    }
+                  `}
+                >
+                  <div className="font-medium text-slate-900 mb-1">
+                    {contrast.label}
+                  </div>
+                  <div className="text-xs text-slate-600">
+                    {contrast.desc}
+                  </div>
                 </button>
               ))}
             </div>
           </div>
 
+          {/* Line Spacing */}
           <div>
-            <div id="accessibility-line-spacing-label" className="text-sm font-medium text-slate-700 mb-3">Line Spacing</div>
-            <div role="group" aria-labelledby="accessibility-line-spacing-label" className="grid grid-cols-3 gap-2">
-              {[{ value: 'normal', label: 'Normal' }, { value: 'relaxed', label: 'Relaxed' }, { value: 'loose', label: 'Loose' }].map(spacing => (
-                <button type="button" key={spacing.value} onClick={() => handleChange('lineSpacing', spacing.value)} aria-pressed={settings.lineSpacing === spacing.value} className={`px-4 py-2 rounded-lg border-2 transition-all ${settings.lineSpacing === spacing.value ? 'border-blue-500 bg-blue-50' : 'border-slate-200 hover:border-slate-300'}`}>{spacing.label}</button>
+            <div id="accessibility-line-spacing-label" className="text-sm font-medium text-slate-700 mb-3">
+              Line Spacing
+            </div>
+            <div
+              role="group"
+              aria-labelledby="accessibility-line-spacing-label"
+              className="grid grid-cols-3 gap-2"
+            >
+              {[
+                { value: 'normal', label: 'Normal' },
+                { value: 'relaxed', label: 'Relaxed' },
+                { value: 'loose', label: 'Loose' }
+              ].map(spacing => (
+                <button
+                  type="button"
+                  key={spacing.value}
+                  onClick={() => handleChange('lineSpacing', spacing.value)}
+                  aria-pressed={settings.lineSpacing === spacing.value}
+                  className={`
+                    px-4 py-2 rounded-lg border-2 transition-all
+                    ${settings.lineSpacing === spacing.value
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-slate-200 hover:border-slate-300'
+                    }
+                  `}
+                >
+                  {spacing.label}
+                </button>
               ))}
             </div>
           </div>
 
+          {/* Toggle Options */}
           <div className="space-y-4">
+            {/* Reduce Motion */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <SafeIcon icon={FiZap} className="w-4 h-4 text-slate-600" />
                 <div>
-                  <div className="text-sm font-medium text-slate-900">Reduce Motion</div>
-                  <div id="accessibility-reduce-motion-description" className="text-xs text-slate-600">Minimize animations and transitions</div>
+                  <div className="text-sm font-medium text-slate-900">
+                    Reduce Motion
+                  </div>
+                  <div id="accessibility-reduce-motion-description" className="text-xs text-slate-600">
+                    Minimize animations and transitions
+                  </div>
                 </div>
               </div>
-              <button type="button" onClick={() => handleChange('reduceMotion', !settings.reduceMotion)} aria-label="Reduce motion" aria-describedby="accessibility-reduce-motion-description" aria-pressed={settings.reduceMotion} className={`w-12 h-6 rounded-full transition-colors ${settings.reduceMotion ? 'bg-green-500' : 'bg-slate-300'}`}>
-                <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${settings.reduceMotion ? 'translate-x-6' : 'translate-x-0.5'}`} />
+              <button
+                type="button"
+                onClick={() => handleChange('reduceMotion', !settings.reduceMotion)}
+                aria-label="Reduce motion"
+                aria-describedby="accessibility-reduce-motion-description"
+                aria-pressed={settings.reduceMotion}
+                className={`
+                  w-12 h-6 rounded-full transition-colors
+                  ${settings.reduceMotion ? 'bg-green-500' : 'bg-slate-300'}
+                `}
+              >
+                <div className={`
+                  w-5 h-5 bg-white rounded-full shadow-md transition-transform
+                  ${settings.reduceMotion ? 'translate-x-6' : 'translate-x-0.5'}
+                `} />
               </button>
             </div>
 
+            {/* Focus Mode */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <SafeIcon icon={FiEye} className="w-4 h-4 text-slate-600" />
                 <div>
-                  <div className="text-sm font-medium text-slate-900">Focus Mode</div>
-                  <div id="accessibility-focus-mode-description" className="text-xs text-slate-600">Dim non-essential elements</div>
+                  <div className="text-sm font-medium text-slate-900">
+                    Focus Mode
+                  </div>
+                  <div id="accessibility-focus-mode-description" className="text-xs text-slate-600">
+                    Dim non-essential elements
+                  </div>
                 </div>
               </div>
-              <button type="button" onClick={() => handleChange('focusMode', !settings.focusMode)} aria-label="Focus mode" aria-describedby="accessibility-focus-mode-description" aria-pressed={settings.focusMode} className={`w-12 h-6 rounded-full transition-colors ${settings.focusMode ? 'bg-green-500' : 'bg-slate-300'}`}>
-                <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${settings.focusMode ? 'translate-x-6' : 'translate-x-0.5'}`} />
+              <button
+                type="button"
+                onClick={() => handleChange('focusMode', !settings.focusMode)}
+                aria-label="Focus mode"
+                aria-describedby="accessibility-focus-mode-description"
+                aria-pressed={settings.focusMode}
+                className={`
+                  w-12 h-6 rounded-full transition-colors
+                  ${settings.focusMode ? 'bg-green-500' : 'bg-slate-300'}
+                `}
+              >
+                <div className={`
+                  w-5 h-5 bg-white rounded-full shadow-md transition-transform
+                  ${settings.focusMode ? 'translate-x-6' : 'translate-x-0.5'}
+                `} />
               </button>
             </div>
 
+            {/* Dyslexic Font */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <SafeIcon icon={FiType} className="w-4 h-4 text-slate-600" />
                 <div>
-                  <div className="text-sm font-medium text-slate-900">Dyslexia-Friendly Font</div>
-                  <div id="accessibility-dyslexic-font-description" className="text-xs text-slate-600">Use OpenDyslexic font</div>
+                  <div className="text-sm font-medium text-slate-900">
+                    Dyslexia-Friendly Font
+                  </div>
+                  <div id="accessibility-dyslexic-font-description" className="text-xs text-slate-600">
+                    Use OpenDyslexic font
+                  </div>
                 </div>
               </div>
-              <button type="button" onClick={() => handleChange('dyslexicFont', !settings.dyslexicFont)} aria-label="Dyslexia-friendly font" aria-describedby="accessibility-dyslexic-font-description" aria-pressed={settings.dyslexicFont} className={`w-12 h-6 rounded-full transition-colors ${settings.dyslexicFont ? 'bg-green-500' : 'bg-slate-300'}`}>
-                <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${settings.dyslexicFont ? 'translate-x-6' : 'translate-x-0.5'}`} />
+              <button
+                type="button"
+                onClick={() => handleChange('dyslexicFont', !settings.dyslexicFont)}
+                aria-label="Dyslexia-friendly font"
+                aria-describedby="accessibility-dyslexic-font-description"
+                aria-pressed={settings.dyslexicFont}
+                className={`
+                  w-12 h-6 rounded-full transition-colors
+                  ${settings.dyslexicFont ? 'bg-green-500' : 'bg-slate-300'}
+                `}
+              >
+                <div className={`
+                  w-5 h-5 bg-white rounded-full shadow-md transition-transform
+                  ${settings.dyslexicFont ? 'translate-x-6' : 'translate-x-0.5'}
+                `} />
               </button>
             </div>
           </div>
         </div>
 
+        {/* Footer */}
         <div className="p-6 border-t border-slate-200 bg-slate-50">
           <div className="flex gap-3">
-            <button type="button" onClick={handleCancel} className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition-colors">Cancel</button>
-            <button type="button" onClick={handleSave} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleSave}
+              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+            >
               <SafeIcon icon={FiSave} className="w-4 h-4" />
               Apply Settings
             </button>
