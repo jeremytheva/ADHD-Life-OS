@@ -225,22 +225,25 @@ const RoutineList = () => {
             </div>
           </div>
         ) : (
-          routines.map((routine, index) => (
-            <motion.div
-              key={routine.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <RoutineCard
-                routine={routine}
-                onEdit={() => handleEditRoutine(routine)}
-                onDelete={() => handleDeleteRoutine(routine.id)}
-                onStart={() => handleStartRoutine(routine)}
-                onViewStats={() => handleViewStats(routine)}
-              />
-            </motion.div>
-          ))
+          <div role="list" aria-label="Routines" className="space-y-4">
+            {routines.map((routine, index) => (
+              <motion.div
+                role="listitem"
+                key={routine.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <RoutineCard
+                  routine={routine}
+                  onEdit={() => handleEditRoutine(routine)}
+                  onDelete={() => handleDeleteRoutine(routine.id)}
+                  onStart={() => handleStartRoutine(routine)}
+                  onViewStats={() => handleViewStats(routine)}
+                />
+              </motion.div>
+            ))}
+          </div>
         )}
       </div>
 
