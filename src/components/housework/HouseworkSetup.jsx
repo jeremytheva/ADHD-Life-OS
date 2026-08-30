@@ -157,7 +157,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
         </div>
 
         <div className="flex-1 overflow-y-auto p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" role="group" aria-label="Select housework tasks">
             {filteredTemplates.map((template, index) => {
               const globalIndex = allTemplates.findIndex(t => t.title === template.title && t.room === template.room)
               const isSelected = selectedTasks.has(globalIndex)
