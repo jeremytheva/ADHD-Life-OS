@@ -22,16 +22,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
 validation_basis: PR #142 exact head c836e039ee526d1049cdf2e09eca06000a5dee75 passed Application validation run 276 and merged at d262324b6d07f01e02a9861b8275003890d1d4ef. PR #143 requires fresh exact-head canonical validation after this status-bearing handoff commit.
 last_verified_commit: c836e039ee526d1049cdf2e09eca06000a5dee75
-last_updated: 2026-08-30T17:18:00+10:00
+last_updated: 2026-08-30T17:22:00+10:00
 ---
 
 # ADHD Life OS — Current Status
