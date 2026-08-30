@@ -26,7 +26,7 @@ validation:
   typecheck: NOT_RUN
   tests: NOT_RUN
   build: NOT_RUN
-  ci: PENDING
+  ci: NOT_RUN
   runtime: UNVERIFIED
 validation_basis: PR #144 exact head 6f371a3e60cd607f45b3670532805d8a9a15dc87 passed Application validation run 281 and merged at 4da492411f6a40882aecb72f3d301716730e9b69. PR #145 adds Gamification Dashboard progress semantics and requires fresh exact-head canonical validation after this status-bearing handoff commit before lifecycle completion.
 last_verified_commit: 6f371a3e60cd607f45b3670532805d8a9a15dc87
