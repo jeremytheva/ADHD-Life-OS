@@ -6,12 +6,12 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Inspect next Stage 3 frontend accessibility or cognitive-load slice after PR #138
+  objective: Inspect next Stage 3 frontend accessibility or cognitive-load slice after PR #139
   issue: null
   pr: null
   branch: null
 next_actions:
-  - Complete PR #138 only after fresh exact-head Application validation and review/thread checks pass.
+  - Complete PR #139 only after fresh exact-head Application validation and review/thread checks pass.
   - After merge, inspect live main, open PRs, branches and remaining Stage 3 frontend surfaces.
   - Select the next evidence-backed accessibility or cognitive-load slice before opening new implementation work.
 blockers: []
@@ -28,9 +28,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #137 exact head a77d1bf2a238dfa9caf4ba49ea3fb355d0864070 passed Application validation run 266 and merged at 075357ec176c8653a4e8e5bb33ac5b1836543a10. PR #138 requires exact-head canonical validation on this status-bearing handoff before lifecycle completion.
-last_verified_commit: a77d1bf2a238dfa9caf4ba49ea3fb355d0864070
-last_updated: 2026-08-30T12:35:00+10:00
+validation_basis: PR #138 exact head 234219cce7bd8342aa6b85f26ead60431891190c passed Application validation run 268 and merged at 2a4d4bcb1f62d14ff1830edbc78635781b174303. PR #139 requires exact-head canonical validation on this status-bearing handoff before lifecycle completion.
+last_verified_commit: 234219cce7bd8342aa6b85f26ead60431891190c
+last_updated: 2026-08-30T12:41:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -42,19 +42,19 @@ last_updated: 2026-08-30T12:35:00+10:00
 
 ## Current objective
 
-Complete **PR #138 — Template Apply outside-dismiss focus restoration** through the guarded lifecycle, then resume from live `main` by inspecting remaining Stage 3 frontend surfaces for the next evidence-backed accessibility, cognitive-load or focused maintainability slice.
+Complete **PR #139 — Housework chore filter selection semantics** through the guarded lifecycle, then resume from live `main` by inspecting remaining Stage 3 frontend surfaces for the next evidence-backed accessibility, cognitive-load or focused maintainability slice.
 
-PR #137 merged at `075357ec176c8653a4e8e5bb33ac5b1836543a10`, completing Recommended Right Now focus transfer. Post-merge inspection confirmed the broader Template Apply keyboard contract from PR #127 remains intact but found one separate dismissal path: clicking outside the Apply menu closed it without using the existing trigger-focus restoration helper, allowing the currently focused menu item to be unmounted without a stable focus destination.
+PR #138 merged at `2a4d4bcb1f62d14ff1830edbc78635781b174303`, completing Template Apply outside-dismiss focus restoration. Post-merge inspection found that `ChoreChecklist` exposes Ready Now and All Chores as visually selected buttons, but the filter pair had no labelled grouping or programmatic selected-state semantics and relied on implicit button type.
 
-PR #138 changes only that outside-dismiss path to `closeApplyMenu({ restoreFocus: true })`. Escape handling, Arrow/Home/End navigation, direct apply, Edit Before Applying modal-stack ownership, template data and provider/persistence boundaries remain unchanged. Deterministic and Playwright coverage now protect actual outside-dismiss focus restoration.
+PR #139 adds a labelled filter group, binds `aria-pressed` to the authoritative `filter` state and explicitly declares the two filter controls as buttons. Existing filter options, handler, styling, housework service queries and provider/persistence boundaries are unchanged. Deterministic regression coverage protects the semantic contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — PR #138 implementation, regression coverage and durable handoff are complete in scope; exact-head canonical validation is required |
-| Execution state | VALIDATING — keep PR #138 Draft until the current status-bearing head passes canonical validation and review/thread checks remain clean |
+| Gate state | VALIDATING — PR #139 implementation, deterministic coverage and durable handoff are complete in scope; exact-head canonical validation is required |
+| Execution state | VALIDATING — keep PR #139 Draft until the current status-bearing head passes canonical validation and review/thread checks remain clean |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -64,7 +64,7 @@ PR #138 changes only that outside-dismiss path to `closeApplyMenu({ restoreFocus
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread after merge | None; inspect live GitHub state before opening the next focused thread |
-| Last completed product outcome after merge | PR #138 — Template Apply outside-dismiss focus restoration |
+| Last completed product outcome after merge | PR #139 — Housework chore filter selection semantics |
 | Current blocker | None; exact-head repository validation is an ordinary lifecycle gate |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect live `main`, open PRs/branches and Stage 3 frontend evidence, then continue the highest-priority dependency-correct independent slice |
@@ -74,10 +74,10 @@ PR #138 changes only that outside-dismiss path to `closeApplyMenu({ restoreFocus
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
-| What is already happening? | PR #138 is the only lifecycle work expected before this checkpoint reaches `main`; after merge there is no preselected product PR. |
-| What has been validated? | PR #137 exact head `a77d1bf2a238dfa9caf4ba49ea3fb355d0864070` passed Application validation run 266 before guarded merge. PR #138 requires a fresh exact-head run on this final handoff commit. |
-| What changed? | Template Apply outside-click dismissal now uses the existing focus-restoring close path, with deterministic and browser regression coverage. |
-| What is next? | Validate and merge PR #138 if clean, inspect live `main`, then choose the next evidence-backed frontend accessibility or cognitive-load slice. |
+| What is already happening? | PR #139 is the only lifecycle work expected before this checkpoint reaches `main`; after merge there is no preselected product PR. |
+| What has been validated? | PR #138 exact head `234219cce7bd8342aa6b85f26ead60431891190c` passed Application validation run 268 before guarded merge. PR #139 requires a fresh exact-head run on this final handoff commit. |
+| What changed? | Housework Ready Now / All Chores now form a labelled stateful button group whose selected state is exposed through `aria-pressed`, with deterministic regression coverage. |
+| What is next? | Validate and merge PR #139 if clean, inspect live `main`, then choose the next evidence-backed frontend accessibility or cognitive-load slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -96,11 +96,12 @@ PR #138 changes only that outside-dismiss path to `closeApplyMenu({ restoreFocus
 - PR #135 — Housework chore checklist progress semantics.
 - PR #136 — Tasks filter selection semantics.
 - PR #137 — Recommended task focus transfer.
-- PR #138 — Template Apply outside-dismiss focus restoration (guarded lifecycle pending at this handoff commit).
+- PR #138 — Template Apply outside-dismiss focus restoration.
+- PR #139 — Housework chore filter selection semantics (guarded lifecycle pending at this handoff commit).
 
 ## Interaction and cognitive-load state
 
-### Completed through PR #138
+### Completed through PR #139
 
 - Routine Progress, Routine Statistics, Template Preview/Edit and Apply flows, Mode Switcher and Project-card menus have explicit focus/keyboard contracts with regression coverage.
 - Template Apply outside-click dismissal returns focus to the Apply trigger rather than unmounting the focused menu item without a stable destination.
@@ -113,6 +114,7 @@ PR #138 changes only that outside-dismiss path to `closeApplyMenu({ restoreFocus
 - Day Setup time labels and Settings Theme are explicitly associated with their controls.
 - Task Selector Recommendation Path, Energy, Available Time and Mood expose programmatic selected state; filter controls are named/connected and Location has an explicit label association.
 - Chore checklist progress exposes progressbar semantics bound to authoritative completed/total counts while preserving visual and checklist behaviour.
+- Housework Ready Now / All Chores filters expose labelled grouping, explicit button type and programmatic selected state while preserving existing filter behaviour.
 
 ## Backend / provider work — intentionally deferred
 
@@ -149,7 +151,7 @@ While deferred:
 
 ## Next dependency-correct work
 
-1. complete PR #138 only after fresh exact-head Application validation and review/thread checks pass;
+1. complete PR #139 only after fresh exact-head Application validation and review/thread checks pass;
 2. inspect live `main`, open PRs and visible branches after merge;
 3. inspect remaining Stage 3 frontend surfaces for an evidence-backed accessibility or cognitive-load defect;
 4. reuse or repair overlapping work if it already exists;
