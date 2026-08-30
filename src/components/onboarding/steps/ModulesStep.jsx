@@ -205,18 +205,20 @@ const ModulesStep = ({ onNext, onBack, currentData }) => {
           </span>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4" role="group" aria-label="Optional modules">
           {MODULES.filter(m => !m.isCore).map((module, index) => {
             const isEnabled = enabledModules.includes(module.id)
             
             return (
               <motion.button
+                type="button"
                 key={module.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: (index + 2) * 0.1 }}
                 onClick={() => !module.comingSoon && toggleModule(module.id)}
                 disabled={module.comingSoon}
+                aria-pressed={isEnabled}
                 className={`
                   p-6 rounded-xl border-2 transition-all text-left
                   ${getColorClasses(module.color, isEnabled)}
@@ -290,12 +292,14 @@ const ModulesStep = ({ onNext, onBack, currentData }) => {
       {/* Navigation */}
       <div className="flex gap-3 pt-6">
         <button
+          type="button"
           onClick={onBack}
           className="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors"
         >
           ← Back
         </button>
         <button
+          type="button"
           onClick={handleNext}
           className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors"
         >

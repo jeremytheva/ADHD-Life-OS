@@ -6,12 +6,12 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Inspect next Stage 3 frontend accessibility or cognitive-load slice after PR #141
+  objective: Inspect next Stage 3 frontend accessibility or cognitive-load slice after PR #142
   issue: null
   pr: null
   branch: null
 next_actions:
-  - Complete PR #141 only after fresh exact-head Application validation and review/thread checks pass.
+  - Complete PR #142 only after fresh exact-head Application validation and review/thread checks pass.
   - After merge, inspect live main, open PRs, branches and remaining Stage 3 frontend surfaces.
   - Select the next evidence-backed accessibility or cognitive-load slice before opening new implementation work.
 blockers: []
@@ -28,9 +28,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #140 exact head 0311dc6c92d5ae6e9ea98d2a3ab38198d98adfe0 passed Application validation run 272 and merged at b217ec32e6437f75b210c1b82fa25c619a39f069. PR #141 requires exact-head canonical validation on this status-bearing handoff before lifecycle completion.
-last_verified_commit: 0311dc6c92d5ae6e9ea98d2a3ab38198d98adfe0
-last_updated: 2026-08-30T14:20:00+10:00
+validation_basis: PR #141 exact head 909556759707d4e882a1183754659ecde6b54e62 passed Application validation run 274 and merged at 945f336497321aa175d5e90df1c8ddcd8ea864b0. PR #142 requires exact-head canonical validation on this status-bearing handoff before lifecycle completion.
+last_verified_commit: 909556759707d4e882a1183754659ecde6b54e62
+last_updated: 2026-08-30T15:14:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -42,19 +42,19 @@ last_updated: 2026-08-30T14:20:00+10:00
 
 ## Current objective
 
-Complete **PR #141 — Onboarding UI style selection semantics** through the guarded lifecycle, then resume from live `main` by inspecting remaining Stage 3 frontend surfaces for the next evidence-backed accessibility, cognitive-load or focused maintainability slice.
+Complete **PR #142 — Onboarding optional-module selection semantics** through the guarded lifecycle, then resume from live `main` by inspecting remaining Stage 3 frontend surfaces for the next evidence-backed accessibility, cognitive-load or focused maintainability slice.
 
-PR #140 merged at `b217ec32e6437f75b210c1b82fa25c619a39f069`, completing Brain Inbox mode selection semantics. Post-merge inspection found that onboarding's Visual, Minimal and Gamified interface-style cards use authoritative `selectedStyle` state and visually distinguish the selected choice, but the choices had no labelled grouping or programmatic selected-state semantics and relied on implicit button type.
+PR #141 merged at `945f336497321aa175d5e90df1c8ddcd8ea864b0`, completing onboarding interface-style selection semantics. Post-merge inspection found that onboarding optional-module cards use authoritative `enabledModules` state and visually distinguish enabled choices, but the controls had no labelled grouping or programmatic pressed-state semantics and relied on implicit button type.
 
-PR #141 adds a labelled interface-style group, binds `aria-pressed` to the existing `isSelected` value derived from authoritative `selectedStyle`, and explicitly declares the style controls as buttons. Existing style values, default, selection handler, preview, navigation and preference handoff remain unchanged. Deterministic regression coverage protects the semantic contract.
+PR #142 adds a labelled optional-module group, binds `aria-pressed` to the existing `isEnabled` value derived from authoritative `enabledModules`, and explicitly declares module and onboarding navigation controls as buttons. Existing module values, core-module rules, coming-soon disabled behaviour, toggle handling, navigation and preference handoff remain unchanged. Deterministic regression coverage protects the semantic contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — PR #141 implementation, deterministic coverage and durable handoff are complete in scope; exact-head canonical validation is required |
-| Execution state | VALIDATING — keep PR #141 Draft until the current status-bearing head passes canonical validation and review/thread checks remain clean |
+| Gate state | VALIDATING — PR #142 implementation, deterministic coverage and durable handoff are complete in scope; exact-head canonical validation is required |
+| Execution state | VALIDATING — keep PR #142 Draft until the current status-bearing head passes canonical validation and review/thread checks remain clean |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -64,7 +64,7 @@ PR #141 adds a labelled interface-style group, binds `aria-pressed` to the exist
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread after merge | None; inspect live GitHub state before opening the next focused thread |
-| Last completed product outcome after merge | PR #141 — Onboarding UI style selection semantics |
+| Last completed product outcome after merge | PR #142 — Onboarding optional-module selection semantics |
 | Current blocker | None; exact-head repository validation is an ordinary lifecycle gate |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect live `main`, open PRs/branches and Stage 3 frontend evidence, then continue the highest-priority dependency-correct independent slice |
@@ -74,10 +74,10 @@ PR #141 adds a labelled interface-style group, binds `aria-pressed` to the exist
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
-| What is already happening? | PR #141 is the only lifecycle work expected before this checkpoint reaches `main`; after merge there is no preselected product PR. |
-| What has been validated? | PR #140 exact head `0311dc6c92d5ae6e9ea98d2a3ab38198d98adfe0` passed Application validation run 272 before guarded merge. PR #141 requires a fresh exact-head run on this final handoff commit. |
-| What changed? | Onboarding Visual / Minimal / Gamified interface-style choices now form a labelled stateful button group whose selected state is exposed through `aria-pressed`, with deterministic regression coverage. |
-| What is next? | Validate and merge PR #141 if clean, inspect live `main`, then choose the next evidence-backed frontend accessibility or cognitive-load slice. |
+| What is already happening? | PR #142 is the only lifecycle work expected before this checkpoint reaches `main`; after merge there is no preselected product PR. |
+| What has been validated? | PR #141 exact head `909556759707d4e882a1183754659ecde6b54e62` passed Application validation run 274 before guarded merge. PR #142 requires a fresh exact-head run on this final handoff commit. |
+| What changed? | Onboarding optional modules now form a labelled stateful button group whose enabled state is exposed through `aria-pressed`, with deterministic regression coverage. |
+| What is next? | Validate and merge PR #142 if clean, inspect live `main`, then choose the next evidence-backed frontend accessibility or cognitive-load slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -99,11 +99,12 @@ PR #141 adds a labelled interface-style group, binds `aria-pressed` to the exist
 - PR #138 — Template Apply outside-dismiss focus restoration.
 - PR #139 — Housework chore filter selection semantics.
 - PR #140 — Brain Inbox mode selection semantics.
-- PR #141 — Onboarding UI style selection semantics (guarded lifecycle pending at this handoff commit).
+- PR #141 — Onboarding UI style selection semantics.
+- PR #142 — Onboarding optional-module selection semantics (guarded lifecycle pending at this handoff commit).
 
 ## Interaction and cognitive-load state
 
-### Completed through PR #141
+### Completed through PR #142
 
 - Routine Progress, Routine Statistics, Template Preview/Edit and Apply flows, Mode Switcher and Project-card menus have explicit focus/keyboard contracts with regression coverage.
 - Template Apply outside-click dismissal returns focus to the Apply trigger rather than unmounting the focused menu item without a stable destination.
@@ -119,6 +120,7 @@ PR #141 adds a labelled interface-style group, binds `aria-pressed` to the exist
 - Housework Ready Now / All Chores filters expose labelled grouping, explicit button type and programmatic selected state while preserving existing filter behaviour.
 - Brain Inbox Capture / Organize modes expose labelled grouping, explicit button type and programmatic selected state while preserving existing mode behaviour.
 - Onboarding interface-style choices expose labelled grouping, explicit button type and programmatic selected state while preserving existing selection and preference handoff behaviour.
+- Onboarding optional-module choices expose labelled grouping, explicit button type and programmatic enabled state while preserving existing toggle and preference handoff behaviour.
 
 ## Backend / provider work — intentionally deferred
 
@@ -155,7 +157,7 @@ While deferred:
 
 ## Next dependency-correct work
 
-1. complete PR #141 only after fresh exact-head Application validation and review/thread checks pass;
+1. complete PR #142 only after fresh exact-head Application validation and review/thread checks pass;
 2. inspect live `main`, open PRs and visible branches after merge;
 3. inspect remaining Stage 3 frontend surfaces for an evidence-backed accessibility or cognitive-load defect;
 4. reuse or repair overlapping work if it already exists;
