@@ -138,7 +138,18 @@ const TodayView = () => {
       <div className="space-y-8">
         {timeGroups.map((group) => (
           <motion.div key={group.key} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            {group.blocks.length > 0 && <><h2 className="text-lg font-medium text-slate-900 mb-4">{group.name}</h2><div className="space-y-3">{group.blocks.map((block, index) => <BlockCard key={`${block.ref_type}-${block.ref_id}-${index}`} block={block} onComplete={handleCompleteTask} pending={block.ref_type === 'task' && pendingTaskId === block.ref_id} />)}</div></>}
+            {group.blocks.length > 0 && (
+              <>
+                <h2 id={`today-${group.key}-heading`} className="text-lg font-medium text-slate-900 mb-4">{group.name}</h2>
+                <div role="list" aria-labelledby={`today-${group.key}-heading`} className="space-y-3">
+                  {group.blocks.map((block, index) => (
+                    <div role="listitem" key={`${block.ref_type}-${block.ref_id}-${index}`}>
+                      <BlockCard block={block} onComplete={handleCompleteTask} pending={block.ref_type === 'task' && pendingTaskId === block.ref_id} />
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </motion.div>
         ))}
       </div>
