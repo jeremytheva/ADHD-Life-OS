@@ -154,11 +154,13 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
 
       <OperationErrorState message={operationError} onDismiss={() => setOperationError(null)} />
 
-      <div className="flex gap-2">
+      <div className="flex gap-2" role="group" aria-label="Filter chores">
         {['today', 'all'].map((value) => (
           <button
+            type="button"
             key={value}
             onClick={() => { setOperationError(null); setFilter(value) }}
+            aria-pressed={filter === value}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === value ? 'bg-purple-600 text-white' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'}`}
           >
             {value === 'today' ? 'Ready Now' : 'All Chores'}
