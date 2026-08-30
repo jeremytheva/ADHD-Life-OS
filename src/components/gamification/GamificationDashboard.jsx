@@ -83,7 +83,15 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
             <span>Level {stats.level}</span>
             <span>{stats.xp} / {stats.xp_to_next_level} XP</span>
           </div>
-          <div className="w-full bg-purple-200 rounded-full h-2 overflow-hidden">
+          <div
+            className="w-full bg-purple-200 rounded-full h-2 overflow-hidden"
+            role="progressbar"
+            aria-label="Level progress"
+            aria-valuemin={0}
+            aria-valuemax={stats.xp_to_next_level}
+            aria-valuenow={stats.xp}
+            aria-valuetext={`${stats.xp} of ${stats.xp_to_next_level} XP`}
+          >
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${stats.progress}%` }}
@@ -134,7 +142,15 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
               <span>Level Progress</span>
               <span>{stats.xp} / {stats.xp_to_next_level} XP</span>
             </div>
-            <div className="w-full bg-purple-700 rounded-full h-3 overflow-hidden">
+            <div
+              className="w-full bg-purple-700 rounded-full h-3 overflow-hidden"
+              role="progressbar"
+              aria-label="Level progress"
+              aria-valuemin={0}
+              aria-valuemax={stats.xp_to_next_level}
+              aria-valuenow={stats.xp}
+              aria-valuetext={`${stats.xp} of ${stats.xp_to_next_level} XP`}
+            >
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${stats.progress}%` }}
@@ -310,7 +326,15 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
                             </div>
                             {progress && (
                               <div className="mb-2">
-                                <div className="w-full bg-slate-200 rounded-full h-1.5 mb-1">
+                                <div
+                                  className="w-full bg-slate-200 rounded-full h-1.5 mb-1"
+                                  role="progressbar"
+                                  aria-label={`${achievement.name} progress`}
+                                  aria-valuemin={0}
+                                  aria-valuemax={progress.target}
+                                  aria-valuenow={progress.current}
+                                  aria-valuetext={`${progress.current} of ${progress.target}`}
+                                >
                                   <div
                                     className="bg-slate-400 h-1.5 rounded-full"
                                     style={{ width: `${progress.progress}%` }}
