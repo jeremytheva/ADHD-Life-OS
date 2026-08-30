@@ -274,7 +274,7 @@ const BrainInbox = () => {
           </form>
 
           {items.length > 0 && (
-            <div className="space-y-3">
+            <div className="space-y-3" role="list" aria-label="Captured thoughts">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-medium text-slate-900">
                   Your Brain Dump ({items.length} items)
@@ -289,6 +289,7 @@ const BrainInbox = () => {
               <AnimatePresence>
                 {items.map((item, index) => (
                   <motion.div
+                    role="listitem"
                     key={item.id}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -297,7 +298,10 @@ const BrainInbox = () => {
                     className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-all"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="flex items-center justify-center w-6 h-6 bg-purple-100 text-purple-600 rounded-full text-sm font-medium flex-shrink-0 mt-0.5">
+                      <div
+                        aria-hidden="true"
+                        className="flex items-center justify-center w-6 h-6 bg-purple-100 text-purple-600 rounded-full text-sm font-medium flex-shrink-0 mt-0.5"
+                      >
                         {index + 1}
                       </div>
 
