@@ -103,7 +103,7 @@ const TemplateCard = ({
         <>
           <div
             className="fixed inset-0 z-10"
-            onClick={() => closeApplyMenu()}
+            onClick={() => closeApplyMenu({ restoreFocus: true })}
           />
           <motion.div
             role="menu"
