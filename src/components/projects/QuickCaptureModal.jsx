@@ -123,7 +123,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
           {items.filter(i => i).length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium text-slate-900">
+                <h3 id="quick-capture-items-heading" className="text-lg font-medium text-slate-900">
                   Your Brain Dump ({items.filter(i => i).length} items)
                 </h3>
                 {items.filter(i => i).length >= 3 && (
@@ -133,36 +133,38 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
                 )}
               </div>
 
-              <AnimatePresence>
-                {items.filter(i => i).map((item, index) => (
-                  <motion.div
-                    key={`${item}-${index}`}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ delay: index * 0.03 }}
-                    className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-all"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="flex items-center justify-center w-6 h-6 bg-green-100 text-green-600 rounded-full text-sm font-medium flex-shrink-0 mt-0.5">
-                        {index + 1}
+              <ol aria-labelledby="quick-capture-items-heading" className="space-y-3">
+                <AnimatePresence>
+                  {items.filter(i => i).map((item, index) => (
+                    <motion.li
+                      key={`${item}-${index}`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ delay: index * 0.03 }}
+                      className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-all"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="flex items-center justify-center w-6 h-6 bg-green-100 text-green-600 rounded-full text-sm font-medium flex-shrink-0 mt-0.5" aria-hidden="true">
+                          {index + 1}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-slate-900">{item}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveItem(index)}
+                          aria-label={`Remove ${item}`}
+                          disabled={isSaving}
+                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          <SafeIcon icon={FiX} className="w-4 h-4" />
+                        </button>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-slate-900">{item}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveItem(index)}
-                        aria-label={`Remove ${item}`}
-                        disabled={isSaving}
-                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                      >
-                        <SafeIcon icon={FiX} className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+                    </motion.li>
+                  ))}
+                </AnimatePresence>
+              </ol>
             </div>
           )}
 
