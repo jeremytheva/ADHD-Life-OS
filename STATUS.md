@@ -6,12 +6,12 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Inspect next Stage 3 frontend accessibility or cognitive-load slice after PR #137
+  objective: Inspect next Stage 3 frontend accessibility or cognitive-load slice after PR #138
   issue: null
   pr: null
   branch: null
 next_actions:
-  - Complete PR #137 only after fresh exact-head Application validation and review/thread checks pass.
+  - Complete PR #138 only after fresh exact-head Application validation and review/thread checks pass.
   - After merge, inspect live main, open PRs, branches and remaining Stage 3 frontend surfaces.
   - Select the next evidence-backed accessibility or cognitive-load slice before opening new implementation work.
 blockers: []
@@ -28,9 +28,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #136 exact head 7655d024644c39827015b2e41c21fb569ad84eff passed Application validation run 264 and merged at 9be4cdfe56556aeddf714aa7fea08b24e8c8b23e. PR #137 requires exact-head canonical validation on this status-bearing handoff before lifecycle completion.
-last_verified_commit: 7655d024644c39827015b2e41c21fb569ad84eff
-last_updated: 2026-08-30T12:26:00+10:00
+validation_basis: PR #137 exact head a77d1bf2a238dfa9caf4ba49ea3fb355d0864070 passed Application validation run 266 and merged at 075357ec176c8653a4e8e5bb33ac5b1836543a10. PR #138 requires exact-head canonical validation on this status-bearing handoff before lifecycle completion.
+last_verified_commit: a77d1bf2a238dfa9caf4ba49ea3fb355d0864070
+last_updated: 2026-08-30T12:35:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -42,19 +42,19 @@ last_updated: 2026-08-30T12:26:00+10:00
 
 ## Current objective
 
-Complete **PR #137 — Recommended task focus transfer** through the guarded lifecycle, then resume from live `main` by inspecting the remaining Stage 3 frontend for the next evidence-backed accessibility, cognitive-load or focused maintainability slice.
+Complete **PR #138 — Template Apply outside-dismiss focus restoration** through the guarded lifecycle, then resume from live `main` by inspecting remaining Stage 3 frontend surfaces for the next evidence-backed accessibility, cognitive-load or focused maintainability slice.
 
-PR #136 merged at `9be4cdfe56556aeddf714aa7fea08b24e8c8b23e`, completing Tasks filter selection semantics. Post-merge inspection found that activating a Recommended Right Now task scrolled and temporarily highlighted its matching card while keyboard focus stayed behind on the recommendation control.
+PR #137 merged at `075357ec176c8653a4e8e5bb33ac5b1836543a10`, completing Recommended Right Now focus transfer. Post-merge inspection confirmed the broader Template Apply keyboard contract from PR #127 remains intact but found one separate dismissal path: clicking outside the Apply menu closed it without using the existing trigger-focus restoration helper, allowing the currently focused menu item to be unmounted without a stable focus destination.
 
-PR #137 preserves recommendation scoring, task ordering, filtering, task actions and provider/persistence boundaries. Recommendation activation now scrolls to and focuses a named, programmatically focusable task region. The region provides a normal focus ring, replacing the timer-driven transient class mutation. Recommendation controls explicitly declare `type="button"`. Deterministic and browser regression coverage protect the interaction contract.
+PR #138 changes only that outside-dismiss path to `closeApplyMenu({ restoreFocus: true })`. Escape handling, Arrow/Home/End navigation, direct apply, Edit Before Applying modal-stack ownership, template data and provider/persistence boundaries remain unchanged. Deterministic and Playwright coverage now protect actual outside-dismiss focus restoration.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — PR #137 implementation, browser coverage and durable handoff are complete in scope; exact-head canonical validation is required |
-| Execution state | VALIDATING — keep PR #137 Draft until the current status-bearing head passes canonical validation and review/thread checks remain clean |
+| Gate state | VALIDATING — PR #138 implementation, regression coverage and durable handoff are complete in scope; exact-head canonical validation is required |
+| Execution state | VALIDATING — keep PR #138 Draft until the current status-bearing head passes canonical validation and review/thread checks remain clean |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -64,7 +64,7 @@ PR #137 preserves recommendation scoring, task ordering, filtering, task actions
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread after merge | None; inspect live GitHub state before opening the next focused thread |
-| Last completed product outcome after merge | PR #137 — Recommended task focus transfer |
+| Last completed product outcome after merge | PR #138 — Template Apply outside-dismiss focus restoration |
 | Current blocker | None; exact-head repository validation is an ordinary lifecycle gate |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect live `main`, open PRs/branches and Stage 3 frontend evidence, then continue the highest-priority dependency-correct independent slice |
@@ -74,10 +74,10 @@ PR #137 preserves recommendation scoring, task ordering, filtering, task actions
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
-| What is already happening? | PR #137 is the only lifecycle work expected before this checkpoint reaches `main`; after merge there is no preselected product PR. |
-| What has been validated? | PR #136 exact head `7655d024644c39827015b2e41c21fb569ad84eff` passed Application validation run 264 before guarded merge. PR #137 requires a fresh exact-head run on this final handoff commit. |
-| What changed? | Recommended task activation now keeps keyboard focus aligned with the scrolled-to task region, with a named focus target, visible focus state and deterministic/browser regression coverage. |
-| What is next? | Validate and merge PR #137 if clean, inspect live `main`, then choose the next evidence-backed frontend accessibility or cognitive-load slice. |
+| What is already happening? | PR #138 is the only lifecycle work expected before this checkpoint reaches `main`; after merge there is no preselected product PR. |
+| What has been validated? | PR #137 exact head `a77d1bf2a238dfa9caf4ba49ea3fb355d0864070` passed Application validation run 266 before guarded merge. PR #138 requires a fresh exact-head run on this final handoff commit. |
+| What changed? | Template Apply outside-click dismissal now uses the existing focus-restoring close path, with deterministic and browser regression coverage. |
+| What is next? | Validate and merge PR #138 if clean, inspect live `main`, then choose the next evidence-backed frontend accessibility or cognitive-load slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -95,13 +95,15 @@ PR #137 preserves recommendation scoring, task ordering, filtering, task actions
 - PR #134 — Settings Theme label association.
 - PR #135 — Housework chore checklist progress semantics.
 - PR #136 — Tasks filter selection semantics.
-- PR #137 — Recommended task focus transfer (guarded lifecycle pending at this handoff commit).
+- PR #137 — Recommended task focus transfer.
+- PR #138 — Template Apply outside-dismiss focus restoration (guarded lifecycle pending at this handoff commit).
 
 ## Interaction and cognitive-load state
 
-### Completed through PR #137
+### Completed through PR #138
 
 - Routine Progress, Routine Statistics, Template Preview/Edit and Apply flows, Mode Switcher and Project-card menus have explicit focus/keyboard contracts with regression coverage.
+- Template Apply outside-click dismissal returns focus to the Apply trigger rather than unmounting the focused menu item without a stable destination.
 - Today progressively discloses unscheduled work rather than rendering an unbounded competing list by default.
 - Tasks sorting uses one authoritative state and one accessible sort control.
 - Tasks timeframe filters expose labelled grouping and programmatic selected state without changing filtering behaviour.
@@ -147,7 +149,7 @@ While deferred:
 
 ## Next dependency-correct work
 
-1. complete PR #137 only after fresh exact-head Application validation and review/thread checks pass;
+1. complete PR #138 only after fresh exact-head Application validation and review/thread checks pass;
 2. inspect live `main`, open PRs and visible branches after merge;
 3. inspect remaining Stage 3 frontend surfaces for an evidence-backed accessibility or cognitive-load defect;
 4. reuse or repair overlapping work if it already exists;
