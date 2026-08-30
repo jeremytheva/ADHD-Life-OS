@@ -224,10 +224,11 @@ const Settings = () => {
           </h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="app-theme" className="block text-sm font-medium text-slate-700 mb-2">
                 Theme
               </label>
               <select
+                id="app-theme"
                 value={preferences?.theme || 'low-stim'}
                 onChange={(e) =>
                   handleUpdatePreferences({ theme: e.target.value })
