@@ -275,7 +275,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
           {project.target_date && (
             <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
               <div className="flex items-center gap-2">
-                <SafeIcon icon={FiCalendar} className="w-5 h-5 text-purple-600" />>
+                <SafeIcon icon={FiCalendar} className="w-5 h-5 text-purple-600" />
                 <span className="font-medium text-purple-900">Target Date:</span>
                 <span className="text-purple-800">{new Date(project.target_date).toLocaleDateString()}</span>
               </div>
