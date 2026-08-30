@@ -381,9 +381,9 @@ const ProjectsList = () => {
       {projects.length > 0 && (
         <div className="flex items-center justify-between">
           <div className="text-sm text-slate-600">{projects.length} project{projects.length !== 1 ? 's' : ''}{currentMode.id !== 'all' && <span className="ml-2 text-xs text-slate-500">(filtered by {currentMode.label} mode)</span>}</div>
-          <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1">
-            <button onClick={() => setViewMode('grid')} aria-label="Grid view" className={`p-2 rounded transition-colors ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-slate-200'}`}><SafeIcon icon={FiGrid} className="w-4 h-4" /></button>
-            <button onClick={() => setViewMode('list')} aria-label="List view" className={`p-2 rounded transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-slate-200'}`}><SafeIcon icon={FiList} className="w-4 h-4" /></button>
+          <div role="group" aria-label="Project view" className="flex items-center gap-1 bg-slate-100 rounded-lg p-1">
+            <button type="button" onClick={() => setViewMode('grid')} aria-label="Grid view" aria-pressed={viewMode === 'grid'} className={`p-2 rounded transition-colors ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-slate-200'}`}><SafeIcon icon={FiGrid} className="w-4 h-4" /></button>
+            <button type="button" onClick={() => setViewMode('list')} aria-label="List view" aria-pressed={viewMode === 'list'} className={`p-2 rounded transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-slate-200'}`}><SafeIcon icon={FiList} className="w-4 h-4" /></button>
           </div>
         </div>
       )}
