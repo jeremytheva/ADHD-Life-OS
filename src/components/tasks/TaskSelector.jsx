@@ -329,105 +329,112 @@ const TaskSelector = ({ onSelectTask }) => {
       {/* Recommendations */}
       {recommendations.length > 0 ? (
         <div className="space-y-3">
-          <h3 className="text-lg font-medium text-slate-900">
+          <h3 id="task-selector-recommendations-heading" className="text-lg font-medium text-slate-900">
             Recommended for You
           </h3>
-          {recommendations.map((rec, index) => (
-            <motion.div
-              key={rec.task.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-lg border-2 border-slate-200 hover:border-purple-300 hover:shadow-lg transition-all overflow-hidden"
-            >
-              {/* Path Badge Ribbon */}
-              <div className={`bg-gradient-to-r ${getPathColor(rec.path)} px-4 py-2`}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-white">
-                    <SafeIcon icon={getPathIcon(rec.path)} className="w-4 h-4" />
-                    <span className="text-sm font-medium">
-                      {rec.path === 'quick_win' && 'Quick Win'}
-                      {rec.path === 'momentum' && 'Momentum Builder'}
-                      {rec.path === 'brave_frog' && 'Brave Frog'}
-                    </span>
-                  </div>
-                  <div className="text-white text-sm">
-                    Score: {rec.score}
+          <div
+            role="list"
+            aria-labelledby="task-selector-recommendations-heading"
+            className="space-y-3"
+          >
+            {recommendations.map((rec, index) => (
+              <motion.div
+                role="listitem"
+                key={rec.task.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-lg border-2 border-slate-200 hover:border-purple-300 hover:shadow-lg transition-all overflow-hidden"
+              >
+                {/* Path Badge Ribbon */}
+                <div className={`bg-gradient-to-r ${getPathColor(rec.path)} px-4 py-2`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-white">
+                      <SafeIcon icon={getPathIcon(rec.path)} className="w-4 h-4" />
+                      <span className="text-sm font-medium">
+                        {rec.path === 'quick_win' && 'Quick Win'}
+                        {rec.path === 'momentum' && 'Momentum Builder'}
+                        {rec.path === 'brave_frog' && 'Brave Frog'}
+                      </span>
+                    </div>
+                    <div className="text-white text-sm">
+                      Score: {rec.score}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Task Content */}
-              <div className="p-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-medium text-slate-900 mb-1">
-                      {rec.task.title}
-                    </h4>
-                    <p className="text-sm text-slate-600 mb-2">
-                      {rec.reason}
-                    </p>
-                    {rec.task.description && (
-                      <p className="text-sm text-slate-500">
-                        {rec.task.description}
+                {/* Task Content */}
+                <div className="p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <h4 className="text-lg font-medium text-slate-900 mb-1">
+                        {rec.task.title}
+                      </h4>
+                      <p className="text-sm text-slate-600 mb-2">
+                        {rec.reason}
                       </p>
+                      {rec.task.description && (
+                        <p className="text-sm text-slate-500">
+                          {rec.task.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Task Metadata */}
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    {rec.task.priority_metadata?.time_required && (
+                      <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs flex items-center gap-1">
+                        <SafeIcon icon={FiClock} className="w-3 h-3" />
+                        {rec.task.priority_metadata.time_required}m
+                      </span>
+                    )}
+                    {rec.task.priority_metadata?.energy_required && (
+                      <span className="px-2 py-1 bg-green-50 text-green-700 rounded text-xs flex items-center gap-1">
+                        <SafeIcon icon={FiZap} className="w-3 h-3" />
+                        {rec.task.priority_metadata.energy_required} energy
+                      </span>
+                    )}
+                    {rec.task.priority_metadata?.location && (
+                      <span className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs flex items-center gap-1">
+                        <SafeIcon icon={FiMapPin} className="w-3 h-3" />
+                        {rec.task.priority_metadata.location}
+                      </span>
+                    )}
+                    {rec.task.is_essential && (
+                      <span className="px-2 py-1 bg-red-50 text-red-700 rounded text-xs">
+                        Essential
+                      </span>
                     )}
                   </div>
-                </div>
 
-                {/* Task Metadata */}
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  {rec.task.priority_metadata?.time_required && (
-                    <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs flex items-center gap-1">
-                      <SafeIcon icon={FiClock} className="w-3 h-3" />
-                      {rec.task.priority_metadata.time_required}m
-                    </span>
-                  )}
-                  {rec.task.priority_metadata?.energy_required && (
-                    <span className="px-2 py-1 bg-green-50 text-green-700 rounded text-xs flex items-center gap-1">
-                      <SafeIcon icon={FiZap} className="w-3 h-3" />
-                      {rec.task.priority_metadata.energy_required} energy
-                    </span>
-                  )}
-                  {rec.task.priority_metadata?.location && (
-                    <span className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs flex items-center gap-1">
-                      <SafeIcon icon={FiMapPin} className="w-3 h-3" />
-                      {rec.task.priority_metadata.location}
-                    </span>
-                  )}
-                  {rec.task.is_essential && (
-                    <span className="px-2 py-1 bg-red-50 text-red-700 rounded text-xs">
-                      Essential
-                    </span>
-                  )}
-                </div>
-
-                {/* Confidence Indicator */}
-                <div className="mb-3">
-                  <div className="flex items-center justify-between text-xs text-slate-600 mb-1">
-                    <span>Match Confidence</span>
-                    <span>{Math.round(rec.confidence * 100)}%</span>
+                  {/* Confidence Indicator */}
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between text-xs text-slate-600 mb-1">
+                      <span>Match Confidence</span>
+                      <span>{Math.round(rec.confidence * 100)}%</span>
+                    </div>
+                    <div className="w-full bg-slate-200 rounded-full h-2">
+                      <div
+                        className="bg-purple-600 h-2 rounded-full transition-all"
+                        style={{ width: `${rec.confidence * 100}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
-                    <div
-                      className="bg-purple-600 h-2 rounded-full transition-all"
-                      style={{ width: `${rec.confidence * 100}%` }}
-                    />
-                  </div>
-                </div>
 
-                {/* Action Button */}
-                <button
-                  type="button"
-                  onClick={() => onSelectTask && onSelectTask(rec.task)}
-                  className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
-                >
-                  <span>Start This Task</span>
-                  <SafeIcon icon={FiChevronRight} className="w-4 h-4" />
-                </button>
-              </div>
-            </motion.div>
-          ))}
+                  {/* Action Button */}
+                  <button
+                    type="button"
+                    onClick={() => onSelectTask && onSelectTask(rec.task)}
+                    className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <span>Start This Task</span>
+                    <SafeIcon icon={FiChevronRight} className="w-4 h-4" />
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       ) : (
         <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
