@@ -88,7 +88,25 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
             </div>
             <button type="button" onClick={onClose} disabled={closeLocked} aria-label="Close chore details" className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:opacity-50"><SafeIcon icon={FiX} className="w-6 h-6" /></button>
           </div>
-          {totalCount > 0 && <div><div className="flex items-center justify-between text-sm mb-2"><span>Progress</span><span>{completedCount} of {totalCount} steps</span></div><div className="w-full bg-purple-700 rounded-full h-3 overflow-hidden"><motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.5 }} className="h-full bg-white rounded-full" /></div></div>}
+          {totalCount > 0 && (
+            <div>
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span>Progress</span>
+                <span>{completedCount} of {totalCount} steps</span>
+              </div>
+              <div
+                role="progressbar"
+                aria-label="Chore checklist progress"
+                aria-valuemin={0}
+                aria-valuemax={totalCount}
+                aria-valuenow={completedCount}
+                aria-valuetext={`${completedCount} of ${totalCount} steps complete`}
+                className="w-full bg-purple-700 rounded-full h-3 overflow-hidden"
+              >
+                <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.5 }} className="h-full bg-white rounded-full" />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex-1 overflow-y-auto p-6">
