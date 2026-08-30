@@ -136,7 +136,7 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
               </select>
             </div>
 
-            <div className="flex items-center gap-2 flex-wrap" aria-label="Template category filters">
+            <div className="flex items-center gap-2 flex-wrap" role="group" aria-label="Template category filters">
               {allCategories.map(category => (
                 <button
                   type="button"
@@ -156,7 +156,7 @@ const TemplateLibrary = ({ onApplyTemplate, onClose }) => {
               ))}
             </div>
 
-            <div className="flex items-center gap-1 ml-auto bg-slate-100 rounded-lg p-1" aria-label="Template view">
+            <div className="flex items-center gap-1 ml-auto bg-slate-100 rounded-lg p-1" role="group" aria-label="Template view">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
