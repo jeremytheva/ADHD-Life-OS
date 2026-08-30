@@ -141,3 +141,18 @@ test('Direct Edit keeps its menu opener connected for focus restoration', async 
   await expect(editor).toHaveCount(0)
   await expect(editMenuItem).toBeFocused()
 })
+
+test('Outside dismissal of the Apply menu restores focus to its trigger', async ({ page }) => {
+  await createTemplateMock(page)
+  const { library } = await registerAndOpenTemplates(page, 'template-outside-dismiss@example.test')
+
+  const applyTrigger = library.getByRole('button', { name: 'Apply' }).first()
+  await applyTrigger.click()
+  await expect(applyTrigger).toHaveAttribute('aria-expanded', 'true')
+  await expect(library.getByRole('menuitem', { name: 'Apply Directly' }).first()).toBeFocused()
+
+  await page.locator('div.fixed.inset-0.z-10').click({ position: { x: 5, y: 5 } })
+
+  await expect(applyTrigger).toHaveAttribute('aria-expanded', 'false')
+  await expect(applyTrigger).toBeFocused()
+})
