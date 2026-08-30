@@ -183,8 +183,10 @@ const BrainInbox = () => {
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2" role="group" aria-label="Brain inbox mode">
           <button
+            type="button"
+            aria-pressed={mode === 'capture'}
             onClick={() => setMode('capture')}
             className={`
               flex-1 px-4 py-2 rounded-lg font-medium transition-colors
@@ -200,6 +202,8 @@ const BrainInbox = () => {
             </div>
           </button>
           <button
+            type="button"
+            aria-pressed={mode === 'organize'}
             onClick={() => setMode('organize')}
             className={`
               flex-1 px-4 py-2 rounded-lg font-medium transition-colors
