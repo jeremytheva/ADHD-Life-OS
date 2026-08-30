@@ -291,21 +291,22 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
 
           {pendingTasks.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-medium text-slate-900 mb-3 flex items-center gap-2">
+              <h3 id="project-pending-tasks-heading" className="text-lg font-medium text-slate-900 mb-3 flex items-center gap-2">
                 <SafeIcon icon={FiAlertCircle} className="w-5 h-5 text-blue-600" />
                 To Do ({pendingTasks.length})
               </h3>
-              <div className="space-y-3">
+              <div role="list" aria-labelledby="project-pending-tasks-heading" className="space-y-3">
                 {pendingTasks.map((task, index) => (
-                  <TaskItem
-                    key={task.id}
-                    task={task}
-                    index={index}
-                    onComplete={() => handleCompleteTask(task.id)}
-                    onDelete={() => handleDeleteTask(task.id)}
-                    onUpdate={(updates) => handleUpdateTask(task.id, updates)}
-                    onCompleteSubtask={handleCompleteSubtask}
-                  />
+                  <div role="listitem" key={task.id}>
+                    <TaskItem
+                      task={task}
+                      index={index}
+                      onComplete={() => handleCompleteTask(task.id)}
+                      onDelete={() => handleDeleteTask(task.id)}
+                      onUpdate={(updates) => handleUpdateTask(task.id, updates)}
+                      onCompleteSubtask={handleCompleteSubtask}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -313,14 +314,15 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
 
           {completedTasks.length > 0 && (
             <div>
-              <h3 className="text-lg font-medium text-slate-900 mb-3 flex items-center gap-2">
+              <h3 id="project-completed-tasks-heading" className="text-lg font-medium text-slate-900 mb-3 flex items-center gap-2">
                 <SafeIcon icon={FiCheckCircle} className="w-5 h-5 text-green-600" />
                 Completed ({completedTasks.length})
               </h3>
-              <div className="space-y-2">
+              <div role="list" aria-labelledby="project-completed-tasks-heading" className="space-y-2">
                 {completedTasks.map((task) => (
                   <div
                     key={task.id}
+                    role="listitem"
                     className="p-3 bg-green-50 border border-green-200 rounded-lg opacity-60"
                   >
                     <div className="flex items-center gap-3">

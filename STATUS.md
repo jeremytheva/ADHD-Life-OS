@@ -29,9 +29,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #159 exact head cb591f4f0889d7120e9ad9d97a318190a59221a4 passed Application validation run 315 and merged at 1521b15d9eb076acf3bd5f25564786e2b30b4582. PR #160 must pass fresh exact-head canonical validation before lifecycle completion; this handoff is intentionally written for the state that should exist after #160 merges.
-last_verified_commit: cb591f4f0889d7120e9ad9d97a318190a59221a4
-last_updated: 2026-08-31T07:30:00+10:00
+validation_basis: PR #160 exact head 9064fafc0f879bec39d08161d7dcc76b95a157db passed Application validation run 317 and merged at 6c89333841062d55fbbb44f65d1b54232474cc84. PR #161 must pass fresh exact-head canonical validation before lifecycle completion; this handoff is intentionally written for the state that should exist after #161 merges.
+last_verified_commit: 9064fafc0f879bec39d08161d7dcc76b95a157db
+last_updated: 2026-08-31T07:36:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,27 +43,27 @@ last_updated: 2026-08-31T07:30:00+10:00
 
 ## Current objective
 
-Resume Stage 3 from fresh `main` after **PR #160 — Today timeline list semantics** completes its guarded repository lifecycle. The slice exposes each rendered Morning/Midday/Afternoon/Evening scheduled-block collection as a semantic list labelled by its existing visible heading, without changing timeline scheduling, ordering, completion/pending behaviour, unscheduled-task behaviour, persistence or provider contracts.
+Resume Stage 3 from fresh `main` after **PR #161 — Project Detail task-list semantics** completes its guarded repository lifecycle. The slice exposes the visible pending and completed project-task collections as labelled semantic lists while preserving TaskItem behaviour, task/subtask operations, recovery/error handling, ordering, persistence and provider contracts.
 
-PR #159 merged at `1521b15d9eb076acf3bd5f25564786e2b30b4582` after exact-head Application validation run 315 passed, completing primary Tasks collection semantics while preserving the existing recommendation focus-transfer group targets.
+PR #160 merged at `6c89333841062d55fbbb44f65d1b54232474cc84` after exact-head Application validation run 317 passed, completing Today time-of-day scheduled-block list semantics.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | READY checkpoint — when this status is present on `main`, PR #160 has completed and fresh repository inspection is required before selecting new work |
+| Gate state | READY checkpoint — when this status is present on `main`, PR #161 has completed and fresh repository inspection is required before selecting new work |
 | Execution state | READY — no default-branch implementation thread is assumed until live GitHub state is inspected |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Re-entry checkpoint after PR #160 merges
+## Re-entry checkpoint after PR #161 merges
 
 | State | Expected value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | PR #160 — Today time-of-day scheduled-block list semantics |
+| Last completed product outcome | PR #161 — Project Detail pending/completed task collection semantics |
 | Current blocker | None expected |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
@@ -74,15 +74,15 @@ PR #159 merged at `1521b15d9eb076acf3bd5f25564786e2b30b4582` after exact-head Ap
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
 | What is already happening? | No implementation thread should be assumed from this default-branch checkpoint; inspect live GitHub state first. |
-| What has been validated? | PR #159 exact head `cb591f4f0889d7120e9ad9d97a318190a59221a4` passed Application validation run 315 and merged. PR #160 requires its own exact-head validation before it can merge. |
-| What changed? | Each non-empty Today time-of-day scheduled-block collection exposes labelled list/list-item structure while retaining existing BlockCard behaviour. |
+| What has been validated? | PR #160 exact head `9064fafc0f879bec39d08161d7dcc76b95a157db` passed Application validation run 317 and merged. PR #161 requires its own exact-head validation before it can merge. |
+| What changed? | Project Detail exposes its pending and completed task collections as labelled lists while preserving existing TaskItem and recovery behaviour. |
 | What is next? | Inspect fresh `main`, open PRs and visible branches, then continue the next concrete independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-PRs #124–#160 progressively established disclosure, task/filter/sort and task-collection semantics, Today timeline collection semantics, modal and menu keyboard/focus integrity, Housework progress/filter/setup semantics, onboarding and template grouping, Gamification progress/section/reward-list semantics, Routine Statistics timeframe grouping, Quick Capture ordered-list semantics, Chore Detail checklist/required-item collection semantics, Projects view-selection and collection semantics, Routines collection list semantics, Brain Inbox captured-thought list semantics, TaskSelector recommendation-list and confidence-progress semantics, and RecommendedTasks collection semantics.
+PRs #124–#161 progressively established disclosure, task/filter/sort and task-collection semantics, Today timeline collection semantics, Project Detail task-collection semantics, modal and menu keyboard/focus integrity, Housework progress/filter/setup semantics, onboarding and template grouping, Gamification progress/section/reward-list semantics, Routine Statistics timeframe grouping, Quick Capture ordered-list semantics, Chore Detail checklist/required-item collection semantics, Projects view-selection and collection semantics, Routines collection list semantics, Brain Inbox captured-thought list semantics, TaskSelector recommendation-list and confidence-progress semantics, and RecommendedTasks collection semantics.
 
 ## Backend / provider work — intentionally deferred
 
