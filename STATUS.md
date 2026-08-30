@@ -6,16 +6,17 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Inspect next Stage 3 frontend accessibility or cognitive-load slice
+  objective: Housework chore checklist progress semantics
   issue: null
-  pr: null
-  branch: null
+  pr: 135
+  branch: fix/chore-progress-semantics
 next_actions:
-  - Require fresh exact-head Application validation for this final PR #134 status-bearing head.
-  - Reconfirm PR #134 review and unresolved-thread state after validation.
+  - Obtain exact-head Application validation for PR #135.
+  - Reconfirm PR #135 review and unresolved-thread state after validation.
+  - Audit acceptance criteria and update the durable post-merge handoff before lifecycle completion.
   - Apply lifecycle:implementation-complete only when the exact current head remains green and no in-scope work remains.
   - Allow the guarded lifecycle to progress Ready to Mergeable to Merged.
-  - After merge, inspect live main and select the next evidence-backed Stage 3 frontend slice.
+  - After merge, inspect live main and remaining Stage 3 frontend surfaces before selecting another slice.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -23,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Application validation run 257 passed on PR #134 implementation head b33988129c779d12d7ab04dda2934843d3d06516. This final status-bearing head requires one fresh exact-head canonical run before lifecycle completion.
-last_verified_commit: b33988129c779d12d7ab04dda2934843d3d06516
-last_updated: 2026-08-30T10:11:00+10:00
+validation_basis: PR #135 adds programmatic progressbar semantics to the existing ChoreDetailView checklist meter and deterministic regression coverage. Exact-head canonical validation is required before lifecycle completion.
+last_verified_commit: null
+last_updated: 2026-08-30T10:19:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,19 +45,19 @@ last_updated: 2026-08-30T10:11:00+10:00
 
 ## Current objective
 
-Complete **PR #134 — Settings theme label association** through its final exact-head guarded lifecycle, then resume from live `main` by inspecting the remaining Stage 3 frontend for the next evidence-backed accessibility or cognitive-load slice.
+Finish **PR #135 — Housework chore checklist progress semantics** through the guarded lifecycle.
 
-PR #133 merged successfully at `00b69c042c92d4e5d7e4d9dc3909dac5fc849127`, completing Task Selector programmatic selection semantics, filter naming/expanded-state semantics and Location label association. PR #134 addresses the next verified accessibility inconsistency in Settings: the visible Theme label and its existing select now have an explicit `htmlFor`/`id` association.
+PR #134 merged successfully at `9439cf1fd42543c5a96bfeb3ca9b9bff2aa0cd70`, completing the explicit Settings Theme label/select association. Post-merge inspection found the next narrow accessibility defect in `ChoreDetailView`: checklist progress was visually rendered from authoritative `completedCount` and `totalCount` state, but the meter exposed no programmatic progress semantics.
 
-PR #134 preserves theme option values, preference update behaviour, schema and provider/persistence boundaries. Deterministic regression coverage protects the association. Application validation run 257 passed the canonical `npm run platform:validate` gate on implementation head `b33988129c779d12d7ab04dda2934843d3d06516`. This status checkpoint is the final status-bearing commit and therefore requires one fresh exact-head validation before implementation-complete.
+PR #135 keeps the existing checklist state, percentage calculation, visual animation, completion behaviour and provider/persistence boundaries unchanged. It exposes the meter as a named progressbar with minimum, maximum, current and human-readable value text derived from the existing authoritative counts, with deterministic regression coverage.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — implementation and acceptance evidence are complete through `b3398812`; one final exact-head run is required for this handoff checkpoint |
-| Execution state | VALIDATING — keep PR #134 Draft until the final status-bearing head passes canonical validation |
+| Gate state | VALIDATING — focused implementation and deterministic coverage exist; exact-head canonical evidence is required |
+| Execution state | VALIDATING — keep PR #135 Draft until exact-head validation and acceptance audit pass |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -65,24 +66,23 @@ PR #134 preserves theme option values, preference update behaviour, schema and p
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Active delivery thread | PR #134 until guarded merge completes |
-| Post-merge active application PR | None; inspect live `main` before opening the next focused thread |
-| Current implementation outcome | Settings Theme label is explicitly associated with its existing select control |
-| Last completed product outcome on `main` | PR #133 — Task Selector selection semantics |
-| Current blocker | None; final exact-head validation is required because this durable handoff is a new commit |
+| Active application PR | PR #135 — Housework chore checklist progress semantics |
+| Current implementation outcome | Chore checklist progress exposes programmatic progress state from authoritative counts |
+| Last completed product outcome on `main` | PR #134 — Settings Theme label association |
+| Current blocker | None; exact-head Application validation is required |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Revalidate this final status-bearing head, reconfirm review/thread state, then allow the guarded lifecycle to merge PR #134 only if evidence remains clean |
-| Post-merge continuation | Inspect live `main` and remaining Stage 3 frontend surfaces; select only an evidence-backed accessibility, cognitive-load or focused maintainability slice. |
+| Next action | Validate PR #135 exact head, audit acceptance criteria and review/thread state, then advance lifecycle only if evidence is clean |
+| Post-merge continuation | Inspect live `main`, open PRs and remaining Stage 3 frontend surfaces; select only an evidence-backed accessibility, cognitive-load or focused maintainability slice. |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3, Change gate, execution state VALIDATING. |
-| What is already happening? | PR #134 is completing its guarded lifecycle; the next product slice has deliberately not been opened yet. |
-| What has been validated? | PR #134 implementation head `b33988129c779d12d7ab04dda2934843d3d06516` passed Application validation run 257 and the full canonical gate. |
-| What changed? | Settings Theme label now has an explicit `htmlFor` relationship to its existing Theme select, with deterministic regression coverage. |
-| What is next? | Validate this final status-bearing head, complete guarded merge, inspect live `main`, then choose the next evidence-backed frontend slice. |
+| What is already happening? | PR #135 is the sole active Draft implementation thread. |
+| What has been validated? | PR #134 merged after exact-head validation; PR #135 exact-head canonical validation is pending. |
+| What changed? | The ChoreDetailView checklist meter now exposes progressbar semantics bound to existing completed/total counts. |
+| What is next? | Obtain exact-head Application validation, reconfirm reviews/threads, audit acceptance criteria and advance the guarded lifecycle only if evidence remains green. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -97,6 +97,7 @@ PR #134 preserves theme option values, preference update behaviour, schema and p
 - PR #131 — closed unmerged as a concurrent duplicate superseded by PR #130.
 - PR #132 — Day Setup label associations.
 - PR #133 — Task Selector selection semantics.
+- PR #134 — Settings Theme label association.
 
 ## Interaction and cognitive-load state
 
@@ -107,15 +108,16 @@ PR #134 preserves theme option values, preference update behaviour, schema and p
 - Tasks sorting uses one authoritative state and one accessible sort control.
 - Reward Shop category filters expose labelled grouping and selected-state semantics.
 - Accessibility Settings Text Size, Contrast and Line Spacing options expose labelled grouping and selected-state semantics.
-- Day Setup time labels are explicitly associated with their inputs.
+- Day Setup time labels and Settings Theme are explicitly associated with their controls.
 - Task Selector Recommendation Path, Energy, Available Time and Mood expose programmatic selected state; filter controls are named/connected and Location has an explicit label association.
 
-### Completing through PR #134
+### Active — Housework / PR #135
 
-- Theme label is explicitly associated with the existing Theme select.
-- Theme option values and preference update behaviour are unchanged.
+- Chore checklist progress meter exposes `role="progressbar"`.
+- Accessible minimum, maximum, current and value-text semantics are derived from existing checklist counts.
+- Visual percentage animation and checklist interaction remain unchanged.
 - Provider/persistence behaviour is unchanged.
-- Deterministic regression coverage protects the label/select relationship.
+- Deterministic regression coverage protects the progress contract.
 
 ## Backend / provider work — intentionally deferred
 
@@ -152,12 +154,14 @@ While deferred:
 
 ## Next dependency-correct work
 
-1. obtain fresh exact-head Application validation on this final PR #134 status-bearing head;
+1. obtain fresh exact-head Application validation on PR #135;
 2. reconfirm submitted reviews and unresolved review threads;
-3. apply `lifecycle:implementation-complete` only when exact-head evidence remains green and no in-scope work remains;
-4. allow the guarded lifecycle to progress Ready → Mergeable → Merged;
-5. inspect live `main`, open PRs and remaining Stage 3 frontend evidence before opening another implementation thread;
-6. continue autonomously while provider-dependent execution work remains intentionally deferred.
+3. audit the PR acceptance criteria against the exact validated head;
+4. update the durable post-merge handoff before implementation-complete if validation passes;
+5. apply `lifecycle:implementation-complete` only when exact-head evidence remains green and no in-scope work remains;
+6. allow the guarded lifecycle to progress Ready → Mergeable → Merged;
+7. after merge, inspect live `main` and remaining Stage 3 frontend evidence before opening another implementation thread;
+8. continue autonomously while provider-dependent execution work remains intentionally deferred.
 
 ## Stage 3 exit conditions
 
