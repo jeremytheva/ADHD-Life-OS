@@ -17,13 +17,20 @@ const RecommendedTasks = ({ tasks, onTaskClick }) => {
     >
       <div className="flex items-center gap-2 mb-3">
         <SafeIcon icon={FiZap} className="w-5 h-5 text-blue-600" />
-        <h3 className="text-sm font-medium text-blue-900">Recommended Right Now</h3>
+        <h3 id="recommended-tasks-heading" className="text-sm font-medium text-blue-900">
+          Recommended Right Now
+        </h3>
       </div>
 
-      <div className="space-y-2">
+      <div
+        role="list"
+        aria-labelledby="recommended-tasks-heading"
+        className="space-y-2"
+      >
         {tasks.map((task, index) => (
           <motion.button
             type="button"
+            role="listitem"
             key={task.id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
