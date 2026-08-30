@@ -130,10 +130,15 @@ const RewardShop = ({ onClose }) => {
 
         {/* Rewards Grid */}
         <div className="flex-1 overflow-y-auto p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div
+            role="list"
+            aria-label="Available rewards"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          >
             {filteredRewards.map((reward, index) => (
               <motion.div
                 key={reward.id}
+                role="listitem"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
