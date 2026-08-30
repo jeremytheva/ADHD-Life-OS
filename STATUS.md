@@ -6,13 +6,13 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #149 Chore Detail checklist step-group semantics through exact-head validation and the guarded repository lifecycle.
+  objective: Complete PR #150 Chore Detail required-items list semantics through exact-head validation and the guarded repository lifecycle.
   issue: null
-  pr: 149
-  branch: fix/chore-detail-step-group-semantics
+  pr: 150
+  branch: fix/chore-detail-required-items-list-semantics
 next_actions:
-  - Run exact-head Application validation for PR #149 after this status-bearing commit.
-  - Audit PR #149 acceptance criteria and review/thread state.
+  - Run exact-head Application validation for PR #150 after this status-bearing commit.
+  - Audit PR #150 acceptance criteria and review/thread state.
   - Apply lifecycle:implementation-complete only when exact-head validation and review gates are clean.
   - After guarded merge, inspect live main before selecting the next Stage 3 accessibility or cognitive-load slice.
 blockers: []
@@ -29,9 +29,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #148 exact head af8bd7cb8317844edf62ea4673aaeda8af81d5e7 passed Application validation run 292 and merged at a9ca011346cf01fd5c930c0ddc7071cdd724d8de. PR #149 requires fresh exact-head canonical validation after this status-bearing commit.
-last_verified_commit: af8bd7cb8317844edf62ea4673aaeda8af81d5e7
-last_updated: 2026-08-30T20:39:00+10:00
+validation_basis: PR #149 exact head b1c51f6cd2a64580efb2ceeb0c68ca883d792cde passed Application validation run 294 and merged at fddff4cc6676636a4156a3d133c016f25caa81ae. PR #150 requires fresh exact-head canonical validation after this status-bearing commit.
+last_verified_commit: b1c51f6cd2a64580efb2ceeb0c68ca883d792cde
+last_updated: 2026-08-30T21:02:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,27 +43,26 @@ last_updated: 2026-08-30T20:39:00+10:00
 
 ## Current objective
 
-Complete **PR #149 — Chore Detail checklist step-group semantics** through the guarded lifecycle. The existing checklist buttons already expose authoritative `aria-pressed` state; this slice connects the selectable collection to its visible **Steps** heading as one named group without changing checklist, completion, dialog, celebration, persistence or provider behaviour.
+Complete **PR #150 — Chore Detail required-items list semantics** through the guarded lifecycle. The visible **What You'll Need** collection is now exposed as one heading-labelled semantic list with semantic list items while preserving item order, styling, checklist behavior, completion behavior, dialog behavior, persistence, and provider boundaries.
 
-PR #148 merged at `a9ca011346cf01fd5c930c0ddc7071cdd724d8de` after exact-head Application validation run 292 passed, completing Quick Capture ordered-list semantics.
+PR #149 merged at `fddff4cc6676636a4156a3d133c016f25caa81ae` after exact-head Application validation run 294 passed, completing Chore Detail checklist step-group semantics.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — PR #149 implementation, deterministic coverage and durable handoff are complete in scope; exact-head validation is required |
-| Execution state | VALIDATING — keep PR #149 Draft until exact-head validation and review/thread checks are clean |
+| Gate state | VALIDATING — PR #150 implementation, deterministic coverage and durable handoff are complete in scope; exact-head validation is required |
+| Execution state | VALIDATING — keep PR #150 Draft until exact-head validation and review/thread checks are clean |
 | Backend/provider state | DEFERRED / UNVERIFIED |
-| Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Re-entry checkpoint after PR #149 merges
+## Re-entry checkpoint after PR #150 merges
 
 | State | Expected value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | PR #149 — Chore Detail checklist step-group semantics |
+| Last completed product outcome | PR #150 — Chore Detail required-items list semantics |
 | Current blocker | None expected |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
@@ -73,87 +72,36 @@ PR #148 merged at `a9ca011346cf01fd5c930c0ddc7071cdd724d8de` after exact-head Ap
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
-| What is already happening? | PR #149 is the sole current implementation thread until its guarded lifecycle completes. |
-| What has been validated? | PR #148 exact head `af8bd7cb8317844edf62ea4673aaeda8af81d5e7` passed Application validation run 292 and merged. PR #149 requires fresh exact-head validation after this handoff commit. |
-| What changed? | Chore Detail checklist step controls now form one programmatically named group derived from the existing Steps heading, while existing per-step pressed state and completion guards remain unchanged. |
-| What is next? | Validate PR #149, audit review evidence, allow guarded merge if clean, then resume from fresh `main`. |
+| What is already happening? | PR #150 is the sole current implementation thread until its guarded lifecycle completes. |
+| What has been validated? | PR #149 exact head `b1c51f6cd2a64580efb2ceeb0c68ca883d792cde` passed Application validation run 294 and merged. PR #150 requires fresh exact-head validation after this handoff commit. |
+| What changed? | Chore Detail required items now form one heading-labelled semantic list while existing item content, order, and visuals remain unchanged. |
+| What is next? | Validate PR #150, audit review evidence, allow guarded merge if clean, then resume from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-- PR #124 — Today unscheduled-task progressive disclosure.
-- PR #125 — Tasks sort-state integrity and one accessible sort control.
-- PR #126 — Project card keyboard and menu interaction integrity.
-- PR #127 — Template Apply menu keyboard and focus ownership.
-- PR #129 — Reward Shop category filter semantics.
-- PR #130 — Accessibility Settings selection semantics.
-- PR #131 — closed unmerged as a duplicate superseded by PR #130.
-- PR #132 — Day Setup label associations.
-- PR #133 — Task Selector selection semantics.
-- PR #134 — Settings Theme label association.
-- PR #135 — Housework chore checklist progress semantics.
-- PR #136 — Tasks filter selection semantics.
-- PR #137 — Recommended task focus transfer.
-- PR #138 — Template Apply outside-dismiss focus restoration.
-- PR #139 — Housework chore filter selection semantics.
-- PR #140 — Brain Inbox mode selection semantics.
-- PR #141 — Onboarding UI style selection semantics.
-- PR #142 — Onboarding optional-module selection semantics.
-- PR #143 — Template Library control-group semantics.
-- PR #144 — Housework Setup task-group semantics.
-- PR #145 — Gamification Dashboard progress semantics.
-- PR #146 — Routine Statistics timeframe-group semantics.
-- PR #147 — Gamification Dashboard section-control grouping.
-- PR #148 — Quick Capture ordered-list semantics.
-
-## Interaction and cognitive-load state
-
-Completed work includes keyboard/focus contracts for modal/menu flows, progressive disclosure of Today unscheduled work, authoritative Tasks sort/filter state, recommendation focus transfer, labelled stateful filters/settings controls, Housework progress/filter/setup semantics, Brain Inbox mode semantics, onboarding style/module semantics, Template Library grouping, Gamification progress/section semantics, Routine Statistics timeframe grouping and Quick Capture ordered-list semantics.
-
-PR #149 extends that accessibility baseline to the Chore Detail selectable step collection only.
+PRs #124–#149 established progressive disclosure, task/filter/sort semantics, modal and menu keyboard/focus integrity, Housework progress/filter/setup semantics, onboarding and template grouping, Gamification progress/section semantics, Routine Statistics timeframe grouping, Quick Capture ordered-list semantics, and Chore Detail checklist step grouping.
 
 ## Backend / provider work — intentionally deferred
 
 **State:** PROVIDER UNVERIFIED / TEMPORARILY DEFERRED.
 
-While deferred:
-
-- keep fail-closed provider mappings in place;
-- do not substitute another project's NoCodeBackend contract;
-- do not use browser persistence as fake durable execution;
-- do not claim durable cross-reload/cross-device execution recovery;
-- continue independent frontend, accessibility, testing and maintainability work.
+Keep provider mappings fail-closed, do not infer physical NoCodeBackend contracts, and continue independent frontend/accessibility/testing work until real provider evidence is available.
 
 ## Quality / technical state
 
-- `npm run platform:validate` remains the canonical validation gate and includes dependency audit, governance, zero-warning lint, typecheck, deterministic tests, production build and critical Playwright coverage.
+- `npm run platform:validate` remains the canonical project-owned validation gate.
 - The roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
 - Production deployment remains unverified/unconfigured for ADHD Life OS.
-- `src/domain/` and `src/domains/` naming overlap remains an architectural hygiene observation only.
-
-## Documentation baseline
-
-| Concept | Canonical location |
-| --- | --- |
-| Agent operating contract | `AGENTS.md` |
-| Project identity/control | `PROJECT.md` |
-| Durable current execution state | `STATUS.md` |
-| Architecture | `docs/ARCHITECTURE.md` |
-| Data model | `docs/DATA_MODEL.md` |
-| System map | `SYSTEM_MAP.md` |
-| Roadmap | `ROADMAP.md` |
-| Decisions/register | `docs/DECISIONS/` |
-| CI/lifecycle workflows | `.github/workflows/` |
 
 ## Next dependency-correct work
 
-1. run exact-head Application validation for PR #149;
-2. audit PR #149 review/thread state and acceptance criteria;
+1. run exact-head Application validation for PR #150;
+2. audit PR #150 review/thread state and acceptance criteria;
 3. apply `lifecycle:implementation-complete` only when the exact head is clean;
 4. allow repository lifecycle/finalizer workflows to own Ready/Mergeable/Merged transitions;
-5. after merge, inspect live `main`, open PRs and visible branches before creating new work;
-6. continue the next evidence-backed accessibility slice, or cognitive-load reduction if no concrete accessibility defect remains.
+5. after merge, inspect live `main`, open PRs and visible branches before creating new work.
 
 ## Stage 3 exit conditions
 

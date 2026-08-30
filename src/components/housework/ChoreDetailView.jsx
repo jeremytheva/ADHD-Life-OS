@@ -18,6 +18,7 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
   const [operationError, setOperationError] = useState(null)
   const closeTimerRef = useRef(null)
   const titleId = useId()
+  const requiredItemsHeadingId = useId()
   const stepsHeadingId = useId()
   const closeLocked = completing || showCelebration
   const dialogRef = useModalDialog({ onEscape: closeLocked ? undefined : onClose })
@@ -117,7 +118,7 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
             <div className="bg-slate-50 rounded-lg p-4"><div className="flex items-center gap-2 text-slate-600 mb-1"><SafeIcon icon={FiCalendar} className="w-4 h-4" /><span className="text-sm font-medium">Frequency</span></div><div className="text-lg font-bold text-slate-900">{getFrequencyLabel(task.frequency)}</div><div className="text-xs text-slate-600 mt-1">Due {format(parseISO(task.next_due_date), 'MMM d')}</div></div>
           </div>
 
-          {task.required_items?.length > 0 && <div className="mb-6"><div className="flex items-center gap-2 mb-3"><SafeIcon icon={FiPackage} className="w-5 h-5 text-slate-600" /><h3 className="font-medium text-slate-900">What You'll Need</h3></div><div className="flex flex-wrap gap-2">{task.required_items.map((item, index) => <span key={index} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">{item}</span>)}</div></div>}
+          {task.required_items?.length > 0 && <div className="mb-6"><div className="flex items-center gap-2 mb-3"><SafeIcon icon={FiPackage} className="w-5 h-5 text-slate-600" /><h3 id={requiredItemsHeadingId} className="font-medium text-slate-900">What You'll Need</h3></div><ul className="flex flex-wrap gap-2" aria-labelledby={requiredItemsHeadingId}>{task.required_items.map((item, index) => <li key={index} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">{item}</li>)}</ul></div>}
 
           {task.checklist?.length > 0 && <div><div className="flex items-center gap-2 mb-3"><SafeIcon icon={FiList} className="w-5 h-5 text-slate-600" /><h3 id={stepsHeadingId} className="font-medium text-slate-900">Steps</h3></div><div className="space-y-2" role="group" aria-labelledby={stepsHeadingId}>{task.checklist.map((item, index) => <motion.button type="button" key={index} onClick={() => handleToggleChecklistItem(index)} disabled={closeLocked} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} aria-pressed={Boolean(checklistState[index])} className={`w-full text-left p-4 rounded-lg border-2 transition-all disabled:cursor-not-allowed ${checklistState[index] ? 'bg-green-50 border-green-300' : 'bg-white border-slate-200 hover:border-purple-300'}`}><div className="flex items-center gap-3"><div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${checklistState[index] ? 'bg-green-500' : 'bg-slate-200'}`}>{checklistState[index] && <SafeIcon icon={FiCheck} className="w-4 h-4 text-white" />}</div><div className="flex items-center gap-2 flex-1"><span className="text-slate-400 font-medium">{index + 1}.</span><span className={checklistState[index] ? 'text-green-900 line-through' : 'text-slate-900'}>{item}</span></div></div></motion.button>)}</div></div>}
 
