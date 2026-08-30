@@ -198,7 +198,7 @@ const AccessibilitySettings = ({ onClose }) => {
                   <div className="text-sm font-medium text-slate-900">
                     Reduce Motion
                   </div>
-                  <div className="text-xs text-slate-600">
+                  <div id="accessibility-reduce-motion-description" className="text-xs text-slate-600">
                     Minimize animations and transitions
                   </div>
                 </div>
@@ -207,6 +207,7 @@ const AccessibilitySettings = ({ onClose }) => {
                 type="button"
                 onClick={() => handleChange('reduceMotion', !settings.reduceMotion)}
                 aria-label="Reduce motion"
+                aria-describedby="accessibility-reduce-motion-description"
                 aria-pressed={settings.reduceMotion}
                 className={`
                   w-12 h-6 rounded-full transition-colors
@@ -228,7 +229,7 @@ const AccessibilitySettings = ({ onClose }) => {
                   <div className="text-sm font-medium text-slate-900">
                     Focus Mode
                   </div>
-                  <div className="text-xs text-slate-600">
+                  <div id="accessibility-focus-mode-description" className="text-xs text-slate-600">
                     Dim non-essential elements
                   </div>
                 </div>
@@ -237,6 +238,7 @@ const AccessibilitySettings = ({ onClose }) => {
                 type="button"
                 onClick={() => handleChange('focusMode', !settings.focusMode)}
                 aria-label="Focus mode"
+                aria-describedby="accessibility-focus-mode-description"
                 aria-pressed={settings.focusMode}
                 className={`
                   w-12 h-6 rounded-full transition-colors
@@ -258,7 +260,7 @@ const AccessibilitySettings = ({ onClose }) => {
                   <div className="text-sm font-medium text-slate-900">
                     Dyslexia-Friendly Font
                   </div>
-                  <div className="text-xs text-slate-600">
+                  <div id="accessibility-dyslexic-font-description" className="text-xs text-slate-600">
                     Use OpenDyslexic font
                   </div>
                 </div>
@@ -267,6 +269,7 @@ const AccessibilitySettings = ({ onClose }) => {
                 type="button"
                 onClick={() => handleChange('dyslexicFont', !settings.dyslexicFont)}
                 aria-label="Dyslexia-friendly font"
+                aria-describedby="accessibility-dyslexic-font-description"
                 aria-pressed={settings.dyslexicFont}
                 className={`
                   w-12 h-6 rounded-full transition-colors
