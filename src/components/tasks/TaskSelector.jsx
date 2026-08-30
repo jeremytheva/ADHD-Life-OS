@@ -411,10 +411,17 @@ const TaskSelector = ({ onSelectTask }) => {
                   {/* Confidence Indicator */}
                   <div className="mb-3">
                     <div className="flex items-center justify-between text-xs text-slate-600 mb-1">
-                      <span>Match Confidence</span>
+                      <span id={`task-selector-confidence-label-${rec.task.id}`}>Match Confidence</span>
                       <span>{Math.round(rec.confidence * 100)}%</span>
                     </div>
-                    <div className="w-full bg-slate-200 rounded-full h-2">
+                    <div
+                      role="progressbar"
+                      aria-labelledby={`task-selector-confidence-label-${rec.task.id}`}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-valuenow={Math.round(rec.confidence * 100)}
+                      className="w-full bg-slate-200 rounded-full h-2"
+                    >
                       <div
                         className="bg-purple-600 h-2 rounded-full transition-all"
                         style={{ width: `${rec.confidence * 100}%` }}
