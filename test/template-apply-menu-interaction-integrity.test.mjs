@@ -27,6 +27,12 @@ test('TemplateCard apply menu owns initial focus and Escape restoration', async 
   assert.match(source, /applyMenuTriggerRef\.current\?\.focus\(\)/)
 })
 
+test('TemplateCard restores trigger focus when the apply menu is dismissed outside', async () => {
+  const source = await read('src/components/templates/TemplateCard.jsx')
+
+  assert.match(source, /className="fixed inset-0 z-10"[\s\S]*?onClick=\{\(\) => closeApplyMenu\(\{ restoreFocus: true \}\)\}/)
+})
+
 test('TemplateCard preserves Edit Before Applying modal-stack focus ownership', async () => {
   const source = await read('src/components/templates/TemplateCard.jsx')
   const editHandler = source.match(/<span>Edit Before Applying<\/span>[\s\S]*?<\/button>/)
