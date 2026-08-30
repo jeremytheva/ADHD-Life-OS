@@ -275,7 +275,7 @@ const TaskList = () => {
       )}
 
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-medium text-slate-900">Tasks</h1>
+        <h1 id="task-list-heading" className="text-2xl font-medium text-slate-900">Tasks</h1>
         <div className="flex gap-2">
           <button
             type="button"
@@ -343,42 +343,46 @@ const TaskList = () => {
         </div>
       </div>
 
-      <div className="space-y-3">
-        {tasks.length === 0 ? (
-          <div className="bg-white rounded-lg border border-slate-200 p-8 text-center">
-            <p className="text-slate-600 mb-4">
-              {currentMode.id !== 'all' ? `No ${currentMode.label.toLowerCase()} tasks found` : 'No tasks found'}
-            </p>
-            <div className="flex gap-3 justify-center">
-              <button type="button" onClick={() => setShowForm(true)} className="text-blue-600 hover:text-blue-700">Create your first task</button>
-              <span className="text-slate-400">or</span>
-              <button type="button" onClick={() => setShowTemplates(true)} className="text-purple-600 hover:text-purple-700">Browse templates</button>
-            </div>
+      {tasks.length === 0 ? (
+        <div className="bg-white rounded-lg border border-slate-200 p-8 text-center">
+          <p className="text-slate-600 mb-4">
+            {currentMode.id !== 'all' ? `No ${currentMode.label.toLowerCase()} tasks found` : 'No tasks found'}
+          </p>
+          <div className="flex gap-3 justify-center">
+            <button type="button" onClick={() => setShowForm(true)} className="text-blue-600 hover:text-blue-700">Create your first task</button>
+            <span className="text-slate-400">or</span>
+            <button type="button" onClick={() => setShowTemplates(true)} className="text-purple-600 hover:text-purple-700">Browse templates</button>
           </div>
-        ) : (
-          tasks.map((task, index) => (
+        </div>
+      ) : (
+        <div role="list" aria-labelledby="task-list-heading" className="space-y-3">
+          {tasks.map((task, index) => (
             <motion.div
               key={task.id}
-              id={`task-${task.id}`}
-              role="group"
-              aria-label={`Task: ${task.title}`}
-              tabIndex={-1}
+              role="listitem"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
-              <TaskCard
-                task={task}
-                onComplete={() => handleCompleteTask(task.id)}
-                onDelete={() => handleDeleteTask(task.id)}
-                showPriority={sortBy === 'priority'}
-                pending={pendingAction?.endsWith(`:${task.id}`)}
-              />
+              <div
+                id={`task-${task.id}`}
+                role="group"
+                aria-label={`Task: ${task.title}`}
+                tabIndex={-1}
+                className="rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <TaskCard
+                  task={task}
+                  onComplete={() => handleCompleteTask(task.id)}
+                  onDelete={() => handleDeleteTask(task.id)}
+                  showPriority={sortBy === 'priority'}
+                  pending={pendingAction?.endsWith(`:${task.id}`)}
+                />
+              </div>
             </motion.div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
       <AnimatePresence>
         {showForm && (
