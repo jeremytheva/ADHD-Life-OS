@@ -106,3 +106,18 @@ test('Tasks selected sort value and actual ordering stay aligned', async ({ page
   await expect(sort).toHaveValue('created')
   await expect(taskTitles(page)).toHaveText(['Mike task', 'Zulu task', 'Alpha task'])
 })
+
+test('Recommended task keyboard activation transfers focus to the matching task region', async ({ page }) => {
+  await createTaskSortMock(page)
+  await registerAndSkipSetup(page)
+  await page.getByRole('link', { name: 'Tasks' }).click()
+
+  const recommendations = page.getByRole('heading', { name: 'Recommended Right Now' }).locator('..').locator('..')
+  const recommendation = recommendations.getByRole('button').filter({ hasText: 'Zulu task' })
+  const target = page.getByRole('group', { name: 'Task: Zulu task' })
+
+  await expect(recommendation).toBeVisible()
+  await recommendation.focus()
+  await recommendation.press('Enter')
+  await expect(target).toBeFocused()
+})
