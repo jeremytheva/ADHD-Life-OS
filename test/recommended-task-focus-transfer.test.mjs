@@ -16,5 +16,6 @@ test('recommended task activation transfers focus to the matching task region', 
   assert.match(taskList, /tabIndex=\{-1\}/)
   assert.match(taskList, /focus:ring-2 focus:ring-blue-400/)
   assert.doesNotMatch(taskList, /element\.classList\.add\('ring-2'/)
-  assert.match(recommendations, /<motion\.button\s+type="button"/)
+  assert.match(recommendations, /<button\s+type="button"/)
+  assert.match(recommendations, /onClick=\{\(\) => onTaskClick && onTaskClick\(task\)\}/)
 })
