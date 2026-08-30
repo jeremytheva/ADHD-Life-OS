@@ -29,9 +29,9 @@ validation:
   build: PASS
   ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #155 exact head dfef1195c9a1b397d4cbd69a4830a0aabc1d92d2 passed Application validation run 305 and merged at a27a24cc80f606f6e31418eccae590f4c899fde2. PR #156 must pass fresh exact-head canonical validation before lifecycle completion; this handoff is intentionally written for the state that should exist after #156 merges.
-last_verified_commit: dfef1195c9a1b397d4cbd69a4830a0aabc1d92d2
-last_updated: 2026-08-31T03:18:00+10:00
+validation_basis: PR #156 exact head 7109ab94803b8710830181d30bcb2d4686c59344 passed Application validation run 307 and merged at 29fbe83583039a7d401b46e9c00cfa23c4742d8a. PR #157 must pass fresh exact-head canonical validation before lifecycle completion; this handoff is intentionally written for the state that should exist after #157 merges.
+last_verified_commit: 7109ab94803b8710830181d30bcb2d4686c59344
+last_updated: 2026-08-31T05:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,27 +43,27 @@ last_updated: 2026-08-31T03:18:00+10:00
 
 ## Current objective
 
-Resume Stage 3 from fresh `main` after **PR #156 — TaskSelector recommendation-list semantics** completes its guarded repository lifecycle. The slice exposes TaskSelector's rendered recommendation cards as one labelled semantic list with one list item per recommendation while preserving recommendation policy, scoring, filtering, animation, task selection, persistence and provider behaviour.
+Resume Stage 3 from fresh `main` after **PR #157 — TaskSelector Match Confidence progress semantics** completes its guarded repository lifecycle. The slice exposes each recommendation confidence bar as a labelled `progressbar` with 0–100 bounds and the rounded current confidence value while preserving recommendation policy, scoring, filtering, ordering, visual rendering, task selection, persistence and provider behaviour.
 
-PR #155 merged at `a27a24cc80f606f6e31418eccae590f4c899fde2` after exact-head Application validation run 305 passed, completing Brain Inbox captured-thought list semantics.
+PR #156 merged at `29fbe83583039a7d401b46e9c00cfa23c4742d8a` after exact-head Application validation run 307 passed, completing TaskSelector recommendation-list semantics.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | READY checkpoint — when this status is present on `main`, PR #156 has completed and fresh repository inspection is required before selecting new work |
+| Gate state | READY checkpoint — when this status is present on `main`, PR #157 has completed and fresh repository inspection is required before selecting new work |
 | Execution state | READY — no default-branch implementation thread is assumed until live GitHub state is inspected |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Re-entry checkpoint after PR #156 merges
+## Re-entry checkpoint after PR #157 merges
 
 | State | Expected value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | PR #156 — TaskSelector recommendation-list semantics |
+| Last completed product outcome | PR #157 — TaskSelector Match Confidence progress semantics |
 | Current blocker | None expected |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
@@ -74,15 +74,15 @@ PR #155 merged at `a27a24cc80f606f6e31418eccae590f4c899fde2` after exact-head Ap
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
 | What is already happening? | No implementation thread should be assumed from this default-branch checkpoint; inspect live GitHub state first. |
-| What has been validated? | PR #155 exact head `dfef1195c9a1b397d4cbd69a4830a0aabc1d92d2` passed Application validation run 305 and merged. PR #156 requires its own exact-head validation before it can merge. |
-| What changed? | TaskSelector recommendations are exposed as one labelled semantic list with one list item per recommendation. |
+| What has been validated? | PR #156 exact head `7109ab94803b8710830181d30bcb2d4686c59344` passed Application validation run 307 and merged. PR #157 requires its own exact-head validation before it can merge. |
+| What changed? | TaskSelector Match Confidence bars expose labelled progress semantics and authoritative percentage values. |
 | What is next? | Inspect fresh `main`, open PRs and visible branches, then continue the next concrete independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-PRs #124–#156 progressively established disclosure, task/filter/sort semantics, modal and menu keyboard/focus integrity, Housework progress/filter/setup semantics, onboarding and template grouping, Gamification progress/section/reward-list semantics, Routine Statistics timeframe grouping, Quick Capture ordered-list semantics, Chore Detail checklist/required-item collection semantics, Projects view-selection and collection semantics, Routines collection list semantics, Brain Inbox captured-thought list semantics, and TaskSelector recommendation-list semantics.
+PRs #124–#157 progressively established disclosure, task/filter/sort semantics, modal and menu keyboard/focus integrity, Housework progress/filter/setup semantics, onboarding and template grouping, Gamification progress/section/reward-list semantics, Routine Statistics timeframe grouping, Quick Capture ordered-list semantics, Chore Detail checklist/required-item collection semantics, Projects view-selection and collection semantics, Routines collection list semantics, Brain Inbox captured-thought list semantics, TaskSelector recommendation-list semantics, and TaskSelector confidence-progress semantics.
 
 ## Backend / provider work — intentionally deferred
 
