@@ -34,6 +34,10 @@ test('Routine Statistics controls expose explicit accessible semantics', async (
   const source = await read('src/components/routines/RoutineStats.jsx')
 
   assert.match(source, /aria-label="Close routine statistics"/)
+  assert.match(source, /const timeframeGroupLabelId = `routine-stats-timeframe-label-\$\{routine\.id\}`/)
+  assert.match(source, /role="group"/)
+  assert.match(source, /aria-labelledby=\{timeframeGroupLabelId\}/)
+  assert.match(source, /id=\{timeframeGroupLabelId\}[^>]*>Show data for:/)
   assert.match(source, /aria-pressed=\{timeframe === days\}/)
   assert.match(source, /aria-disabled=\{loading\}/)
   assert.match(source, /if \(loading \|\| days === timeframe\) return/)
