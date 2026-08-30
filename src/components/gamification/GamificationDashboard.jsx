@@ -161,7 +161,11 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
           </div>
         </div>
 
-        <div className="flex border-b border-slate-200">
+        <div
+          className="flex border-b border-slate-200"
+          role="group"
+          aria-label="Progress section"
+        >
           {['overview', 'achievements', 'stats'].map(tab => (
             <button
               type="button"
