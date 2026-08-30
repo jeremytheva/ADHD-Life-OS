@@ -4,17 +4,17 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Change
-execution_state: READY
+execution_state: VALIDATING
 current_work:
-  objective: Inspect fresh main and continue the next evidence-backed Stage 3 frontend accessibility or cognitive-load slice.
+  objective: Complete PR #157 TaskSelector Match Confidence progress semantics through exact-head validation and guarded repository lifecycle.
   issue: null
-  pr: null
-  branch: main
+  pr: 157
+  branch: fix/task-selector-confidence-progress-semantics
 next_actions:
-  - Inspect live main, open PRs and visible branches before creating new work.
-  - Continue the next concrete frontend accessibility/interaction integrity defect if one remains.
-  - If no concrete accessibility defect remains, move to the next evidence-backed client-side cognitive-load reduction slice.
-  - Keep NoCodeBackend-dependent execution work deferred until real target-provider evidence is available.
+  - Run exact-head Application validation for PR #157 after this status-bearing commit.
+  - Audit PR #157 acceptance criteria and review/thread state.
+  - Apply lifecycle:implementation-complete only when exact-head validation and review gates are clean.
+  - After merge, inspect fresh main before selecting the next Stage 3 accessibility or cognitive-load slice.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -22,16 +22,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #155 exact head dfef1195c9a1b397d4cbd69a4830a0aabc1d92d2 passed Application validation run 305 and merged at a27a24cc80f606f6e31418eccae590f4c899fde2. PR #156 must pass fresh exact-head canonical validation before lifecycle completion; this handoff is intentionally written for the state that should exist after #156 merges.
-last_verified_commit: dfef1195c9a1b397d4cbd69a4830a0aabc1d92d2
-last_updated: 2026-08-31T03:18:00+10:00
+validation_basis: PR #156 exact head 7109ab94803b8710830181d30bcb2d4686c59344 passed Application validation run 307 and merged at 29fbe83583039a7d401b46e9c00cfa23c4742d8a. PR #157 requires fresh exact-head canonical validation after this status-bearing commit.
+last_verified_commit: 7109ab94803b8710830181d30bcb2d4686c59344
+last_updated: 2026-08-31T05:16:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,27 +43,27 @@ last_updated: 2026-08-31T03:18:00+10:00
 
 ## Current objective
 
-Resume Stage 3 from fresh `main` after **PR #156 — TaskSelector recommendation-list semantics** completes its guarded repository lifecycle. The slice exposes TaskSelector's rendered recommendation cards as one labelled semantic list with one list item per recommendation while preserving recommendation policy, scoring, filtering, animation, task selection, persistence and provider behaviour.
+Complete **PR #157 — TaskSelector Match Confidence progress semantics** through the guarded lifecycle. The slice exposes each recommendation confidence bar as a labelled `progressbar` with 0–100 bounds and the rounded current confidence value while preserving recommendation policy, scoring, filtering, ordering, visual rendering, task selection, persistence and provider behaviour.
 
-PR #155 merged at `a27a24cc80f606f6e31418eccae590f4c899fde2` after exact-head Application validation run 305 passed, completing Brain Inbox captured-thought list semantics.
+PR #156 merged at `29fbe83583039a7d401b46e9c00cfa23c4742d8a` after exact-head Application validation run 307 passed, completing TaskSelector recommendation-list semantics.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | READY checkpoint — when this status is present on `main`, PR #156 has completed and fresh repository inspection is required before selecting new work |
-| Execution state | READY — no default-branch implementation thread is assumed until live GitHub state is inspected |
+| Gate state | VALIDATING — PR #157 implementation, deterministic regression coverage and durable handoff are complete in scope; exact-head validation is required |
+| Execution state | VALIDATING — keep PR #157 Draft until exact-head validation and review/thread checks are clean |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Re-entry checkpoint after PR #156 merges
+## Re-entry checkpoint after PR #157 merges
 
 | State | Expected value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | PR #156 — TaskSelector recommendation-list semantics |
+| Last completed product outcome | PR #157 — TaskSelector Match Confidence progress semantics |
 | Current blocker | None expected |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
@@ -73,10 +73,10 @@ PR #155 merged at `a27a24cc80f606f6e31418eccae590f4c899fde2` after exact-head Ap
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
-| What is already happening? | No implementation thread should be assumed from this default-branch checkpoint; inspect live GitHub state first. |
-| What has been validated? | PR #155 exact head `dfef1195c9a1b397d4cbd69a4830a0aabc1d92d2` passed Application validation run 305 and merged. PR #156 requires its own exact-head validation before it can merge. |
-| What changed? | TaskSelector recommendations are exposed as one labelled semantic list with one list item per recommendation. |
-| What is next? | Inspect fresh `main`, open PRs and visible branches, then continue the next concrete independent Stage 3 slice. |
+| What is already happening? | PR #157 is the sole current implementation thread until its guarded lifecycle completes. |
+| What has been validated? | PR #156 exact head `7109ab94803b8710830181d30bcb2d4686c59344` passed Application validation run 307 and merged. PR #157 requires fresh exact-head validation after this handoff commit. |
+| What changed? | TaskSelector Match Confidence bars now expose labelled progress semantics and authoritative percentage values. |
+| What is next? | Validate PR #157, audit review evidence, allow guarded merge if clean, then resume from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -98,11 +98,11 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 
 ## Next dependency-correct work
 
-1. inspect live `main`, open PRs and visible branches before creating new work;
-2. continue the next concrete frontend accessibility/interaction integrity defect if evidence supports one;
-3. if accessibility evidence is exhausted, move to the next evidence-backed client-side cognitive-load reduction slice;
-4. preserve NoCodeBackend/provider deferral until real target-instance evidence is available;
-5. maintain one primary implementation thread and the guarded PR lifecycle.
+1. run exact-head Application validation for PR #157;
+2. audit PR #157 review/thread state and acceptance criteria;
+3. apply `lifecycle:implementation-complete` only when the exact head is clean;
+4. allow repository lifecycle/finalizer workflows to own Ready/Mergeable/Merged transitions;
+5. after merge, inspect live `main`, open PRs and visible branches before creating new work.
 
 ## Stage 3 exit conditions
 
