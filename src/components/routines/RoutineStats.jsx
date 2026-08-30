@@ -17,6 +17,7 @@ const RoutineStats = ({ routine, onClose }) => {
   const [timeframe, setTimeframe] = useState(30)
   const dialogTitleId = `routine-stats-title-${routine.id}`
   const routineNameId = `routine-stats-name-${routine.id}`
+  const timeframeGroupLabelId = `routine-stats-timeframe-label-${routine.id}`
 
   const loadStats = useCallback(async () => {
     try {
@@ -82,8 +83,12 @@ const RoutineStats = ({ routine, onClose }) => {
 
         {/* Timeframe Selector */}
         <div className="p-6 border-b border-slate-200">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-slate-600">Show data for:</span>
+          <div
+            className="flex items-center gap-2"
+            role="group"
+            aria-labelledby={timeframeGroupLabelId}
+          >
+            <span id={timeframeGroupLabelId} className="text-sm text-slate-600">Show data for:</span>
             {[7, 30, 90].map(days => (
               <button
                 key={days}
