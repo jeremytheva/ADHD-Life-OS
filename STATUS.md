@@ -6,13 +6,13 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Expose Template Library category and view controls as labelled groups without changing existing filtering or view behaviour.
+  objective: Expose Housework Setup selectable chore cards as one labelled group without changing selection, filtering or save behaviour.
   issue: null
-  pr: 143
-  branch: fix/template-library-control-group-semantics
+  pr: 144
+  branch: fix/housework-setup-task-group-semantics
 next_actions:
-  - Run exact-head Application validation for PR #143 after this durable status-bearing commit.
-  - Audit PR #143 acceptance criteria and review/thread state after validation completes.
+  - Run exact-head Application validation for PR #144 after this durable status-bearing commit.
+  - Audit PR #144 acceptance criteria and review/thread state after validation completes.
   - Apply lifecycle:implementation-complete only if exact-head validation and the review/thread gate are clean.
   - After guarded merge, inspect live main and continue the next evidence-backed Stage 3 frontend accessibility or cognitive-load slice.
 blockers: []
@@ -29,9 +29,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #142 exact head c836e039ee526d1049cdf2e09eca06000a5dee75 passed Application validation run 276 and merged at d262324b6d07f01e02a9861b8275003890d1d4ef. PR #143 requires fresh exact-head canonical validation after this status-bearing handoff commit.
-last_verified_commit: c836e039ee526d1049cdf2e09eca06000a5dee75
-last_updated: 2026-08-30T17:22:00+10:00
+validation_basis: PR #143 exact head ac6364c01310fff2705bc083dae939b055955625 passed Application validation run 279 and merged at 0da50162412c6dac2cfc5e44bbca9f4731941e36. PR #144 requires fresh exact-head canonical validation after this status-bearing handoff commit.
+last_verified_commit: ac6364c01310fff2705bc083dae939b055955625
+last_updated: 2026-08-30T17:31:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,19 +43,19 @@ last_updated: 2026-08-30T17:22:00+10:00
 
 ## Current objective
 
-Complete **PR #143 — Template Library control-group semantics** through the guarded lifecycle, then resume from live `main` by inspecting remaining Stage 3 frontend surfaces for the next evidence-backed accessibility, cognitive-load or focused maintainability slice.
+Complete **PR #144 — Housework Setup task-group semantics** through the guarded lifecycle, then resume from live `main` by inspecting remaining Stage 3 frontend surfaces for the next evidence-backed accessibility, cognitive-load or focused maintainability slice.
 
-PR #142 merged at `d262324b6d07f01e02a9861b8275003890d1d4ef` after exact-head Application validation run 276 passed, completing onboarding optional-module selection semantics.
+PR #143 merged at `0da50162412c6dac2cfc5e44bbca9f4731941e36` after exact-head Application validation run 279 passed, completing Template Library category/view control grouping.
 
-Post-merge inspection found no open implementation PR. In `TemplateLibrary`, category buttons and grid/list view buttons already exposed authoritative `aria-pressed` state, but each related container only carried an `aria-label` on a generic `div`. PR #143 adds explicit `role="group"` semantics to those two existing labelled containers and adds deterministic regression coverage. Category filtering, search/type filtering, view switching, template preview/edit/apply behaviour, persistence and provider boundaries remain unchanged.
+Post-merge inspection found no open implementation PR. Housework Setup already exposed authoritative `aria-pressed={isSelected}` state on each selectable chore card, but the chore-card collection itself had no programmatic grouping or accessible group name. PR #144 adds `role="group"` and the accessible name `Select housework tasks` to that existing collection and adds deterministic regression coverage. Room filtering, Starter Set selection, individual toggle handling, partial-save recovery, save behaviour, persistence and provider boundaries remain unchanged.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — PR #143 implementation, deterministic coverage and durable handoff are complete in scope; exact-head canonical validation is required |
-| Execution state | VALIDATING — keep PR #143 Draft until the current status-bearing head passes canonical validation and review/thread checks remain clean |
+| Gate state | VALIDATING — PR #144 implementation, deterministic coverage and durable handoff are complete in scope; exact-head canonical validation is required |
+| Execution state | VALIDATING — keep PR #144 Draft until the current status-bearing head passes canonical validation and review/thread checks remain clean |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -64,20 +64,20 @@ Post-merge inspection found no open implementation PR. In `TemplateLibrary`, cat
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Active delivery thread | PR #143 / `fix/template-library-control-group-semantics` |
-| Last completed product outcome | PR #142 — Onboarding optional-module selection semantics |
+| Active delivery thread | PR #144 / `fix/housework-setup-task-group-semantics` |
+| Last completed product outcome | PR #143 — Template Library control-group semantics |
 | Current blocker | None; exact-head repository validation is an ordinary lifecycle gate |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Validate PR #143 exact head, audit acceptance/review evidence, then allow the repository lifecycle to advance it only if clean |
+| Next action | Validate PR #144 exact head, audit acceptance/review evidence, then allow the repository lifecycle to advance it only if clean |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
-| What is already happening? | PR #143 is the sole active implementation thread. |
-| What has been validated? | PR #142 exact head `c836e039ee526d1049cdf2e09eca06000a5dee75` passed Application validation run 276 before guarded merge. PR #143 requires a fresh exact-head run after this status update. |
-| What changed? | Template Library category and view controls now have explicit labelled group semantics while retaining their existing pressed state and behaviour. |
+| What is already happening? | PR #144 is the sole active implementation thread. |
+| What has been validated? | PR #143 exact head `ac6364c01310fff2705bc083dae939b055955625` passed Application validation run 279 before guarded merge. PR #144 requires a fresh exact-head run after this status update. |
+| What changed? | Housework Setup selectable chore cards now belong to one named group while retaining their existing per-card pressed state and toggle behaviour. |
 | What is next? | Run exact-head canonical validation, check review/thread state, then advance the guarded lifecycle if all evidence is clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
@@ -102,12 +102,13 @@ Post-merge inspection found no open implementation PR. In `TemplateLibrary`, cat
 - PR #140 — Brain Inbox mode selection semantics.
 - PR #141 — Onboarding UI style selection semantics.
 - PR #142 — Onboarding optional-module selection semantics.
+- PR #143 — Template Library control-group semantics.
 
 ## Interaction and cognitive-load state
 
-Completed work now includes explicit keyboard/focus contracts for modal/menu flows, progressive disclosure of Today unscheduled work, authoritative Tasks sort/filter state, accessible recommendation focus transfer, labelled stateful filters/settings controls, explicit form-label associations, Housework progress/filter semantics, Brain Inbox mode semantics, and onboarding style/module selection semantics.
+Completed work now includes explicit keyboard/focus contracts for modal/menu flows, progressive disclosure of Today unscheduled work, authoritative Tasks sort/filter state, accessible recommendation focus transfer, labelled stateful filters/settings controls, explicit form-label associations, Housework progress/filter semantics, Brain Inbox mode semantics, onboarding style/module selection semantics, and Template Library category/view grouping.
 
-PR #143 extends the same accessibility contract to Template Library category and view control groupings. It does not change template selection or application policy.
+PR #144 extends the same accessibility contract to the Housework Setup selectable chore-card collection. It does not change Housework selection or save policy.
 
 ## Backend / provider work — intentionally deferred
 
@@ -144,7 +145,7 @@ While deferred:
 
 ## Next dependency-correct work
 
-1. run exact-head Application validation for PR #143;
+1. run exact-head Application validation for PR #144;
 2. audit the PR against its acceptance criteria and current review/thread state;
 3. apply `lifecycle:implementation-complete` only when the exact head is fully validated and no blocking finding remains;
 4. allow repository lifecycle/finalizer workflows to own Ready/Mergeable/Merged transitions;
