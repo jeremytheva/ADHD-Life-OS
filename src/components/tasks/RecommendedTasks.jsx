@@ -23,6 +23,7 @@ const RecommendedTasks = ({ tasks, onTaskClick }) => {
       <div className="space-y-2">
         {tasks.map((task, index) => (
           <motion.button
+            type="button"
             key={task.id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}

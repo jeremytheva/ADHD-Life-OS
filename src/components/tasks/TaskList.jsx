@@ -306,10 +306,7 @@ const TaskList = () => {
             const element = document.getElementById(`task-${task.id}`)
             if (element) {
               element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-              element.classList.add('ring-2', 'ring-blue-400')
-              setTimeout(() => {
-                element.classList.remove('ring-2', 'ring-blue-400')
-              }, 2000)
+              element.focus({ preventScroll: true })
             }
           }}
         />
@@ -363,9 +360,13 @@ const TaskList = () => {
             <motion.div
               key={task.id}
               id={`task-${task.id}`}
+              role="group"
+              aria-label={`Task: ${task.title}`}
+              tabIndex={-1}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
+              className="rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <TaskCard
                 task={task}
