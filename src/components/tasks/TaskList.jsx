@@ -316,13 +316,14 @@ const TaskList = () => {
       )}
 
       <div className="flex flex-wrap items-center gap-4">
-        <div className="flex items-center space-x-2">
+        <div role="group" aria-label="Filter tasks by timeframe" className="flex items-center space-x-2">
           <SafeIcon icon={FiFilter} className="w-5 h-5 text-slate-600" />
           {filters.map((filterOption) => (
             <button
               type="button"
               key={filterOption.key}
               onClick={() => setFilter(filterOption.key)}
+              aria-pressed={filter === filterOption.key}
               className={`px-3 py-2 rounded-md text-sm transition-colors ${filter === filterOption.key ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-slate-100'}`}
             >
               {filterOption.label}

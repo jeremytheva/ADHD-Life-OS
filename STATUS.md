@@ -6,12 +6,12 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Inspect next Stage 3 frontend accessibility or cognitive-load slice
+  objective: Inspect next Stage 3 frontend accessibility or cognitive-load slice after PR #136
   issue: null
   pr: null
   branch: null
 next_actions:
-  - Complete the guarded lifecycle for PR #135 only after fresh exact-head Application validation and review/thread checks pass.
+  - Complete PR #136 only after fresh exact-head Application validation and review/thread checks pass.
   - After merge, inspect live main, open PRs, branches and remaining Stage 3 frontend surfaces.
   - Select the next evidence-backed accessibility or cognitive-load slice before opening new implementation work.
 blockers: []
@@ -28,9 +28,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #135 implementation and prior status head passed Application validation run 261 at 0c1433fdd6a47c26604ca343a0c4d0df41f07f87. This post-merge handoff commit requires fresh exact-head validation before lifecycle completion.
-last_verified_commit: 0c1433fdd6a47c26604ca343a0c4d0df41f07f87
-last_updated: 2026-08-30T12:10:00+10:00
+validation_basis: PR #135 exact head a8a6297b22b4b140f196de08c6baace3ed88446e passed Application validation run 262 and merged at 48a3941a0e02c8af44376f12f62f3edda1811ccd. PR #136 requires exact-head canonical validation on this status-bearing handoff before lifecycle completion.
+last_verified_commit: a8a6297b22b4b140f196de08c6baace3ed88446e
+last_updated: 2026-08-30T12:19:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -42,19 +42,19 @@ last_updated: 2026-08-30T12:10:00+10:00
 
 ## Current objective
 
-Resume from live `main` after **PR #135 — Housework chore checklist progress semantics** completes its guarded lifecycle. Inspect remaining Stage 3 frontend surfaces and select the next evidence-backed accessibility, cognitive-load or focused maintainability slice without creating competing work.
+Complete **PR #136 — Tasks filter selection semantics** through the guarded lifecycle, then resume from live `main` by inspecting the remaining Stage 3 frontend for the next evidence-backed accessibility, cognitive-load or focused maintainability slice.
 
-PR #134 merged at `9439cf1fd42543c5a96bfeb3ca9b9bff2aa0cd70`, completing the Settings Theme label/select association. PR #135 adds programmatic progress semantics to the existing `ChoreDetailView` checklist meter while preserving checklist state, percentage calculation, visual animation, completion behaviour and provider/persistence boundaries.
+PR #135 merged at `48a3941a0e02c8af44376f12f62f3edda1811ccd`, completing Housework checklist progress semantics. Post-merge inspection identified the next independent accessibility defect in `TaskList`: All Tasks, Due Today, Upcoming, Needs attention and Completed used visual active styling but exposed no grouped accessible name or programmatic selected state.
 
-PR #135 implementation and its previous status-bearing head passed the canonical `npm run platform:validate` gate through Application validation run 261 at `0c1433fdd6a47c26604ca343a0c4d0df41f07f87`. This post-merge handoff is a new commit, so GitHub must obtain fresh exact-head validation before implementation-complete and merge.
+PR #136 keeps the existing filter state, service query construction, option set, click handlers, sort behaviour, task records and provider/persistence boundaries unchanged. The existing timeframe buttons now belong to a labelled group and expose `aria-pressed` from the authoritative `filter` state. Deterministic regression coverage protects the contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — PR #135 is implementation-complete in scope but the final post-merge handoff head requires fresh exact-head validation |
-| Execution state | VALIDATING — do not advance lifecycle until current-head validation and review/thread evidence are clean |
+| Gate state | VALIDATING — PR #136 implementation and durable handoff are complete in scope; exact-head canonical validation is required |
+| Execution state | VALIDATING — keep PR #136 Draft until the current status-bearing head passes canonical validation and review/thread checks remain clean |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -64,8 +64,8 @@ PR #135 implementation and its previous status-bearing head passed the canonical
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread after merge | None; inspect live GitHub state before opening the next focused thread |
-| Last completed product outcome after merge | PR #135 — Housework chore checklist progress semantics |
-| Current blocker | None; final exact-head repository validation is an ordinary lifecycle gate |
+| Last completed product outcome after merge | PR #136 — Tasks filter selection semantics |
+| Current blocker | None; exact-head repository validation is an ordinary lifecycle gate |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect live `main`, open PRs/branches and Stage 3 frontend evidence, then continue the highest-priority dependency-correct independent slice |
 
@@ -74,10 +74,10 @@ PR #135 implementation and its previous status-bearing head passed the canonical
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
-| What is already happening? | PR #135 is the only lifecycle work expected before this checkpoint reaches `main`; after merge there is no preselected product PR. |
-| What has been validated? | PR #135 implementation and prior handoff head passed Application validation run 261 at `0c1433fdd6a47c26604ca343a0c4d0df41f07f87`; the final handoff commit requires fresh exact-head validation before merge. |
-| What changed? | Chore checklist progress exposes a named progressbar with min/max/current/value-text semantics derived from authoritative checklist counts, with deterministic regression coverage. |
-| What is next? | Inspect live `main` and GitHub state, then choose the next evidence-backed frontend accessibility or cognitive-load slice. |
+| What is already happening? | PR #136 is the only lifecycle work expected before this checkpoint reaches `main`; after merge there is no preselected product PR. |
+| What has been validated? | PR #135 exact head `a8a6297b22b4b140f196de08c6baace3ed88446e` passed Application validation run 262 before guarded merge. PR #136 requires a fresh exact-head run on this final handoff commit. |
+| What changed? | Task timeframe filters now expose a labelled group and selected-state semantics bound to the existing authoritative filter state, with deterministic regression coverage. |
+| What is next? | Validate and merge PR #136 if clean, inspect live `main`, then choose the next evidence-backed frontend accessibility or cognitive-load slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -93,15 +93,17 @@ PR #135 implementation and its previous status-bearing head passed the canonical
 - PR #132 — Day Setup label associations.
 - PR #133 — Task Selector selection semantics.
 - PR #134 — Settings Theme label association.
-- PR #135 — Housework chore checklist progress semantics (guarded lifecycle pending at this handoff commit).
+- PR #135 — Housework chore checklist progress semantics.
+- PR #136 — Tasks filter selection semantics (guarded lifecycle pending at this handoff commit).
 
 ## Interaction and cognitive-load state
 
-### Completed through PR #135
+### Completed through PR #136
 
 - Routine Progress, Routine Statistics, Template Preview/Edit and Apply flows, Mode Switcher and Project-card menus have explicit focus/keyboard contracts with regression coverage.
 - Today progressively discloses unscheduled work rather than rendering an unbounded competing list by default.
 - Tasks sorting uses one authoritative state and one accessible sort control.
+- Tasks timeframe filters expose labelled grouping and programmatic selected state without changing filtering behaviour.
 - Reward Shop category filters expose labelled grouping and selected-state semantics.
 - Accessibility Settings Text Size, Contrast and Line Spacing options expose labelled grouping and selected-state semantics.
 - Day Setup time labels and Settings Theme are explicitly associated with their controls.
@@ -143,7 +145,7 @@ While deferred:
 
 ## Next dependency-correct work
 
-1. complete PR #135 only after fresh exact-head Application validation and review/thread checks pass;
+1. complete PR #136 only after fresh exact-head Application validation and review/thread checks pass;
 2. inspect live `main`, open PRs and visible branches after merge;
 3. inspect remaining Stage 3 frontend surfaces for an evidence-backed accessibility or cognitive-load defect;
 4. reuse or repair overlapping work if it already exists;
