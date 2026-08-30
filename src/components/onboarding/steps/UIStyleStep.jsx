@@ -68,13 +68,15 @@ const UIStyleStep = ({ onNext, onBack, currentData }) => {
       </div>
 
       {/* Style Selection */}
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-4" role="group" aria-label="Interface style">
         {UI_STYLES.map((style, index) => {
           const isSelected = selectedStyle === style.id
           
           return (
             <motion.button
               key={style.id}
+              type="button"
+              aria-pressed={isSelected}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
