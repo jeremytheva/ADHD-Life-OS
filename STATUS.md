@@ -6,14 +6,15 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Inspect next Stage 3 frontend accessibility or cognitive-load slice after PR #142
+  objective: Expose Template Library category and view controls as labelled groups without changing existing filtering or view behaviour.
   issue: null
-  pr: null
-  branch: null
+  pr: 143
+  branch: fix/template-library-control-group-semantics
 next_actions:
-  - Complete PR #142 only after fresh exact-head Application validation and review/thread checks pass.
-  - After merge, inspect live main, open PRs, branches and remaining Stage 3 frontend surfaces.
-  - Select the next evidence-backed accessibility or cognitive-load slice before opening new implementation work.
+  - Run exact-head Application validation for PR #143 after this durable status-bearing commit.
+  - Audit PR #143 acceptance criteria and review/thread state after validation completes.
+  - Apply lifecycle:implementation-complete only if exact-head validation and the review/thread gate are clean.
+  - After guarded merge, inspect live main and continue the next evidence-backed Stage 3 frontend accessibility or cognitive-load slice.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -21,16 +22,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
+  governance: PENDING
+  lint: PENDING
+  typecheck: PENDING
+  tests: PENDING
+  build: PENDING
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #141 exact head 909556759707d4e882a1183754659ecde6b54e62 passed Application validation run 274 and merged at 945f336497321aa175d5e90df1c8ddcd8ea864b0. PR #142 requires exact-head canonical validation on this status-bearing handoff before lifecycle completion.
-last_verified_commit: 909556759707d4e882a1183754659ecde6b54e62
-last_updated: 2026-08-30T15:14:00+10:00
+validation_basis: PR #142 exact head c836e039ee526d1049cdf2e09eca06000a5dee75 passed Application validation run 276 and merged at d262324b6d07f01e02a9861b8275003890d1d4ef. PR #143 requires fresh exact-head canonical validation after this status-bearing handoff commit.
+last_verified_commit: c836e039ee526d1049cdf2e09eca06000a5dee75
+last_updated: 2026-08-30T17:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -42,19 +43,19 @@ last_updated: 2026-08-30T15:14:00+10:00
 
 ## Current objective
 
-Complete **PR #142 — Onboarding optional-module selection semantics** through the guarded lifecycle, then resume from live `main` by inspecting remaining Stage 3 frontend surfaces for the next evidence-backed accessibility, cognitive-load or focused maintainability slice.
+Complete **PR #143 — Template Library control-group semantics** through the guarded lifecycle, then resume from live `main` by inspecting remaining Stage 3 frontend surfaces for the next evidence-backed accessibility, cognitive-load or focused maintainability slice.
 
-PR #141 merged at `945f336497321aa175d5e90df1c8ddcd8ea864b0`, completing onboarding interface-style selection semantics. Post-merge inspection found that onboarding optional-module cards use authoritative `enabledModules` state and visually distinguish enabled choices, but the controls had no labelled grouping or programmatic pressed-state semantics and relied on implicit button type.
+PR #142 merged at `d262324b6d07f01e02a9861b8275003890d1d4ef` after exact-head Application validation run 276 passed, completing onboarding optional-module selection semantics.
 
-PR #142 adds a labelled optional-module group, binds `aria-pressed` to the existing `isEnabled` value derived from authoritative `enabledModules`, and explicitly declares module and onboarding navigation controls as buttons. Existing module values, core-module rules, coming-soon disabled behaviour, toggle handling, navigation and preference handoff remain unchanged. Deterministic regression coverage protects the semantic contract.
+Post-merge inspection found no open implementation PR. In `TemplateLibrary`, category buttons and grid/list view buttons already exposed authoritative `aria-pressed` state, but each related container only carried an `aria-label` on a generic `div`. PR #143 adds explicit `role="group"` semantics to those two existing labelled containers and adds deterministic regression coverage. Category filtering, search/type filtering, view switching, template preview/edit/apply behaviour, persistence and provider boundaries remain unchanged.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — PR #142 implementation, deterministic coverage and durable handoff are complete in scope; exact-head canonical validation is required |
-| Execution state | VALIDATING — keep PR #142 Draft until the current status-bearing head passes canonical validation and review/thread checks remain clean |
+| Gate state | VALIDATING — PR #143 implementation, deterministic coverage and durable handoff are complete in scope; exact-head canonical validation is required |
+| Execution state | VALIDATING — keep PR #143 Draft until the current status-bearing head passes canonical validation and review/thread checks remain clean |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
@@ -63,21 +64,21 @@ PR #142 adds a labelled optional-module group, binds `aria-pressed` to the exist
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Active delivery thread after merge | None; inspect live GitHub state before opening the next focused thread |
-| Last completed product outcome after merge | PR #142 — Onboarding optional-module selection semantics |
+| Active delivery thread | PR #143 / `fix/template-library-control-group-semantics` |
+| Last completed product outcome | PR #142 — Onboarding optional-module selection semantics |
 | Current blocker | None; exact-head repository validation is an ordinary lifecycle gate |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Inspect live `main`, open PRs/branches and Stage 3 frontend evidence, then continue the highest-priority dependency-correct independent slice |
+| Next action | Validate PR #143 exact head, audit acceptance/review evidence, then allow the repository lifecycle to advance it only if clean |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
-| What is already happening? | PR #142 is the only lifecycle work expected before this checkpoint reaches `main`; after merge there is no preselected product PR. |
-| What has been validated? | PR #141 exact head `909556759707d4e882a1183754659ecde6b54e62` passed Application validation run 274 before guarded merge. PR #142 requires a fresh exact-head run on this final handoff commit. |
-| What changed? | Onboarding optional modules now form a labelled stateful button group whose enabled state is exposed through `aria-pressed`, with deterministic regression coverage. |
-| What is next? | Validate and merge PR #142 if clean, inspect live `main`, then choose the next evidence-backed frontend accessibility or cognitive-load slice. |
+| What is already happening? | PR #143 is the sole active implementation thread. |
+| What has been validated? | PR #142 exact head `c836e039ee526d1049cdf2e09eca06000a5dee75` passed Application validation run 276 before guarded merge. PR #143 requires a fresh exact-head run after this status update. |
+| What changed? | Template Library category and view controls now have explicit labelled group semantics while retaining their existing pressed state and behaviour. |
+| What is next? | Run exact-head canonical validation, check review/thread state, then advance the guarded lifecycle if all evidence is clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -89,7 +90,7 @@ PR #142 adds a labelled optional-module group, binds `aria-pressed` to the exist
 - PR #127 — Template Apply menu keyboard and focus ownership.
 - PR #129 — Reward Shop category filter semantics.
 - PR #130 — Accessibility Settings selection semantics.
-- PR #131 — closed unmerged as a concurrent duplicate superseded by PR #130.
+- PR #131 — closed unmerged as a duplicate superseded by PR #130.
 - PR #132 — Day Setup label associations.
 - PR #133 — Task Selector selection semantics.
 - PR #134 — Settings Theme label association.
@@ -100,27 +101,13 @@ PR #142 adds a labelled optional-module group, binds `aria-pressed` to the exist
 - PR #139 — Housework chore filter selection semantics.
 - PR #140 — Brain Inbox mode selection semantics.
 - PR #141 — Onboarding UI style selection semantics.
-- PR #142 — Onboarding optional-module selection semantics (guarded lifecycle pending at this handoff commit).
+- PR #142 — Onboarding optional-module selection semantics.
 
 ## Interaction and cognitive-load state
 
-### Completed through PR #142
+Completed work now includes explicit keyboard/focus contracts for modal/menu flows, progressive disclosure of Today unscheduled work, authoritative Tasks sort/filter state, accessible recommendation focus transfer, labelled stateful filters/settings controls, explicit form-label associations, Housework progress/filter semantics, Brain Inbox mode semantics, and onboarding style/module selection semantics.
 
-- Routine Progress, Routine Statistics, Template Preview/Edit and Apply flows, Mode Switcher and Project-card menus have explicit focus/keyboard contracts with regression coverage.
-- Template Apply outside-click dismissal returns focus to the Apply trigger rather than unmounting the focused menu item without a stable destination.
-- Today progressively discloses unscheduled work rather than rendering an unbounded competing list by default.
-- Tasks sorting uses one authoritative state and one accessible sort control.
-- Tasks timeframe filters expose labelled grouping and programmatic selected state without changing filtering behaviour.
-- Recommended Right Now activation transfers focus to the matching named task region after scrolling, keeping keyboard context aligned with the viewport.
-- Reward Shop category filters expose labelled grouping and selected-state semantics.
-- Accessibility Settings Text Size, Contrast and Line Spacing options expose labelled grouping and selected-state semantics.
-- Day Setup time labels and Settings Theme are explicitly associated with their controls.
-- Task Selector Recommendation Path, Energy, Available Time and Mood expose programmatic selected state; filter controls are named/connected and Location has an explicit label association.
-- Chore checklist progress exposes progressbar semantics bound to authoritative completed/total counts while preserving visual and checklist behaviour.
-- Housework Ready Now / All Chores filters expose labelled grouping, explicit button type and programmatic selected state while preserving existing filter behaviour.
-- Brain Inbox Capture / Organize modes expose labelled grouping, explicit button type and programmatic selected state while preserving existing mode behaviour.
-- Onboarding interface-style choices expose labelled grouping, explicit button type and programmatic selected state while preserving existing selection and preference handoff behaviour.
-- Onboarding optional-module choices expose labelled grouping, explicit button type and programmatic enabled state while preserving existing toggle and preference handoff behaviour.
+PR #143 extends the same accessibility contract to Template Library category and view control groupings. It does not change template selection or application policy.
 
 ## Backend / provider work — intentionally deferred
 
@@ -157,12 +144,12 @@ While deferred:
 
 ## Next dependency-correct work
 
-1. complete PR #142 only after fresh exact-head Application validation and review/thread checks pass;
-2. inspect live `main`, open PRs and visible branches after merge;
-3. inspect remaining Stage 3 frontend surfaces for an evidence-backed accessibility or cognitive-load defect;
-4. reuse or repair overlapping work if it already exists;
-5. open one focused Draft PR only after confirming no equivalent work is active;
-6. continue autonomously while provider-dependent execution work remains intentionally deferred.
+1. run exact-head Application validation for PR #143;
+2. audit the PR against its acceptance criteria and current review/thread state;
+3. apply `lifecycle:implementation-complete` only when the exact head is fully validated and no blocking finding remains;
+4. allow repository lifecycle/finalizer workflows to own Ready/Mergeable/Merged transitions;
+5. after merge, inspect live `main`, open PRs/branches and remaining Stage 3 frontend evidence;
+6. continue the next independent accessibility or cognitive-load slice while provider-dependent execution work remains intentionally deferred.
 
 ## Stage 3 exit conditions
 
