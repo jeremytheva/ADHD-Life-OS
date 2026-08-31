@@ -115,8 +115,17 @@ const RoutineStats = ({ routine, onClose }) => {
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
           {loading ? (
-            <div className="py-12 text-center" role="status">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+            <div
+              className="py-12 text-center"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              aria-busy="true"
+            >
+              <div
+                className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"
+                aria-hidden="true"
+              ></div>
               <p className="text-slate-600 mt-4">Loading statistics...</p>
             </div>
           ) : loadError ? (
