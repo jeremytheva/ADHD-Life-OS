@@ -192,10 +192,17 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
           {stats && (
             <div>
               <div className="flex items-center justify-between text-sm mb-2">
-                <span>Overall Progress</span>
+                <span id="project-overall-progress-label">Overall Progress</span>
                 <span className="font-bold">{stats.completion_percentage}% Complete</span>
               </div>
-              <div className="w-full bg-white bg-opacity-30 rounded-full h-3 overflow-hidden">
+              <div
+                role="progressbar"
+                aria-labelledby="project-overall-progress-label"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(stats.completion_percentage)}
+                className="w-full bg-white bg-opacity-30 rounded-full h-3 overflow-hidden"
+              >
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${stats.completion_percentage}%` }}

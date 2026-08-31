@@ -4,17 +4,17 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Change
-execution_state: VALIDATING
+execution_state: READY
 current_work:
-  objective: Complete PR #162 Accessibility Settings toggle-description semantics through exact-head validation and the guarded repository lifecycle.
+  objective: Inspect fresh main and continue the next evidence-backed Stage 3 accessibility or cognitive-load slice.
   issue: null
-  pr: 162
-  branch: fix/accessibility-toggle-description-semantics
+  pr: null
+  branch: null
 next_actions:
-  - Run exact-head Application validation for PR #162 after this status-bearing commit.
-  - Audit PR #162 acceptance criteria and review/thread state.
-  - Apply lifecycle:implementation-complete only when exact-head validation and review gates are clean.
-  - After guarded merge, inspect live main before selecting the next Stage 3 accessibility or cognitive-load slice.
+  - Inspect live main, open PRs, visible branches and current checks before creating new work.
+  - Continue remaining evidence-backed frontend accessibility and interaction integrity work first.
+  - If no concrete accessibility defect remains, move to the next evidence-backed client-side cognitive-load reduction slice.
+  - Keep NoCodeBackend-dependent execution persistence deferred until real target-provider evidence is available.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -22,16 +22,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #161 exact head d5704e47828f998369e1f872a66bc3ec4c12f805 passed Application validation run 319 and merged at 000ebb9fdf233831172146e92d1b948df068aac3. PR #162 requires fresh exact-head canonical validation after this status-bearing commit.
-last_verified_commit: d5704e47828f998369e1f872a66bc3ec4c12f805
-last_updated: 2026-08-31T08:47:00+10:00
+validation_basis: PR #163 may merge only after its exact current head passes Application validation and the guarded repository lifecycle. PR #162 exact head 2ad2b76f9eb8dd528d2dc14afc9c4db12319622e passed Application validation run 322 and merged at c60c78158e866eba2e27f95694c7ee48b179d82e.
+last_verified_commit: 2ad2b76f9eb8dd528d2dc14afc9c4db12319622e
+last_updated: 2026-08-31T09:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,27 +43,27 @@ last_updated: 2026-08-31T08:47:00+10:00
 
 ## Current objective
 
-Complete **PR #162 — Accessibility Settings toggle-description semantics** through the guarded lifecycle. Reduce Motion, Focus Mode and Dyslexia-Friendly Font already expose authoritative names and pressed state; this slice associates each control with its existing visible explanatory text using `aria-describedby` without changing preference state, preview, save/cancel, styling, persistence or provider behaviour.
+Resume from fresh `main` after **PR #163 — Project Detail progress semantics**. The Project Detail Overall Progress meter is now intended to expose a labelled `progressbar` with 0–100 bounds and the rounded current completion value while preserving the existing visual percentage, animation, statistics source, task/subtask operations, persistence and provider behaviour.
 
-PR #161 merged at `000ebb9fdf233831172146e92d1b948df068aac3` after exact-head Application validation run 319 passed, completing Project Detail pending/completed task-list semantics.
+PR #162 merged at `c60c78158e866eba2e27f95694c7ee48b179d82e` after exact-head Application validation run 322 passed, completing Accessibility Settings toggle-description semantics.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | VALIDATING — PR #162 implementation, deterministic coverage and durable handoff are complete in scope; exact-head validation is required |
-| Execution state | VALIDATING — keep PR #162 Draft until exact-head validation and review/thread checks are clean |
+| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after #163 merges |
+| Execution state | READY FOR NEXT — inspect live repository evidence before selecting the next slice |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Re-entry checkpoint after PR #162 merges
+## Re-entry checkpoint after PR #163 merges
 
 | State | Expected value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | PR #162 — Accessibility Settings toggle-description semantics |
+| Last completed product outcome | PR #163 — Project Detail Overall Progress semantics |
 | Current blocker | None expected |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
@@ -73,18 +73,18 @@ PR #161 merged at `000ebb9fdf233831172146e92d1b948df068aac3` after exact-head Ap
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
-| What is already happening? | PR #162 is the sole current implementation thread until its guarded lifecycle completes. |
-| What has been validated? | PR #161 exact head `d5704e47828f998369e1f872a66bc3ec4c12f805` passed Application validation run 319 and merged. PR #162 requires fresh exact-head validation after this handoff commit. |
-| What changed? | Accessibility Settings toggle controls now expose their existing visible explanatory text as accessible descriptions while preserving names, pressed state and preference behaviour. |
-| What is next? | Validate PR #162, audit review evidence, allow guarded merge if clean, then resume from fresh `main`. |
+| What is already happening? | Do not assume an active implementation thread from this checkpoint; inspect live GitHub state first. |
+| What has been validated? | PR #162 exact head `2ad2b76f9eb8dd528d2dc14afc9c4db12319622e` passed Application validation run 322 and merged. PR #163 must pass exact-head validation before this checkpoint can reach `main`. |
+| What changed? | Project Detail’s visual Overall Progress meter now exposes labelled semantic progress state without changing project statistics or task behaviour. |
+| What is next? | Inspect fresh `main`, open PRs/branches/checks, then continue the next dependency-correct accessibility or cognitive-load slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-PRs #124–#161 progressively established disclosure, task/filter/sort and task-collection semantics, Today timeline collection semantics, Project Detail task-collection semantics, modal and menu keyboard/focus integrity, Housework progress/filter/setup semantics, onboarding and template grouping, Gamification progress/section/reward-list semantics, Routine Statistics timeframe grouping, Quick Capture ordered-list semantics, Chore Detail checklist/required-item collection semantics, Projects view-selection and collection semantics, Routines collection list semantics, Brain Inbox captured-thought list semantics, TaskSelector recommendation-list and confidence-progress semantics, and RecommendedTasks collection semantics.
+PRs #124–#162 progressively established disclosure, task/filter/sort and collection semantics, Today timeline semantics, Project Detail task collections, modal/menu keyboard and focus integrity, Housework progress/filter/setup semantics, onboarding/template grouping, Gamification semantics, Routine Statistics timeframe grouping, Quick Capture ordered-list semantics, Chore Detail collection semantics, Projects view/collection semantics, Routines list semantics, Brain Inbox list semantics, TaskSelector recommendation/confidence semantics, RecommendedTasks collection semantics, and Accessibility Settings toggle descriptions.
 
-PR #162 extends the accessibility baseline by connecting the three Accessibility Settings toggle controls to the explanatory copy already displayed beside them.
+PR #163 extends that accessibility baseline by exposing Project Detail’s existing Overall Progress meter as a programmatic progress indicator.
 
 ## Backend / provider work — intentionally deferred
 
@@ -97,14 +97,15 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 - `npm run platform:validate` remains the canonical project-owned validation gate.
 - The roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
 - Production deployment remains unverified/unconfigured for ADHD Life OS.
+- Repository merge proves repository integration only; it does not prove deployment/provider/runtime readiness.
 
 ## Next dependency-correct work
 
-1. run exact-head Application validation for PR #162;
-2. audit PR #162 review/thread state and acceptance criteria;
-3. apply `lifecycle:implementation-complete` only when the exact head is clean;
-4. allow repository lifecycle/finalizer workflows to own Ready/Mergeable/Merged transitions;
-5. after merge, inspect live `main`, open PRs and visible branches before creating new work.
+1. inspect live `main`, open PRs, visible branches and checks;
+2. reuse or repair any active/overlapping implementation before creating new work;
+3. continue the next evidence-backed frontend accessibility/interaction issue;
+4. if accessibility evidence is exhausted, move to client-side cognitive-load reduction;
+5. keep provider-dependent execution work deferred until real provider evidence exists.
 
 ## Stage 3 exit conditions
 
