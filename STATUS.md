@@ -4,7 +4,7 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Change
-execution_state: READY_FOR_NEXT
+execution_state: READY
 current_work:
   objective: Inspect fresh main and continue the next evidence-backed Stage 3 accessibility or cognitive-load slice.
   issue: null
