@@ -6,6 +6,25 @@ import { createNcbHandler } from './api/ncb/handler.js'
 
 const repositoryRoot = path.dirname(fileURLToPath(import.meta.url))
 
+export const adaptNcbResponse = (res) => {
+  res.status = (statusCode) => {
+    res.statusCode = statusCode
+    return res
+  }
+  res.json = (body) => {
+    if (!res.getHeader('Content-Type')) {
+      res.setHeader('Content-Type', 'application/json; charset=utf-8')
+    }
+    res.end(JSON.stringify(body))
+    return res
+  }
+  res.send = (body) => {
+    res.end(body)
+    return res
+  }
+  return res
+}
+
 const ncbApiPlugin = () => ({
   name: 'ncb-api-contracts',
   configureServer(server) {
@@ -18,7 +37,7 @@ const ncbApiPlugin = () => ({
           req.query[key] = req.query[key] === undefined ? value : [].concat(req.query[key], value)
         })
         req.query.path = url.pathname.split('/').filter(Boolean)
-        return handler(req, res)
+        return handler(req, adaptNcbResponse(res))
       })
     }
   }

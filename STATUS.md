@@ -27,11 +27,11 @@ validation:
   typecheck: PASS
   tests: PASS
   build: PASS
-  ci: PASS
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #163 may merge only after its exact current head passes Application validation and the guarded repository lifecycle. PR #162 exact head 2ad2b76f9eb8dd528d2dc14afc9c4db12319622e passed Application validation run 322 and merged at c60c78158e866eba2e27f95694c7ee48b179d82e.
-last_verified_commit: 2ad2b76f9eb8dd528d2dc14afc9c4db12319622e
-last_updated: 2026-08-31T09:18:00+10:00
+validation_basis: PR #164 implements Brain Inbox Organize collection semantics. Application validation run 331 passed audit, governance, lint, typecheck, all 164 Node tests and build, then exposed a Vite/Playwright NCB response-adapter defect (native ServerResponse lacked the status/json/send contract expected by the production handler), crashing the test server and cascading browser failures. The active PR repairs that adapter boundary with deterministic coverage and must merge only after the exact final head passes canonical Application validation and the guarded repository lifecycle.
+last_verified_commit: 4cf4ac15caf9ce4ba17bf43d891603e19c84797e
+last_updated: 2026-08-31T12:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,27 +43,25 @@ last_updated: 2026-08-31T09:18:00+10:00
 
 ## Current objective
 
-Resume from fresh `main` after **PR #163 — Project Detail progress semantics**. The Project Detail Overall Progress meter is now intended to expose a labelled `progressbar` with 0–100 bounds and the rounded current completion value while preserving the existing visual percentage, animation, statistics source, task/subtask operations, persistence and provider behaviour.
-
-PR #162 merged at `c60c78158e866eba2e27f95694c7ee48b179d82e` after exact-head Application validation run 322 passed, completing Accessibility Settings toggle-description semantics.
+Resume from fresh `main` after **PR #164 — Brain Inbox Organize list semantics**. That slice exposes the visible “To Organize” collection and each populated organized-category collection as heading-labelled semantic lists, with each animated item wrapper exposed as a list item, while preserving categorization, task conversion, deletion, ordering, animation, persistence, recovery/error and provider behaviour. During canonical validation, the PR also exposed and repaired the Vite development/Playwright response adapter required to invoke the unchanged production NCB handler safely.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after #163 merges |
-| Execution state | READY FOR NEXT — inspect live repository evidence before selecting the next slice |
+| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after #164 merges |
+| Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Re-entry checkpoint after PR #163 merges
+## Re-entry checkpoint after PR #164 merges
 
 | State | Expected value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | PR #163 — Project Detail Overall Progress semantics |
+| Last completed product outcome | PR #164 — Brain Inbox Organize collection semantics plus the validation-blocking Vite NCB response-adapter repair |
 | Current blocker | None expected |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
@@ -74,17 +72,17 @@ PR #162 merged at `c60c78158e866eba2e27f95694c7ee48b179d82e` after exact-head Ap
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
 | What is already happening? | Do not assume an active implementation thread from this checkpoint; inspect live GitHub state first. |
-| What has been validated? | PR #162 exact head `2ad2b76f9eb8dd528d2dc14afc9c4db12319622e` passed Application validation run 322 and merged. PR #163 must pass exact-head validation before this checkpoint can reach `main`. |
-| What changed? | Project Detail’s visual Overall Progress meter now exposes labelled semantic progress state without changing project statistics or task behaviour. |
+| What has been validated? | PR #163 exact head `4cf4ac15caf9ce4ba17bf43d891603e19c84797e` passed Application validation run 326 and merged. For #164, run 331 proved governance/lint/typecheck/Node tests/build before exposing a browser-server adapter crash; the repaired final head must pass exact-head canonical validation before this checkpoint can reach `main`. |
+| What changed? | Brain Inbox Organize mode now exposes its repeated item collections with the list structure already conveyed visually. The Vite development/Playwright NCB adapter now supplies the production handler’s response interface instead of passing an incompatible native response through unchanged. |
 | What is next? | Inspect fresh `main`, open PRs/branches/checks, then continue the next dependency-correct accessibility or cognitive-load slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-PRs #124–#162 progressively established disclosure, task/filter/sort and collection semantics, Today timeline semantics, Project Detail task collections, modal/menu keyboard and focus integrity, Housework progress/filter/setup semantics, onboarding/template grouping, Gamification semantics, Routine Statistics timeframe grouping, Quick Capture ordered-list semantics, Chore Detail collection semantics, Projects view/collection semantics, Routines list semantics, Brain Inbox list semantics, TaskSelector recommendation/confidence semantics, RecommendedTasks collection semantics, and Accessibility Settings toggle descriptions.
+PRs #124–#163 progressively established disclosure, task/filter/sort and collection semantics, modal/menu keyboard and focus integrity, Housework/onboarding/template/Gamification accessibility, Today timeline semantics, Brain Inbox Capture semantics, TaskSelector/recommendation semantics, Project Detail task collections and progress semantics, and Accessibility Settings control descriptions.
 
-PR #163 extends that accessibility baseline by exposing Project Detail’s existing Overall Progress meter as a programmatic progress indicator.
+PR #164 extends that accessibility baseline to Brain Inbox Organize mode item collections and repairs the Vite response adapter discovered by its canonical browser validation.
 
 ## Backend / provider work — intentionally deferred
 
@@ -95,7 +93,8 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 ## Quality / technical state
 
 - `npm run platform:validate` remains the canonical project-owned validation gate.
-- The roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
+- Application validation run 331 passed dependency audit, governance, lint, typecheck, all Node tests and build, then failed because the Vite test server passed a native `ServerResponse` directly to a handler that requires `status()`, `json()` and `send()` response methods. The active branch contains the smallest adapter-boundary correction plus regression coverage; exact-head revalidation remains required.
+- Roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
 - Production deployment remains unverified/unconfigured for ADHD Life OS.
 - Repository merge proves repository integration only; it does not prove deployment/provider/runtime readiness.
 
