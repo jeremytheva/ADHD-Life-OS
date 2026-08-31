@@ -29,9 +29,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: The Projects route now exposes its initial loading state as a polite atomic busy status while hiding the decorative spinner from assistive technology. Repository integration still requires exact-head canonical Application validation and the guarded PR lifecycle before merge.
-last_verified_commit: 43114bee79998de7d21688e19c5d065e044e1309
-last_updated: 2026-08-31T22:17:00+10:00
+validation_basis: The Housework chore list now exposes its initial loading state as a polite atomic busy status while hiding the decorative spinner from assistive technology. Repository integration still requires exact-head canonical Application validation and the guarded PR lifecycle before merge.
+last_verified_commit: c16258dd2071743c91e4fa44ebc1c379840549ac
+last_updated: 2026-08-31T22:28:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,25 +43,25 @@ last_updated: 2026-08-31T22:17:00+10:00
 
 ## Current objective
 
-Resume from fresh `main` after the **Projects loading-status semantics** slice. The Projects route now exposes its visible “Loading your projects...” feedback as a polite atomic busy status and hides the decorative spinner from assistive technology without changing project loading, filtering, statistics, templates, editing, persistence or provider behaviour.
+Resume from fresh `main` after the **Housework chore-list loading-status semantics** slice. The Housework chore list now exposes its visible “Loading your chores...” feedback as a polite atomic busy status and hides the decorative spinner from assistive technology without changing chore loading, filtering, statistics, completion, snooze, persistence or provider behaviour.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after the Projects loading-status slice merges |
+| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after the Housework chore-list loading-status slice merges |
 | Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Re-entry checkpoint after the Projects loading-status slice merges
+## Re-entry checkpoint after the Housework chore-list loading-status slice merges
 
 | State | Expected value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | The Projects route initial loading state is programmatically announced without exposing its decorative spinner |
+| Last completed product outcome | The Housework chore-list initial loading state is programmatically announced without exposing its decorative spinner |
 | Current blocker | None expected |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
@@ -72,8 +72,8 @@ Resume from fresh `main` after the **Projects loading-status semantics** slice. 
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
 | What is already happening? | Do not assume an active implementation thread from this checkpoint; inspect live GitHub state first. |
-| What has been validated? | PR #172 exact head `c8633fc35aaf51d71772040fdd962119d905987a` passed Application validation run 348 and merged at `43114bee79998de7d21688e19c5d065e044e1309`. The Projects loading-status slice must independently pass exact-head canonical validation before merge. |
-| What changed? | The Projects route initial loading feedback now has polite atomic busy-status semantics, while its decorative spinner is hidden from assistive technology. |
+| What has been validated? | PR #173 exact head `691a0fa7dc1df59d260f8a53448166284e35cca8` passed Application validation run 349 and merged at `c16258dd2071743c91e4fa44ebc1c379840549ac`. The Housework chore-list loading-status slice must independently pass exact-head canonical validation before merge. |
+| What changed? | The Housework chore-list initial loading feedback now has polite atomic busy-status semantics, while its decorative spinner is hidden from assistive technology. |
 | What is next? | Inspect fresh `main`, open PRs/branches/checks, then continue the next dependency-correct accessibility or cognitive-load slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
@@ -82,7 +82,7 @@ Resume from fresh `main` after the **Projects loading-status semantics** slice. 
 
 PRs #124–#167 progressively established disclosure, task/filter/sort and collection semantics, modal/menu keyboard and focus integrity, Housework/onboarding/template/Gamification accessibility, Today timeline semantics, Brain Inbox Capture/Organize semantics, TaskSelector/recommendation semantics, Project Detail task collections/progress semantics, Accessibility Settings control descriptions, Routine Progress step semantics, Routine Statistics history and key-metric semantics, and the Vite NCB test-server response adapter required by canonical browser validation.
 
-PR #168 extended that accessibility baseline to the shared application loading fallback used across authentication/session, onboarding and lazy-route transitions. PR #169 extended transient-state accessibility to shared celebration completion feedback. PR #170 applied the same architecture principle to Today’s route-level initial loading state. PR #171 applied it to the Tasks route initial loading state. PR #172 applied it to the Routines route initial loading state. The current Projects loading-status slice applies it to the Projects route initial loading state.
+PR #168 extended that accessibility baseline to the shared application loading fallback used across authentication/session, onboarding and lazy-route transitions. PR #169 extended transient-state accessibility to shared celebration completion feedback. PR #170 applied the same architecture principle to Today’s route-level initial loading state. PR #171 applied it to the Tasks route initial loading state. PR #172 applied it to the Routines route initial loading state. PR #173 applied it to the Projects route initial loading state. The current Housework chore-list loading-status slice applies it to the Housework route’s chore-list initial loading state.
 
 ## Backend / provider work — intentionally deferred
 
@@ -93,8 +93,8 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 ## Quality / technical state
 
 - `npm run platform:validate` remains the canonical project-owned validation gate.
-- PR #172 exact head passed Application validation run 348 before guarded merge.
-- The Projects loading-status slice has focused deterministic coverage but still requires exact-head canonical validation before lifecycle completion.
+- PR #173 exact head passed Application validation run 349 before guarded merge.
+- The Housework chore-list loading-status slice has focused deterministic coverage but still requires exact-head canonical validation before lifecycle completion.
 - Roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
 - Production deployment remains unverified/unconfigured for ADHD Life OS.
 - Repository merge proves repository integration only; it does not prove deployment/provider/runtime readiness.
