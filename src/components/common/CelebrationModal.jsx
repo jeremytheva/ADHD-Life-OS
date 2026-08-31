@@ -8,6 +8,9 @@ const CelebrationModal = ({ message }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
       className="fixed top-20 right-6 z-[70] bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-lg shadow-2xl max-w-sm"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
     >
       <div className="flex items-center gap-3">
         <motion.div
@@ -17,6 +20,7 @@ const CelebrationModal = ({ message }) => {
           }}
           transition={{ duration: 0.5 }}
           className="text-3xl"
+          aria-hidden="true"
         >
           ✨
         </motion.div>
