@@ -4,17 +4,17 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Change
-execution_state: READY
+execution_state: IMPLEMENTING
 current_work:
-  objective: Inspect fresh main and continue the next evidence-backed Stage 3 accessibility or cognitive-load slice.
+  objective: Expose Brain Inbox Organize mode item collections with labelled list semantics without changing categorization, conversion, persistence, or provider behavior.
   issue: null
   pr: null
-  branch: null
+  branch: fix/brain-inbox-organize-list-semantics
 next_actions:
-  - Inspect live main, open PRs, visible branches and current checks before creating new work.
-  - Continue remaining evidence-backed frontend accessibility and interaction integrity work first.
-  - If no concrete accessibility defect remains, move to the next evidence-backed client-side cognitive-load reduction slice.
-  - Keep NoCodeBackend-dependent execution persistence deferred until real target-provider evidence is available.
+  - Expose the To Organize collection and its item wrappers with heading-labelled list/list-item semantics.
+  - Expose each populated organized category collection and item wrappers with heading-labelled list/list-item semantics.
+  - Add deterministic regression coverage, run exact-head canonical validation, and complete the guarded PR lifecycle if all gates pass.
+  - Re-enter from fresh main after merge and continue the next evidence-backed Stage 3 accessibility slice.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -29,9 +29,9 @@ validation:
   build: PASS
   ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #163 may merge only after its exact current head passes Application validation and the guarded repository lifecycle. PR #162 exact head 2ad2b76f9eb8dd528d2dc14afc9c4db12319622e passed Application validation run 322 and merged at c60c78158e866eba2e27f95694c7ee48b179d82e.
-last_verified_commit: 2ad2b76f9eb8dd528d2dc14afc9c4db12319622e
-last_updated: 2026-08-31T09:18:00+10:00
+validation_basis: PR #163 exact head 4cf4ac15caf9ce4ba17bf43d891603e19c84797e passed Application validation run 326 and merged through the guarded repository lifecycle at 5b5501d126f96a4d8bcf08310d379b5d9a8649ad. Fresh main inspection found no open implementation PR; this new slice has not yet completed exact-head validation.
+last_verified_commit: 4cf4ac15caf9ce4ba17bf43d891603e19c84797e
+last_updated: 2026-08-31T11:15:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,48 +43,39 @@ last_updated: 2026-08-31T09:18:00+10:00
 
 ## Current objective
 
-Resume from fresh `main` after **PR #163 — Project Detail progress semantics**. The Project Detail Overall Progress meter is now intended to expose a labelled `progressbar` with 0–100 bounds and the rounded current completion value while preserving the existing visual percentage, animation, statistics source, task/subtask operations, persistence and provider behaviour.
+Continue the highest-priority backend-independent Stage 3 accessibility work with one focused Brain Inbox Organize-mode slice. Fresh `main` inspection after PR #163 found no open implementation PR. PR #155 explicitly completed Capture-mode list semantics while leaving Organize-mode semantics out of scope. The current Organize view still presents repeated “To Organize” items and per-category organized items as visual collections without equivalent programmatic list structure.
 
-PR #162 merged at `c60c78158e866eba2e27f95694c7ee48b179d82e` after exact-head Application validation run 322 passed, completing Accessibility Settings toggle-description semantics.
+The implementation must preserve existing categorization choices, task conversion, deletion, ordering, animation, persistence, error handling, and provider boundaries.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after #163 merges |
-| Execution state | READY FOR NEXT — inspect live repository evidence before selecting the next slice |
+| Gate state | IMPLEMENTING — focused accessibility slice selected from fresh repository evidence |
+| Execution state | IMPLEMENTING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Re-entry checkpoint after PR #163 merges
+## Post-merge re-entry checkpoint
 
-| State | Expected value |
-| --- | --- |
-| Current stage | Stage 3 — execution and next-action experience |
-| Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | PR #163 — Project Detail Overall Progress semantics |
-| Current blocker | None expected |
-| Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
+When this Brain Inbox Organize list-semantics slice merges, do not leave its closing PR as the default branch’s active target. Re-inspect fresh `main`, open PRs, branches, checks and reviews; then continue the next evidence-backed frontend accessibility/interaction defect. If no concrete accessibility defect remains, move to the next evidence-backed client-side cognitive-load reduction slice.
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience. |
-| What is already happening? | Do not assume an active implementation thread from this checkpoint; inspect live GitHub state first. |
-| What has been validated? | PR #162 exact head `2ad2b76f9eb8dd528d2dc14afc9c4db12319622e` passed Application validation run 322 and merged. PR #163 must pass exact-head validation before this checkpoint can reach `main`. |
-| What changed? | Project Detail’s visual Overall Progress meter now exposes labelled semantic progress state without changing project statistics or task behaviour. |
-| What is next? | Inspect fresh `main`, open PRs/branches/checks, then continue the next dependency-correct accessibility or cognitive-load slice. |
+| Where am I? | Stage 3 — execution and next-action experience, Change gate. |
+| What is already happening? | One focused Brain Inbox Organize accessibility branch is implementing collection semantics; no competing implementation PR existed at branch creation. |
+| What has been validated? | PR #163 exact head `4cf4ac15caf9ce4ba17bf43d891603e19c84797e` passed Application validation run 326 and merged at `5b5501d126f96a4d8bcf08310d379b5d9a8649ad`. This new slice still requires exact-head canonical validation. |
+| What changed? | Durable project state has been reconciled to the real post-#163 repository state and the next evidence-backed accessibility objective. |
+| What is next? | Implement Organize-mode list semantics, add deterministic coverage, validate the exact head, reconcile reviews, and advance the repository-managed PR lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-PRs #124–#162 progressively established disclosure, task/filter/sort and collection semantics, Today timeline semantics, Project Detail task collections, modal/menu keyboard and focus integrity, Housework progress/filter/setup semantics, onboarding/template grouping, Gamification semantics, Routine Statistics timeframe grouping, Quick Capture ordered-list semantics, Chore Detail collection semantics, Projects view/collection semantics, Routines list semantics, Brain Inbox list semantics, TaskSelector recommendation/confidence semantics, RecommendedTasks collection semantics, and Accessibility Settings toggle descriptions.
-
-PR #163 extends that accessibility baseline by exposing Project Detail’s existing Overall Progress meter as a programmatic progress indicator.
+PRs #124–#163 progressively established disclosure, task/filter/sort and collection semantics, modal/menu keyboard and focus integrity, Housework/onboarding/template/Gamification accessibility, Today timeline semantics, Brain Inbox Capture semantics, TaskSelector/recommendation semantics, Project Detail task collections and progress semantics, and Accessibility Settings control descriptions.
 
 ## Backend / provider work — intentionally deferred
 
@@ -95,17 +86,17 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 ## Quality / technical state
 
 - `npm run platform:validate` remains the canonical project-owned validation gate.
-- The roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
+- Roadmap priority remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability while backend work is deferred.
 - Production deployment remains unverified/unconfigured for ADHD Life OS.
 - Repository merge proves repository integration only; it does not prove deployment/provider/runtime readiness.
 
 ## Next dependency-correct work
 
-1. inspect live `main`, open PRs, visible branches and checks;
-2. reuse or repair any active/overlapping implementation before creating new work;
-3. continue the next evidence-backed frontend accessibility/interaction issue;
-4. if accessibility evidence is exhausted, move to client-side cognitive-load reduction;
-5. keep provider-dependent execution work deferred until real provider evidence exists.
+1. finish the selected Brain Inbox Organize collection-semantics slice;
+2. add deterministic regression coverage;
+3. run exact-head canonical validation and repair any in-scope failure at root cause;
+4. reconcile review/thread state and advance the guarded PR lifecycle only after semantic completion;
+5. after merge, inspect fresh repository evidence before selecting another slice.
 
 ## Stage 3 exit conditions
 
