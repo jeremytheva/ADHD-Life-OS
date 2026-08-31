@@ -29,9 +29,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #166 implements Routine Statistics Recent Completions collection semantics. The application change and deterministic regression coverage are complete in scope; repository integration requires exact-head canonical Application validation and the guarded lifecycle before merge.
-last_verified_commit: 935ffadcefa9cbd29de20e5d5b7339efcb63db45
-last_updated: 2026-08-31T14:16:00+10:00
+validation_basis: PR #167 implements Routine Statistics key metric name-value semantics. The application change and deterministic regression coverage are complete in scope; repository integration requires exact-head canonical Application validation and the guarded lifecycle before merge.
+last_verified_commit: 9f7a3a783fbae613179e03420cbdff0f1235d773
+last_updated: 2026-08-31T14:22:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,25 +43,25 @@ last_updated: 2026-08-31T14:16:00+10:00
 
 ## Current objective
 
-Resume from fresh `main` after **PR #166 — Routine Statistics Recent Completions list semantics**. That slice exposes the visually coherent routine-history collection as one heading-labelled semantic list and each rendered history entry as a list item, while preserving statistics retrieval, history ordering, timeframe selection, metric/progress presentation, dialog behaviour, persistence and provider boundaries.
+Resume from fresh `main` after **PR #167 — Routine Statistics key metric semantics**. That slice exposes the four visual key metrics as semantic term/value pairs while preserving metric values, ordering, layout, statistics retrieval, timeframe selection, history, dialog behaviour, persistence and provider boundaries.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after #166 merges |
+| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after #167 merges |
 | Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Re-entry checkpoint after PR #166 merges
+## Re-entry checkpoint after PR #167 merges
 
 | State | Expected value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | PR #166 — Routine Statistics Recent Completions collection semantics |
+| Last completed product outcome | PR #167 — Routine Statistics key metric name-value semantics |
 | Current blocker | None expected |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
@@ -72,17 +72,17 @@ Resume from fresh `main` after **PR #166 — Routine Statistics Recent Completio
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
 | What is already happening? | Do not assume an active implementation thread from this checkpoint; inspect live GitHub state first. |
-| What has been validated? | PR #165 exact head `935ffadcefa9cbd29de20e5d5b7339efcb63db45` passed canonical Application validation before guarded merge at `051e58af6bacdb1971d493efafcf697a0fe0de7e`. PR #166 must independently pass exact-head canonical validation before merge. |
-| What changed? | Routine Statistics now exposes Recent Completions with the list structure already conveyed visually, without changing statistics, history or persistence behaviour. |
+| What has been validated? | PR #166 exact head `9f7a3a783fbae613179e03420cbdff0f1235d773` passed Application validation run 340 and merged at `f41585c8b10513403f9ecc8b062175596c68fd61`. PR #167 must independently pass exact-head canonical validation before merge. |
+| What changed? | Routine Statistics now exposes the visible key metrics as semantic name-value pairs without changing calculations, values or persistence behaviour. |
 | What is next? | Inspect fresh `main`, open PRs/branches/checks, then continue the next dependency-correct accessibility or cognitive-load slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-PRs #124–#165 progressively established disclosure, task/filter/sort and collection semantics, modal/menu keyboard and focus integrity, Housework/onboarding/template/Gamification accessibility, Today timeline semantics, Brain Inbox Capture/Organize semantics, TaskSelector/recommendation semantics, Project Detail task collections/progress semantics, Accessibility Settings control descriptions, Routine Progress step semantics, and the Vite NCB test-server response adapter required by canonical browser validation.
+PRs #124–#166 progressively established disclosure, task/filter/sort and collection semantics, modal/menu keyboard and focus integrity, Housework/onboarding/template/Gamification accessibility, Today timeline semantics, Brain Inbox Capture/Organize semantics, TaskSelector/recommendation semantics, Project Detail task collections/progress semantics, Accessibility Settings control descriptions, Routine Progress step semantics, Routine Statistics history semantics, and the Vite NCB test-server response adapter required by canonical browser validation.
 
-PR #166 extends that accessibility baseline to Routine Statistics’ Recent Completions history collection.
+PR #167 extends that accessibility baseline to Routine Statistics’ key metric name-value relationships.
 
 ## Backend / provider work — intentionally deferred
 
@@ -93,8 +93,8 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 ## Quality / technical state
 
 - `npm run platform:validate` remains the canonical project-owned validation gate.
-- PR #165 exact head passed canonical validation before guarded merge.
-- PR #166 has focused deterministic coverage but still requires exact-head canonical validation before lifecycle completion.
+- PR #166 exact head passed Application validation run 340 before guarded merge.
+- PR #167 has focused deterministic coverage but still requires exact-head canonical validation before lifecycle completion.
 - Roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
 - Production deployment remains unverified/unconfigured for ADHD Life OS.
 - Repository merge proves repository integration only; it does not prove deployment/provider/runtime readiness.
