@@ -431,40 +431,47 @@ const BrainInbox = () => {
 
           {uncategorizedItems.length > 0 && (
             <div className="space-y-3">
-              <h3 className="text-lg font-medium text-slate-900">
+              <h3 id="brain-inbox-to-organize-heading" className="text-lg font-medium text-slate-900">
                 To Organize ({uncategorizedItems.length} items)
               </h3>
 
-              {uncategorizedItems.map((item, index) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="bg-white rounded-lg border-2 border-amber-300 p-4"
-                >
-                  <div className="mb-3">
-                    <p className="text-slate-900 font-medium">{item.content}</p>
-                  </div>
+              <div
+                role="list"
+                aria-labelledby="brain-inbox-to-organize-heading"
+                className="space-y-3"
+              >
+                {uncategorizedItems.map((item, index) => (
+                  <motion.div
+                    role="listitem"
+                    key={item.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="bg-white rounded-lg border-2 border-amber-300 p-4"
+                  >
+                    <div className="mb-3">
+                      <p className="text-slate-900 font-medium">{item.content}</p>
+                    </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    {categories.map(cat => (
-                      <button
-                        key={cat.value}
-                        onClick={() => handleCategoryChange(item.id, cat.value)}
-                        className={`
-                          px-3 py-2 rounded-lg text-sm font-medium transition-all
-                          bg-${cat.color}-100 text-${cat.color}-700 hover:bg-${cat.color}-200
-                          flex items-center gap-2
-                        `}
-                      >
-                        <span>{cat.icon}</span>
-                        <span>{cat.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="flex flex-wrap gap-2">
+                      {categories.map(cat => (
+                        <button
+                          key={cat.value}
+                          onClick={() => handleCategoryChange(item.id, cat.value)}
+                          className={`
+                            px-3 py-2 rounded-lg text-sm font-medium transition-all
+                            bg-${cat.color}-100 text-${cat.color}-700 hover:bg-${cat.color}-200
+                            flex items-center gap-2
+                          `}
+                        >
+                          <span>{cat.icon}</span>
+                          <span>{cat.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           )}
 
@@ -480,53 +487,64 @@ const BrainInbox = () => {
               {categories.map(cat => {
                 const catItems = categorizedItems.filter(item => item.category === cat.value)
                 if (catItems.length === 0) return null
+                const categoryHeadingId = `brain-inbox-organized-${cat.value}-heading`
 
                 return (
                   <div key={cat.value} className="space-y-2">
-                    <h4 className="text-md font-medium text-slate-700 flex items-center gap-2">
+                    <h4
+                      id={categoryHeadingId}
+                      className="text-md font-medium text-slate-700 flex items-center gap-2"
+                    >
                       <span>{cat.icon}</span>
                       <span>{cat.label} ({catItems.length})</span>
                     </h4>
 
-                    {catItems.map((item, index) => (
-                      <motion.div
-                        key={item.id}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.03 }}
-                        className="bg-white rounded-lg border border-slate-200 p-4 ml-6"
-                      >
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex-1">
-                            <p className="text-slate-900">{item.content}</p>
+                    <div
+                      role="list"
+                      aria-labelledby={categoryHeadingId}
+                      className="space-y-2"
+                    >
+                      {catItems.map((item, index) => (
+                        <motion.div
+                          role="listitem"
+                          key={item.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.03 }}
+                          className="bg-white rounded-lg border border-slate-200 p-4 ml-6"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-1">
+                              <p className="text-slate-900">{item.content}</p>
+                            </div>
+                            <div className="flex gap-1">
+                              <button
+                                onClick={() => handleConvertToTask(item)}
+                                className="px-3 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm flex items-center gap-1"
+                                title="Convert to task"
+                              >
+                                <SafeIcon icon={FiZap} className="w-3 h-3" />
+                                <span>Task</span>
+                              </button>
+                              <button
+                                onClick={() => handleCategoryChange(item.id, null)}
+                                className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                                aria-label={`Remove category from ${item.content}`}
+                              >
+                                <SafeIcon icon={FiTag} className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteItem(item.id)}
+                                className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                aria-label={`Delete ${item.content}`}
+                              >
+                                <SafeIcon icon={FiTrash2} className="w-4 h-4" />
+                              </button>
+                            </div>
                           </div>
-                          <div className="flex gap-1">
-                            <button
-                              onClick={() => handleConvertToTask(item)}
-                              className="px-3 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm flex items-center gap-1"
-                              title="Convert to task"
-                            >
-                              <SafeIcon icon={FiZap} className="w-3 h-3" />
-                              <span>Task</span>
-                            </button>
-                            <button
-                              onClick={() => handleCategoryChange(item.id, null)}
-                              className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
-                              aria-label={`Remove category from ${item.content}`}
-                            >
-                              <SafeIcon icon={FiTag} className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteItem(item.id)}
-                              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                              aria-label={`Delete ${item.content}`}
-                            >
-                              <SafeIcon icon={FiTrash2} className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
+                        </motion.div>
+                      ))}
+                    </div>
                   </div>
                 )
               })}
