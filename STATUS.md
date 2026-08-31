@@ -8,7 +8,7 @@ execution_state: IMPLEMENTING
 current_work:
   objective: Expose Brain Inbox Organize mode item collections with labelled list semantics without changing categorization, conversion, persistence, or provider behavior.
   issue: null
-  pr: null
+  pr: 164
   branch: fix/brain-inbox-organize-list-semantics
 next_actions:
   - Expose the To Organize collection and its item wrappers with heading-labelled list/list-item semantics.
@@ -27,11 +27,11 @@ validation:
   typecheck: PASS
   tests: PASS
   build: PASS
-  ci: PASS
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #163 exact head 4cf4ac15caf9ce4ba17bf43d891603e19c84797e passed Application validation run 326 and merged through the guarded repository lifecycle at 5b5501d126f96a4d8bcf08310d379b5d9a8649ad. Fresh main inspection found no open implementation PR; this new slice has not yet completed exact-head validation.
+validation_basis: PR #163 exact head 4cf4ac15caf9ce4ba17bf43d891603e19c84797e passed Application validation run 326 and merged through the guarded repository lifecycle at 5b5501d126f96a4d8bcf08310d379b5d9a8649ad. PR #164 is Draft/Implementing and requires fresh exact-head canonical validation after its implementation and regression coverage are complete.
 last_verified_commit: 4cf4ac15caf9ce4ba17bf43d891603e19c84797e
-last_updated: 2026-08-31T11:15:00+10:00
+last_updated: 2026-08-31T11:16:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,7 +43,7 @@ last_updated: 2026-08-31T11:15:00+10:00
 
 ## Current objective
 
-Continue the highest-priority backend-independent Stage 3 accessibility work with one focused Brain Inbox Organize-mode slice. Fresh `main` inspection after PR #163 found no open implementation PR. PR #155 explicitly completed Capture-mode list semantics while leaving Organize-mode semantics out of scope. The current Organize view still presents repeated “To Organize” items and per-category organized items as visual collections without equivalent programmatic list structure.
+Continue the highest-priority backend-independent Stage 3 accessibility work with **Draft PR #164 — Brain Inbox Organize list semantics**. Fresh `main` inspection after PR #163 found no open implementation PR. PR #155 explicitly completed Capture-mode list semantics while leaving Organize-mode semantics out of scope. The current Organize view still presents repeated “To Organize” items and per-category organized items as visual collections without equivalent programmatic list structure.
 
 The implementation must preserve existing categorization choices, task conversion, deletion, ordering, animation, persistence, error handling, and provider boundaries.
 
@@ -52,23 +52,23 @@ The implementation must preserve existing categorization choices, task conversio
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | IMPLEMENTING — focused accessibility slice selected from fresh repository evidence |
+| Gate state | IMPLEMENTING — PR #164 owns the focused accessibility slice |
 | Execution state | IMPLEMENTING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
 ## Post-merge re-entry checkpoint
 
-When this Brain Inbox Organize list-semantics slice merges, do not leave its closing PR as the default branch’s active target. Re-inspect fresh `main`, open PRs, branches, checks and reviews; then continue the next evidence-backed frontend accessibility/interaction defect. If no concrete accessibility defect remains, move to the next evidence-backed client-side cognitive-load reduction slice.
+When PR #164 merges, do not leave its closing PR as the default branch’s active target. Re-inspect fresh `main`, open PRs, branches, checks and reviews; then continue the next evidence-backed frontend accessibility/interaction defect. If no concrete accessibility defect remains, move to the next evidence-backed client-side cognitive-load reduction slice.
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience, Change gate. |
-| What is already happening? | One focused Brain Inbox Organize accessibility branch is implementing collection semantics; no competing implementation PR existed at branch creation. |
-| What has been validated? | PR #163 exact head `4cf4ac15caf9ce4ba17bf43d891603e19c84797e` passed Application validation run 326 and merged at `5b5501d126f96a4d8bcf08310d379b5d9a8649ad`. This new slice still requires exact-head canonical validation. |
-| What changed? | Durable project state has been reconciled to the real post-#163 repository state and the next evidence-backed accessibility objective. |
+| What is already happening? | Draft PR #164 is the sole primary implementation thread for Brain Inbox Organize collection semantics. |
+| What has been validated? | PR #163 exact head `4cf4ac15caf9ce4ba17bf43d891603e19c84797e` passed Application validation run 326 and merged at `5b5501d126f96a4d8bcf08310d379b5d9a8649ad`. PR #164 still requires exact-head canonical validation after implementation completes. |
+| What changed? | Durable project state has been reconciled to the real post-#163 repository state and bound to PR #164. |
 | What is next? | Implement Organize-mode list semantics, add deterministic coverage, validate the exact head, reconcile reviews, and advance the repository-managed PR lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
@@ -92,7 +92,7 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 
 ## Next dependency-correct work
 
-1. finish the selected Brain Inbox Organize collection-semantics slice;
+1. finish the selected Brain Inbox Organize collection-semantics slice in PR #164;
 2. add deterministic regression coverage;
 3. run exact-head canonical validation and repair any in-scope failure at root cause;
 4. reconcile review/thread state and advance the guarded PR lifecycle only after semantic completion;
