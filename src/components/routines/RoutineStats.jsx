@@ -18,6 +18,7 @@ const RoutineStats = ({ routine, onClose }) => {
   const dialogTitleId = `routine-stats-title-${routine.id}`
   const routineNameId = `routine-stats-name-${routine.id}`
   const timeframeGroupLabelId = `routine-stats-timeframe-label-${routine.id}`
+  const recentHistoryHeadingId = `routine-stats-recent-history-heading-${routine.id}`
 
   const loadStats = useCallback(async () => {
     try {
@@ -180,11 +181,18 @@ const RoutineStats = ({ routine, onClose }) => {
               {/* Recent History */}
               {history.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-medium text-slate-900 mb-4 flex items-center gap-2">
+                  <h3
+                    id={recentHistoryHeadingId}
+                    className="text-lg font-medium text-slate-900 mb-4 flex items-center gap-2"
+                  >
                     <SafeIcon icon={FiCalendar} className="w-5 h-5" />
                     Recent Completions
                   </h3>
-                  <div className="space-y-2">
+                  <div
+                    className="space-y-2"
+                    role="list"
+                    aria-labelledby={recentHistoryHeadingId}
+                  >
                     {history.map((session, index) => {
                       const completedSteps = session.completed_steps.filter(s => !s.skipped).length
                       const skippedSteps = session.completed_steps.filter(s => s.skipped).length
@@ -196,6 +204,7 @@ const RoutineStats = ({ routine, onClose }) => {
                       return (
                         <motion.div
                           key={session.id}
+                          role="listitem"
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.05 }}
