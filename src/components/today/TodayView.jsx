@@ -95,7 +95,22 @@ const TodayView = () => {
   }
 
   if (loading) return (
-    <div className="p-6"><div className="bg-white rounded-lg border border-slate-200 p-8 text-center"><SafeIcon icon={FiRefreshCw} className="w-8 h-8 text-slate-400 mx-auto mb-4 animate-spin" /><p className="text-slate-600">Loading your day...</p></div></div>
+    <div className="p-6">
+      <div
+        className="bg-white rounded-lg border border-slate-200 p-8 text-center"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        aria-busy="true"
+      >
+        <SafeIcon
+          icon={FiRefreshCw}
+          className="w-8 h-8 text-slate-400 mx-auto mb-4 animate-spin"
+          aria-hidden="true"
+        />
+        <p className="text-slate-600">Loading your day...</p>
+      </div>
+    </div>
   )
 
   if (loadError) return (
