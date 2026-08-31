@@ -130,48 +130,40 @@ const RoutineStats = ({ routine, onClose }) => {
               {/* Key Metrics */}
               <dl className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
-                  <div className="flex items-center gap-2 mb-2">
+                  <dt className="flex items-center gap-2 mb-2 text-xs text-purple-700 font-medium">
                     <SafeIcon icon={FiTrendingUp} className="w-4 h-4 text-purple-600" />
-                    <dt className="text-xs text-purple-700 font-medium">
-                      Total Completions
-                    </dt>
-                  </div>
+                    Total Completions
+                  </dt>
                   <dd className="text-3xl font-bold text-purple-900">
                     {stats.total_completions}
                   </dd>
                 </div>
 
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
-                  <div className="flex items-center gap-2 mb-2">
+                  <dt className="flex items-center gap-2 mb-2 text-xs text-green-700 font-medium">
                     <SafeIcon icon={FiActivity} className="w-4 h-4 text-green-600" />
-                    <dt className="text-xs text-green-700 font-medium">
-                      Completion Rate
-                    </dt>
-                  </div>
+                    Completion Rate
+                  </dt>
                   <dd className="text-3xl font-bold text-green-900">
                     {stats.completion_rate}%
                   </dd>
                 </div>
 
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-                  <div className="flex items-center gap-2 mb-2">
+                  <dt className="flex items-center gap-2 mb-2 text-xs text-blue-700 font-medium">
                     <SafeIcon icon={FiClock} className="w-4 h-4 text-blue-600" />
-                    <dt className="text-xs text-blue-700 font-medium">
-                      Avg. Time
-                    </dt>
-                  </div>
+                    Avg. Time
+                  </dt>
                   <dd className="text-3xl font-bold text-blue-900">
                     {stats.average_completion_time}m
                   </dd>
                 </div>
 
                 <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
-                  <div className="flex items-center gap-2 mb-2">
+                  <dt className="flex items-center gap-2 mb-2 text-xs text-orange-700 font-medium">
                     <SafeIcon icon={FiAward} className="w-4 h-4 text-orange-600" />
-                    <dt className="text-xs text-orange-700 font-medium">
-                      Current Streak
-                    </dt>
-                  </div>
+                    Current Streak
+                  </dt>
                   <dd className="text-3xl font-bold text-orange-900">
                     {stats.current_streak} days
                   </dd>
