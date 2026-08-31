@@ -29,9 +29,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #164 implements Brain Inbox Organize collection semantics and must merge only after its exact final head passes Application validation and the guarded repository lifecycle. PR #163 exact head 4cf4ac15caf9ce4ba17bf43d891603e19c84797e passed Application validation run 326 and merged at 5b5501d126f96a4d8bcf08310d379b5d9a8649ad.
+validation_basis: PR #164 implements Brain Inbox Organize collection semantics. Application validation run 331 passed audit, governance, lint, typecheck, all 164 Node tests and build, then exposed a Vite/Playwright NCB response-adapter defect (native ServerResponse lacked the status/json/send contract expected by the production handler), crashing the test server and cascading browser failures. The active PR repairs that adapter boundary with deterministic coverage and must merge only after the exact final head passes canonical Application validation and the guarded repository lifecycle.
 last_verified_commit: 4cf4ac15caf9ce4ba17bf43d891603e19c84797e
-last_updated: 2026-08-31T11:18:00+10:00
+last_updated: 2026-08-31T12:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,7 +43,7 @@ last_updated: 2026-08-31T11:18:00+10:00
 
 ## Current objective
 
-Resume from fresh `main` after **PR #164 — Brain Inbox Organize list semantics**. That slice is intended to expose the visible “To Organize” collection and each populated organized-category collection as heading-labelled semantic lists, with each animated item wrapper exposed as a list item, while preserving categorization, task conversion, deletion, ordering, animation, persistence, recovery/error and provider behaviour.
+Resume from fresh `main` after **PR #164 — Brain Inbox Organize list semantics**. That slice exposes the visible “To Organize” collection and each populated organized-category collection as heading-labelled semantic lists, with each animated item wrapper exposed as a list item, while preserving categorization, task conversion, deletion, ordering, animation, persistence, recovery/error and provider behaviour. During canonical validation, the PR also exposed and repaired the Vite development/Playwright response adapter required to invoke the unchanged production NCB handler safely.
 
 ## AI execution gate
 
@@ -61,7 +61,7 @@ Resume from fresh `main` after **PR #164 — Brain Inbox Organize list semantics
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | PR #164 — Brain Inbox Organize collection semantics |
+| Last completed product outcome | PR #164 — Brain Inbox Organize collection semantics plus the validation-blocking Vite NCB response-adapter repair |
 | Current blocker | None expected |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
@@ -72,8 +72,8 @@ Resume from fresh `main` after **PR #164 — Brain Inbox Organize list semantics
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
 | What is already happening? | Do not assume an active implementation thread from this checkpoint; inspect live GitHub state first. |
-| What has been validated? | PR #163 exact head `4cf4ac15caf9ce4ba17bf43d891603e19c84797e` passed Application validation run 326 and merged. PR #164 must pass exact-head validation before this checkpoint can reach `main`. |
-| What changed? | Brain Inbox Organize mode now exposes its repeated item collections with the list structure already conveyed visually, without changing categorization or persistence behaviour. |
+| What has been validated? | PR #163 exact head `4cf4ac15caf9ce4ba17bf43d891603e19c84797e` passed Application validation run 326 and merged. For #164, run 331 proved governance/lint/typecheck/Node tests/build before exposing a browser-server adapter crash; the repaired final head must pass exact-head canonical validation before this checkpoint can reach `main`. |
+| What changed? | Brain Inbox Organize mode now exposes its repeated item collections with the list structure already conveyed visually. The Vite development/Playwright NCB adapter now supplies the production handler’s response interface instead of passing an incompatible native response through unchanged. |
 | What is next? | Inspect fresh `main`, open PRs/branches/checks, then continue the next dependency-correct accessibility or cognitive-load slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
@@ -82,7 +82,7 @@ Resume from fresh `main` after **PR #164 — Brain Inbox Organize list semantics
 
 PRs #124–#163 progressively established disclosure, task/filter/sort and collection semantics, modal/menu keyboard and focus integrity, Housework/onboarding/template/Gamification accessibility, Today timeline semantics, Brain Inbox Capture semantics, TaskSelector/recommendation semantics, Project Detail task collections and progress semantics, and Accessibility Settings control descriptions.
 
-PR #164 extends that accessibility baseline to Brain Inbox Organize mode item collections.
+PR #164 extends that accessibility baseline to Brain Inbox Organize mode item collections and repairs the Vite response adapter discovered by its canonical browser validation.
 
 ## Backend / provider work — intentionally deferred
 
@@ -93,6 +93,7 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 ## Quality / technical state
 
 - `npm run platform:validate` remains the canonical project-owned validation gate.
+- Application validation run 331 passed dependency audit, governance, lint, typecheck, all Node tests and build, then failed because the Vite test server passed a native `ServerResponse` directly to a handler that requires `status()`, `json()` and `send()` response methods. The active branch contains the smallest adapter-boundary correction plus regression coverage; exact-head revalidation remains required.
 - Roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
 - Production deployment remains unverified/unconfigured for ADHD Life OS.
 - Repository merge proves repository integration only; it does not prove deployment/provider/runtime readiness.
