@@ -209,15 +209,19 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
               type="button"
               onClick={handleSave}
               disabled={selectedTasks.size === 0 || saving}
+              aria-busy={saving}
               className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? (
-                <><div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>Creating Tasks...</>
+                <><div aria-hidden="true" className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>Creating Tasks...</>
               ) : (
                 <><SafeIcon icon={FiPlus} className="w-5 h-5" />Add {selectedTasks.size} Task{selectedTasks.size !== 1 ? 's' : ''}</>
               )}
             </button>
           </div>
+          <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {saving ? 'Creating tasks...' : ''}
+          </span>
         </div>
       </motion.div>
     </div>
