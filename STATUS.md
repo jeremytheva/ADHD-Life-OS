@@ -29,9 +29,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: The Housework setup multi-chore save operation now exposes explicit busy state, a polite atomic live announcement, and hides its decorative spinner from assistive technology. Repository integration still requires exact-head canonical Application validation and the guarded PR lifecycle before merge.
-last_verified_commit: 16fbaa5cf8dfaa20b9341686319b7b6bea3b79e6
-last_updated: 2026-09-01T00:16:00+10:00
+validation_basis: The active login/register submit operation now exposes explicit busy state, a polite atomic live announcement using the existing mode-specific loading copy, and hides its decorative spinner from assistive technology. Repository integration still requires exact-head canonical Application validation and the guarded PR lifecycle before merge.
+last_verified_commit: cfb0d416781f43c57662cb447af04de7a51f451c
+last_updated: 2026-09-01T01:21:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,25 +43,25 @@ last_updated: 2026-09-01T00:16:00+10:00
 
 ## Current objective
 
-Resume from fresh `main` after the **Housework setup saving-status semantics** slice. The multi-chore setup save operation now exposes explicit busy state and a polite atomic “Creating tasks...” announcement while hiding its decorative spinner from assistive technology, without changing chore selection, creation, partial-success recovery, persistence or provider behaviour.
+Resume from fresh `main` after the **authentication submit-status semantics** slice. The active login/register form now exposes its visible “Signing in...” or “Creating account...” operation as an explicit busy state with a polite atomic announcement while hiding the decorative spinner from assistive technology, without changing authentication, redirect, session, provider or credential behaviour.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after the Housework setup saving-status slice merges |
+| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after the authentication submit-status slice merges |
 | Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Re-entry checkpoint after the Housework setup saving-status slice merges
+## Re-entry checkpoint after the authentication submit-status slice merges
 
 | State | Expected value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | Housework setup announces its multi-chore saving state without exposing the decorative spinner |
+| Last completed product outcome | Login and registration submit progress is programmatically announced without exposing the decorative spinner |
 | Current blocker | None expected |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
@@ -72,8 +72,8 @@ Resume from fresh `main` after the **Housework setup saving-status semantics** s
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
 | What is already happening? | Do not assume an active implementation thread from this checkpoint; inspect live GitHub state first. |
-| What has been validated? | PR #174 exact head `c1ddb3d88eb28f87c2bc6dc891cba4d4b12f9905` passed Application validation run 350 and merged at `16fbaa5cf8dfaa20b9341686319b7b6bea3b79e6`. The Housework setup saving-status slice must independently pass exact-head canonical validation before merge. |
-| What changed? | Housework setup now communicates its active multi-chore save operation through explicit busy/live semantics and hides the decorative spinner. |
+| What has been validated? | PR #175 exact head `4dd10cc872c9f49feace59e73f2163f5435383e0` passed Application validation run 351 and merged at `cfb0d416781f43c57662cb447af04de7a51f451c`. The authentication submit-status slice must independently pass exact-head canonical validation before merge. |
+| What changed? | The active login/register submit state now communicates its operation through explicit busy/live semantics and hides the decorative spinner. |
 | What is next? | Inspect fresh `main`, open PRs/branches/checks, then continue the next dependency-correct accessibility or cognitive-load slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
@@ -82,7 +82,7 @@ Resume from fresh `main` after the **Housework setup saving-status semantics** s
 
 PRs #124–#167 progressively established disclosure, task/filter/sort and collection semantics, modal/menu keyboard and focus integrity, Housework/onboarding/template/Gamification accessibility, Today timeline semantics, Brain Inbox Capture/Organize semantics, TaskSelector/recommendation semantics, Project Detail task collections/progress semantics, Accessibility Settings control descriptions, Routine Progress step semantics, Routine Statistics history and key-metric semantics, and the Vite NCB test-server response adapter required by canonical browser validation.
 
-PR #168 extended that accessibility baseline to the shared application loading fallback used across authentication/session, onboarding and lazy-route transitions. PR #169 extended transient-state accessibility to shared celebration completion feedback. PR #170 applied the same architecture principle to Today’s route-level initial loading state. PR #171 applied it to the Tasks route initial loading state. PR #172 applied it to the Routines route initial loading state. PR #173 applied it to the Projects route initial loading state. PR #174 applied it to the Housework chore-list initial loading state. The current Housework setup saving-status slice extends the same transient-state integrity to the multi-chore setup write operation.
+PR #168 extended that accessibility baseline to the shared application loading fallback used across authentication/session, onboarding and lazy-route transitions. PR #169 extended transient-state accessibility to shared celebration completion feedback. PR #170 applied the same architecture principle to Today’s route-level initial loading state. PR #171 applied it to the Tasks route initial loading state. PR #172 applied it to the Routines route initial loading state. PR #173 applied it to the Projects route initial loading state. PR #174 applied it to the Housework chore-list initial loading state. PR #175 extended the same transient-state integrity to the Housework multi-chore setup write operation. The current authentication submit-status slice applies it to the live login/register form.
 
 ## Backend / provider work — intentionally deferred
 
@@ -93,8 +93,8 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 ## Quality / technical state
 
 - `npm run platform:validate` remains the canonical project-owned validation gate.
-- PR #174 exact head passed Application validation run 350 before guarded merge.
-- The Housework setup saving-status slice has focused deterministic coverage but still requires exact-head canonical validation before lifecycle completion.
+- PR #175 exact head passed Application validation run 351 before guarded merge.
+- The authentication submit-status slice has focused deterministic coverage but still requires exact-head canonical validation before lifecycle completion.
 - Roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
 - Production deployment remains unverified/unconfigured for ADHD Life OS.
 - Repository merge proves repository integration only; it does not prove deployment/provider/runtime readiness.
