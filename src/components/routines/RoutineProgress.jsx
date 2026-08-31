@@ -29,6 +29,7 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
   const isFinishingSession = currentStepIndex != null && currentStepIndex >= routineSteps.length
   const hasCurrentStep = Boolean(currentStep)
   const dialogTitleId = `routine-progress-title-${routineId}`
+  const allStepsHeadingId = `routine-progress-all-steps-${routineId}`
 
   const initializeSession = useCallback(async () => {
     try {
@@ -305,8 +306,8 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
           </AnimatePresence>
 
           <div className="mt-8 pt-6 border-t border-slate-200">
-            <h4 className="text-sm font-medium text-slate-700 mb-3">All Steps</h4>
-            <div className="space-y-2">
+            <h4 id={allStepsHeadingId} className="text-sm font-medium text-slate-700 mb-3">All Steps</h4>
+            <div className="space-y-2" role="list" aria-labelledby={allStepsHeadingId}>
               {routineSteps.map((step, index) => {
                 const isCompleted = session.completed_steps.some(
                   completed => completed.step_index === index
@@ -319,6 +320,7 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
                 return (
                   <div
                     key={step.id}
+                    role="listitem"
                     className={`
                       flex items-center gap-3 p-2 rounded-lg transition-colors
                       ${isCurrent ? 'bg-purple-50 border border-purple-200' : ''}

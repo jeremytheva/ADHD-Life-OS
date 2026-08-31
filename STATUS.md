@@ -29,9 +29,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #164 implements Brain Inbox Organize collection semantics. Application validation run 331 passed audit, governance, lint, typecheck, all 164 Node tests and build, then exposed a Vite/Playwright NCB response-adapter defect (native ServerResponse lacked the status/json/send contract expected by the production handler), crashing the test server and cascading browser failures. The active PR repairs that adapter boundary with deterministic coverage and must merge only after the exact final head passes canonical Application validation and the guarded repository lifecycle.
-last_verified_commit: 4cf4ac15caf9ce4ba17bf43d891603e19c84797e
-last_updated: 2026-08-31T12:18:00+10:00
+validation_basis: PR #165 implements Routine Progress All Steps collection semantics. The application and deterministic regression coverage are complete in scope; the PR must merge only after its exact final head passes canonical Application validation and the guarded repository lifecycle.
+last_verified_commit: a9a2820537fa3b366e746efdbf9a2a0d9ba88be4
+last_updated: 2026-08-31T12:26:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,25 +43,25 @@ last_updated: 2026-08-31T12:18:00+10:00
 
 ## Current objective
 
-Resume from fresh `main` after **PR #164 — Brain Inbox Organize list semantics**. That slice exposes the visible “To Organize” collection and each populated organized-category collection as heading-labelled semantic lists, with each animated item wrapper exposed as a list item, while preserving categorization, task conversion, deletion, ordering, animation, persistence, recovery/error and provider behaviour. During canonical validation, the PR also exposed and repaired the Vite development/Playwright response adapter required to invoke the unchanged production NCB handler safely.
+Resume from fresh `main` after **PR #165 — Routine Progress All Steps list semantics**. That slice exposes the active routine session’s visible “All Steps” collection as one heading-labelled semantic list and each rendered step wrapper as a list item, while preserving current/completed/skipped presentation, complete/skip/cancel/finalize behaviour, timing, persistence, recovery/error and provider boundaries.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE |
-| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after #164 merges |
+| Gate state | RE-ENTRY — no implementation PR should be assumed active from this file after #165 merges |
 | Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Re-entry checkpoint after PR #164 merges
+## Re-entry checkpoint after PR #165 merges
 
 | State | Expected value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
 | Active delivery thread | None until live `main` and open PRs/branches are inspected |
-| Last completed product outcome | PR #164 — Brain Inbox Organize collection semantics plus the validation-blocking Vite NCB response-adapter repair |
+| Last completed product outcome | PR #165 — Routine Progress All Steps collection semantics |
 | Current blocker | None expected |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Inspect remaining frontend accessibility evidence; if none is concrete, move to the next evidence-backed cognitive-load slice |
@@ -72,17 +72,17 @@ Resume from fresh `main` after **PR #164 — Brain Inbox Organize list semantics
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience. |
 | What is already happening? | Do not assume an active implementation thread from this checkpoint; inspect live GitHub state first. |
-| What has been validated? | PR #163 exact head `4cf4ac15caf9ce4ba17bf43d891603e19c84797e` passed Application validation run 326 and merged. For #164, run 331 proved governance/lint/typecheck/Node tests/build before exposing a browser-server adapter crash; the repaired final head must pass exact-head canonical validation before this checkpoint can reach `main`. |
-| What changed? | Brain Inbox Organize mode now exposes its repeated item collections with the list structure already conveyed visually. The Vite development/Playwright NCB adapter now supplies the production handler’s response interface instead of passing an incompatible native response through unchanged. |
+| What has been validated? | PR #164 exact head `a9a2820537fa3b366e746efdbf9a2a0d9ba88be4` passed Application validation run 335 and merged at `cd00c8e50dd0500ca38694be484e966cf33daf6f`. PR #165 must independently pass exact-head canonical validation before merge. |
+| What changed? | Routine Progress now exposes the visible All Steps collection with the list structure already conveyed visually, without changing execution or persistence behaviour. |
 | What is next? | Inspect fresh `main`, open PRs/branches/checks, then continue the next dependency-correct accessibility or cognitive-load slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-PRs #124–#163 progressively established disclosure, task/filter/sort and collection semantics, modal/menu keyboard and focus integrity, Housework/onboarding/template/Gamification accessibility, Today timeline semantics, Brain Inbox Capture semantics, TaskSelector/recommendation semantics, Project Detail task collections and progress semantics, and Accessibility Settings control descriptions.
+PRs #124–#164 progressively established disclosure, task/filter/sort and collection semantics, modal/menu keyboard and focus integrity, Housework/onboarding/template/Gamification accessibility, Today timeline semantics, Brain Inbox Capture/Organize semantics, TaskSelector/recommendation semantics, Project Detail task collections/progress semantics, Accessibility Settings control descriptions, and the Vite NCB test-server response adapter required by canonical browser validation.
 
-PR #164 extends that accessibility baseline to Brain Inbox Organize mode item collections and repairs the Vite response adapter discovered by its canonical browser validation.
+PR #165 extends that accessibility baseline to the active Routine Progress “All Steps” collection.
 
 ## Backend / provider work — intentionally deferred
 
@@ -93,7 +93,8 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 ## Quality / technical state
 
 - `npm run platform:validate` remains the canonical project-owned validation gate.
-- Application validation run 331 passed dependency audit, governance, lint, typecheck, all Node tests and build, then failed because the Vite test server passed a native `ServerResponse` directly to a handler that requires `status()`, `json()` and `send()` response methods. The active branch contains the smallest adapter-boundary correction plus regression coverage; exact-head revalidation remains required.
+- PR #164 exact head passed Application validation run 335, including dependency audit, governance, zero-warning lint, typecheck, deterministic Node tests, production build and Playwright, before guarded merge.
+- PR #165 has focused deterministic coverage but still requires exact-head canonical validation before lifecycle completion.
 - Roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
 - Production deployment remains unverified/unconfigured for ADHD Life OS.
 - Repository merge proves repository integration only; it does not prove deployment/provider/runtime readiness.
