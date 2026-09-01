@@ -11,10 +11,9 @@ current_work:
   pr: 195
   branch: feat/tasks-load-summary-disclosure
 next_actions:
-  - Run canonical Application validation on the exact PR #195 head.
-  - Repair any in-scope validation finding on the same PR.
+  - Run canonical Application validation on the STATUS-updated exact PR #195 head.
+  - Repair any remaining in-scope validation finding on the same PR.
   - Re-audit review submissions and inline review threads on the final exact head.
-  - Record exact-head validation evidence in this durable handoff and revalidate any resulting STATUS-only candidate head.
   - Apply lifecycle:implementation-complete only after final exact-head validation and review/thread evidence remain clean.
   - Allow repository automation to own Ready -> Mergeable -> Merged.
   - After merge, inspect fresh main and continue the next evidence-backed independent Stage 3 task.
@@ -26,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
+  governance: PASS
+  lint: REPAIRED_PENDING_REVALIDATION
   typecheck: NOT_RUN
   tests: NOT_RUN
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #194 passed final exact-head Application validation run 406 and merged through the repository finalizer at f35be83aee31ce64dc5404c7f2b094e7f00efcf6. PR #195 implementation and deterministic regression coverage are present; canonical exact-head validation is pending.
+validation_basis: PR #195 head c89dde6909d2364dbedcb5ea1f708c1296424aae reached canonical Application validation run 408. Dependency audit and governance passed, then lint failed only because test/task-load-analysis-disclosure.test.mjs referenced URL without an explicit node:url import. The test harness was repaired on the same branch in commit 22030caa9241017456201dde9bee650b93499aec. This STATUS update creates a new final candidate and therefore canonical exact-head revalidation is required.
 last_verified_commit: f35be83aee31ce64dc5404c7f2b094e7f00efcf6
-last_updated: 2026-09-02T07:25:00+10:00
+last_updated: 2026-09-02T08:13:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -53,12 +52,14 @@ The Tasks page previously expanded Task Load Analysis into multiple metric cards
 
 The change is presentation-only. Existing task-load calculations, priority/recommendation policy, filters, sorting, task mutations, persistence and provider behaviour are unchanged. Deterministic source-contract coverage protects the compact-summary and detailed-disclosure contract.
 
+Canonical Application validation run 408 reached the repository lint gate after dependency audit and governance passed, then failed because the new deterministic test used `URL` without explicitly importing it for ESLint. That test-only harness defect was repaired on the same PR with an explicit `node:url` import. No application behaviour changed in the repair.
+
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — Tasks load-summary progressive disclosure |
-| Gate state | VALIDATING — implementation present; canonical exact-head validation pending |
+| Gate state | VALIDATING — run 408 lint finding repaired; final STATUS-updated exact head requires canonical validation |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -72,11 +73,13 @@ The change is presentation-only. Existing task-load calculations, priority/recom
 | Implemented change | Total task count and urgent attention remain visible; detailed workload metrics move behind native progressive disclosure |
 | Preserved behaviour | Analysis calculations, task priority/recommendation policy, filters, sort, mutations, persistence and provider contracts |
 | Deterministic coverage | `test/task-load-analysis-disclosure.test.mjs` protects summary visibility and detailed-metric availability |
-| Validation | Canonical exact-head validation pending |
+| Validation finding | Run 408: deterministic test lint failure (`URL` undefined) after audit/governance passed |
+| Validation repair | Added explicit `URL` import from `node:url` in the test harness; application code unchanged |
+| Validation | Final STATUS-updated exact-head canonical validation pending |
 | Review/thread audit | Pending final exact-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Validate the exact PR #195 head and repair any in-scope finding on the same PR |
+| Next action | Revalidate the final exact PR #195 head and repair any remaining in-scope finding on the same PR |
 
 ## Autonomous continuation entry answers
 
@@ -84,9 +87,9 @@ The change is presentation-only. Existing task-load calculations, priority/recom
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience, validating PR #195. |
 | What is already happening? | PR #195 reduces Tasks-page metric competition without removing workload information. |
-| What has been validated? | PR #194 completed its guarded repository lifecycle and merged; PR #195 exact-head validation is pending. |
-| What changed? | Task Load now presents a compact default summary with detailed metrics available on demand. |
-| What is next? | Run canonical validation, repair in-scope failures, record evidence, revalidate any STATUS-updated final head, audit reviews/threads, then complete lifecycle if clean. |
+| What has been validated? | Run 408 passed dependency audit and governance before exposing a test-only lint finding; that finding is repaired and exact-head revalidation is required. |
+| What changed? | Task Load now presents a compact default summary with detailed metrics available on demand; the new regression test now explicitly imports the Node URL class. |
+| What is next? | Run final exact-head canonical validation, repair any remaining in-scope finding, audit reviews/threads, then complete lifecycle if clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -97,7 +100,8 @@ The change is presentation-only. Existing task-load calculations, priority/recom
 - Overdue and critical work are summarized into a visible attention count.
 - Detailed total/critical/high/overdue/due-today/estimated-time information remains available behind native progressive disclosure.
 - No task loading, filtering, sorting, recommendation, mutation, persistence or provider code changed.
-- `test/task-load-analysis-disclosure.test.mjs` protects the presentation contract.
+- `test/task-load-analysis-disclosure.test.mjs` protects the presentation contract and explicitly imports `URL` from `node:url` for lint-clean deterministic execution.
+- Application validation run 408 passed audit/governance and then failed only on the repaired test lint finding.
 
 ## Backend / provider work — intentionally deferred
 
@@ -105,14 +109,12 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact PR #195 head;
-2. repair any in-scope failure on this PR;
-3. update this durable handoff with exact validation evidence;
-4. revalidate any final STATUS-only candidate head;
-5. re-audit review submissions and inline review threads;
-6. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
-7. allow repository automation to own Ready -> Mergeable -> Merged;
-8. inspect fresh `main` and open PRs before selecting the next Stage 3 slice.
+1. run canonical Application validation on the final STATUS-updated PR #195 head;
+2. repair any remaining in-scope failure on this PR;
+3. re-audit review submissions and inline review threads;
+4. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
+5. allow repository automation to own Ready -> Mergeable -> Merged;
+6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice.
 
 ## Stage 3 exit conditions
 
