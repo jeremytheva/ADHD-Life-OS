@@ -6,17 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Finish the guarded repository lifecycle for PR #191, then inspect fresh main for the next dependency-correct Stage 3 task.
+  objective: Complete PR #192, which reduces initial choice load in the Today next-action panel through progressive disclosure while preserving user control.
   issue: null
-  pr: 191
-  branch: fix/project-task-form-pending-integrity
+  pr: 192
+  branch: feat/next-action-progressive-disclosure
 next_actions:
-  - Revalidate the final STATUS-updated PR head through canonical Application validation.
+  - Validate the current exact PR head through canonical Application validation.
   - Repair any in-scope validation finding on the same PR.
-  - Re-audit review submissions and inline review threads on the final head.
-  - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence remain clean.
+  - Audit review submissions and inline review threads after validation.
+  - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence are clean.
   - Allow repository automation to own Ready -> Mergeable -> Merged.
-  - After merge, inspect fresh main and continue remaining frontend interaction-integrity work; otherwise move to client-side cognitive-load reduction.
+  - After merge, inspect fresh main and continue the next evidence-backed client-side cognitive-load reduction task.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -25,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #191 implementation head e108296c1da2f48858d2ca3c3d6bbb2278aa9d7a passed canonical Application validation run 392 with clean review and thread state. This STATUS-only handoff commit invalidates exact-head evidence and requires one final canonical validation before lifecycle completion.
-last_verified_commit: e108296c1da2f48858d2ca3c3d6bbb2278aa9d7a
-last_updated: 2026-09-01T22:10:00+10:00
+validation_basis: PR #192 is directly based on the PR #191 merge. The focused implementation and deterministic regression coverage are complete; canonical exact-head validation is pending.
+last_verified_commit: 4170a3b8a50be1f2999d8545d19644ed0b6ef630
+last_updated: 2026-09-01T23:16:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,18 +46,18 @@ last_updated: 2026-09-01T22:10:00+10:00
 
 ## Current objective
 
-Finish the guarded lifecycle for the focused Project Task Form pending-save interaction-integrity slice. PR #190 merged automatically at `f333d9492744f45650ee67041a88457dad2b7bc0`. PR #191 fixes the remaining unresolved-write integrity gap in the project-scoped task form: repeated submit and dismissal were already guarded while saving, but project-task fields could still mutate while the persisted snapshot was unresolved.
+Complete the focused Today next-action cognitive-load slice in PR #192. PR #191 merged automatically at `4170a3b8a50be1f2999d8545d19644ed0b6ef630`, closing the remaining known pending-save interaction-integrity gap identified in the form audit. Fresh-main inspection found no competing open PR and moved to the roadmap's next independent priority: client-side cognitive-load reduction.
 
-The implementation head `e108296c1da2f48858d2ca3c3d6bbb2278aa9d7a` passed canonical Application validation run 392, with no submitted reviews and no inline review threads. This STATUS-only handoff commit deliberately moves the PR head, so one final exact-head canonical validation is required before implementation-complete can be signalled.
+The next-action panel already had useful medium-energy / 15-minute defaults, but exposed both fit selectors before the user could act on the recommendation. PR #192 keeps those defaults and the full controls while replacing the always-visible selectors with a compact current-fit summary and an accessible `Adjust fit` disclosure. This reduces the initial decision surface without restricting capability or changing recommendation policy.
 
-This file is post-merge re-entry safe: once PR #191 merges, inspect fresh `main` and open PRs before choosing further work. Continue evidence-backed frontend accessibility/interaction integrity if one remains; otherwise move to the highest-priority client-side cognitive-load reduction work. Provider-dependent execution persistence remains deferred until real target-instance NoCodeBackend evidence exists.
+This file is post-merge re-entry safe. Once PR #192 merges, inspect fresh `main` and open PRs before selecting the next evidence-backed client-side cognitive-load reduction slice. Provider-dependent execution persistence remains deferred until real target-instance NoCodeBackend evidence exists.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — Project Task Form pending-save integrity |
-| Gate state | VALIDATING — implementation head passed; final STATUS-updated exact head requires canonical validation |
+| Current gate | INTEGRATION — Today next-action progressive disclosure |
+| Gate state | VALIDATING — focused implementation and durable handoff complete; exact-head validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -66,36 +66,35 @@ This file is post-merge re-entry safe: once PR #191 merges, inspect fresh `main`
 
 | State | Current value |
 | --- | --- |
-| Post-merge baseline | PR #190 merged automatically at `f333d9492744f45650ee67041a88457dad2b7bc0` |
-| Active outcome | PR #191 — Project Task Form pending-save interaction integrity |
-| Implemented change | Project Task Form freezes project-task field mutation under a disabled fieldset and ignores mutation handlers while saving, while preserving existing duplicate-submit, Escape/close/cancel, busy and live-progress guards |
-| Validated implementation head | `e108296c1da2f48858d2ca3c3d6bbb2278aa9d7a` — Application validation run 392 passed |
-| Review/thread audit | No submitted reviews; no inline review threads |
+| Post-merge baseline | PR #191 merged automatically at `4170a3b8a50be1f2999d8545d19644ed0b6ef630` |
+| Active outcome | PR #192 — simplify next-action fit choices |
+| Implemented change | Today shows the active time/energy fit compactly and progressively discloses the existing selectors behind an accessible toggle |
+| Preserved behaviour | Existing defaults, execution-engine inputs, automatic refresh, bounded alternatives, transient Not now feedback and retry semantics |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Validate the final STATUS-updated exact head, re-audit review/thread state, then complete repository lifecycle if clean |
+| Next action | Run canonical exact-head validation, repair any in-scope finding, then complete repository lifecycle if review/thread state is clean |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, completing PR #191 lifecycle. |
-| What is already happening? | PR #191 hardens Project Task Form so an unresolved project-task save owns one immutable form snapshot and cannot race user field edits or dismissal. |
-| What has been validated? | PR #190 merged after exact-head validation. PR #191 implementation head `e108296c1da2f48858d2ca3c3d6bbb2278aa9d7a` passed Application validation run 392; the final STATUS-updated head still requires exact-head validation. |
-| What changed? | Project Task Form now ignores field mutation while saving and disables all project-task input controls under one fieldset; existing duplicate-submit, dismissal guards and busy/progress semantics remain intact. |
-| What is next? | Validate the final exact head, re-audit reviews/threads, apply implementation-complete only if clean, allow repository automation to merge, then inspect fresh main before selecting further Stage 3 work. |
+| Where am I? | Stage 3 — execution and next-action experience, validating PR #192. |
+| What is already happening? | PR #192 reduces initial choice load in the Today recommendation panel through progressive disclosure. |
+| What has been validated? | PR #191 merged after exact-head validation. PR #192 exact-head validation is pending. |
+| What changed? | The current fit remains visible, while energy/time selectors are hidden by default and available through an accessible `Adjust fit` toggle. |
+| What is next? | Run canonical Application validation on the exact PR #192 head, repair any in-scope failure, audit reviews/threads and advance the guarded lifecycle when clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Evidence for this slice
 
-- `src/components/projects/TaskForm.jsx` already rejected duplicate submit while `saving` and blocked Escape, close and cancel dismissal.
-- Project Task Form now also rejects `handleChange` while saving and groups project-task fields under `fieldset disabled={saving}`.
-- Existing form/action `aria-busy`, disabled save action, visible `Saving...` copy and polite atomic live announcement remain intact.
-- Focused deterministic coverage extends `test/project-task-form-saving-guard.test.mjs` to protect immutable pending-save state and dismissal guards.
-- Provider contracts, schemas and parent persistence policy are unchanged.
-- Canonical Application validation run 392 passed on implementation head `e108296c1da2f48858d2ca3c3d6bbb2278aa9d7a`.
-- Review submissions and inline review threads were empty at the completion audit before this STATUS-only commit.
+- `src/components/today/NextActionPanel.jsx` retains the existing `medium` energy and `15` minute defaults.
+- The recommendation engine still receives `current_energy`, `available_time` and current location exactly as before.
+- A compact `Current fit` summary exposes the active values without forcing two initial controls into the primary decision surface.
+- `Adjust fit` uses `aria-expanded` and `aria-controls`; the existing labelled selects remain available when expanded.
+- Existing bounded alternative, transient Not now, skipped-option restore and retry behaviour are unchanged.
+- `test/next-action-experience.test.mjs` now protects the default and progressive-disclosure contract.
+- No provider contract, persistence model or execution-engine policy changed.
 
 ## Backend / provider work — intentionally deferred
 
@@ -103,13 +102,13 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the final STATUS-updated PR #191 head;
+1. validate the current exact PR #192 head with `npm run platform:validate` through canonical Application validation;
 2. repair any in-scope failure on this PR;
-3. re-audit review submissions and inline threads;
-4. apply `lifecycle:implementation-complete` only after the final exact-head validation and audit are clean;
+3. audit review submissions and inline review threads;
+4. apply `lifecycle:implementation-complete` only after all implementation-owned criteria are satisfied;
 5. allow repository automation to own Ready -> Mergeable -> Merged;
 6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice;
-7. continue evidence-backed frontend interaction integrity, or move to client-side cognitive-load reduction if that evidence is exhausted.
+7. continue the highest-value evidence-backed client-side cognitive-load reduction work.
 
 ## Stage 3 exit conditions
 
