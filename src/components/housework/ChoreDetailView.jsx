@@ -135,7 +135,7 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
           >
             {completing ? <><div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" aria-hidden="true"></div><span>Confirming completion...</span></> : <><SafeIcon icon={FiCheck} className="w-5 h-5" />Mark as Complete</>}
           </button>
-          <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+          <p className="sr-only" aria-live="polite" aria-atomic="true">
             {completing ? 'Confirming chore completion...' : ''}
           </p>
         </div>
