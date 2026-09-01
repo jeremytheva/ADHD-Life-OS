@@ -3,13 +3,16 @@ import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 import useModalDialog from '../../common/useModalDialog'
-import { routineService } from '../../services/routineService'
 
 const { FiX, FiPlus, FiTrash2 } = FiIcons
 
 const RoutineForm = ({ routine = null, onSave, onCancel }) => {
   const nameInputRef = useRef(null)
-  const dialogRef = useModalDialog({ onEscape: onCancel, initialFocusRef: nameInputRef })
+  const [saving, setSaving] = useState(false)
+  const dialogRef = useModalDialog({
+    onEscape: saving ? null : onCancel,
+    initialFocusRef: nameInputRef
+  })
   const [formData, setFormData] = useState({
     name: routine?.name || '',
     description: routine?.description || '',
@@ -23,31 +26,13 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (saving) return
 
+    setSaving(true)
     try {
-      const savedRoutine = await onSave(formData)
-
-      if (routine) {
-        for (const step of steps) {
-          if (step.id) {
-            await routineService.updateRoutineStep(step.id, step)
-          } else {
-            await routineService.createRoutineStep({
-              ...step,
-              routine_id: routine.id
-            })
-          }
-        }
-      } else if (savedRoutine) {
-        for (const step of steps) {
-          await routineService.createRoutineStep({
-            ...step,
-            routine_id: savedRoutine.id
-          })
-        }
-      }
-    } catch (error) {
-      console.error('Error saving routine:', error)
+      await onSave({ ...formData, steps })
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -62,6 +47,7 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
   }
 
   const addStep = () => {
+    if (saving) return
     setSteps(prev => [...prev, {
       name: '',
       duration_minutes: 30,
@@ -70,6 +56,7 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
   }
 
   const removeStep = (index) => {
+    if (saving) return
     setSteps(prev => prev.filter((_, i) => i !== index))
   }
 
@@ -82,6 +69,7 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
         role="dialog"
         aria-modal="true"
         aria-labelledby="routine-form-title"
+        aria-busy={saving ? 'true' : 'false'}
         tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -94,14 +82,15 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
           <button
             type="button"
             onClick={onCancel}
+            disabled={saving}
             aria-label={`Close ${title}`}
-            className="p-1 text-slate-400 hover:text-slate-600"
+            className="p-1 text-slate-400 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiX} className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-6" aria-busy={saving ? 'true' : 'false'}>
           <div className="space-y-4">
             <div>
               <label htmlFor="routine-name" className="block text-sm font-medium text-slate-700 mb-2">
@@ -167,7 +156,8 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
               <button
                 type="button"
                 onClick={addStep}
-                className="text-blue-600 hover:text-blue-700 flex items-center space-x-1 text-sm"
+                disabled={saving}
+                className="text-blue-600 hover:text-blue-700 flex items-center space-x-1 text-sm disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <SafeIcon icon={FiPlus} className="w-4 h-4" />
                 <span>Add Step</span>
@@ -202,8 +192,9 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
                     <button
                       type="button"
                       onClick={() => removeStep(index)}
+                      disabled={saving}
                       aria-label={`Remove step ${index + 1}`}
-                      className="p-1 text-slate-400 hover:text-red-600 transition-colors"
+                      className="p-1 text-slate-400 hover:text-red-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <SafeIcon icon={FiTrash2} className="w-4 h-4" />
                     </button>
@@ -217,17 +208,23 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 bg-slate-100 text-slate-700 py-2 px-4 rounded-md hover:bg-slate-200"
+              disabled={saving}
+              className="flex-1 bg-slate-100 text-slate-700 py-2 px-4 rounded-md hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+              disabled={saving}
+              aria-busy={saving ? 'true' : 'false'}
+              className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {routine ? 'Update' : 'Create'}
+              {saving ? 'Saving...' : routine ? 'Update' : 'Create'}
             </button>
           </div>
+          <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {saving ? 'Saving routine...' : ''}
+          </span>
         </form>
       </motion.div>
     </div>
