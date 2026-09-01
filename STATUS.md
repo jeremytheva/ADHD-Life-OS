@@ -4,17 +4,17 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: READY
+execution_state: VALIDATING
 current_work:
-  objective: Inspect fresh main after PR #184 merges, then continue the next evidence-backed frontend accessibility or cognitive-load slice.
+  objective: Validate PR #185 project-task pending-save guard without creating a competing implementation thread.
   issue: null
-  pr: null
-  branch: main
+  pr: 185
+  branch: fix/project-task-form-saving-guard
 next_actions:
-  - Inspect fresh main plus open PRs, visible branches and current checks after PR #184 merges.
-  - Continue the next evidence-backed frontend accessibility or interaction-integrity slice if one remains.
-  - If accessibility evidence is exhausted, move to the highest-priority client-side cognitive-load reduction work.
-  - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
+  - Run exact-head canonical Application validation for PR #185.
+  - Repair only evidence-backed failures in the current slice.
+  - Audit acceptance criteria and review/thread state after exact-head validation passes.
+  - Prepare post-merge-safe STATUS.md before implementation-complete.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -29,9 +29,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #184 product and active-state head ab12ccd9ca6a15478dce9fae344e5d20c3fca6ff passed canonical Application validation run 368 with no submitted reviews or review threads and was current with main. This final STATUS.md handoff commit intentionally invalidates that exact-head evidence and requires fresh canonical validation before lifecycle completion; the durable handoff itself is post-merge re-entry safe.
-last_verified_commit: ab12ccd9ca6a15478dce9fae344e5d20c3fca6ff
-last_updated: 2026-09-01T13:24:00+10:00
+validation_basis: PR #184 final exact head fbca7405be58d37fc58776f1f9b27f9e1b3bef73 passed canonical Application validation run 369 and merged through the guarded lifecycle at 639d95ad4a8dfb35db15d4183961d5b7985831b5. Fresh main had no open competing PRs. PR #185 addresses a production-reachable interaction-integrity defect: the project-detail Task Form previously had no pending-write guard, allowing repeated submit or dismissal while createTask was unresolved. Exact-head canonical validation is pending.
+last_verified_commit: 639d95ad4a8dfb35db15d4183961d5b7985831b5
+last_updated: 2026-09-01T13:30:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,44 +43,44 @@ last_updated: 2026-09-01T13:24:00+10:00
 
 ## Current objective
 
-Use this file as the **post-merge re-entry checkpoint for PR #184**. After PR #184 merges, inspect fresh `main`, open PRs, visible branches and current checks before selecting new work. Continue the next evidence-backed frontend accessibility/interaction-integrity slice if one remains; otherwise move to the highest-priority client-side cognitive-load reduction work. Do not reopen provider-dependent execution persistence without real target-instance NoCodeBackend evidence.
+Finish **PR #185 — project-task pending-save integrity**. In Project Detail, the nested Task Form awaited an asynchronous create operation without any local pending state, so duplicate submission, Escape dismissal and close/cancel remained possible while persistence was unresolved. This slice adds a bounded promise guard, disables dismissal/submission during the save, and exposes visible plus assistive-technology progress without changing the parent persistence/reconciliation contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION / POST-MERGE RE-ENTRY |
-| Gate state | PR #184 implementation outcome passed Application validation run 368 on the prior exact head; this final STATUS-only handoff commit requires fresh exact-head canonical validation before lifecycle completion |
-| Execution state | READY |
+| Current gate | INTEGRATION / VALIDATION |
+| Gate state | PR #185 active; focused implementation and deterministic regression coverage added; exact-head canonical validation pending |
+| Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
 
-## Delivery checkpoint
+## Active delivery checkpoint
 
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Post-merge baseline | PR #184 — Task Form saving-state accessibility |
-| Completed product outcome | Task Form saving exposes form/action busy state and a polite atomic progress announcement while preserving visible saving copy, dialog focus/Escape behaviour, task creation, retry/error handling and provider behaviour |
-| Current blocker | None |
+| Active delivery thread | PR #185 / `fix/project-task-form-saving-guard` |
+| Current product outcome | Project Task Form ignores duplicate submits, blocks dismissal while saving, and exposes busy/live saving feedback until the existing `onSave` promise settles |
+| Current blocker | None; exact-head validation is actionable |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | After PR #184 merges, inspect fresh repository/GitHub state and continue the next evidence-backed independent Stage 3 slice |
+| Next action | Run canonical Application validation; repair only evidence-backed current-slice failures; then complete the guarded lifecycle |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, at the post-PR-#184 re-entry checkpoint. |
-| What is already happening? | PR #184 adds accessible saving-state semantics to the production Task Form and deterministic regression coverage. |
-| What has been validated? | PR #184 exact head `ab12ccd9ca6a15478dce9fae344e5d20c3fca6ff` passed canonical Application validation run 368 and had no submitted reviews or review threads. The final STATUS-only handoff commit still requires fresh exact-head validation before lifecycle completion. |
-| What changed? | Task Form now marks the form and submit action busy during persistence and announces `Saving task changes...` through a polite atomic status while retaining visible `Saving...` copy and existing task-create semantics. |
-| What is next? | After merge, inspect fresh `main`, open PRs/branches/checks, then continue remaining frontend accessibility work or move to cognitive-load reduction if that evidence is exhausted. |
+| Where am I? | Stage 3 — execution and next-action experience; PR #185 is the sole active implementation thread. |
+| What is already happening? | PR #185 adds a pending-save integrity guard and accessible progress feedback to the project-detail Task Form. |
+| What has been validated? | PR #184 final exact head `fbca7405be58d37fc58776f1f9b27f9e1b3bef73` passed Application validation run 369 and merged at `639d95ad4a8dfb35db15d4183961d5b7985831b5`. PR #185 exact-head canonical validation is pending. |
+| What changed? | Project Task Form now owns a local pending state around `onSave`, ignores repeated submit, suppresses Escape, disables close/cancel/submit, and announces `Saving project task...` while unresolved. |
+| What is next? | Validate PR #185, repair only in-scope evidence if necessary, then audit and advance its lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-PRs #124–#167 established the broad Stage 3 accessibility/interaction baseline. PRs #168–#183 progressively covered shared loading, transient celebration feedback, route/collection loading, multi-write saving, authentication submission, Settings/Brain Inbox/Routine Statistics/Gamification/Task Selector loading, Chore Detail completion persistence and Day Setup preference persistence. PR #184 extends the same transient-state architecture to the production task-create form.
+PRs #124–#167 established the broad Stage 3 accessibility/interaction baseline. PRs #168–#184 progressively covered loading, transient feedback, saving and completion semantics across production surfaces, culminating in the main Tasks form saving-state semantics. PR #185 now closes the stronger duplicate-submit/dismissal gap in the nested Project Task Form.
 
 ## Backend / provider work — intentionally deferred
 
@@ -91,21 +91,21 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 ## Quality / technical state
 
 - `npm run platform:validate` remains the canonical project-owned validation gate.
-- PR #183 final exact head passed Application validation run 366 and merged at `88eb8e8178d1589543d8298c72fa1aa4a0cfa3e9`.
-- Fresh post-merge inspection found no open competing PRs before PR #184 was started.
-- PR #184 exact head `ab12ccd9ca6a15478dce9fae344e5d20c3fca6ff` passed canonical Application validation run 368; review/thread audit was clean and the branch was current with `main`.
-- This final post-merge-safe STATUS-only commit requires fresh exact-head canonical validation before implementation-complete evidence is applied.
+- PR #184 final exact head passed Application validation run 369 and merged at `639d95ad4a8dfb35db15d4183961d5b7985831b5`.
+- Fresh post-merge inspection found no open competing PRs before PR #185 was started.
+- PR #185 is based directly on that merge and changes only project Task Form pending-state semantics, focused regression coverage and durable status.
 - Roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
 - Production deployment remains unverified/unconfigured for ADHD Life OS.
-- Repository merge proves repository integration only; it does not prove deployment/provider/runtime readiness.
 
 ## Next dependency-correct work
 
-1. complete PR #184 lifecycle only after fresh canonical validation passes for this final status-only head;
-2. after merge, inspect live `main`, open PRs, visible branches and checks before selecting new work;
-3. continue the next evidence-backed frontend accessibility/interaction issue if one remains;
-4. otherwise move to the highest-priority client-side cognitive-load reduction slice;
-5. keep provider-dependent execution work deferred until real provider evidence exists.
+1. validate exact PR #185 head with canonical Application validation;
+2. repair only current-slice failures supported by validation evidence;
+3. audit acceptance criteria, reviews/threads and branch freshness after a pass;
+4. prepare post-merge-safe STATUS.md before implementation-complete;
+5. advance the guarded lifecycle from exact-head evidence;
+6. after merge, inspect fresh repository/GitHub state before selecting another slice;
+7. keep provider-dependent execution work deferred until real provider evidence exists.
 
 ## Stage 3 exit conditions
 
