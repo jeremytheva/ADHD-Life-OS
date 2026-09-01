@@ -35,9 +35,9 @@ test('TemplateCard restores trigger focus when the apply menu is dismissed outsi
 
 test('TemplateCard preserves Edit Before Applying modal-stack focus ownership', async () => {
   const source = await read('src/components/templates/TemplateCard.jsx')
-  const editHandler = source.match(/<span>Edit Before Applying<\/span>[\s\S]*?<\/button>/)
+  const editButton = source.match(/<button[^>]*role="menuitem"[^>]*(?:onClick=\{onEditBeforeApply\}|onClick=\{\(\) => \{[\s\S]*?onEditBeforeApply\(\)[\s\S]*?\}\})[^>]*>[\s\S]*?<span>Edit Before Applying<\/span>[\s\S]*?<\/button>/)
 
-  assert.match(source, /onEditBeforeApply\(\)/)
-  assert.match(source, /Keep the initiating control mounted while the child dialog is open/)
-  assert.doesNotMatch(editHandler?.[0] ?? '', /closeApplyMenu\(/)
+  assert.ok(editButton, 'Edit Before Applying remains an explicit menu item connected to its mounted trigger')
+  assert.doesNotMatch(editButton?.[0] ?? '', /closeApplyMenu\(/)
+  assert.match(source, /disabled=\{isApplied \|\| isApplying\}/)
 })
