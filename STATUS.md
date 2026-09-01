@@ -6,14 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #193, which reduces immediate action competition in the Today next-action card while preserving manual refresh capability.
+  objective: Complete PR #194, which reduces secondary cognitive load on Today by progressively disclosing unscheduled task details while keeping their count visible.
   issue: null
-  pr: 193
-  branch: feat/next-action-secondary-options
+  pr: 194
+  branch: feat/today-unscheduled-progressive-disclosure
 next_actions:
-  - Revalidate this STATUS-updated exact PR head through canonical Application validation.
+  - Run canonical Application validation on the exact PR #194 head.
   - Repair any in-scope validation finding on the same PR.
   - Re-audit review submissions and inline review threads on the final exact head.
+  - Record exact-head validation evidence in this durable handoff.
+  - Revalidate any STATUS-updated final head before lifecycle completion.
   - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence remain clean.
   - Allow repository automation to own Ready -> Mergeable -> Merged.
   - After merge, inspect fresh main and continue the next evidence-backed client-side cognitive-load reduction task.
@@ -32,9 +34,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #193 implementation head 27b4a00291594269b248c498efa5e29e18b84025 passed canonical Application validation run 398 with no submitted reviews or inline review threads. This STATUS-only handoff commit invalidates exact-head evidence and requires one final canonical validation before lifecycle completion.
-last_verified_commit: 27b4a00291594269b248c498efa5e29e18b84025
-last_updated: 2026-09-02T03:12:00+10:00
+validation_basis: PR #194 implementation and deterministic regression coverage are present, but canonical exact-head Application validation has not yet completed.
+last_verified_commit: 62ce4f979c0fa215a20d6ae40cb4df1cc5d1e13f
+last_updated: 2026-09-02T05:20:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,20 +48,18 @@ last_updated: 2026-09-02T03:12:00+10:00
 
 ## Current objective
 
-Complete the focused client-side cognitive-load slice in PR #193. PR #192 merged automatically into `main` at `bcf57f4a4e55c73b16102c30806462e887f48a27`. No competing open PRs were present when this slice began.
+Complete PR #194, the next independent client-side cognitive-load slice after PR #193 merged into `main` at `62ce4f979c0fa215a20d6ae40cb4df1cc5d1e13f`.
 
-PR #193 reduces action competition in the Today recommendation card. `Not now` and the bounded alternative remain immediately visible because they directly support the current decision. The less-frequent manual `Recheck now` action remains available but is progressively disclosed under native `details` / `summary` controls. This preserves capability while reducing the number of simultaneous actions competing with initiation guidance.
+PR #194 keeps the Today next-action experience primary by collapsing unscheduled task titles and scheduling guidance until the user explicitly chooses to review them. The number of unscheduled tasks remains visible so important state is not hidden. Once opened, Today still limits the initial list to three items and retains the existing show-more/show-less control for larger sets.
 
-Implementation head `27b4a00291594269b248c498efa5e29e18b84025` passed canonical Application validation run 398. The completion audit found no submitted reviews and no inline review threads. This STATUS-only handoff deliberately moves the PR head, so the final exact head must pass canonical validation before implementation-complete can be signalled.
-
-This file is post-merge re-entry safe. Once PR #193 merges, inspect fresh `main` and open PRs before selecting the next evidence-backed client-side cognitive-load reduction slice. Provider-dependent execution persistence remains deferred until real target-instance NoCodeBackend evidence exists.
+The change is frontend-only. Timeline loading, mode filtering, next-action recommendation, task completion, scheduling policy, persistence and provider behaviour are unchanged. Disclosure state resets when Today reloads or refilters so secondary details do not remain expanded across a refreshed decision context.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — Today next-action secondary-option disclosure |
-| Gate state | VALIDATING — implementation head passed; final STATUS-updated exact head requires canonical validation |
+| Current gate | INTEGRATION — Today unscheduled-task progressive disclosure |
+| Gate state | VALIDATING — implementation present; canonical exact-head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -68,40 +68,38 @@ This file is post-merge re-entry safe. Once PR #193 merges, inspect fresh `main`
 
 | State | Current value |
 | --- | --- |
-| Post-merge baseline | PR #192 merged automatically at `bcf57f4a4e55c73b16102c30806462e887f48a27` |
-| Active outcome | PR #193 — reduce next-action secondary choices |
-| Implemented change | Manual `Recheck now` remains available behind native progressive disclosure instead of competing as a third immediate recommendation action |
-| Preserved behaviour | Existing defaults, fit controls, execution-engine inputs, automatic recommendation refresh, bounded alternatives, transient Not now feedback, skipped-option restoration and retry semantics |
-| Deterministic coverage | `test/next-action-experience.test.mjs` protects the secondary-option disclosure contract |
-| Validated implementation head | `27b4a00291594269b248c498efa5e29e18b84025` — Application validation run 398 passed |
-| Review/thread audit | No submitted reviews; no inline review threads |
+| Post-merge baseline | PR #193 merged automatically at `62ce4f979c0fa215a20d6ae40cb4df1cc5d1e13f` |
+| Active outcome | PR #194 — progressively disclose unscheduled Today tasks |
+| Implemented change | Unscheduled task count remains visible while titles and scheduling guidance are collapsed behind an explicit accessible review control |
+| Preserved behaviour | Existing first-three limit after expansion, show-more/show-less, timeline loading, mode filtering, task completion, next-action behaviour, persistence and provider contracts |
+| Deterministic coverage | `test/next-action-experience.test.mjs` protects the unscheduled-detail disclosure contract |
+| Validation | Canonical exact-head validation pending |
+| Review/thread audit | Pending final exact-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Validate the final STATUS-updated exact head, re-audit review/thread state, then complete repository lifecycle if clean |
+| Next action | Validate the exact PR head and repair any in-scope finding on the same PR |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, completing PR #193 lifecycle. |
-| What is already happening? | PR #193 reduces immediate recommendation-action competition without removing manual refresh capability. |
-| What has been validated? | PR #192 completed its guarded repository lifecycle and merged. PR #193 implementation head `27b4a00291594269b248c498efa5e29e18b84025` passed Application validation run 398; the final STATUS-updated head still requires exact-head validation. |
-| What changed? | The manual refresh action moved behind native progressive disclosure while `Not now` and bounded alternatives remain immediate. |
-| What is next? | Validate the final exact head, re-audit reviews/threads, apply implementation-complete only if clean, allow repository automation to merge, then inspect fresh main before selecting the next Stage 3 slice. |
+| Where am I? | Stage 3 — execution and next-action experience, validating PR #194. |
+| What is already happening? | PR #194 reduces secondary Today-page competition by progressively disclosing unscheduled-task detail. |
+| What has been validated? | PR #193 completed its guarded repository lifecycle and merged. PR #194 exact-head canonical validation is pending. |
+| What changed? | Today retains visible awareness of unscheduled work without expanding task titles and guidance by default. |
+| What is next? | Run canonical validation, repair in-scope failures, record evidence, revalidate the final STATUS-updated head, audit reviews/threads, then complete repository lifecycle if clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Evidence for this slice
 
-- `src/components/today/NextActionPanel.jsx` keeps `Not now` and the bounded `Give me another option` control in the immediate decision surface.
-- Manual `Recheck now` remains connected to `loadRecommendations` but is nested under native `details` / `summary` progressive disclosure.
-- Fit defaults and the existing `Adjust fit` progressive disclosure remain unchanged.
-- Automatic recommendation reload on fit, mode and skipped-option changes remains unchanged.
-- Error-state retry still calls the same recommendation loader directly.
-- No execution-engine policy, provider contract, persistence model or durable execution behaviour changed.
-- `test/next-action-experience.test.mjs` protects the new disclosure contract.
-- Canonical Application validation run 398 passed on implementation head `27b4a00291594269b248c498efa5e29e18b84025`.
-- Review submissions and inline review threads were empty at the completion audit before this STATUS-only commit.
+- `src/components/today/TodayView.jsx` introduces `showUnscheduledTasks` with a default collapsed state.
+- The unscheduled-task count remains visible without interaction.
+- The review control exposes `aria-expanded` and `aria-controls` for the secondary detail region.
+- Once expanded, the existing bounded first-three preview and show-more/show-less behaviour remain available.
+- Timeline reload/refilter collapses both the primary unscheduled disclosure and the nested show-all state.
+- `test/next-action-experience.test.mjs` protects the progressive-disclosure contract.
+- No execution-engine policy, provider contract, persistence model, scheduling policy or durable execution behaviour changed.
 
 ## Backend / provider work — intentionally deferred
 
@@ -109,13 +107,15 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the final STATUS-updated PR #193 head;
+1. run canonical Application validation on the exact PR #194 head;
 2. repair any in-scope failure on this PR;
-3. re-audit review submissions and inline review threads;
-4. apply `lifecycle:implementation-complete` only after the final exact-head validation and audit are clean;
-5. allow repository automation to own Ready -> Mergeable -> Merged;
-6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice;
-7. continue the highest-value evidence-backed client-side cognitive-load reduction work.
+3. update this durable handoff with exact validation evidence;
+4. revalidate the final STATUS-updated exact head because the documentation commit changes the candidate SHA;
+5. re-audit review submissions and inline review threads;
+6. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
+7. allow repository automation to own Ready -> Mergeable -> Merged;
+8. inspect fresh `main` and open PRs before selecting the next Stage 3 slice;
+9. continue the highest-value evidence-backed independent client-side cognitive-load reduction work.
 
 ## Stage 3 exit conditions
 
