@@ -32,6 +32,7 @@ const TodayView = () => {
   const [operationError, setOperationError] = useState(null)
   const [pendingTaskId, setPendingTaskId] = useState(null)
   const [showGamification, setShowGamification] = useState(false)
+  const [showUnscheduledTasks, setShowUnscheduledTasks] = useState(false)
   const [showAllUnscheduled, setShowAllUnscheduled] = useState(false)
 
   const loadTimeline = useCallback(async () => {
@@ -49,6 +50,7 @@ const TodayView = () => {
             }
             return true
           })
+      setShowUnscheduledTasks(false)
       setShowAllUnscheduled(false)
       setTimeline({
         blocks: filteredBlocks,
@@ -171,25 +173,41 @@ const TodayView = () => {
 
       {unscheduledTaskCount > 0 && (
         <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-amber-50 border border-amber-200 rounded-lg p-6" aria-labelledby="unscheduled-tasks-title">
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-            <h2 id="unscheduled-tasks-title" className="text-lg font-medium text-amber-900">Unscheduled Tasks</h2>
-            <span className="text-sm font-medium text-amber-800">{unscheduledTaskCount} total</span>
-          </div>
-          <ul id="today-unscheduled-task-list" className="space-y-2">
-            {visibleUnscheduledTasks.map((task) => <li key={task.id} className="text-amber-800">• {task.title}</li>)}
-          </ul>
-          {hasAdditionalUnscheduledTasks && (
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 id="unscheduled-tasks-title" className="text-lg font-medium text-amber-900">Unscheduled Tasks</h2>
+              <p className="mt-1 text-sm text-amber-800">{unscheduledTaskCount} {unscheduledTaskCount === 1 ? 'task is' : 'tasks are'} waiting outside today’s schedule.</p>
+            </div>
             <button
               type="button"
-              onClick={() => setShowAllUnscheduled((current) => !current)}
-              aria-expanded={showAllUnscheduled}
-              aria-controls="today-unscheduled-task-list"
-              className="mt-4 rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100"
+              onClick={() => setShowUnscheduledTasks((current) => !current)}
+              aria-expanded={showUnscheduledTasks}
+              aria-controls="today-unscheduled-task-details"
+              className="rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100"
             >
-              {showAllUnscheduled ? 'Show less' : `Show ${hiddenUnscheduledCount} more`}
+              {showUnscheduledTasks ? 'Hide unscheduled tasks' : 'Review unscheduled tasks'}
             </button>
+          </div>
+
+          {showUnscheduledTasks && (
+            <div id="today-unscheduled-task-details" className="mt-4 border-t border-amber-200 pt-4">
+              <ul id="today-unscheduled-task-list" className="space-y-2">
+                {visibleUnscheduledTasks.map((task) => <li key={task.id} className="text-amber-800">• {task.title}</li>)}
+              </ul>
+              {hasAdditionalUnscheduledTasks && (
+                <button
+                  type="button"
+                  onClick={() => setShowAllUnscheduled((current) => !current)}
+                  aria-expanded={showAllUnscheduled}
+                  aria-controls="today-unscheduled-task-list"
+                  className="mt-4 rounded-lg border border-amber-300 bg-white px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100"
+                >
+                  {showAllUnscheduled ? 'Show less' : `Show ${hiddenUnscheduledCount} more`}
+                </button>
+              )}
+              <p className="text-sm text-amber-700 mt-4">These tasks couldn't fit in today's schedule. Consider moving some to tomorrow or adjusting their duration.</p>
+            </div>
           )}
-          <p className="text-sm text-amber-700 mt-4">These tasks couldn't fit in today's schedule. Consider moving some to tomorrow or adjusting their duration.</p>
         </motion.section>
       )}
 
