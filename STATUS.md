@@ -4,11 +4,11 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: READY
+execution_state: VALIDATING
 current_work:
   objective: Complete the Template Library pending-apply interaction-integrity slice, then inspect fresh main for the next independent Stage 3 task.
   issue: null
-  pr: null
+  pr: 188
   branch: fix/template-apply-pending-integrity
 next_actions:
   - Validate the template apply pending-integrity changes on the exact current head.
@@ -28,11 +28,11 @@ validation:
   typecheck: NOT_RUN
   tests: NOT_RUN
   build: NOT_RUN
-  ci: NOT_RUN
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #187 exact head 6e604468436b1efb7f6c2b61c001fa937007bc68 passed Application validation run 378 and merged automatically to main at 0361151c58c3733a9412dd7d0507f2ae69c32155. The current branch guards Template Library, Preview, Edit and card interactions while asynchronous template application is unresolved; exact-head validation is pending.
+validation_basis: PR #187 exact head 6e604468436b1efb7f6c2b61c001fa937007bc68 passed Application validation run 378 and merged automatically to main at 0361151c58c3733a9412dd7d0507f2ae69c32155. PR #188 guards Template Library, Preview, Edit and card interactions while asynchronous template application is unresolved. Initial validation failed only because this handoff omitted the required autonomous continuation entry-answer section; that governance defect is repaired here and exact-head validation must rerun.
 last_verified_commit: 6e604468436b1efb7f6c2b61c001fa937007bc68
-last_updated: 2026-09-01T15:45:00+10:00
+last_updated: 2026-09-01T15:10:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -53,8 +53,8 @@ This file is intentionally post-merge safe. Once this slice merges, inspect fres
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — Template apply pending integrity |
-| Gate state | ACTIVE — implementation complete candidate; exact-head validation required |
-| Execution state | READY |
+| Gate state | VALIDATING — implementation complete candidate; exact-head validation required |
+| Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -63,11 +63,23 @@ This file is intentionally post-merge safe. Once this slice merges, inspect fres
 | State | Current value |
 | --- | --- |
 | Post-merge baseline | PR #187 merged automatically at `0361151c58c3733a9412dd7d0507f2ae69c32155` |
-| Active outcome | Template Library pending-apply interaction integrity |
+| Active outcome | PR #188 — Template Library pending-apply interaction integrity |
 | Implemented change | One synchronous pending-apply guard; Library/Preview/Edit/Card controls cannot dismiss or mutate application state while unresolved; explicit busy/progress semantics added |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Next action | Run exact-head canonical validation, audit reviews/threads, then complete the repository lifecycle if clean |
+
+## Autonomous continuation entry answers
+
+| Question | Durable answer |
+| --- | --- |
+| Where am I? | Stage 3 — execution and next-action experience, validating PR #188. |
+| What is already happening? | PR #188 hardens Template Library application so unresolved async apply operations cannot race dismissal, filters, view changes, preview/edit actions or repeated application. |
+| What has been validated? | PR #187 exact head `6e604468436b1efb7f6c2b61c001fa937007bc68` passed Application validation run 378 and merged at `0361151c58c3733a9412dd7d0507f2ae69c32155`. PR #188 initial validation reached governance and failed because this required handoff section was missing; fresh exact-head validation is now required. |
+| What changed? | Template Library now coordinates one pending apply state across the Library, Template Card, Preview and Edit surfaces, blocks unsafe state mutation/dismissal while unresolved, and exposes busy/progress feedback. |
+| What is next? | Re-run canonical validation on the exact PR #188 head, repair any in-scope finding, audit reviews/threads, then complete lifecycle if clean. |
+| Can I proceed autonomously? | Yes. No owner decision is currently required. |
+| Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Evidence for this slice
 
