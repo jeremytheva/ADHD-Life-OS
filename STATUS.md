@@ -11,7 +11,7 @@ current_work:
   pr: 188
   branch: fix/template-apply-pending-integrity
 next_actions:
-  - Validate the template apply pending-integrity changes on the exact current head.
+  - Revalidate the final STATUS-updated exact head.
   - Repair any in-scope validation finding on the same PR.
   - Complete lifecycle only after exact-head validation and review/thread audit are clean.
   - After merge, inspect fresh main and continue remaining frontend interaction-integrity work; otherwise move to client-side cognitive-load reduction.
@@ -23,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #187 exact head 6e604468436b1efb7f6c2b61c001fa937007bc68 passed Application validation run 378 and merged automatically to main at 0361151c58c3733a9412dd7d0507f2ae69c32155. PR #188 guards Template Library, Preview, Edit and card interactions while asynchronous template application is unresolved. Initial validation failed only because this handoff omitted the required autonomous continuation entry-answer section; that governance defect is repaired here and exact-head validation must rerun.
-last_verified_commit: 6e604468436b1efb7f6c2b61c001fa937007bc68
-last_updated: 2026-09-01T15:10:00+10:00
+validation_basis: PR #188 head cb831ed8134c1fde161d07fbea09cb6ae9a86cd5 passed canonical Application validation run 384 with no submitted reviews or inline review threads. This durable handoff update creates the final candidate head, so exact-head canonical validation must rerun before lifecycle completion.
+last_verified_commit: cb831ed8134c1fde161d07fbea09cb6ae9a86cd5
+last_updated: 2026-09-01T16:10:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -53,7 +53,7 @@ This file is intentionally post-merge safe. Once this slice merges, inspect fres
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — Template apply pending integrity |
-| Gate state | VALIDATING — implementation complete candidate; exact-head validation required |
+| Gate state | VALIDATING — implementation and durable handoff complete; final exact-head validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -67,28 +67,30 @@ This file is intentionally post-merge safe. Once this slice merges, inspect fres
 | Implemented change | One synchronous pending-apply guard; Library/Preview/Edit/Card controls cannot dismiss or mutate application state while unresolved; explicit busy/progress semantics added |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Run exact-head canonical validation, audit reviews/threads, then complete the repository lifecycle if clean |
+| Next action | Revalidate the STATUS-updated exact head, then complete repository lifecycle if review/thread state remains clean |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, validating PR #188. |
+| Where am I? | Stage 3 — execution and next-action experience, final-validating PR #188. |
 | What is already happening? | PR #188 hardens Template Library application so unresolved async apply operations cannot race dismissal, filters, view changes, preview/edit actions or repeated application. |
-| What has been validated? | PR #187 exact head `6e604468436b1efb7f6c2b61c001fa937007bc68` passed Application validation run 378 and merged at `0361151c58c3733a9412dd7d0507f2ae69c32155`. PR #188 initial validation reached governance and failed because this required handoff section was missing; fresh exact-head validation is now required. |
+| What has been validated? | PR #188 head `cb831ed8134c1fde161d07fbea09cb6ae9a86cd5` passed Application validation run 384. Review submissions and inline review threads were both empty. This STATUS update creates a new final candidate head, which must be validated exactly before completion. |
 | What changed? | Template Library now coordinates one pending apply state across the Library, Template Card, Preview and Edit surfaces, blocks unsafe state mutation/dismissal while unresolved, and exposes busy/progress feedback. |
-| What is next? | Re-run canonical validation on the exact PR #188 head, repair any in-scope finding, audit reviews/threads, then complete lifecycle if clean. |
+| What is next? | Re-run canonical validation on the final exact PR #188 head, then apply implementation-complete only if validation and review/thread state remain clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Evidence for this slice
 
-- `TemplateLibrary` now uses a ref-backed duplicate-apply guard plus visible state.
+- `TemplateLibrary` uses a ref-backed duplicate-apply guard plus visible state.
 - Library Escape/close, search, filters and view controls are disabled while applying.
 - Template cards cannot preview or initiate another application while the operation is unresolved.
 - Template Preview blocks Escape/backdrop/close/edit/apply during application and exposes busy/progress semantics.
 - Template Edit freezes form mutations and dismissal during application, with form/action busy state and polite progress feedback.
 - Focused deterministic coverage is in `test/template-apply-pending-integrity.test.mjs`.
+- Application validation run 384 passed on head `cb831ed8134c1fde161d07fbea09cb6ae9a86cd5`; final STATUS-only handoff commit requires one exact-head rerun.
+- Review submissions: none; inline review threads: none at the pre-handoff audit.
 
 ## Backend / provider work — intentionally deferred
 
@@ -96,9 +98,9 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. validate the exact current branch head with `npm run platform:validate` through canonical Application validation;
+1. validate the final current branch head with `npm run platform:validate` through canonical Application validation;
 2. repair any in-scope failure on this PR;
-3. audit review submissions and inline threads;
+3. re-audit review submissions and inline threads;
 4. apply `lifecycle:implementation-complete` only after all implementation-owned criteria are satisfied;
 5. allow repository automation to own Ready → Mergeable → Merged;
 6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice;
