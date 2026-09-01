@@ -1,0 +1,38 @@
+name: Repair browserslist lock
+
+on:
+  push:
+    branches:
+      - feat/today-unscheduled-progressive-disclosure
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v7
+        with:
+          ref: feat/today-unscheduled-progressive-disclosure
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Refresh patched dependency
+        run: npm install --save-dev browserslist@4.28.8
+      - name: Verify audit gate
+        run: npm audit --audit-level=moderate
+      - name: Commit lock repair
+        run: |
+          if git diff --quiet -- package.json package-lock.json; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          git commit -m "chore: update browserslist security patch"
+          git push origin HEAD:feat/today-unscheduled-progressive-disclosure
