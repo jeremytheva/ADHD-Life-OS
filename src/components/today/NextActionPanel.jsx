@@ -179,10 +179,13 @@ const NextActionPanel = ({ currentMode }) => {
                 Give me another option
               </button>
             )}
-            <button type="button" onClick={loadRecommendations} className="rounded-lg px-3 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50">
+          </div>
+          <details className="mt-3 text-sm text-slate-600">
+            <summary className="w-fit cursor-pointer font-medium text-emerald-700 hover:underline">More options</summary>
+            <button type="button" onClick={loadRecommendations} className="mt-2 rounded-lg px-3 py-2 font-medium text-emerald-700 hover:bg-emerald-50">
               Recheck now
             </button>
-          </div>
+          </details>
         </div>
       )}
 
