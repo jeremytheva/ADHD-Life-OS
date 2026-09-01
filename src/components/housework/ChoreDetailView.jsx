@@ -125,7 +125,20 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
           {task.completion_count > 0 && <div className="mt-6 p-4 bg-purple-50 rounded-lg border border-purple-200"><div className="flex items-center gap-2 mb-2"><SafeIcon icon={FiTrendingUp} className="w-4 h-4 text-purple-600" /><span className="text-sm font-medium text-purple-900">Your Progress</span></div><p className="text-sm text-purple-800">You've completed this {task.completion_count} time{task.completion_count !== 1 ? 's' : ''}! {task.last_completed && <> Last done {format(parseISO(task.last_completed), 'MMM d')}.</>}</p></div>}
         </div>
 
-        <div className="p-6 border-t border-slate-200 bg-slate-50"><button type="button" onClick={handleComplete} disabled={closeLocked} className="w-full px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">{completing ? <><div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>Confirming completion...</> : <><SafeIcon icon={FiCheck} className="w-5 h-5" />Mark as Complete</>}</button></div>
+        <div className="p-6 border-t border-slate-200 bg-slate-50">
+          <button
+            type="button"
+            onClick={handleComplete}
+            disabled={closeLocked}
+            aria-busy={completing ? 'true' : 'false'}
+            className="w-full px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {completing ? <><div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" aria-hidden="true"></div><span>Confirming completion...</span></> : <><SafeIcon icon={FiCheck} className="w-5 h-5" />Mark as Complete</>}
+          </button>
+          <p className="sr-only" aria-live="polite" aria-atomic="true">
+            {completing ? 'Confirming chore completion...' : ''}
+          </p>
+        </div>
 
         <AnimatePresence>{showCelebration && <motion.div role="status" aria-live="polite" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-95 z-10"><div className="text-center"><motion.div initial={{ scale: 0 }} animate={{ scale: [0, 1.2, 1] }} transition={{ duration: 0.5 }} className="text-8xl mb-4">✨</motion.div><h3 className="text-3xl font-bold text-purple-600 mb-2">Great job!</h3><p className="text-slate-600">Completion confirmed.</p></div></motion.div>}</AnimatePresence>
       </motion.div>
