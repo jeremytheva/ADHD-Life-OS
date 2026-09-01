@@ -12,13 +12,15 @@ const DaySetup = ({ preferences, onUpdate }) => {
   const [saving, setSaving] = useState(false)
 
   const handleChange = (field, value) => {
+    if (saving) return
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (saving) return
     setSaving(true)
-    
+
     try {
       // Empty optional time inputs are represented as null in the canonical
       // preferences schema instead of the browser's empty-string value.
@@ -42,68 +44,70 @@ const DaySetup = ({ preferences, onUpdate }) => {
       </p>
 
       <form onSubmit={handleSubmit} className="space-y-4" aria-busy={saving ? 'true' : 'false'}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="day-setup-wake-time" className="block text-sm font-medium text-slate-700 mb-2">
-              Wake Time
-            </label>
-            <input
-              id="day-setup-wake-time"
-              type="time"
-              value={formData.wake_time}
-              onChange={(e) => handleChange('wake_time', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="day-setup-sleep-time" className="block text-sm font-medium text-slate-700 mb-2">
-              Sleep Time
-            </label>
-            <input
-              id="day-setup-sleep-time"
-              type="time"
-              value={formData.sleep_time}
-              onChange={(e) => handleChange('sleep_time', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-        </div>
-
-        <div className="border-t border-slate-200 pt-4">
-          <h3 className="text-sm font-medium text-slate-700 mb-3">
-            Work Hours (Optional)
-          </h3>
+        <fieldset disabled={saving} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="day-setup-work-start-time" className="block text-sm font-medium text-slate-700 mb-2">
-                Work Start Time
+              <label htmlFor="day-setup-wake-time" className="block text-sm font-medium text-slate-700 mb-2">
+                Wake Time
               </label>
               <input
-                id="day-setup-work-start-time"
+                id="day-setup-wake-time"
                 type="time"
-                value={formData.work_start_time}
-                onChange={(e) => handleChange('work_start_time', e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                value={formData.wake_time}
+                onChange={(e) => handleChange('wake_time', e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+                required
               />
             </div>
 
             <div>
-              <label htmlFor="day-setup-work-end-time" className="block text-sm font-medium text-slate-700 mb-2">
-                Work End Time
+              <label htmlFor="day-setup-sleep-time" className="block text-sm font-medium text-slate-700 mb-2">
+                Sleep Time
               </label>
               <input
-                id="day-setup-work-end-time"
+                id="day-setup-sleep-time"
                 type="time"
-                value={formData.work_end_time}
-                onChange={(e) => handleChange('work_end_time', e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                value={formData.sleep_time}
+                onChange={(e) => handleChange('sleep_time', e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+                required
               />
             </div>
           </div>
-        </div>
+
+          <div className="border-t border-slate-200 pt-4">
+            <h3 className="text-sm font-medium text-slate-700 mb-3">
+              Work Hours (Optional)
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="day-setup-work-start-time" className="block text-sm font-medium text-slate-700 mb-2">
+                  Work Start Time
+                </label>
+                <input
+                  id="day-setup-work-start-time"
+                  type="time"
+                  value={formData.work_start_time}
+                  onChange={(e) => handleChange('work_start_time', e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="day-setup-work-end-time" className="block text-sm font-medium text-slate-700 mb-2">
+                  Work End Time
+                </label>
+                <input
+                  id="day-setup-work-end-time"
+                  type="time"
+                  value={formData.work_end_time}
+                  onChange={(e) => handleChange('work_end_time', e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+                />
+              </div>
+            </div>
+          </div>
+        </fieldset>
 
         <div className="pt-4">
           <button
