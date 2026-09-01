@@ -11,7 +11,7 @@ current_work:
   pr: 195
   branch: feat/tasks-load-summary-disclosure
 next_actions:
-  - Run canonical Application validation on the STATUS-updated exact PR #195 head.
+  - Run canonical Application validation on the repaired exact PR #195 head.
   - Repair any remaining in-scope validation finding on the same PR.
   - Re-audit review submissions and inline review threads on the final exact head.
   - Apply lifecycle:implementation-complete only after final exact-head validation and review/thread evidence remain clean.
@@ -25,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: REPAIRED_PENDING_REVALIDATION
+  governance: NOT_RUN
+  lint: NOT_RUN
   typecheck: NOT_RUN
   tests: NOT_RUN
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #195 head c89dde6909d2364dbedcb5ea1f708c1296424aae reached canonical Application validation run 408. Dependency audit and governance passed, then lint failed only because test/task-load-analysis-disclosure.test.mjs referenced URL without an explicit node:url import. The test harness was repaired on the same branch in commit 22030caa9241017456201dde9bee650b93499aec. This STATUS update creates a new final candidate and therefore canonical exact-head revalidation is required.
+validation_basis: PR #195 head face5f7c44eff7701b35c89a404922ccdf5bab66 reached canonical Application validation run 410. Dependency audit passed with zero vulnerabilities, but governance failed because STATUS.md used the non-canonical lint state REPAIRED_PENDING_REVALIDATION; governance permits only PASS, FAIL, NOT_RUN or NOT_APPLICABLE. The durable state contract is repaired on this branch by using canonical NOT_RUN values until exact-head validation re-establishes evidence. No application behaviour changed.
 last_verified_commit: f35be83aee31ce64dc5404c7f2b094e7f00efcf6
-last_updated: 2026-09-02T08:13:00+10:00
+last_updated: 2026-09-02T09:13:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -52,14 +52,14 @@ The Tasks page previously expanded Task Load Analysis into multiple metric cards
 
 The change is presentation-only. Existing task-load calculations, priority/recommendation policy, filters, sorting, task mutations, persistence and provider behaviour are unchanged. Deterministic source-contract coverage protects the compact-summary and detailed-disclosure contract.
 
-Canonical Application validation run 408 reached the repository lint gate after dependency audit and governance passed, then failed because the new deterministic test used `URL` without explicitly importing it for ESLint. That test-only harness defect was repaired on the same PR with an explicit `node:url` import. No application behaviour changed in the repair.
+Canonical Application validation run 408 reached lint after dependency audit and governance passed, then exposed a test-harness defect because the new deterministic test used `URL` without explicitly importing it for ESLint. That test-only defect was repaired on the same PR. Run 410 then exposed a durable-state governance defect rather than an application defect: `STATUS.md` used `REPAIRED_PENDING_REVALIDATION` for `validation.lint`, but the repository governance contract accepts only `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE`. This checkpoint repairs the state vocabulary and resets unverified gates to canonical `NOT_RUN` until exact-head validation runs again.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — Tasks load-summary progressive disclosure |
-| Gate state | VALIDATING — run 408 lint finding repaired; final STATUS-updated exact head requires canonical validation |
+| Gate state | VALIDATING — run 410 governance finding repaired; repaired exact head requires canonical validation |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -73,13 +73,13 @@ Canonical Application validation run 408 reached the repository lint gate after 
 | Implemented change | Total task count and urgent attention remain visible; detailed workload metrics move behind native progressive disclosure |
 | Preserved behaviour | Analysis calculations, task priority/recommendation policy, filters, sort, mutations, persistence and provider contracts |
 | Deterministic coverage | `test/task-load-analysis-disclosure.test.mjs` protects summary visibility and detailed-metric availability |
-| Validation finding | Run 408: deterministic test lint failure (`URL` undefined) after audit/governance passed |
-| Validation repair | Added explicit `URL` import from `node:url` in the test harness; application code unchanged |
-| Validation | Final STATUS-updated exact-head canonical validation pending |
+| Validation findings | Run 408: test-only lint failure (`URL` undefined). Run 410: STATUS governance vocabulary failure. |
+| Validation repairs | Added explicit `URL` import from `node:url`; restored STATUS validation fields to the repository's canonical state vocabulary. Application behaviour unchanged by either repair. |
+| Validation | Repaired exact-head canonical validation pending |
 | Review/thread audit | Pending final exact-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Revalidate the final exact PR #195 head and repair any remaining in-scope finding on the same PR |
+| Next action | Revalidate the repaired exact PR #195 head and repair any remaining in-scope finding on the same PR |
 
 ## Autonomous continuation entry answers
 
@@ -87,9 +87,9 @@ Canonical Application validation run 408 reached the repository lint gate after 
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience, validating PR #195. |
 | What is already happening? | PR #195 reduces Tasks-page metric competition without removing workload information. |
-| What has been validated? | Run 408 passed dependency audit and governance before exposing a test-only lint finding; that finding is repaired and exact-head revalidation is required. |
-| What changed? | Task Load now presents a compact default summary with detailed metrics available on demand; the new regression test now explicitly imports the Node URL class. |
-| What is next? | Run final exact-head canonical validation, repair any remaining in-scope finding, audit reviews/threads, then complete lifecycle if clean. |
+| What has been validated? | Run 408 passed dependency audit/governance before the repaired test lint finding. Run 410 passed dependency audit and then exposed the repaired STATUS governance-state defect. |
+| What changed? | Task Load now presents a compact default summary with detailed metrics available on demand; the regression harness and durable validation-state vocabulary have both been repaired. |
+| What is next? | Run exact-head canonical validation, repair any remaining in-scope finding, audit reviews/threads, then complete lifecycle if clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -101,7 +101,8 @@ Canonical Application validation run 408 reached the repository lint gate after 
 - Detailed total/critical/high/overdue/due-today/estimated-time information remains available behind native progressive disclosure.
 - No task loading, filtering, sorting, recommendation, mutation, persistence or provider code changed.
 - `test/task-load-analysis-disclosure.test.mjs` protects the presentation contract and explicitly imports `URL` from `node:url` for lint-clean deterministic execution.
-- Application validation run 408 passed audit/governance and then failed only on the repaired test lint finding.
+- Application validation run 408 passed audit/governance and then exposed the repaired test-only lint finding.
+- Application validation run 410 passed dependency audit with zero vulnerabilities and then exposed the repaired STATUS governance-state vocabulary finding.
 
 ## Backend / provider work — intentionally deferred
 
@@ -109,7 +110,7 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the final STATUS-updated PR #195 head;
+1. run canonical Application validation on the repaired exact PR #195 head;
 2. repair any remaining in-scope failure on this PR;
 3. re-audit review submissions and inline review threads;
 4. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
