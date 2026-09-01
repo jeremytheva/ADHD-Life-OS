@@ -15,6 +15,7 @@ const pathLabel = (path) => ({
 const NextActionPanel = ({ currentMode }) => {
   const [energy, setEnergy] = useState('medium')
   const [availableTime, setAvailableTime] = useState(15)
+  const [showFitControls, setShowFitControls] = useState(false)
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
@@ -81,32 +82,52 @@ const NextActionPanel = ({ currentMode }) => {
       <div className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Execution support</p>
         <h2 id="next-action-title" className="text-xl font-semibold text-slate-900">What should I do now?</h2>
-        <p className="mt-1 text-sm text-slate-600">Set what you have available. Life OS will narrow the list before asking you to choose.</p>
+        <p className="mt-1 text-sm text-slate-600">Life OS starts with a realistic default and narrows the list before asking you to choose.</p>
       </div>
 
-      <div className="mb-4 grid gap-3 sm:grid-cols-2">
-        <label className="text-sm font-medium text-slate-700">
-          Energy now
-          <select
-            aria-label="Energy now"
-            value={energy}
-            onChange={(event) => setEnergy(event.target.value)}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
+      <div className="mb-4 rounded-lg border border-emerald-200 bg-white p-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Current fit</p>
+            <p className="text-sm text-slate-700">{availableTime} minutes · {energy} energy</p>
+          </div>
+          <button
+            type="button"
+            aria-expanded={showFitControls}
+            aria-controls="next-action-fit-controls"
+            onClick={() => setShowFitControls((current) => !current)}
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
-            {ENERGY_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}
-          </select>
-        </label>
-        <label className="text-sm font-medium text-slate-700">
-          Time available
-          <select
-            aria-label="Time available"
-            value={availableTime}
-            onChange={(event) => setAvailableTime(Number(event.target.value))}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
-          >
-            {TIME_OPTIONS.map((minutes) => <option key={minutes} value={minutes}>{minutes} minutes</option>)}
-          </select>
-        </label>
+            {showFitControls ? 'Hide fit options' : 'Adjust fit'}
+          </button>
+        </div>
+
+        {showFitControls && (
+          <div id="next-action-fit-controls" className="mt-3 grid gap-3 border-t border-slate-200 pt-3 sm:grid-cols-2">
+            <label className="text-sm font-medium text-slate-700">
+              Energy now
+              <select
+                aria-label="Energy now"
+                value={energy}
+                onChange={(event) => setEnergy(event.target.value)}
+                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
+              >
+                {ENERGY_OPTIONS.map((option) => <option key={option} value={option}>{option}</option>)}
+              </select>
+            </label>
+            <label className="text-sm font-medium text-slate-700">
+              Time available
+              <select
+                aria-label="Time available"
+                value={availableTime}
+                onChange={(event) => setAvailableTime(Number(event.target.value))}
+                className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2"
+              >
+                {TIME_OPTIONS.map((minutes) => <option key={minutes} value={minutes}>{minutes} minutes</option>)}
+              </select>
+            </label>
+          </div>
+        )}
       </div>
 
       {feedbackMessage && (
