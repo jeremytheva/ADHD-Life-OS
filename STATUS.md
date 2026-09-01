@@ -11,7 +11,7 @@ current_work:
   pr: 189
   branch: fix/day-setup-pending-integrity
 next_actions:
-  - Validate the exact current PR head through canonical Application validation.
+  - Revalidate the final STATUS-updated exact head through canonical Application validation.
   - Repair any in-scope validation finding on the same PR.
   - Complete lifecycle only after exact-head validation and review/thread audit are clean.
   - After merge, inspect fresh main and continue remaining frontend interaction-integrity work; otherwise move to client-side cognitive-load reduction.
@@ -23,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #188 merged at f835b3abc35e8732cde497e1459199eea3c5e745. Fresh-main inspection found no competing PR and identified Day Setup as a remaining pending-write interaction-integrity gap. Application validation run 386 failed immediately on the first candidate because STATUS.md used non-canonical PENDING values for repository validation fields; this handoff now uses the governance-supported NOT_RUN state and requires exact-head revalidation.
-last_verified_commit: f835b3abc35e8732cde497e1459199eea3c5e745
-last_updated: 2026-09-01T17:17:00+10:00
+validation_basis: PR #189 head 80e6a0460f87e86ca337873e0bc298ac468dd0d9 passed canonical Application validation run 387 with no submitted reviews or inline review threads. This durable handoff update creates the final candidate head, so exact-head canonical validation must rerun before lifecycle completion.
+last_verified_commit: 80e6a0460f87e86ca337873e0bc298ac468dd0d9
+last_updated: 2026-09-01T18:11:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -53,7 +53,7 @@ This file is intentionally post-merge safe. Once this slice merges, inspect fres
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — Day Setup pending-save integrity |
-| Gate state | VALIDATING — implementation and durable handoff prepared; exact-head validation required |
+| Gate state | VALIDATING — implementation and durable handoff complete; final exact-head validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -67,17 +67,17 @@ This file is intentionally post-merge safe. Once this slice merges, inspect fres
 | Implemented change | Day Setup now rejects repeated submit while unresolved and freezes schedule-field mutation under a disabled fieldset while preserving existing busy/progress feedback |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Run canonical exact-head validation, repair any in-scope finding, then complete repository lifecycle if review/thread state is clean |
+| Next action | Revalidate the STATUS-updated exact head, then complete repository lifecycle if review/thread state remains clean |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, validating PR #189. |
+| Where am I? | Stage 3 — execution and next-action experience, final-validating PR #189. |
 | What is already happening? | PR #189 hardens Day Setup so an unresolved preference save owns one immutable form submission and cannot be duplicated through another submit event. |
-| What has been validated? | The previous baseline is merged PR #188. Application validation run 386 exposed and rejected an invalid STATUS validation-state value before application checks; the corrected exact head must rerun. |
+| What has been validated? | PR #189 head `80e6a0460f87e86ca337873e0bc298ac468dd0d9` passed Application validation run 387. Review submissions and inline review threads were both empty. This STATUS update creates a new final candidate head, which must be validated exactly before completion. |
 | What changed? | Day Setup now has an implementation-level duplicate-submit guard, ignores field mutation while saving, disables the schedule field group, and retains the existing form/action busy and live-status semantics. |
-| What is next? | Run canonical Application validation on the corrected exact PR head and audit review/thread state. |
+| What is next? | Re-run canonical validation on the final exact PR head, then apply implementation-complete only if validation and review/thread state remain clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -89,6 +89,8 @@ This file is intentionally post-merge safe. Once this slice merges, inspect fres
 - Focused deterministic coverage extends `test/day-setup-saving-status-semantics.test.mjs` to protect duplicate-submit and pending-field-state integrity.
 - Provider contracts, preference schema, normalization and parent persistence behaviour are unchanged.
 - Application validation run 386 failed at governance because this branch initially used unsupported `PENDING` values for governance/lint/typecheck/tests/build; corrected to canonical `NOT_RUN` before revalidation.
+- Application validation run 387 passed on head `80e6a0460f87e86ca337873e0bc298ac468dd0d9`; this final STATUS-only handoff commit requires one exact-head rerun.
+- Review submissions: none; inline review threads: none at the pre-handoff audit.
 
 ## Backend / provider work — intentionally deferred
 
@@ -98,7 +100,7 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 1. validate the final current branch head with `npm run platform:validate` through canonical Application validation;
 2. repair any in-scope failure on this PR;
-3. audit review submissions and inline threads;
+3. re-audit review submissions and inline threads;
 4. apply `lifecycle:implementation-complete` only after all implementation-owned criteria are satisfied;
 5. allow repository automation to own Ready → Mergeable → Merged;
 6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice;
