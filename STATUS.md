@@ -11,10 +11,10 @@ current_work:
   pr: 192
   branch: feat/next-action-progressive-disclosure
 next_actions:
-  - Validate the current exact PR head through canonical Application validation.
+  - Revalidate this STATUS-updated exact PR head through canonical Application validation.
   - Repair any in-scope validation finding on the same PR.
-  - Audit review submissions and inline review threads after validation.
-  - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence are clean.
+  - Re-audit review submissions and inline review threads on the final exact head.
+  - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence remain clean.
   - Allow repository automation to own Ready -> Mergeable -> Merged.
   - After merge, inspect fresh main and continue the next evidence-backed client-side cognitive-load reduction task.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
@@ -32,14 +32,14 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #192 is directly based on the PR #191 merge. The focused implementation and deterministic regression coverage are complete; canonical exact-head validation is pending.
-last_verified_commit: 4170a3b8a50be1f2999d8545d19644ed0b6ef630
-last_updated: 2026-09-01T23:16:00+10:00
+validation_basis: PR #192 implementation head 2b0ba44a0e8b6246d6a7999b23a9fab4790bf8e0 passed canonical Application validation run 395 with no submitted reviews or inline review threads. This STATUS-only handoff commit invalidates exact-head evidence and requires one final canonical validation before lifecycle completion.
+last_verified_commit: 2b0ba44a0e8b6246d6a7999b23a9fab4790bf8e0
+last_updated: 2026-09-02T00:14:00+10:00
 ---
 
 # ADHD Life OS — Current Status
 
-**Snapshot date:** 1 September 2026  
+**Snapshot date:** 2 September 2026  
 **Default branch:** `main`  
 **Overall status:** Active development / backend provider work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
@@ -50,6 +50,8 @@ Complete the focused Today next-action cognitive-load slice in PR #192. PR #191 
 
 The next-action panel already had useful medium-energy / 15-minute defaults, but exposed both fit selectors before the user could act on the recommendation. PR #192 keeps those defaults and the full controls while replacing the always-visible selectors with a compact current-fit summary and an accessible `Adjust fit` disclosure. This reduces the initial decision surface without restricting capability or changing recommendation policy.
 
+Implementation head `2b0ba44a0e8b6246d6a7999b23a9fab4790bf8e0` passed canonical Application validation run 395. The completion audit found no submitted reviews and no inline review threads. This STATUS-only handoff deliberately moves the PR head, so the final exact head must pass canonical validation before implementation-complete can be signalled.
+
 This file is post-merge re-entry safe. Once PR #192 merges, inspect fresh `main` and open PRs before selecting the next evidence-backed client-side cognitive-load reduction slice. Provider-dependent execution persistence remains deferred until real target-instance NoCodeBackend evidence exists.
 
 ## AI execution gate
@@ -57,7 +59,7 @@ This file is post-merge re-entry safe. Once PR #192 merges, inspect fresh `main`
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — Today next-action progressive disclosure |
-| Gate state | VALIDATING — focused implementation and durable handoff complete; exact-head validation required |
+| Gate state | VALIDATING — implementation head passed; final STATUS-updated exact head requires canonical validation |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -70,19 +72,21 @@ This file is post-merge re-entry safe. Once PR #192 merges, inspect fresh `main`
 | Active outcome | PR #192 — simplify next-action fit choices |
 | Implemented change | Today shows the active time/energy fit compactly and progressively discloses the existing selectors behind an accessible toggle |
 | Preserved behaviour | Existing defaults, execution-engine inputs, automatic refresh, bounded alternatives, transient Not now feedback and retry semantics |
+| Validated implementation head | `2b0ba44a0e8b6246d6a7999b23a9fab4790bf8e0` — Application validation run 395 passed |
+| Review/thread audit | No submitted reviews; no inline review threads |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Run canonical exact-head validation, repair any in-scope finding, then complete repository lifecycle if review/thread state is clean |
+| Next action | Validate the final STATUS-updated exact head, re-audit review/thread state, then complete repository lifecycle if clean |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, validating PR #192. |
+| Where am I? | Stage 3 — execution and next-action experience, completing PR #192 lifecycle. |
 | What is already happening? | PR #192 reduces initial choice load in the Today recommendation panel through progressive disclosure. |
-| What has been validated? | PR #191 merged after exact-head validation. PR #192 exact-head validation is pending. |
+| What has been validated? | PR #191 merged after exact-head validation. PR #192 implementation head `2b0ba44a0e8b6246d6a7999b23a9fab4790bf8e0` passed Application validation run 395; the final STATUS-updated head still requires exact-head validation. |
 | What changed? | The current fit remains visible, while energy/time selectors are hidden by default and available through an accessible `Adjust fit` toggle. |
-| What is next? | Run canonical Application validation on the exact PR #192 head, repair any in-scope failure, audit reviews/threads and advance the guarded lifecycle when clean. |
+| What is next? | Validate the final exact head, re-audit reviews/threads, apply implementation-complete only if clean, allow repository automation to merge, then inspect fresh main before selecting the next Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -93,8 +97,10 @@ This file is post-merge re-entry safe. Once PR #192 merges, inspect fresh `main`
 - A compact `Current fit` summary exposes the active values without forcing two initial controls into the primary decision surface.
 - `Adjust fit` uses `aria-expanded` and `aria-controls`; the existing labelled selects remain available when expanded.
 - Existing bounded alternative, transient Not now, skipped-option restore and retry behaviour are unchanged.
-- `test/next-action-experience.test.mjs` now protects the default and progressive-disclosure contract.
+- `test/next-action-experience.test.mjs` protects the default and progressive-disclosure contract.
 - No provider contract, persistence model or execution-engine policy changed.
+- Canonical Application validation run 395 passed on implementation head `2b0ba44a0e8b6246d6a7999b23a9fab4790bf8e0`.
+- Review submissions and inline review threads were empty at the completion audit before this STATUS-only commit.
 
 ## Backend / provider work — intentionally deferred
 
@@ -102,10 +108,10 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. validate the current exact PR #192 head with `npm run platform:validate` through canonical Application validation;
+1. run canonical Application validation on the final STATUS-updated PR #192 head;
 2. repair any in-scope failure on this PR;
-3. audit review submissions and inline review threads;
-4. apply `lifecycle:implementation-complete` only after all implementation-owned criteria are satisfied;
+3. re-audit review submissions and inline review threads;
+4. apply `lifecycle:implementation-complete` only after the final exact-head validation and audit are clean;
 5. allow repository automation to own Ready -> Mergeable -> Merged;
 6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice;
 7. continue the highest-value evidence-backed client-side cognitive-load reduction work.
