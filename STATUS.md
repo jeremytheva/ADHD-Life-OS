@@ -23,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #188 merged at f835b3abc35e8732cde497e1459199eea3c5e745. Fresh-main inspection found no competing PR and identified Day Setup as a remaining pending-write interaction-integrity gap. Exact-head canonical validation is required for this new slice.
+validation_basis: PR #188 merged at f835b3abc35e8732cde497e1459199eea3c5e745. Fresh-main inspection found no competing PR and identified Day Setup as a remaining pending-write interaction-integrity gap. Application validation run 386 failed immediately on the first candidate because STATUS.md used non-canonical PENDING values for repository validation fields; this handoff now uses the governance-supported NOT_RUN state and requires exact-head revalidation.
 last_verified_commit: f835b3abc35e8732cde497e1459199eea3c5e745
-last_updated: 2026-09-01T17:12:46+10:00
+last_updated: 2026-09-01T17:17:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -75,9 +75,9 @@ This file is intentionally post-merge safe. Once this slice merges, inspect fres
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience, validating PR #189. |
 | What is already happening? | PR #189 hardens Day Setup so an unresolved preference save owns one immutable form submission and cannot be duplicated through another submit event. |
-| What has been validated? | The previous baseline is merged PR #188. PR #189 exact-head canonical validation is pending. |
+| What has been validated? | The previous baseline is merged PR #188. Application validation run 386 exposed and rejected an invalid STATUS validation-state value before application checks; the corrected exact head must rerun. |
 | What changed? | Day Setup now has an implementation-level duplicate-submit guard, ignores field mutation while saving, disables the schedule field group, and retains the existing form/action busy and live-status semantics. |
-| What is next? | Run canonical Application validation on the exact PR head and audit review/thread state. |
+| What is next? | Run canonical Application validation on the corrected exact PR head and audit review/thread state. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -88,6 +88,7 @@ This file is intentionally post-merge safe. Once this slice merges, inspect fres
 - Existing `aria-busy`, disabled save action, visible `Saving...` copy and polite atomic live announcement remain intact.
 - Focused deterministic coverage extends `test/day-setup-saving-status-semantics.test.mjs` to protect duplicate-submit and pending-field-state integrity.
 - Provider contracts, preference schema, normalization and parent persistence behaviour are unchanged.
+- Application validation run 386 failed at governance because this branch initially used unsupported `PENDING` values for governance/lint/typecheck/tests/build; corrected to canonical `NOT_RUN` before revalidation.
 
 ## Backend / provider work — intentionally deferred
 
