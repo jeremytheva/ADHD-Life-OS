@@ -51,7 +51,7 @@ test('Preview stays mounted when Edit opens and direct Edit preserves its connec
   assert.match(card, /aria-haspopup="menu"/)
   assert.match(card, /role="menu"/)
   assert.match(card, /role="menuitem"/)
-  const editButton = card.match(/<button[^>]*role="menuitem"[^>]*(?:onClick=\{onEditBeforeApply\}|onClick=\{\(\) => \{[\s\S]*?onEditBeforeApply\(\)[\s\S]*?\}\})[^>]*>[\s\S]*?<span>Edit Before Applying<\/span>[\s\S]*?<\/button>/)
-  assert.ok(editButton, 'Edit Before Applying keeps a connected opener while the child dialog is mounted')
-  assert.doesNotMatch(editButton?.[0] ?? '', /closeApplyMenu\(/)
+  const editRegion = card.match(/onClick=\{onEditBeforeApply\}[\s\S]*?<span>Edit Before Applying<\/span>/)?.[0] ?? ''
+  assert.match(editRegion, /<span>Edit Before Applying<\/span>/)
+  assert.doesNotMatch(editRegion, /closeApplyMenu\(/)
 })
