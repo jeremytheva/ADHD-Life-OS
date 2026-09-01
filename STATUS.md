@@ -6,15 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: READY
 current_work:
-  objective: Inspect fresh main after PR #187 merges, then continue the next evidence-backed frontend accessibility or cognitive-load slice.
+  objective: Complete the Template Library pending-apply interaction-integrity slice, then inspect fresh main for the next independent Stage 3 task.
   issue: null
   pr: null
-  branch: main
+  branch: fix/template-apply-pending-integrity
 next_actions:
-  - Complete PR #187 only after canonical validation passes for its exact current head and review/thread state is clean.
-  - After merge, inspect fresh main plus open PRs, visible branches and current checks.
-  - Continue the next evidence-backed frontend accessibility or interaction-integrity slice if one remains.
-  - If accessibility evidence is exhausted, move to the highest-priority client-side cognitive-load reduction work.
+  - Validate the template apply pending-integrity changes on the exact current head.
+  - Repair any in-scope validation finding on the same PR.
+  - Complete lifecycle only after exact-head validation and review/thread audit are clean.
+  - After merge, inspect fresh main and continue remaining frontend interaction-integrity work; otherwise move to client-side cognitive-load reduction.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -30,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #186 final exact head a35ff88e8a6d977ba5f1d25b67bfb0ed761cfdc3 passed canonical Application validation run 375 and merged to main at 4433d51d75e1243107f3f76fb2afa3c9beb0a09d. PR #187 now guards Quick Capture against dismissal and captured-state mutation while its multi-task save is unresolved; its exact-head canonical validation is pending.
-last_verified_commit: a35ff88e8a6d977ba5f1d25b67bfb0ed761cfdc3
-last_updated: 2026-09-01T15:15:00+10:00
+validation_basis: PR #187 exact head 6e604468436b1efb7f6c2b61c001fa937007bc68 passed Application validation run 378 and merged automatically to main at 0361151c58c3733a9412dd7d0507f2ae69c32155. The current branch guards Template Library, Preview, Edit and card interactions while asynchronous template application is unresolved; exact-head validation is pending.
+last_verified_commit: 6e604468436b1efb7f6c2b61c001fa937007bc68
+last_updated: 2026-09-01T15:45:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,69 +44,53 @@ last_updated: 2026-09-01T15:15:00+10:00
 
 ## Current objective
 
-Use this file as the **post-merge re-entry checkpoint for PR #187**. PR #187 is the sole active implementation thread while it is open: it hardens Quick Capture so an unresolved multi-task save cannot be dismissed or have its submitted captured-task set mutated, while making that pending state explicit. After PR #187 merges, inspect fresh `main`, open PRs, visible branches and current checks before selecting new work. Continue the next evidence-backed frontend accessibility/interaction-integrity slice if one remains; otherwise move to the highest-priority client-side cognitive-load reduction work. Do not reopen provider-dependent execution persistence without real target-instance NoCodeBackend evidence.
+Complete the focused Template Library pending-apply interaction-integrity slice. PR #187 is merged. Fresh-main inspection found no competing open PR and identified a remaining async interaction race in Template Library: direct or edited template application could remain unresolved while Library/Preview/Edit dismissal and mutation controls stayed active.
+
+This file is intentionally post-merge safe. Once this slice merges, inspect fresh `main` before choosing further work. Continue evidence-backed frontend accessibility/interaction integrity if one remains; otherwise move to the highest-priority client-side cognitive-load reduction work. Provider-dependent execution persistence remains deferred until real target-instance NoCodeBackend evidence exists.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION / PR #187 VALIDATION |
-| Gate state | Quick Capture pending-save integrity implemented with deterministic regression coverage; exact-head canonical validation still required before lifecycle completion |
+| Current gate | INTEGRATION — Template apply pending integrity |
+| Gate state | ACTIVE — implementation complete candidate; exact-head validation required |
 | Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
-| Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
+| Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
 ## Delivery checkpoint
 
 | State | Current value |
 | --- | --- |
-| Current stage | Stage 3 — execution and next-action experience |
-| Post-merge baseline | PR #186 — routine form persistence ownership and pending-save integrity, merged to `main` at `4433d51d75e1243107f3f76fb2afa3c9beb0a09d` |
-| Active outcome | PR #187 — Quick Capture pending-save interaction integrity |
-| Implemented change | Quick Capture now blocks Escape/close/cancel and captured-task mutations while a multi-task save is unresolved, exposes dialog/action busy state, and announces save progress while preserving partial-write recovery semantics |
+| Post-merge baseline | PR #187 merged automatically at `0361151c58c3733a9412dd7d0507f2ae69c32155` |
+| Active outcome | Template Library pending-apply interaction integrity |
+| Implemented change | One synchronous pending-apply guard; Library/Preview/Edit/Card controls cannot dismiss or mutate application state while unresolved; explicit busy/progress semantics added |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Validate PR #187 exact head, complete its lifecycle if clean, then inspect fresh main for the next independent Stage 3 slice |
+| Next action | Run exact-head canonical validation, audit reviews/threads, then complete the repository lifecycle if clean |
 
-## Autonomous continuation entry answers
+## Evidence for this slice
 
-| Question | Durable answer |
-| --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, with PR #187 as the sole active implementation thread until merge. |
-| What is already happening? | PR #187 guards Quick Capture against dismissal and captured-state mutation during an unresolved multi-task save. |
-| What has been validated? | PR #186 final exact head `a35ff88e8a6d977ba5f1d25b67bfb0ed761cfdc3` passed canonical Application validation run 375 and merged at `4433d51d75e1243107f3f76fb2afa3c9beb0a09d`. PR #187 exact-head validation is not yet complete. |
-| What changed? | Quick Capture disables Escape, close/cancel, text entry, add/remove and organization mutation while saving; its dialog/save action expose busy state and a polite atomic save announcement. Existing duplicate-save and partial-write recovery behaviour remain intact. |
-| What is next? | Complete PR #187 validation/lifecycle, then inspect fresh `main` and continue remaining frontend accessibility work or move to cognitive-load reduction if that evidence is exhausted. |
-| Can I proceed autonomously? | Yes. No owner decision is currently required. |
-| Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
-
-## Recent completed outcomes
-
-PRs #124–#167 established the broad Stage 3 accessibility/interaction baseline. PRs #168–#185 progressively covered loading, transient feedback, saving/completion semantics and stronger pending-save integrity across production surfaces. PR #186 corrected Routine Form persistence ownership so routine steps flow through the existing service boundary and pending saves cannot race dismissal or step mutation. PR #187 continues that evidence-backed interaction-integrity work in Quick Capture, where dismissal and captured-state mutation were still possible during an unresolved multi-task save.
+- `TemplateLibrary` now uses a ref-backed duplicate-apply guard plus visible state.
+- Library Escape/close, search, filters and view controls are disabled while applying.
+- Template cards cannot preview or initiate another application while the operation is unresolved.
+- Template Preview blocks Escape/backdrop/close/edit/apply during application and exposes busy/progress semantics.
+- Template Edit freezes form mutations and dismissal during application, with form/action busy state and polite progress feedback.
+- Focused deterministic coverage is in `test/template-apply-pending-integrity.test.mjs`.
 
 ## Backend / provider work — intentionally deferred
 
-**State:** PROVIDER UNVERIFIED / TEMPORARILY DEFERRED.
-
-Keep provider mappings fail-closed, do not infer physical NoCodeBackend contracts, and continue independent frontend/accessibility/testing work until real provider evidence is available.
-
-## Quality / technical state
-
-- `npm run platform:validate` remains the canonical project-owned validation gate.
-- PR #186 final exact head `a35ff88e8a6d977ba5f1d25b67bfb0ed761cfdc3` passed Application validation run 375 and merged to `main` at `4433d51d75e1243107f3f76fb2afa3c9beb0a09d`.
-- Fresh post-merge inspection found no open competing PRs before PR #187 was started.
-- PR #187 is a focused frontend interaction-integrity slice with deterministic regression coverage; exact-head canonical validation and final review/thread audit remain outstanding.
-- Roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
-- Production deployment remains unverified/unconfigured for ADHD Life OS.
+Keep provider mappings fail-closed and do not let provider uncertainty block independent frontend/accessibility/testing work.
 
 ## Next dependency-correct work
 
-1. run canonical validation for PR #187's exact current head and repair any in-scope findings on the same PR;
-2. audit its acceptance criteria and review/thread state, then complete the repository lifecycle only if the exact head remains clean;
-3. after merge, inspect live `main`, open PRs, visible branches and checks before selecting new work;
-4. continue the next evidence-backed frontend accessibility/interaction issue if one remains;
-5. otherwise move to the highest-priority client-side cognitive-load reduction slice;
-6. keep provider-dependent execution work deferred until real provider evidence exists.
+1. validate the exact current branch head with `npm run platform:validate` through canonical Application validation;
+2. repair any in-scope failure on this PR;
+3. audit review submissions and inline threads;
+4. apply `lifecycle:implementation-complete` only after all implementation-owned criteria are satisfied;
+5. allow repository automation to own Ready → Mergeable → Merged;
+6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice;
+7. continue evidence-backed frontend interaction integrity, or move to client-side cognitive-load reduction if that evidence is exhausted.
 
 ## Stage 3 exit conditions
 
