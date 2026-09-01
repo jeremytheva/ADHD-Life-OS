@@ -61,7 +61,7 @@ const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4" aria-busy={saving ? 'true' : 'false'}>
           <div>
             <label htmlFor="task-title" className="block text-sm font-medium text-slate-700 mb-2">
               Title *
@@ -143,11 +143,15 @@ const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
             <button
               type="submit"
               disabled={saving}
+              aria-busy={saving ? 'true' : 'false'}
               className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {saving ? 'Saving...' : task ? 'Update' : 'Create'}
             </button>
           </div>
+          <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {saving ? 'Saving task changes...' : ''}
+          </span>
         </form>
       </motion.div>
     </div>
