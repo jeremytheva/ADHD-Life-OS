@@ -6,12 +6,12 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: READY
 current_work:
-  objective: Inspect fresh main after PR #186 merges, then continue the next evidence-backed frontend accessibility or cognitive-load slice.
+  objective: Inspect fresh main after PR #187 merges, then continue the next evidence-backed frontend accessibility or cognitive-load slice.
   issue: null
   pr: null
   branch: main
 next_actions:
-  - Complete PR #186 lifecycle only after fresh canonical validation passes for this final STATUS-only head.
+  - Complete PR #187 only after canonical validation passes for its exact current head and review/thread state is clean.
   - After merge, inspect fresh main plus open PRs, visible branches and current checks.
   - Continue the next evidence-backed frontend accessibility or interaction-integrity slice if one remains.
   - If accessibility evidence is exhausted, move to the highest-priority client-side cognitive-load reduction work.
@@ -28,11 +28,11 @@ validation:
   typecheck: NOT_RUN
   tests: NOT_RUN
   build: NOT_RUN
-  ci: PENDING
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #186 product and active-state head b20a3e8cd95cee52e806ef403a60237281a4921a passed canonical Application validation run 374 with no submitted reviews or review threads and was mergeable. This final STATUS-only handoff commit intentionally invalidates that exact-head evidence and requires fresh canonical validation before lifecycle completion; the durable handoff itself is post-merge re-entry safe.
-last_verified_commit: b20a3e8cd95cee52e806ef403a60237281a4921a
-last_updated: 2026-09-01T14:12:00+10:00
+validation_basis: PR #186 final exact head a35ff88e8a6d977ba5f1d25b67bfb0ed761cfdc3 passed canonical Application validation run 375 and merged to main at 4433d51d75e1243107f3f76fb2afa3c9beb0a09d. PR #187 now guards Quick Capture against dismissal and captured-state mutation while its multi-task save is unresolved; its exact-head canonical validation is pending.
+last_verified_commit: a35ff88e8a6d977ba5f1d25b67bfb0ed761cfdc3
+last_updated: 2026-09-01T15:15:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,14 +44,14 @@ last_updated: 2026-09-01T14:12:00+10:00
 
 ## Current objective
 
-Use this file as the **post-merge re-entry checkpoint for PR #186**. After PR #186 merges, inspect fresh `main`, open PRs, visible branches and current checks before selecting new work. Continue the next evidence-backed frontend accessibility/interaction-integrity slice if one remains; otherwise move to the highest-priority client-side cognitive-load reduction work. Do not reopen provider-dependent execution persistence without real target-instance NoCodeBackend evidence.
+Use this file as the **post-merge re-entry checkpoint for PR #187**. PR #187 is the sole active implementation thread while it is open: it hardens Quick Capture so an unresolved multi-task save cannot be dismissed or have its submitted captured-task set mutated, while making that pending state explicit. After PR #187 merges, inspect fresh `main`, open PRs, visible branches and current checks before selecting new work. Continue the next evidence-backed frontend accessibility/interaction-integrity slice if one remains; otherwise move to the highest-priority client-side cognitive-load reduction work. Do not reopen provider-dependent execution persistence without real target-instance NoCodeBackend evidence.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION / POST-MERGE RE-ENTRY |
-| Gate state | PR #186 implementation outcome passed Application validation run 374 on the prior exact head; this final STATUS-only handoff commit requires fresh exact-head canonical validation before lifecycle completion |
+| Current gate | INTEGRATION / PR #187 VALIDATION |
+| Gate state | Quick Capture pending-save integrity implemented with deterministic regression coverage; exact-head canonical validation still required before lifecycle completion |
 | Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour until provider work is explicitly resumed with real target evidence. |
@@ -61,27 +61,28 @@ Use this file as the **post-merge re-entry checkpoint for PR #186**. After PR #1
 | State | Current value |
 | --- | --- |
 | Current stage | Stage 3 — execution and next-action experience |
-| Post-merge baseline | PR #186 — routine form persistence ownership and pending-save integrity |
-| Completed product outcome | Routine Form submits the full routine-plus-steps payload through its existing parent/service boundary, no longer performs direct routine-step persistence, blocks duplicate/dismissal races while saving, and exposes explicit busy/live saving feedback |
+| Post-merge baseline | PR #186 — routine form persistence ownership and pending-save integrity, merged to `main` at `4433d51d75e1243107f3f76fb2afa3c9beb0a09d` |
+| Active outcome | PR #187 — Quick Capture pending-save interaction integrity |
+| Implemented change | Quick Capture now blocks Escape/close/cancel and captured-task mutations while a multi-task save is unresolved, exposes dialog/action busy state, and announces save progress while preserving partial-write recovery semantics |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | After PR #186 merges, inspect fresh repository/GitHub state and continue the next evidence-backed independent Stage 3 slice |
+| Next action | Validate PR #187 exact head, complete its lifecycle if clean, then inspect fresh main for the next independent Stage 3 slice |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, at the post-PR-#186 re-entry checkpoint. |
-| What is already happening? | PR #186 repairs Routine Form persistence ownership and pending-save interaction integrity. |
-| What has been validated? | PR #186 exact head `b20a3e8cd95cee52e806ef403a60237281a4921a` passed canonical Application validation run 374 and had no submitted reviews or review threads. This final STATUS-only handoff commit still requires fresh exact-head validation before lifecycle completion. |
-| What changed? | Routine Form now delegates `{ ...formData, steps }` through `onSave`/`routineService`, removes duplicated direct step persistence, ignores repeated submit, blocks Escape/dismissal and step mutations while saving, and announces save progress. |
-| What is next? | After merge, inspect fresh `main`, open PRs/branches/checks, then continue remaining frontend accessibility work or move to cognitive-load reduction if that evidence is exhausted. |
+| Where am I? | Stage 3 — execution and next-action experience, with PR #187 as the sole active implementation thread until merge. |
+| What is already happening? | PR #187 guards Quick Capture against dismissal and captured-state mutation during an unresolved multi-task save. |
+| What has been validated? | PR #186 final exact head `a35ff88e8a6d977ba5f1d25b67bfb0ed761cfdc3` passed canonical Application validation run 375 and merged at `4433d51d75e1243107f3f76fb2afa3c9beb0a09d`. PR #187 exact-head validation is not yet complete. |
+| What changed? | Quick Capture disables Escape, close/cancel, text entry, add/remove and organization mutation while saving; its dialog/save action expose busy state and a polite atomic save announcement. Existing duplicate-save and partial-write recovery behaviour remain intact. |
+| What is next? | Complete PR #187 validation/lifecycle, then inspect fresh `main` and continue remaining frontend accessibility work or move to cognitive-load reduction if that evidence is exhausted. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Recent completed outcomes
 
-PRs #124–#167 established the broad Stage 3 accessibility/interaction baseline. PRs #168–#185 progressively covered loading, transient feedback, saving/completion semantics and stronger pending-save integrity across production surfaces. PR #186 corrects a stronger Routine Form service-boundary defect that could omit newly entered steps while aligning pending-save behaviour with the established interaction-integrity model.
+PRs #124–#167 established the broad Stage 3 accessibility/interaction baseline. PRs #168–#185 progressively covered loading, transient feedback, saving/completion semantics and stronger pending-save integrity across production surfaces. PR #186 corrected Routine Form persistence ownership so routine steps flow through the existing service boundary and pending saves cannot race dismissal or step mutation. PR #187 continues that evidence-backed interaction-integrity work in Quick Capture, where dismissal and captured-state mutation were still possible during an unresolved multi-task save.
 
 ## Backend / provider work — intentionally deferred
 
@@ -92,20 +93,20 @@ Keep provider mappings fail-closed, do not infer physical NoCodeBackend contract
 ## Quality / technical state
 
 - `npm run platform:validate` remains the canonical project-owned validation gate.
-- PR #185 final exact head passed Application validation run 372 and merged at `73c6d4be7dcce9679c5b46cf4aa2508f9ba4a912`.
-- Fresh post-merge inspection found no open competing PRs before PR #186 was started.
-- PR #186 product and active-state head `b20a3e8cd95cee52e806ef403a60237281a4921a` passed Application validation run 374; review/thread audit was clean and GitHub reported the PR mergeable.
-- This final post-merge-safe STATUS-only commit requires fresh exact-head canonical validation before implementation-complete evidence is applied.
+- PR #186 final exact head `a35ff88e8a6d977ba5f1d25b67bfb0ed761cfdc3` passed Application validation run 375 and merged to `main` at `4433d51d75e1243107f3f76fb2afa3c9beb0a09d`.
+- Fresh post-merge inspection found no open competing PRs before PR #187 was started.
+- PR #187 is a focused frontend interaction-integrity slice with deterministic regression coverage; exact-head canonical validation and final review/thread audit remain outstanding.
 - Roadmap priority while backend work is deferred remains frontend accessibility/interaction integrity, then cognitive-load reduction, then focused maintainability.
 - Production deployment remains unverified/unconfigured for ADHD Life OS.
 
 ## Next dependency-correct work
 
-1. complete PR #186 lifecycle only after fresh canonical validation passes for this final status-only head;
-2. after merge, inspect live `main`, open PRs, visible branches and checks before selecting new work;
-3. continue the next evidence-backed frontend accessibility/interaction issue if one remains;
-4. otherwise move to the highest-priority client-side cognitive-load reduction slice;
-5. keep provider-dependent execution work deferred until real provider evidence exists.
+1. run canonical validation for PR #187's exact current head and repair any in-scope findings on the same PR;
+2. audit its acceptance criteria and review/thread state, then complete the repository lifecycle only if the exact head remains clean;
+3. after merge, inspect live `main`, open PRs, visible branches and checks before selecting new work;
+4. continue the next evidence-backed frontend accessibility/interaction issue if one remains;
+5. otherwise move to the highest-priority client-side cognitive-load reduction slice;
+6. keep provider-dependent execution work deferred until real provider evidence exists.
 
 ## Stage 3 exit conditions
 
