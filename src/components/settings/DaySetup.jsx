@@ -41,7 +41,7 @@ const DaySetup = ({ preferences, onUpdate }) => {
         Configure your daily schedule to help the system plan your day effectively.
       </p>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4" aria-busy={saving ? 'true' : 'false'}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label htmlFor="day-setup-wake-time" className="block text-sm font-medium text-slate-700 mb-2">
@@ -109,10 +109,14 @@ const DaySetup = ({ preferences, onUpdate }) => {
           <button
             type="submit"
             disabled={saving}
+            aria-busy={saving ? 'true' : 'false'}
             className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
+          <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {saving ? 'Saving day setup changes...' : ''}
+          </span>
         </div>
       </form>
     </div>
