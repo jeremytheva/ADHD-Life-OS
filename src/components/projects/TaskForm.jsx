@@ -13,17 +13,28 @@ const TaskForm = ({ projectId, task = null, onSave, onCancel }) => {
     estimated_duration: task?.estimated_duration || 30,
     is_essential: task?.is_essential || false
   })
+  const [saving, setSaving] = useState(false)
   const titleInputRef = useRef(null)
-  const dialogRef = useModalDialog({ onEscape: onCancel, initialFocusRef: titleInputRef })
+  const dialogRef = useModalDialog({
+    onEscape: saving ? null : onCancel,
+    initialFocusRef: titleInputRef
+  })
   const titleId = `project-task-title-${projectId}`
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onSave(formData)
+    if (saving) return
+
+    setSaving(true)
+    try {
+      await onSave(formData)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -45,14 +56,15 @@ const TaskForm = ({ projectId, task = null, onSave, onCancel }) => {
           <button
             type="button"
             onClick={onCancel}
+            disabled={saving}
             aria-label="Close task form"
-            className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
+            className="p-2 text-slate-400 hover:text-slate-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiX} className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4" aria-busy={saving ? 'true' : 'false'}>
           <div>
             <label htmlFor={titleId} className="block text-sm font-medium text-slate-700 mb-2">
               Task Title *
@@ -117,18 +129,24 @@ const TaskForm = ({ projectId, task = null, onSave, onCancel }) => {
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+              disabled={saving}
+              className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+              disabled={saving}
+              aria-busy={saving ? 'true' : 'false'}
+              className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <SafeIcon icon={FiSave} className="w-4 h-4" />
-              {task ? 'Update' : 'Add'} Task
+              <SafeIcon icon={FiSave} className="w-4 h-4" aria-hidden="true" />
+              {saving ? 'Saving...' : `${task ? 'Update' : 'Add'} Task`}
             </button>
           </div>
+          <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {saving ? 'Saving project task...' : ''}
+          </span>
         </form>
       </motion.div>
     </div>
