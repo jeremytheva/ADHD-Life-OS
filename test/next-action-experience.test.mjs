@@ -43,6 +43,14 @@ test('next-action panel presents initiation guidance and bounded alternatives', 
   assert.match(source, /recommendations\.length > 1/)
 })
 
+test('next-action panel progressively discloses the manual refresh control', async () => {
+  const source = await read('src/components/today/NextActionPanel.jsx')
+  assert.match(source, /<details className="mt-3 text-sm text-slate-600">/)
+  assert.match(source, /<summary[^>]*>More options<\/summary>/)
+  assert.match(source, />\s*Recheck now\s*</)
+  assert.match(source, /onClick=\{loadRecommendations\}/)
+})
+
 test('next-action panel treats not-now feedback as transient recommendation state', async () => {
   const source = await read('src/components/today/NextActionPanel.jsx')
   assert.match(source, /const \[excludedActivityIds, setExcludedActivityIds\] = useState\(\[\]\)/)
