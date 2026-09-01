@@ -6,10 +6,10 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #193, which reduces immediate action competition in the Today next-action card while preserving manual refresh capability.
+  objective: Complete PR #194, which reduces secondary cognitive load on Today by progressively disclosing unscheduled task details while keeping their count visible.
   issue: null
-  pr: 193
-  branch: feat/next-action-secondary-options
+  pr: 194
+  branch: feat/today-unscheduled-progressive-disclosure
 next_actions:
   - Revalidate this STATUS-updated exact PR head through canonical Application validation.
   - Repair any in-scope validation finding on the same PR.
@@ -25,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #193 implementation head 27b4a00291594269b248c498efa5e29e18b84025 passed canonical Application validation run 398 with no submitted reviews or inline review threads. This STATUS-only handoff commit invalidates exact-head evidence and requires one final canonical validation before lifecycle completion.
-last_verified_commit: 27b4a00291594269b248c498efa5e29e18b84025
-last_updated: 2026-09-02T03:12:00+10:00
+validation_basis: PR #194 repaired implementation head 1dac9186f312156531bc01d3adadc55fa192be15 passed canonical Application validation run 405. Run 404 had already proved dependency audit, governance, lint, typecheck, Node tests and build after the browserslist security repair, but exposed one stale Today Playwright expectation; that browser regression test was aligned to the new collapsed-by-default disclosure contract and run 405 passed. This STATUS-only handoff changes the candidate SHA and therefore requires one final canonical exact-head validation before lifecycle completion.
+last_verified_commit: 1dac9186f312156531bc01d3adadc55fa192be15
+last_updated: 2026-09-02T07:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,20 +46,20 @@ last_updated: 2026-09-02T03:12:00+10:00
 
 ## Current objective
 
-Complete the focused client-side cognitive-load slice in PR #193. PR #192 merged automatically into `main` at `bcf57f4a4e55c73b16102c30806462e887f48a27`. No competing open PRs were present when this slice began.
+Complete PR #194, the active client-side cognitive-load slice after PR #193 merged into `main` at `62ce4f979c0fa215a20d6ae40cb4df1cc5d1e13f`.
 
-PR #193 reduces action competition in the Today recommendation card. `Not now` and the bounded alternative remain immediately visible because they directly support the current decision. The less-frequent manual `Recheck now` action remains available but is progressively disclosed under native `details` / `summary` controls. This preserves capability while reducing the number of simultaneous actions competing with initiation guidance.
+PR #194 keeps the Today next-action experience primary by collapsing unscheduled task titles and scheduling guidance until the user explicitly chooses to review them. The number of unscheduled tasks remains visible so important state is not hidden. Once opened, Today still limits the initial list to three items and retains the existing show-more/show-less control for larger sets.
 
-Implementation head `27b4a00291594269b248c498efa5e29e18b84025` passed canonical Application validation run 398. The completion audit found no submitted reviews and no inline review threads. This STATUS-only handoff deliberately moves the PR head, so the final exact head must pass canonical validation before implementation-complete can be signalled.
+The branch also contains the smallest repository-baseline dependency repair required by canonical validation: `browserslist` is explicitly resolved to the patched line after the prior lockfile version became subject to a high-severity advisory. The generated lockfile is committed; no provider or application architecture behaviour changed.
 
-This file is post-merge re-entry safe. Once PR #193 merges, inspect fresh `main` and open PRs before selecting the next evidence-backed client-side cognitive-load reduction slice. Provider-dependent execution persistence remains deferred until real target-instance NoCodeBackend evidence exists.
+Canonical Application validation run 404 then exposed one hard failure in the pre-existing Today Playwright test because that test still expected unscheduled titles to be visible before disclosure. The test was repaired on the same PR to assert the intended collapsed-by-default state, explicit review expansion, bounded first-three preview, show-more/show-less behaviour, and re-collapse semantics. Repaired head `1dac9186f312156531bc01d3adadc55fa192be15` passed canonical Application validation run 405. This STATUS-only handoff moves the exact PR head, so one final exact-head canonical validation is required before lifecycle completion.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — Today next-action secondary-option disclosure |
-| Gate state | VALIDATING — implementation head passed; final STATUS-updated exact head requires canonical validation |
+| Current gate | INTEGRATION — Today unscheduled-task progressive disclosure |
+| Gate state | VALIDATING — repaired implementation head passed run 405; final STATUS-updated exact head requires canonical validation |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -68,40 +68,43 @@ This file is post-merge re-entry safe. Once PR #193 merges, inspect fresh `main`
 
 | State | Current value |
 | --- | --- |
-| Post-merge baseline | PR #192 merged automatically at `bcf57f4a4e55c73b16102c30806462e887f48a27` |
-| Active outcome | PR #193 — reduce next-action secondary choices |
-| Implemented change | Manual `Recheck now` remains available behind native progressive disclosure instead of competing as a third immediate recommendation action |
-| Preserved behaviour | Existing defaults, fit controls, execution-engine inputs, automatic recommendation refresh, bounded alternatives, transient Not now feedback, skipped-option restoration and retry semantics |
-| Deterministic coverage | `test/next-action-experience.test.mjs` protects the secondary-option disclosure contract |
-| Validated implementation head | `27b4a00291594269b248c498efa5e29e18b84025` — Application validation run 398 passed |
-| Review/thread audit | No submitted reviews; no inline review threads |
+| Post-merge baseline | PR #193 merged automatically at `62ce4f979c0fa215a20d6ae40cb4df1cc5d1e13f` |
+| Active outcome | PR #194 — progressively disclose unscheduled Today tasks |
+| Implemented change | Unscheduled task count remains visible while titles and scheduling guidance are collapsed behind an explicit accessible review control |
+| Validation repair | Patched `browserslist` dependency line; aligned the Today Playwright journey with the intended collapsed-by-default disclosure contract |
+| Preserved behaviour | Existing first-three limit after expansion, show-more/show-less, timeline loading, mode filtering, task completion, next-action behaviour, persistence and provider contracts |
+| Deterministic coverage | `test/next-action-experience.test.mjs` protects the disclosure contract |
+| Browser coverage | `e2e/today-unscheduled-disclosure.spec.js` now verifies collapsed default, explicit expansion, bounded preview, show-more/show-less and re-collapse |
+| Validated implementation head | `1dac9186f312156531bc01d3adadc55fa192be15` — Application validation run 405 passed |
+| Review/thread audit | No submitted reviews; no inline review threads before this STATUS-only handoff |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Validate the final STATUS-updated exact head, re-audit review/thread state, then complete repository lifecycle if clean |
+| Next action | Revalidate the final STATUS-updated exact head, then re-audit reviews/threads and complete lifecycle if clean |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, completing PR #193 lifecycle. |
-| What is already happening? | PR #193 reduces immediate recommendation-action competition without removing manual refresh capability. |
-| What has been validated? | PR #192 completed its guarded repository lifecycle and merged. PR #193 implementation head `27b4a00291594269b248c498efa5e29e18b84025` passed Application validation run 398; the final STATUS-updated head still requires exact-head validation. |
-| What changed? | The manual refresh action moved behind native progressive disclosure while `Not now` and bounded alternatives remain immediate. |
-| What is next? | Validate the final exact head, re-audit reviews/threads, apply implementation-complete only if clean, allow repository automation to merge, then inspect fresh main before selecting the next Stage 3 slice. |
+| Where am I? | Stage 3 — execution and next-action experience, completing PR #194 lifecycle. |
+| What is already happening? | PR #194 reduces secondary Today-page competition by progressively disclosing unscheduled-task detail. |
+| What has been validated? | PR #194 repaired implementation head `1dac9186f312156531bc01d3adadc55fa192be15` passed Application validation run 405. |
+| What changed? | Today retains visible awareness of unscheduled work without expanding task titles/guidance by default; browser coverage now tests that contract; the dependency security baseline is patched. |
+| What is next? | Validate the final STATUS-updated exact head, re-audit reviews/threads, apply implementation-complete only if clean, then allow repository automation to merge. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Evidence for this slice
 
-- `src/components/today/NextActionPanel.jsx` keeps `Not now` and the bounded `Give me another option` control in the immediate decision surface.
-- Manual `Recheck now` remains connected to `loadRecommendations` but is nested under native `details` / `summary` progressive disclosure.
-- Fit defaults and the existing `Adjust fit` progressive disclosure remain unchanged.
-- Automatic recommendation reload on fit, mode and skipped-option changes remains unchanged.
-- Error-state retry still calls the same recommendation loader directly.
-- No execution-engine policy, provider contract, persistence model or durable execution behaviour changed.
-- `test/next-action-experience.test.mjs` protects the new disclosure contract.
-- Canonical Application validation run 398 passed on implementation head `27b4a00291594269b248c498efa5e29e18b84025`.
-- Review submissions and inline review threads were empty at the completion audit before this STATUS-only commit.
+- `src/components/today/TodayView.jsx` introduces `showUnscheduledTasks` with a default collapsed state.
+- The unscheduled-task count remains visible without interaction.
+- The review control exposes `aria-expanded` and `aria-controls` for the secondary detail region.
+- Once expanded, the existing bounded first-three preview and show-more/show-less behaviour remain available.
+- Timeline reload/refilter collapses both the primary unscheduled disclosure and the nested show-all state.
+- `test/next-action-experience.test.mjs` protects the progressive-disclosure contract.
+- `e2e/today-unscheduled-disclosure.spec.js` protects the critical browser interaction path after the stale pre-change expectation was found by run 404.
+- `package.json` / `package-lock.json` carry the deliberate patched `browserslist` dependency resolution required by the canonical audit gate.
+- Canonical Application validation run 405 passed on implementation head `1dac9186f312156531bc01d3adadc55fa192be15`.
+- No execution-engine policy, provider contract, persistence model, scheduling policy or durable execution behaviour changed.
 
 ## Backend / provider work — intentionally deferred
 
@@ -109,13 +112,13 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the final STATUS-updated PR #193 head;
+1. run canonical Application validation on the final STATUS-updated PR #194 head;
 2. repair any in-scope failure on this PR;
 3. re-audit review submissions and inline review threads;
 4. apply `lifecycle:implementation-complete` only after the final exact-head validation and audit are clean;
 5. allow repository automation to own Ready -> Mergeable -> Merged;
 6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice;
-7. continue the highest-value evidence-backed client-side cognitive-load reduction work.
+7. continue the highest-value evidence-backed independent client-side cognitive-load reduction work.
 
 ## Stage 3 exit conditions
 

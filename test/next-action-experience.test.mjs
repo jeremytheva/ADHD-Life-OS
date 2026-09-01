@@ -67,3 +67,16 @@ test('next-action retrieval failures remain retryable and do not imply activity 
   assert.match(source, /Your activities have not changed/)
   assert.match(source, /onRetry=\{loadRecommendations\}/)
 })
+
+test('Today keeps unscheduled task details secondary to the primary execution surface', async () => {
+  const source = await read('src/components/today/TodayView.jsx')
+  assert.match(source, /const \[showUnscheduledTasks, setShowUnscheduledTasks\] = useState\(false\)/)
+  assert.match(source, /aria-expanded=\{showUnscheduledTasks\}/)
+  assert.match(source, /aria-controls="today-unscheduled-task-details"/)
+  assert.match(source, /Review unscheduled tasks/)
+  assert.match(source, /showUnscheduledTasks && \(/)
+  assert.match(source, /id="today-unscheduled-task-details"/)
+  assert.match(source, /setShowUnscheduledTasks\(false\)/)
+  assert.match(source, /const DEFAULT_UNSCHEDULED_LIMIT = 3/)
+  assert.match(source, /showAllUnscheduled \? 'Show less' : `Show \$\{hiddenUnscheduledCount\} more`/)
+})

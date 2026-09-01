@@ -93,9 +93,18 @@ test('Today progressively discloses a long unscheduled-task list', async ({ page
 
   const section = page.getByRole('region', { name: 'Unscheduled Tasks' })
   await expect(section).toBeVisible()
-  await expect(section.getByText('5 total')).toBeVisible()
+  await expect(section.getByText('5 tasks are waiting outside today’s schedule.')).toBeVisible()
+
+  const reviewTasks = section.getByRole('button', { name: 'Review unscheduled tasks' })
+  await expect(reviewTasks).toHaveAttribute('aria-expanded', 'false')
+  await expect(reviewTasks).toHaveAttribute('aria-controls', 'today-unscheduled-task-details')
 
   const taskItems = section.locator('#today-unscheduled-task-list li')
+  await expect(taskItems).toHaveCount(0)
+  await expect(section.getByText('Unscheduled task 1')).toHaveCount(0)
+
+  await reviewTasks.click()
+  await expect(section.getByRole('button', { name: 'Hide unscheduled tasks' })).toHaveAttribute('aria-expanded', 'true')
   await expect(taskItems).toHaveCount(3)
   await expect(taskItems.nth(0)).toContainText('Unscheduled task 1')
   await expect(taskItems.nth(2)).toContainText('Unscheduled task 3')
@@ -116,4 +125,8 @@ test('Today progressively discloses a long unscheduled-task list', async ({ page
 
   await expect(taskItems).toHaveCount(3)
   await expect(section.getByText('Unscheduled task 4')).toHaveCount(0)
+
+  await section.getByRole('button', { name: 'Hide unscheduled tasks' }).click()
+  await expect(taskItems).toHaveCount(0)
+  await expect(section.getByRole('button', { name: 'Review unscheduled tasks' })).toHaveAttribute('aria-expanded', 'false')
 })
