@@ -6,14 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete the Day Setup pending-save interaction-integrity slice, then inspect fresh main for the next independent Stage 3 task.
+  objective: Complete the Task Form pending-save interaction-integrity slice, then inspect fresh main for the next independent Stage 3 task.
   issue: null
-  pr: 189
-  branch: fix/day-setup-pending-integrity
+  pr: 190
+  branch: fix/task-form-pending-integrity
 next_actions:
-  - Revalidate the final STATUS-updated exact head through canonical Application validation.
+  - Validate the current exact PR head through canonical Application validation.
   - Repair any in-scope validation finding on the same PR.
-  - Complete lifecycle only after exact-head validation and review/thread audit are clean.
+  - Audit review submissions and inline review threads after validation.
+  - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence are clean.
   - After merge, inspect fresh main and continue remaining frontend interaction-integrity work; otherwise move to client-side cognitive-load reduction.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
@@ -23,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #189 head 80e6a0460f87e86ca337873e0bc298ac468dd0d9 passed canonical Application validation run 387 with no submitted reviews or inline review threads. This durable handoff update creates the final candidate head, so exact-head canonical validation must rerun before lifecycle completion.
-last_verified_commit: 80e6a0460f87e86ca337873e0bc298ac468dd0d9
-last_updated: 2026-09-01T18:11:00+10:00
+validation_basis: PR #190 has focused implementation and deterministic regression coverage on a branch directly based on the PR #189 merge. Canonical exact-head Application validation is pending.
+last_verified_commit: 6a7acc43d9c2f3713e8319ebee0be934b86284de
+last_updated: 2026-09-01T19:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,16 +45,16 @@ last_updated: 2026-09-01T18:11:00+10:00
 
 ## Current objective
 
-Complete the focused Day Setup pending-save interaction-integrity slice. PR #188 merged successfully. Fresh-main inspection found no competing open PR and identified a remaining async state-integrity gap in Day Setup: the submit button was disabled while saving, but the submit handler itself had no duplicate-submit guard and the time fields remained mutable while the persisted snapshot was unresolved.
+Complete the focused Task Form pending-save interaction-integrity slice. PR #189 merged automatically at `6a7acc43d9c2f3713e8319ebee0be934b86284de`. Fresh-main inspection found no competing open PR and identified a remaining async state-integrity gap in the task create/edit form: repeated submit and dismissal were already guarded while saving, but task fields could still mutate while the persisted snapshot was unresolved.
 
-This file is intentionally post-merge safe. Once this slice merges, inspect fresh `main` before choosing further work. Continue evidence-backed frontend accessibility/interaction integrity if one remains; otherwise move to the highest-priority client-side cognitive-load reduction work. Provider-dependent execution persistence remains deferred until real target-instance NoCodeBackend evidence exists.
+This file is post-merge safe. Once this slice merges, inspect fresh `main` before choosing further work. Continue evidence-backed frontend accessibility/interaction integrity if one remains; otherwise move to the highest-priority client-side cognitive-load reduction work. Provider-dependent execution persistence remains deferred until real target-instance NoCodeBackend evidence exists.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — Day Setup pending-save integrity |
-| Gate state | VALIDATING — implementation and durable handoff complete; final exact-head validation required |
+| Current gate | INTEGRATION — Task Form pending-save integrity |
+| Gate state | VALIDATING — implementation and durable handoff complete; exact-head validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -62,35 +63,33 @@ This file is intentionally post-merge safe. Once this slice merges, inspect fres
 
 | State | Current value |
 | --- | --- |
-| Post-merge baseline | PR #188 merged automatically at `f835b3abc35e8732cde497e1459199eea3c5e745` |
-| Active outcome | PR #189 — Day Setup pending-save interaction integrity |
-| Implemented change | Day Setup now rejects repeated submit while unresolved and freezes schedule-field mutation under a disabled fieldset while preserving existing busy/progress feedback |
+| Post-merge baseline | PR #189 merged automatically at `6a7acc43d9c2f3713e8319ebee0be934b86284de` |
+| Active outcome | PR #190 — Task Form pending-save interaction integrity |
+| Implemented change | Task Form now freezes task-field mutation under a disabled fieldset and ignores mutation handlers while saving, while preserving existing duplicate-submit, Escape/close/cancel, busy and live-progress guards |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Revalidate the STATUS-updated exact head, then complete repository lifecycle if review/thread state remains clean |
+| Next action | Run canonical exact-head validation, repair any in-scope finding, then complete repository lifecycle if review/thread state remains clean |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, final-validating PR #189. |
-| What is already happening? | PR #189 hardens Day Setup so an unresolved preference save owns one immutable form submission and cannot be duplicated through another submit event. |
-| What has been validated? | PR #189 head `80e6a0460f87e86ca337873e0bc298ac468dd0d9` passed Application validation run 387. Review submissions and inline review threads were both empty. This STATUS update creates a new final candidate head, which must be validated exactly before completion. |
-| What changed? | Day Setup now has an implementation-level duplicate-submit guard, ignores field mutation while saving, disables the schedule field group, and retains the existing form/action busy and live-status semantics. |
-| What is next? | Re-run canonical validation on the final exact PR head, then apply implementation-complete only if validation and review/thread state remain clean. |
+| Where am I? | Stage 3 — execution and next-action experience, validating PR #190. |
+| What is already happening? | PR #190 hardens Task Form so an unresolved task save owns one immutable form snapshot and cannot race user field edits or dismissal. |
+| What has been validated? | PR #189 merged after exact-head validation. PR #190 exact-head validation is pending. |
+| What changed? | Task Form now ignores field mutation while saving and disables all task input controls under one fieldset; existing duplicate-submit, dismissal guards, due-date normalization and busy/progress semantics remain intact. |
+| What is next? | Run canonical Application validation on the exact PR #190 head, repair any in-scope failure, then audit reviews/threads and apply implementation-complete only when clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Evidence for this slice
 
-- `DaySetup` now checks `saving` in both submission and field-mutation paths.
-- Schedule inputs are grouped under `fieldset disabled={saving}` so the form snapshot cannot continue changing while persistence is unresolved.
-- Existing `aria-busy`, disabled save action, visible `Saving...` copy and polite atomic live announcement remain intact.
-- Focused deterministic coverage extends `test/day-setup-saving-status-semantics.test.mjs` to protect duplicate-submit and pending-field-state integrity.
-- Provider contracts, preference schema, normalization and parent persistence behaviour are unchanged.
-- Application validation run 386 failed at governance because this branch initially used unsupported `PENDING` values for governance/lint/typecheck/tests/build; corrected to canonical `NOT_RUN` before revalidation.
-- Application validation run 387 passed on head `80e6a0460f87e86ca337873e0bc298ac468dd0d9`; this final STATUS-only handoff commit requires one exact-head rerun.
-- Review submissions: none; inline review threads: none at the pre-handoff audit.
+- `TaskForm` already rejected duplicate submit while `saving` and blocked Escape, close and cancel dismissal.
+- `TaskForm` now also rejects `handleChange` while saving and groups task fields under `fieldset disabled={saving}`.
+- Existing form/action `aria-busy`, disabled save action, visible `Saving...` copy and polite atomic live announcement remain intact.
+- Due-date empty-string to `null` normalization remains unchanged.
+- Focused deterministic coverage is in `test/task-form-saving-integrity.test.mjs`.
+- Provider contracts, task schema and `TaskList` persistence policy are unchanged.
 
 ## Backend / provider work — intentionally deferred
 
@@ -98,9 +97,9 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. validate the final current branch head with `npm run platform:validate` through canonical Application validation;
+1. validate the current exact PR head with `npm run platform:validate` through canonical Application validation;
 2. repair any in-scope failure on this PR;
-3. re-audit review submissions and inline threads;
+3. audit review submissions and inline threads;
 4. apply `lifecycle:implementation-complete` only after all implementation-owned criteria are satisfied;
 5. allow repository automation to own Ready → Mergeable → Merged;
 6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice;

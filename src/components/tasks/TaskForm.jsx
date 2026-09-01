@@ -31,6 +31,7 @@ const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
   }
 
   const handleChange = (field, value) => {
+    if (saving) return
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
@@ -62,74 +63,76 @@ const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4" aria-busy={saving ? 'true' : 'false'}>
-          <div>
-            <label htmlFor="task-title" className="block text-sm font-medium text-slate-700 mb-2">
-              Title *
-            </label>
-            <input
-              ref={titleInputRef}
-              id="task-title"
-              type="text"
-              value={formData.title}
-              onChange={(e) => handleChange('title', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
+          <fieldset disabled={saving} className="space-y-4">
+            <div>
+              <label htmlFor="task-title" className="block text-sm font-medium text-slate-700 mb-2">
+                Title *
+              </label>
+              <input
+                ref={titleInputRef}
+                id="task-title"
+                type="text"
+                value={formData.title}
+                onChange={(e) => handleChange('title', e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
 
-          <div>
-            <label htmlFor="task-description" className="block text-sm font-medium text-slate-700 mb-2">
-              Description
-            </label>
-            <textarea
-              id="task-description"
-              value={formData.description}
-              onChange={(e) => handleChange('description', e.target.value)}
-              rows={3}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
+            <div>
+              <label htmlFor="task-description" className="block text-sm font-medium text-slate-700 mb-2">
+                Description
+              </label>
+              <textarea
+                id="task-description"
+                value={formData.description}
+                onChange={(e) => handleChange('description', e.target.value)}
+                rows={3}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
 
-          <div>
-            <label htmlFor="task-due-date" className="block text-sm font-medium text-slate-700 mb-2">
-              Due Date
-            </label>
-            <input
-              id="task-due-date"
-              type="date"
-              value={formData.due_date}
-              onChange={(e) => handleChange('due_date', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
+            <div>
+              <label htmlFor="task-due-date" className="block text-sm font-medium text-slate-700 mb-2">
+                Due Date
+              </label>
+              <input
+                id="task-due-date"
+                type="date"
+                value={formData.due_date}
+                onChange={(e) => handleChange('due_date', e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
 
-          <div>
-            <label htmlFor="task-estimated-duration" className="block text-sm font-medium text-slate-700 mb-2">
-              Estimated Duration (minutes)
-            </label>
-            <input
-              id="task-estimated-duration"
-              type="number"
-              value={formData.estimated_duration}
-              onChange={(e) => handleChange('estimated_duration', parseInt(e.target.value))}
-              min="5"
-              step="5"
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
+            <div>
+              <label htmlFor="task-estimated-duration" className="block text-sm font-medium text-slate-700 mb-2">
+                Estimated Duration (minutes)
+              </label>
+              <input
+                id="task-estimated-duration"
+                type="number"
+                value={formData.estimated_duration}
+                onChange={(e) => handleChange('estimated_duration', parseInt(e.target.value))}
+                min="5"
+                step="5"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
 
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="is_essential"
-              checked={formData.is_essential}
-              onChange={(e) => handleChange('is_essential', e.target.checked)}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
-            />
-            <label htmlFor="is_essential" className="ml-2 text-sm text-slate-700">
-              Mark as essential
-            </label>
-          </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="is_essential"
+                checked={formData.is_essential}
+                onChange={(e) => handleChange('is_essential', e.target.checked)}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
+              />
+              <label htmlFor="is_essential" className="ml-2 text-sm text-slate-700">
+                Mark as essential
+              </label>
+            </div>
+          </fieldset>
 
           <div className="flex space-x-3 pt-4">
             <button
