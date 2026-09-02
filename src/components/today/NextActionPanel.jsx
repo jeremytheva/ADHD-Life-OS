@@ -134,6 +134,12 @@ const NextActionPanel = ({ currentMode }) => {
         <p className="mb-3 text-sm text-slate-600" role="status" aria-live="polite">{feedbackMessage}</p>
       )}
 
+      {selected && (
+        <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+          Suggested next action: {selected.title}. Start with this: {selected.start_action}
+        </p>
+      )}
+
       {loading && <p className="text-sm text-slate-600" role="status">Finding a realistic next action…</p>}
 
       {!loading && loadError && (
