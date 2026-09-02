@@ -4,19 +4,16 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: VALIDATING
+execution_state: READY
 current_work:
-  objective: Complete PR #198, which exposes the existing binary Accessibility Settings controls with switch semantics matching their visual and interaction model.
+  objective: After PR #198 merges, inspect fresh main and continue the next evidence-backed independent Stage 3 frontend accessibility and interaction-integrity slice.
   issue: null
-  pr: 198
-  branch: fix/accessibility-toggle-switch-semantics
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the repaired exact PR #198 head.
-  - Repair any further in-scope validation finding on the same PR.
-  - Re-audit review submissions and inline review threads on the final exact head.
-  - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence remain clean.
-  - Allow repository automation to own Ready -> Mergeable -> Merged.
-  - After merge, inspect fresh main and continue the next evidence-backed independent Stage 3 accessibility task.
+  - Inspect fresh main, open PRs, checks, relevant architecture and existing accessibility implementation before selecting new work.
+  - Continue the highest-priority evidence-backed frontend accessibility and interaction-integrity gap without duplicating existing work.
+  - Prefer shared interaction corrections and deterministic regression coverage over isolated cosmetic changes.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -28,13 +25,13 @@ validation:
   governance: PASS
   lint: PASS
   typecheck: PASS
-  tests: FAIL
-  build: NOT_RUN
-  ci: PENDING
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: Application validation run 420 reached canonical npm run platform:validate on PR #198 head fd8a96725a3e54fff68cbf6a901f89186ff625e5. Dependency audit, governance, lint and typecheck passed; Node tests reported one failure because the pre-existing accessibility-description contract still asserted aria-pressed for the three controls intentionally converted to switch semantics. That stale test contract has been repaired on the same PR to preserve aria-describedby coverage while asserting aria-checked. Exact-head revalidation is required after this durable-state update.
-last_verified_commit: null
-last_updated: 2026-09-02T18:12:00+10:00
+validation_basis: Canonical Application validation run 422 passed on PR #198 implementation head d0d36111dba9d9577159b88b7ca8f18478d90f41 after the stale accessibility-description test contract was repaired. The final lifecycle exact-head gate must still pass for any later handoff commit before repository automation may merge the PR.
+last_verified_commit: d0d36111dba9d9577159b88b7ca8f18478d90f41
+last_updated: 2026-09-02T19:10:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,21 +43,19 @@ last_updated: 2026-09-02T18:12:00+10:00
 
 ## Current objective
 
-Complete PR #198, the next independent Stage 3 frontend-accessibility slice after PR #197 merged into `main` at `89d853ab43e0d0448b88506461c79054ae07310a`.
+PR #198 completes the current independent Stage 3 accessibility slice by exposing the three binary Accessibility Settings controls — **Reduce Motion**, **Focus Mode**, and **Dyslexia-Friendly Font** — with switch semantics matching their visual and interaction model.
 
-The Accessibility Settings modal has three binary controls — **Reduce Motion**, **Focus Mode**, and **Dyslexia-Friendly Font** — that are visually and behaviourally switches. They previously exposed toggle-button state with `aria-pressed`, which works as a generic pressed-button pattern but does not convey the more specific on/off switch role that matches the controls.
+The implementation preserves native button keyboard activation, labels, descriptions, state changes, preview behaviour, persistence, styling, and provider boundaries while exposing `role="switch"` with `aria-checked`. Deterministic coverage protects both the switch-role/state contract and each visible-description relationship.
 
-PR #198 preserves the existing native button keyboard activation, labels, descriptions, state changes, preview behaviour, persistence, styling, and provider boundaries while exposing `role="switch"` with `aria-checked` for each binary setting. Deterministic source-contract coverage protects the three-switch semantic contract.
-
-Canonical Application validation run 420 passed dependency audit, governance, lint and typecheck, then exposed one stale deterministic test contract: `test/accessibility-toggle-description-semantics.test.mjs` still required `aria-pressed` on the three controls even though this PR intentionally changes them to switches. The existing test has been repaired on the same PR so it continues to protect each visible-description association through `aria-describedby` while asserting the new `aria-checked` state contract. No application behaviour changed in that repair.
+Canonical Application validation run 422 passed on implementation head `d0d36111dba9d9577159b88b7ca8f18478d90f41`. This durable checkpoint intentionally points the next repository entry to fresh `main` after #198 merges rather than back to a soon-to-close PR.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — Accessibility Settings switch semantics |
-| Gate state | VALIDATING — run 420 stale-test finding repaired; exact-head canonical revalidation pending |
-| Execution state | VALIDATING |
+| Current gate | INTEGRATION — frontend accessibility and interaction integrity |
+| Gate state | READY FOR NEXT SLICE after repository-owned completion of PR #198 |
+| Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -68,38 +63,36 @@ Canonical Application validation run 420 passed dependency audit, governance, li
 
 | State | Current value |
 | --- | --- |
-| Post-merge baseline | PR #197 merged at `89d853ab43e0d0448b88506461c79054ae07310a` |
-| Active outcome | PR #198 — expose binary accessibility controls as switches |
-| Implemented change | Reduce Motion, Focus Mode, and Dyslexia-Friendly Font now expose switch role/state semantics |
+| Current delivery | PR #198 — Accessibility Settings switch semantics |
+| Implemented change | Reduce Motion, Focus Mode, and Dyslexia-Friendly Font expose `role="switch"` and `aria-checked` |
 | Preserved behaviour | Existing labels/descriptions, keyboard/click activation, preview/save/cancel behaviour, preference persistence, styling, provider and execution behaviour |
-| Deterministic coverage | `test/accessibility-toggle-switch-semantics.test.mjs` protects switch roles/states; `test/accessibility-toggle-description-semantics.test.mjs` now preserves visible-description linkage without contradicting switch semantics |
-| Validation | Run 420 passed audit/governance/lint/typecheck and failed only on the stale description test contract; repaired exact-head validation pending |
-| Review/thread audit | Pending final exact-head audit |
+| Deterministic coverage | `test/accessibility-toggle-switch-semantics.test.mjs` and `test/accessibility-toggle-description-semantics.test.mjs` |
+| Validation | Canonical Application validation run 422 passed on implementation head `d0d36111dba9d9577159b88b7ca8f18478d90f41` |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Validate the repaired final PR #198 head, repair any further in-scope finding, then audit reviews/threads and complete lifecycle if clean |
+| Next action | After #198 merges, inspect fresh `main` and continue the next evidence-backed Stage 3 accessibility/interaction-integrity slice |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, validating PR #198. |
-| What is already happening? | PR #198 improves binary Accessibility Settings semantics without changing preference behaviour or persistence. |
-| What has been validated? | Run 420 passed dependency audit, governance, lint and typecheck, then exposed one stale deterministic test that contradicted the intended switch-semantic change. |
-| What changed? | Three visually binary accessibility toggles expose `role="switch"` and `aria-checked`; the older description-linkage test is now aligned with that contract. |
-| What is next? | Run canonical exact-head validation, repair any further finding, audit reviews/threads, then complete lifecycle if clean. |
+| Where am I? | Stage 3 — execution and next-action experience; frontend accessibility/interaction integrity remains the highest independent priority while backend work is deferred. |
+| What is already happening? | PR #198 is the current delivery slice and repository automation owns its final lifecycle once exact-head evidence is clean. |
+| What has been validated? | Application validation run 422 passed on the repaired #198 implementation head. |
+| What changed? | Three visually binary accessibility controls now expose specific switch role/state semantics without changing their existing behaviour or persistence. |
+| What is next? | Inspect fresh `main` and existing work after #198 merges, then continue the highest-priority evidence-backed accessibility/interaction-integrity gap. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
-## Evidence for this slice
+## Evidence for the completed slice
 
 - `src/components/accessibility/AccessibilitySettings.jsx` exposes `role="switch"` on Reduce Motion, Focus Mode, and Dyslexia-Friendly Font.
 - Each binary control exposes its current state with the corresponding `aria-checked` value.
 - Existing `aria-label` and `aria-describedby` relationships remain intact.
 - The controls remain native `<button type="button">` elements, preserving keyboard activation without custom keyboard handling.
-- `test/accessibility-toggle-switch-semantics.test.mjs` protects the semantic contract and explicitly imports `URL` from `node:url` for lint-safe Node execution.
-- `test/accessibility-toggle-description-semantics.test.mjs` continues to protect each visible-description association and now checks `aria-checked` rather than the superseded `aria-pressed` state.
-- Application validation run 420 passed dependency audit, governance, lint and typecheck before the stale contract test stopped the run.
+- `test/accessibility-toggle-switch-semantics.test.mjs` protects the semantic contract.
+- `test/accessibility-toggle-description-semantics.test.mjs` protects each visible-description association while asserting the switch state contract.
+- Canonical Application validation run 422 passed on the repaired implementation head.
 - No preference schema, persistence, styling, provider, recommendation, or durable execution-session behaviour changed.
 
 ## Backend / provider work — intentionally deferred
@@ -108,12 +101,11 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the repaired exact PR #198 head;
-2. repair any remaining in-scope failure on this PR;
-3. re-audit review submissions and inline review threads;
-4. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
-5. allow repository automation to own Ready -> Mergeable -> Merged;
-6. inspect fresh `main` and open PRs before selecting the next Stage 3 accessibility slice.
+1. allow repository automation to complete PR #198 only after final exact-head validation and review/thread evidence remain clean;
+2. inspect fresh `main`, open PRs and current checks after merge before selecting new work;
+3. continue the next evidence-backed frontend accessibility and interaction-integrity gap, preferring shared interaction patterns over isolated cosmetic changes;
+4. add deterministic/browser regression coverage where the behaviour is material;
+5. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
