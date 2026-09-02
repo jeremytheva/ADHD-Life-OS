@@ -6,13 +6,13 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #197, which makes the existing Reduce Motion preference govern shared Framer Motion animations while preserving OS-level reduced-motion support.
+  objective: Complete PR #198, which exposes the existing binary Accessibility Settings controls with switch semantics matching their visual and interaction model.
   issue: null
-  pr: 197
-  branch: fix/reduced-motion-framer-policy
+  pr: 198
+  branch: fix/accessibility-toggle-switch-semantics
 next_actions:
-  - Run canonical Application validation on the repaired exact PR #197 head.
-  - Repair any further in-scope validation finding on the same PR.
+  - Run canonical Application validation on the exact PR #198 head after this durable-state update.
+  - Repair any in-scope validation finding on the same PR.
   - Re-audit review submissions and inline review threads on the final exact head.
   - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence remain clean.
   - Allow repository automation to own Ready -> Mergeable -> Merged.
@@ -32,9 +32,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Application validation run 416 failed on PR #197 head e5c82e320bddf5db4546185ec5d816d47a28ad45 during canonical platform validation after checkout, dependency installation and Chromium setup passed. The new source-contract test referenced URL without an explicit node:url import; that lint-safety defect was repaired on the same PR. Canonical exact-head revalidation is pending after this durable-state update.
+validation_basis: PR #197 merged into main at 89d853ab43e0d0448b88506461c79054ae07310a after canonical Application validation run 418 passed on its exact head. PR #198 is the next independent frontend-accessibility slice and requires canonical exact-head validation after this STATUS.md update.
 last_verified_commit: null
-last_updated: 2026-09-02T15:15:00+10:00
+last_updated: 2026-09-02T17:13:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,20 +46,18 @@ last_updated: 2026-09-02T15:15:00+10:00
 
 ## Current objective
 
-Complete PR #197, the next independent Stage 3 frontend-accessibility slice after PR #196 merged into `main` at `f785fc726924bf2594281828818dcd640aca5ca8`.
+Complete PR #198, the next independent Stage 3 frontend-accessibility slice after PR #197 merged into `main` at `89d853ab43e0d0448b88506461c79054ae07310a`.
 
-The application already exposes a saved **Reduce Motion** preference, but its implementation only sets a CSS animation-duration variable. Framer Motion components use JavaScript-driven motion configuration and therefore were not governed by that application preference. PR #197 repairs the shared accessibility boundary by wrapping application children in `MotionConfig`: saved `reduceMotion: true` forces reduced motion, while the disabled application preference continues to defer to the user's operating-system reduced-motion preference.
+The Accessibility Settings modal has three binary controls — **Reduce Motion**, **Focus Mode**, and **Dyslexia-Friendly Font** — that are visually and behaviourally switches. They previously exposed toggle-button state with `aria-pressed`, which works as a generic pressed-button pattern but does not convey the more specific on/off switch role that matches the controls.
 
-No individual animation, recommendation policy, persistence schema, provider mapping, or execution-session behaviour changes.
-
-Application validation run 416 reached `npm run platform:validate` after checkout, locked dependency installation and Chromium setup all passed, then failed on the new deterministic source-contract test because it used the Node `URL` global without the explicit `node:url` import required by repository linting. The test harness has been repaired on the same PR; application behaviour did not change. This STATUS update records that evidence, so one new exact-head canonical validation is required before lifecycle completion.
+PR #198 preserves the existing native button keyboard activation, labels, descriptions, state changes, preview behaviour, persistence, styling, and provider boundaries while exposing `role="switch"` with `aria-checked` for each binary setting. Deterministic source-contract coverage protects the three-switch semantic contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — shared reduced-motion policy |
-| Gate state | VALIDATING — run 416 finding repaired; final exact-head validation pending |
+| Current gate | INTEGRATION — Accessibility Settings switch semantics |
+| Gate state | VALIDATING — implementation and durable handoff committed; exact-head canonical validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -68,37 +66,37 @@ Application validation run 416 reached `npm run platform:validate` after checkou
 
 | State | Current value |
 | --- | --- |
-| Post-merge baseline | PR #196 merged at `f785fc726924bf2594281828818dcd640aca5ca8` |
-| Active outcome | PR #197 — make reduced-motion preference govern Framer Motion |
-| Implemented change | AccessibilityPreferencesProvider now supplies shared Framer Motion reduced-motion policy |
-| Preserved behaviour | Existing preference persistence/CSS application, all individual animation definitions, provider and execution behaviour |
-| Deterministic coverage | `test/reduced-motion-framer-policy.test.mjs` protects the shared motion-policy wiring and now explicitly imports `URL` from `node:url` |
-| Validation | Run 416 failed in canonical platform validation on the test-harness lint defect; repaired exact-head validation pending |
+| Post-merge baseline | PR #197 merged at `89d853ab43e0d0448b88506461c79054ae07310a` |
+| Active outcome | PR #198 — expose binary accessibility controls as switches |
+| Implemented change | Reduce Motion, Focus Mode, and Dyslexia-Friendly Font now expose switch role/state semantics |
+| Preserved behaviour | Existing labels/descriptions, keyboard/click activation, preview/save/cancel behaviour, preference persistence, styling, provider and execution behaviour |
+| Deterministic coverage | `test/accessibility-toggle-switch-semantics.test.mjs` protects all three switch roles/states and prevents regression to toggle-button state for these controls |
+| Validation | Canonical exact-head Application validation pending after durable STATUS update |
 | Review/thread audit | Pending final exact-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Validate the repaired final PR #197 head, then audit reviews/threads and complete lifecycle if clean |
+| Next action | Validate the final exact PR #198 head, repair any in-scope finding, then audit reviews/threads and complete lifecycle if clean |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, validating PR #197. |
-| What is already happening? | PR #197 repairs the shared reduced-motion accessibility policy. |
-| What has been validated? | Run 416 proved checkout/dependency/Chromium setup and exposed an in-scope test-harness lint defect; the defect is repaired and exact-head revalidation is pending. |
-| What changed? | Saved Reduce Motion now controls Framer Motion globally; otherwise OS reduced-motion preference is respected. The deterministic test is now lint-safe. |
-| What is next? | Run canonical exact-head validation, repair any further finding, audit reviews/threads, then complete lifecycle if clean. |
+| Where am I? | Stage 3 — execution and next-action experience, validating PR #198. |
+| What is already happening? | PR #198 improves binary Accessibility Settings semantics without changing preference behaviour or persistence. |
+| What has been validated? | PR #197 completed its canonical lifecycle and merged; PR #198 exact-head validation is pending after its durable-state commit. |
+| What changed? | Three visually binary accessibility toggles now expose `role="switch"` and `aria-checked` while keeping their existing native button interaction. |
+| What is next? | Run canonical exact-head validation, repair any finding, audit reviews/threads, then complete lifecycle if clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Evidence for this slice
 
-- `src/contexts/AccessibilityPreferencesContext.jsx` imports and applies Framer Motion `MotionConfig` at the shared application-preferences boundary.
-- `reduceMotion: true` maps to `reducedMotion="always"`.
-- When the application preference is disabled, `reducedMotion="user"` preserves operating-system preference handling.
-- `test/reduced-motion-framer-policy.test.mjs` protects the shared wiring and explicitly imports `URL` from `node:url` for lint-safe Node execution.
-- Application validation run 416 failed only after entering the canonical validation command; checkout, dependency installation and Chromium setup had passed.
-- No data model, API, persistence schema, provider, recommendation, or durable execution-session behaviour changed.
+- `src/components/accessibility/AccessibilitySettings.jsx` exposes `role="switch"` on Reduce Motion, Focus Mode, and Dyslexia-Friendly Font.
+- Each binary control exposes its current state with the corresponding `aria-checked` value.
+- Existing `aria-label` and `aria-describedby` relationships remain intact.
+- The controls remain native `<button type="button">` elements, preserving keyboard activation without custom keyboard handling.
+- `test/accessibility-toggle-switch-semantics.test.mjs` protects the semantic contract and explicitly imports `URL` from `node:url` for lint-safe Node execution.
+- No preference schema, persistence, styling, provider, recommendation, or durable execution-session behaviour changed.
 
 ## Backend / provider work — intentionally deferred
 
@@ -106,7 +104,7 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the repaired exact PR #197 head;
+1. run canonical Application validation on the final exact PR #198 head;
 2. repair any remaining in-scope failure on this PR;
 3. re-audit review submissions and inline review threads;
 4. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
