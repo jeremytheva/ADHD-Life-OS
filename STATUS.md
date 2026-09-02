@@ -6,14 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Revalidate PR #199 after repairing its durable STATUS execution-state value, then complete repository-owned lifecycle and continue from fresh main.
+  objective: Validate and complete PR #200, which restores keyboard focus after removing a Quick Capture item.
   issue: null
-  pr: 199
-  branch: fix/task-selector-filter-focus-recovery
+  pr: 200
+  branch: fix/quick-capture-remove-focus-recovery
 next_actions:
-  - Require canonical exact-head validation to pass after the STATUS execution-state repair.
-  - If validation and review evidence are clean, complete PR #199 through the repository-owned lifecycle.
-  - After merge, inspect fresh main plus current GitHub work and continue the next evidence-backed frontend accessibility and interaction-integrity gap.
+  - Require canonical exact-head validation for PR #200.
+  - Audit final review and thread state after validation.
+  - If evidence is clean, complete PR #200 through the repository-owned lifecycle.
+  - After merge, inspect fresh main and continue the next evidence-backed frontend accessibility and interaction-integrity gap.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -22,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: FAIL
+  governance: NOT_RUN
   lint: NOT_RUN
   typecheck: NOT_RUN
   tests: NOT_RUN
   build: NOT_RUN
-  ci: FAIL
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 427 failed on handoff head 0c5f3aa1e787a77d561df37a1a074d953dfd632c because STATUS.md used unsupported execution_state READY_FOR_NEXT. The governance contract permits READY, IMPLEMENTING, VALIDATING, BLOCKED, COMPLETE, or MAINTENANCE. The durable state has been repaired to VALIDATING; fresh exact-head canonical validation is required.
-last_verified_commit: d126e9ec161253baad30c90b11becd8abcf4088f
-last_updated: 2026-09-03T00:14:42+10:00
+validation_basis: PR #199 passed canonical Application validation run 428 on exact head 3701b2c8a4e87e545444f01ab0a75dec40a80373 and merged into main at ff5be887c422932e8ba47819484d3cd969db1ded. PR #200 is the sole active implementation thread and requires fresh canonical validation after its implementation, regression test, and durable STATUS update.
+last_verified_commit: 3701b2c8a4e87e545444f01ab0a75dec40a80373
+last_updated: 2026-09-03T01:24:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,18 +44,16 @@ last_updated: 2026-09-03T00:14:42+10:00
 
 ## Current objective
 
-PR #199 restores keyboard-focus continuity in Task Selector: when recommendation filters are open and a user activates the internal **Hide recommendation filters** control, focus returns to the persistent recommendation-filter disclosure trigger instead of being lost when the transient panel is removed.
+PR #200 repairs a keyboard-focus continuity defect in Quick Capture. When a user activates a captured task's **Remove** button, that button is removed from the DOM with its item. The removal handler now transfers focus to the persistent Quick Capture input so keyboard users retain a predictable interaction point and can immediately continue capturing tasks.
 
-The implementation remains complete and intentionally narrow. Recommendation scoring, task retrieval, selected path, filter values, task selection, persistence, provider boundaries, animation, and the disclosure control's `aria-expanded` / `aria-controls` behaviour are unchanged.
-
-Canonical Application validation run 426 passed on implementation head `d126e9ec161253baad30c90b11becd8abcf4088f`. The later durable handoff commit introduced no application change, but run 427 failed governance because `STATUS.md` used unsupported machine-readable `execution_state: READY_FOR_NEXT`. That durable-state defect is now repaired to the canonical `VALIDATING` value and requires fresh exact-head validation before lifecycle completion.
+The change reuses the input ref already used for modal initial focus. Item removal, capture state, save behaviour, modal semantics, persistence, provider boundaries and task-organization policy remain unchanged.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | Revalidating after STATUS governance-state repair |
+| Gate state | Exact-head validation required for PR #200 |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -63,13 +62,14 @@ Canonical Application validation run 426 passed on implementation head `d126e9ec
 
 | State | Current value |
 | --- | --- |
-| Current delivery | PR #199 implementation complete; durable handoff governance defect repaired |
-| Implemented change | Internal filter-panel dismissal returns focus to the persistent disclosure trigger |
-| Preserved behaviour | Recommendation/filter policy, task selection, persistence, provider behaviour, animation and external disclosure-toggle behaviour |
-| Deterministic coverage | `test/task-selector-filter-focus-recovery.test.mjs` |
-| Validation evidence | Run 426 passed on implementation head; run 427 failed only at governance because `READY_FOR_NEXT` is not an accepted execution-state value; exact-head revalidation required after repair |
-| Review evidence | No submitted reviews and no inline review threads were present before the handoff commit; final exact-head audit remains required |
-| Current blocker | None; repository-owned validation/lifecycle evidence remains to complete |
+| Prior delivery | PR #199 merged at `ff5be887c422932e8ba47819484d3cd969db1ded` after exact-head Application validation run 428 passed |
+| Current delivery | Draft PR #200 — Quick Capture item-removal focus recovery |
+| Implemented change | Item removal returns focus to the persistent `quick-capture-input` |
+| Preserved behaviour | Capture contents, item removal semantics, saving, modal behaviour, persistence, provider behaviour and task organization |
+| Deterministic coverage | `test/quick-capture-remove-focus-recovery.test.mjs` |
+| Validation evidence | Fresh exact-head canonical validation pending after this durable STATUS update |
+| Review evidence | Final review/thread audit pending after exact-head validation |
+| Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Post-merge continuation | Inspect fresh `main` and continue the next evidence-backed Stage 3 accessibility/interaction-integrity slice |
 
@@ -77,35 +77,34 @@ Canonical Application validation run 426 passed on implementation head `d126e9ec
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience; PR #199 is revalidating after a STATUS governance-state repair. |
-| What is already happening? | PR #199 remains the sole active implementation thread and must pass fresh exact-head canonical validation before repository-owned lifecycle completion. |
-| What has been validated? | The application implementation passed canonical run 426. Run 427 failed only because durable STATUS used an unsupported execution-state enum. |
-| What changed? | Closing Task Selector's transient filter panel from its internal close control restores keyboard focus to the filter disclosure trigger; the latest commit repairs durable execution-state metadata only. |
-| What is next? | Pass exact-head validation, audit final review/thread state, complete #199 lifecycle, then continue from fresh main. |
+| Where am I? | Stage 3 — execution and next-action experience; PR #200 is the sole active implementation thread. |
+| What is already happening? | Quick Capture removal focus recovery is implemented with deterministic coverage and now requires exact-head validation. |
+| What has been validated? | The preceding PR #199 passed canonical run 428 before merge. PR #200 has not yet been validated on its current exact head. |
+| What changed? | Removing a captured task now returns keyboard focus to the persistent capture input instead of allowing focus to disappear with the removed button. |
+| What is next? | Run canonical exact-head validation, audit reviews/threads, complete the repository lifecycle if clean, then continue from fresh main. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
-## Evidence for the completed slice
+## Evidence for the current slice
 
-- `src/components/tasks/TaskSelector.jsx` retains a ref to the persistent recommendation-filter disclosure control.
-- The internal filter close handler dismisses the panel and moves focus back to that disclosure control.
-- The disclosure retains `aria-expanded` and `aria-controls="task-selector-filters"`.
-- `test/task-selector-filter-focus-recovery.test.mjs` protects the focus-recovery and disclosure-state contract.
-- Canonical run 426 passed on implementation head `d126e9ec161253baad30c90b11becd8abcf4088f`.
-- Run 427 isolated a durable-governance error rather than an application-behaviour defect.
-- No recommendation policy, filter data, persisted domain state, provider contract, or durable execution-session behaviour changed.
+- `src/components/projects/QuickCaptureModal.jsx` already owned `inputRef` as the modal's initial-focus target.
+- `handleRemoveItem` still removes exactly the selected captured item and now calls `inputRef.current?.focus()` after scheduling that removal.
+- The persistent input remains `id="quick-capture-input"` and is available throughout normal item removal.
+- `test/quick-capture-remove-focus-recovery.test.mjs` protects the input-ref, removal-handler and focus-transfer contract.
+- No provider, storage, recommendation, execution-session or backend contract changed.
 
 ## Backend / provider work — intentionally deferred
 
-Keep provider mappings fail-closed and do not let provider uncertainty block independent frontend accessibility, interaction-integrity, testing or cognitive-load work.
+Keep provider mappings fail-closed and do not let provider uncertainty block independent frontend accessibility, interaction-integrity, testing or cognitive-load work. Real provider-dependent execution work remains deferred until target-instance evidence exists.
 
 ## Next dependency-correct work
 
-1. pass fresh exact-head canonical validation after the STATUS governance repair;
-2. audit current review/thread state and complete repository-owned lifecycle for PR #199 when evidence is clean;
-3. after merge, inspect fresh `main`, open PRs/branches/checks and current durable state before creating new work;
-4. identify and repair the next concrete accessibility/interaction-integrity gap with deterministic/browser coverage where material;
-5. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. pass canonical validation on the final exact head of PR #200;
+2. audit submitted reviews and inline threads;
+3. reconcile the PR contract and complete repository-owned lifecycle when evidence is clean;
+4. after merge, inspect fresh `main`, open work, branches/checks and durable state before selecting the next slice;
+5. continue the next concrete frontend accessibility/interaction-integrity gap with focused regression coverage;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
