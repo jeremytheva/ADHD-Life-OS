@@ -6,17 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #194, which reduces secondary cognitive load on Today by progressively disclosing unscheduled task details while keeping their count visible.
+  objective: Complete PR #195, which reduces Tasks-page visual competition by keeping a compact task-load summary visible while progressively disclosing detailed workload metrics.
   issue: null
-  pr: 194
-  branch: feat/today-unscheduled-progressive-disclosure
+  pr: 195
+  branch: feat/tasks-load-summary-disclosure
 next_actions:
-  - Revalidate this STATUS-updated exact PR head through canonical Application validation.
-  - Repair any in-scope validation finding on the same PR.
+  - Run canonical Application validation on the repaired exact PR #195 head.
+  - Repair any remaining in-scope validation finding on the same PR.
   - Re-audit review submissions and inline review threads on the final exact head.
-  - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence remain clean.
+  - Apply lifecycle:implementation-complete only after final exact-head validation and review/thread evidence remain clean.
   - Allow repository automation to own Ready -> Mergeable -> Merged.
-  - After merge, inspect fresh main and continue the next evidence-backed client-side cognitive-load reduction task.
+  - After merge, inspect fresh main and continue the next evidence-backed independent Stage 3 task.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -25,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #194 repaired implementation head 1dac9186f312156531bc01d3adadc55fa192be15 passed canonical Application validation run 405. Run 404 had already proved dependency audit, governance, lint, typecheck, Node tests and build after the browserslist security repair, but exposed one stale Today Playwright expectation; that browser regression test was aligned to the new collapsed-by-default disclosure contract and run 405 passed. This STATUS-only handoff changes the candidate SHA and therefore requires one final canonical exact-head validation before lifecycle completion.
-last_verified_commit: 1dac9186f312156531bc01d3adadc55fa192be15
-last_updated: 2026-09-02T07:18:00+10:00
+validation_basis: PR #195 head face5f7c44eff7701b35c89a404922ccdf5bab66 reached canonical Application validation run 410. Dependency audit passed with zero vulnerabilities, but governance failed because STATUS.md used the non-canonical lint state REPAIRED_PENDING_REVALIDATION; governance permits only PASS, FAIL, NOT_RUN or NOT_APPLICABLE. The durable state contract is repaired on this branch by using canonical NOT_RUN values until exact-head validation re-establishes evidence. No application behaviour changed.
+last_verified_commit: f35be83aee31ce64dc5404c7f2b094e7f00efcf6
+last_updated: 2026-09-02T09:13:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,20 +46,20 @@ last_updated: 2026-09-02T07:18:00+10:00
 
 ## Current objective
 
-Complete PR #194, the active client-side cognitive-load slice after PR #193 merged into `main` at `62ce4f979c0fa215a20d6ae40cb4df1cc5d1e13f`.
+Complete PR #195, the next independent client-side cognitive-load slice after PR #194 merged into `main` at `f35be83aee31ce64dc5404c7f2b094e7f00efcf6`.
 
-PR #194 keeps the Today next-action experience primary by collapsing unscheduled task titles and scheduling guidance until the user explicitly chooses to review them. The number of unscheduled tasks remains visible so important state is not hidden. Once opened, Today still limits the initial list to three items and retains the existing show-more/show-less control for larger sets.
+The Tasks page previously expanded Task Load Analysis into multiple metric cards, estimated-time detail and warnings before the user reached recommendations, filters or the task list. PR #195 keeps the most useful awareness visible by default — total active tasks plus an attention count when overdue/critical work exists — while moving detailed priority, overdue, due-today and estimated-time metrics behind a native `details`/`summary` disclosure.
 
-The branch also contains the smallest repository-baseline dependency repair required by canonical validation: `browserslist` is explicitly resolved to the patched line after the prior lockfile version became subject to a high-severity advisory. The generated lockfile is committed; no provider or application architecture behaviour changed.
+The change is presentation-only. Existing task-load calculations, priority/recommendation policy, filters, sorting, task mutations, persistence and provider behaviour are unchanged. Deterministic source-contract coverage protects the compact-summary and detailed-disclosure contract.
 
-Canonical Application validation run 404 then exposed one hard failure in the pre-existing Today Playwright test because that test still expected unscheduled titles to be visible before disclosure. The test was repaired on the same PR to assert the intended collapsed-by-default state, explicit review expansion, bounded first-three preview, show-more/show-less behaviour, and re-collapse semantics. Repaired head `1dac9186f312156531bc01d3adadc55fa192be15` passed canonical Application validation run 405. This STATUS-only handoff moves the exact PR head, so one final exact-head canonical validation is required before lifecycle completion.
+Canonical Application validation run 408 reached lint after dependency audit and governance passed, then exposed a test-harness defect because the new deterministic test used `URL` without explicitly importing it for ESLint. That test-only defect was repaired on the same PR. Run 410 then exposed a durable-state governance defect rather than an application defect: `STATUS.md` used `REPAIRED_PENDING_REVALIDATION` for `validation.lint`, but the repository governance contract accepts only `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE`. This checkpoint repairs the state vocabulary and resets unverified gates to canonical `NOT_RUN` until exact-head validation runs again.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — Today unscheduled-task progressive disclosure |
-| Gate state | VALIDATING — repaired implementation head passed run 405; final STATUS-updated exact head requires canonical validation |
+| Current gate | INTEGRATION — Tasks load-summary progressive disclosure |
+| Gate state | VALIDATING — run 410 governance finding repaired; repaired exact head requires canonical validation |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -68,43 +68,41 @@ Canonical Application validation run 404 then exposed one hard failure in the pr
 
 | State | Current value |
 | --- | --- |
-| Post-merge baseline | PR #193 merged automatically at `62ce4f979c0fa215a20d6ae40cb4df1cc5d1e13f` |
-| Active outcome | PR #194 — progressively disclose unscheduled Today tasks |
-| Implemented change | Unscheduled task count remains visible while titles and scheduling guidance are collapsed behind an explicit accessible review control |
-| Validation repair | Patched `browserslist` dependency line; aligned the Today Playwright journey with the intended collapsed-by-default disclosure contract |
-| Preserved behaviour | Existing first-three limit after expansion, show-more/show-less, timeline loading, mode filtering, task completion, next-action behaviour, persistence and provider contracts |
-| Deterministic coverage | `test/next-action-experience.test.mjs` protects the disclosure contract |
-| Browser coverage | `e2e/today-unscheduled-disclosure.spec.js` now verifies collapsed default, explicit expansion, bounded preview, show-more/show-less and re-collapse |
-| Validated implementation head | `1dac9186f312156531bc01d3adadc55fa192be15` — Application validation run 405 passed |
-| Review/thread audit | No submitted reviews; no inline review threads before this STATUS-only handoff |
+| Post-merge baseline | PR #194 merged automatically at `f35be83aee31ce64dc5404c7f2b094e7f00efcf6` after final exact-head run 406 passed |
+| Active outcome | PR #195 — simplify Task Load Analysis |
+| Implemented change | Total task count and urgent attention remain visible; detailed workload metrics move behind native progressive disclosure |
+| Preserved behaviour | Analysis calculations, task priority/recommendation policy, filters, sort, mutations, persistence and provider contracts |
+| Deterministic coverage | `test/task-load-analysis-disclosure.test.mjs` protects summary visibility and detailed-metric availability |
+| Validation findings | Run 408: test-only lint failure (`URL` undefined). Run 410: STATUS governance vocabulary failure. |
+| Validation repairs | Added explicit `URL` import from `node:url`; restored STATUS validation fields to the repository's canonical state vocabulary. Application behaviour unchanged by either repair. |
+| Validation | Repaired exact-head canonical validation pending |
+| Review/thread audit | Pending final exact-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Revalidate the final STATUS-updated exact head, then re-audit reviews/threads and complete lifecycle if clean |
+| Next action | Revalidate the repaired exact PR #195 head and repair any remaining in-scope finding on the same PR |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, completing PR #194 lifecycle. |
-| What is already happening? | PR #194 reduces secondary Today-page competition by progressively disclosing unscheduled-task detail. |
-| What has been validated? | PR #194 repaired implementation head `1dac9186f312156531bc01d3adadc55fa192be15` passed Application validation run 405. |
-| What changed? | Today retains visible awareness of unscheduled work without expanding task titles/guidance by default; browser coverage now tests that contract; the dependency security baseline is patched. |
-| What is next? | Validate the final STATUS-updated exact head, re-audit reviews/threads, apply implementation-complete only if clean, then allow repository automation to merge. |
+| Where am I? | Stage 3 — execution and next-action experience, validating PR #195. |
+| What is already happening? | PR #195 reduces Tasks-page metric competition without removing workload information. |
+| What has been validated? | Run 408 passed dependency audit/governance before the repaired test lint finding. Run 410 passed dependency audit and then exposed the repaired STATUS governance-state defect. |
+| What changed? | Task Load now presents a compact default summary with detailed metrics available on demand; the regression harness and durable validation-state vocabulary have both been repaired. |
+| What is next? | Run exact-head canonical validation, repair any remaining in-scope finding, audit reviews/threads, then complete lifecycle if clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Evidence for this slice
 
-- `src/components/today/TodayView.jsx` introduces `showUnscheduledTasks` with a default collapsed state.
-- The unscheduled-task count remains visible without interaction.
-- The review control exposes `aria-expanded` and `aria-controls` for the secondary detail region.
-- Once expanded, the existing bounded first-three preview and show-more/show-less behaviour remain available.
-- Timeline reload/refilter collapses both the primary unscheduled disclosure and the nested show-all state.
-- `test/next-action-experience.test.mjs` protects the progressive-disclosure contract.
-- `e2e/today-unscheduled-disclosure.spec.js` protects the critical browser interaction path after the stale pre-change expectation was found by run 404.
-- `package.json` / `package-lock.json` carry the deliberate patched `browserslist` dependency resolution required by the canonical audit gate.
-- Canonical Application validation run 405 passed on implementation head `1dac9186f312156531bc01d3adadc55fa192be15`.
-- No execution-engine policy, provider contract, persistence model, scheduling policy or durable execution behaviour changed.
+- `src/components/tasks/TaskLoadAnalysis.jsx` retains the existing analysis input and calculations.
+- Total active tasks remain visible without interaction.
+- Overdue and critical work are summarized into a visible attention count.
+- Detailed total/critical/high/overdue/due-today/estimated-time information remains available behind native progressive disclosure.
+- No task loading, filtering, sorting, recommendation, mutation, persistence or provider code changed.
+- `test/task-load-analysis-disclosure.test.mjs` protects the presentation contract and explicitly imports `URL` from `node:url` for lint-clean deterministic execution.
+- Application validation run 408 passed audit/governance and then exposed the repaired test-only lint finding.
+- Application validation run 410 passed dependency audit with zero vulnerabilities and then exposed the repaired STATUS governance-state vocabulary finding.
 
 ## Backend / provider work — intentionally deferred
 
@@ -112,13 +110,12 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the final STATUS-updated PR #194 head;
-2. repair any in-scope failure on this PR;
+1. run canonical Application validation on the repaired exact PR #195 head;
+2. repair any remaining in-scope failure on this PR;
 3. re-audit review submissions and inline review threads;
-4. apply `lifecycle:implementation-complete` only after the final exact-head validation and audit are clean;
+4. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
 5. allow repository automation to own Ready -> Mergeable -> Merged;
-6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice;
-7. continue the highest-value evidence-backed independent client-side cognitive-load reduction work.
+6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice.
 
 ## Stage 3 exit conditions
 
