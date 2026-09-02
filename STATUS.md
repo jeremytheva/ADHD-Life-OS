@@ -4,17 +4,16 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: VALIDATING
+execution_state: READY_FOR_NEXT
 current_work:
-  objective: Complete PR #199, restoring focus to the recommendation-filter disclosure control when the transient Task Selector filter panel is closed from within.
+  objective: After PR #199 merges, inspect fresh main and continue the next evidence-backed frontend accessibility and interaction-integrity gap.
   issue: null
-  pr: 199
-  branch: fix/task-selector-filter-focus-recovery
+  pr: null
+  branch: null
 next_actions:
-  - Re-run canonical exact-head validation for PR #199 after correcting invalid STATUS validation-state values.
-  - Audit submitted reviews and inline review threads on the final exact head.
-  - When exact-head evidence is clean, reconcile the PR contract and allow repository lifecycle automation to complete the PR.
-  - After merge, inspect fresh main and continue the next evidence-backed frontend accessibility and interaction-integrity gap.
+  - Confirm PR #199 has merged and inspect fresh main plus current GitHub work before starting anything new.
+  - Continue the next evidence-backed frontend accessibility and interaction-integrity gap that is independent of unverified provider behaviour.
+  - Prefer shared interaction-pattern corrections and deterministic regression coverage over isolated cosmetic changes.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -28,11 +27,11 @@ validation:
   typecheck: NOT_RUN
   tests: NOT_RUN
   build: NOT_RUN
-  ci: FAIL
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Canonical Application validation run 425 failed on PR #199 head 0f5b4f613bda99d681f286d4ffa8d1bf799880c8 before application validation because STATUS.md used unsupported PENDING values for governance, lint, typecheck, tests, and build. Dependency audit passed with 0 vulnerabilities. The durable validation-state defect is corrected on the current branch and exact-head revalidation is required.
-last_verified_commit: null
-last_updated: 2026-09-02T22:18:00+10:00
+validation_basis: PR #199 implementation head d126e9ec161253baad30c90b11becd8abcf4088f passed canonical Application validation run 426 and had no submitted reviews or inline review threads. This durable post-merge handoff commit changes repository state only and requires exact-head canonical validation before lifecycle completion.
+last_verified_commit: d126e9ec161253baad30c90b11becd8abcf4088f
+last_updated: 2026-09-02T23:15:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,19 +43,17 @@ last_updated: 2026-09-02T22:18:00+10:00
 
 ## Current objective
 
-PR #199 is the sole active Stage 3 delivery thread. It fixes a keyboard-focus continuity gap in Task Selector: when the recommendation filters are open and a user activates the internal **Hide recommendation filters** button, that focused button is removed with the transient panel. The implementation now returns focus to the persistent recommendation-filter disclosure trigger.
+PR #199 restores keyboard-focus continuity in Task Selector: when recommendation filters are open and a user activates the internal **Hide recommendation filters** control, focus returns to the persistent recommendation-filter disclosure trigger instead of being lost when the transient panel is removed.
 
-The change is intentionally narrow. Existing recommendation scoring, task retrieval, selected path, filter values, task selection, persistence, provider boundaries, animation, and the disclosure control's `aria-expanded` / `aria-controls` behaviour remain unchanged.
-
-PR #198 has merged into `main` at `1f6b09100e2ab8b90fb6799d018d9c266efd3eb1`; no competing open PR existed when #199 was started from that exact main state.
+The implementation is complete and intentionally narrow. Recommendation scoring, task retrieval, selected path, filter values, task selection, persistence, provider boundaries, animation, and the disclosure control's `aria-expanded` / `aria-controls` behaviour are unchanged. The durable checkpoint is now written for the state that should exist after #199 merges rather than retaining the soon-to-close PR as the default re-entry target.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | VALIDATING PR #199 |
-| Execution state | VALIDATING |
+| Gate state | Final exact-head validation required before PR #199 lifecycle completion |
+| Execution state | READY_FOR_NEXT after merge |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -64,12 +61,13 @@ PR #198 has merged into `main` at `1f6b09100e2ab8b90fb6799d018d9c266efd3eb1`; no
 
 | State | Current value |
 | --- | --- |
-| Current delivery | Draft PR #199 — Task Selector filter focus recovery |
+| Current delivery | PR #199 implementation complete; durable post-merge handoff prepared |
 | Implemented change | Internal filter-panel dismissal returns focus to the persistent disclosure trigger |
 | Preserved behaviour | Recommendation/filter policy, task selection, persistence, provider behaviour, animation and external disclosure-toggle behaviour |
 | Deterministic coverage | `test/task-selector-filter-focus-recovery.test.mjs` |
-| Validation | Application validation run 425 failed at governance because STATUS.md used unsupported PENDING validation-state values; correction committed and exact-head revalidation required |
-| Current blocker | None outside the active PR; validation repair is in progress |
+| Validation evidence | Application validation run 426 passed on implementation head `d126e9ec161253baad30c90b11becd8abcf4088f`; this handoff commit requires fresh exact-head validation |
+| Review evidence | No submitted reviews and no inline review threads were present before the handoff commit |
+| Current blocker | None; repository lifecycle evidence remains to complete |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 | Post-merge continuation | Inspect fresh `main` and continue the next evidence-backed Stage 3 accessibility/interaction-integrity slice |
 
@@ -78,21 +76,21 @@ PR #198 has merged into `main` at `1f6b09100e2ab8b90fb6799d018d9c266efd3eb1`; no
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience; frontend accessibility/interaction integrity remains the highest independent priority while backend work is deferred. |
-| What is already happening? | Draft PR #199 is the sole active implementation thread and is being revalidated after a durable STATUS governance-state repair. |
-| What has been validated? | PR #198 completed and merged. PR #199 run 425 passed dependency audit but stopped at governance before lint/typecheck/tests/build because STATUS validation fields used unsupported PENDING values. |
-| What changed? | Closing Task Selector's transient filter panel from its internal close control now restores keyboard focus to the filter disclosure trigger. The subsequent repair only corrects durable validation-state vocabulary in STATUS.md. |
-| What is next? | Revalidate #199, repair any real finding, audit reviews/threads, complete lifecycle, then inspect fresh main for the next accessibility gap. |
+| What is already happening? | PR #199 is at final exact-head validation/lifecycle completion; after merge there should be no retained active implementation branch in this handoff. |
+| What has been validated? | PR #199 implementation head passed canonical run 426. The final durable handoff head still requires canonical exact-head validation. |
+| What changed? | Closing Task Selector's transient filter panel from its internal close control restores keyboard focus to the filter disclosure trigger. |
+| What is next? | Finish #199 lifecycle from exact-head evidence, then inspect fresh main/current GitHub state and continue the next evidence-backed accessibility gap. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
-## Evidence for the active slice
+## Evidence for the completed slice
 
 - `src/components/tasks/TaskSelector.jsx` retains a ref to the persistent recommendation-filter disclosure control.
 - The internal filter close handler dismisses the panel and moves focus back to that disclosure control.
 - The disclosure retains `aria-expanded` and `aria-controls="task-selector-filters"`.
 - `test/task-selector-filter-focus-recovery.test.mjs` protects the focus-recovery and disclosure-state contract.
-- Canonical run 425 found no dependency vulnerabilities and failed only because the durable `STATUS.md` validation vocabulary violated the governance validator contract.
-- `STATUS.md` now uses repository-supported validation-state values; no application behaviour changed in that repair.
+- Canonical run 426 passed on implementation head `d126e9ec161253baad30c90b11becd8abcf4088f`.
+- No submitted reviews or inline review threads were present at the completion audit before this handoff commit.
 - No recommendation policy, filter data, persisted domain state, provider contract, or durable execution-session behaviour changed.
 
 ## Backend / provider work — intentionally deferred
@@ -101,12 +99,11 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. obtain canonical `npm run platform:validate` evidence on the corrected exact final PR #199 head;
-2. repair any real validation finding on the same branch and revalidate the new exact head;
-3. audit submitted reviews and inline review threads;
-4. once clean, update the durable post-merge handoff, reconcile the PR contract, and mark implementation complete for repository-owned readiness/merge automation;
-5. after merge, inspect fresh `main` and continue the next evidence-backed frontend accessibility and interaction-integrity gap;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. complete exact-head validation and repository-owned lifecycle for PR #199;
+2. after merge, inspect fresh `main`, open PRs/branches/checks and current durable state before creating new work;
+3. identify the next concrete accessibility/interaction-integrity gap from implemented UI behaviour and existing regression coverage;
+4. repair that gap as one focused Draft PR with deterministic coverage where material;
+5. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
