@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react'
+import { MotionConfig } from 'framer-motion'
 import {
   applyAccessibilityPreferences,
   initializeAccessibilityPreferences,
@@ -20,7 +21,9 @@ export const AccessibilityPreferencesProvider = ({ children, initialPreferences 
 
   return (
     <AccessibilityPreferencesContext.Provider value={{ preferences, savePreferences }}>
-      {children}
+      <MotionConfig reducedMotion={preferences.reduceMotion ? 'always' : 'user'}>
+        {children}
+      </MotionConfig>
     </AccessibilityPreferencesContext.Provider>
   )
 }
