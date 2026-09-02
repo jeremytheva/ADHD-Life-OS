@@ -6,17 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #195, which reduces Tasks-page visual competition by keeping a compact task-load summary visible while progressively disclosing detailed workload metrics.
+  objective: Complete PR #196, which makes Today next-action selection changes perceivable to assistive technology without changing recommendation behaviour.
   issue: null
-  pr: 195
-  branch: feat/tasks-load-summary-disclosure
+  pr: 196
+  branch: feat/next-action-live-announcement
 next_actions:
-  - Run canonical Application validation on the repaired exact PR #195 head.
-  - Repair any remaining in-scope validation finding on the same PR.
+  - Run canonical Application validation on the exact PR #196 head.
+  - Repair any in-scope validation finding on the same PR.
   - Re-audit review submissions and inline review threads on the final exact head.
   - Apply lifecycle:implementation-complete only after final exact-head validation and review/thread evidence remain clean.
   - Allow repository automation to own Ready -> Mergeable -> Merged.
-  - After merge, inspect fresh main and continue the next evidence-backed independent Stage 3 task.
+  - After merge, inspect fresh main and continue the next evidence-backed independent Stage 3 accessibility task.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -32,9 +32,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #195 head face5f7c44eff7701b35c89a404922ccdf5bab66 reached canonical Application validation run 410. Dependency audit passed with zero vulnerabilities, but governance failed because STATUS.md used the non-canonical lint state REPAIRED_PENDING_REVALIDATION; governance permits only PASS, FAIL, NOT_RUN or NOT_APPLICABLE. The durable state contract is repaired on this branch by using canonical NOT_RUN values until exact-head validation re-establishes evidence. No application behaviour changed.
-last_verified_commit: f35be83aee31ce64dc5404c7f2b094e7f00efcf6
-last_updated: 2026-09-02T09:13:00+10:00
+validation_basis: PR #195 passed canonical Application validation run 411 on exact head fe19cc9ed0cad5cc78d166626329a3b505b2a993 and merged into main at 9c4c67a77a33440f99502f1290f90cd450a7d983. Fresh inspection found no competing open PRs. PR #196 adds a polite atomic visually hidden status announcement for the currently selected Today recommendation plus deterministic source-contract coverage; exact-head canonical validation is pending.
+last_verified_commit: 9c4c67a77a33440f99502f1290f90cd450a7d983
+last_updated: 2026-09-02T11:15:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,20 +46,18 @@ last_updated: 2026-09-02T09:13:00+10:00
 
 ## Current objective
 
-Complete PR #195, the next independent client-side cognitive-load slice after PR #194 merged into `main` at `f35be83aee31ce64dc5404c7f2b094e7f00efcf6`.
+Complete PR #196, the next independent Stage 3 frontend-accessibility slice after PR #195 merged into `main` at `9c4c67a77a33440f99502f1290f90cd450a7d983`.
 
-The Tasks page previously expanded Task Load Analysis into multiple metric cards, estimated-time detail and warnings before the user reached recommendations, filters or the task list. PR #195 keeps the most useful awareness visible by default — total active tasks plus an attention count when overdue/critical work exists — while moving detailed priority, overdue, due-today and estimated-time metrics behind a native `details`/`summary` disclosure.
+The Today next-action panel already exposes loading and skip/restore feedback as status messages, but the `Give me another option` action changes the selected recommendation while keyboard focus remains on the initiating button. Without a dedicated live announcement, assistive-technology users may not be told that the recommendation title and concrete start action changed.
 
-The change is presentation-only. Existing task-load calculations, priority/recommendation policy, filters, sorting, task mutations, persistence and provider behaviour are unchanged. Deterministic source-contract coverage protects the compact-summary and detailed-disclosure contract.
-
-Canonical Application validation run 408 reached lint after dependency audit and governance passed, then exposed a test-harness defect because the new deterministic test used `URL` without explicitly importing it for ESLint. That test-only defect was repaired on the same PR. Run 410 then exposed a durable-state governance defect rather than an application defect: `STATUS.md` used `REPAIRED_PENDING_REVALIDATION` for `validation.lint`, but the repository governance contract accepts only `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE`. This checkpoint repairs the state vocabulary and resets unverified gates to canonical `NOT_RUN` until exact-head validation runs again.
+PR #196 adds a visually hidden `role="status"`, `aria-live="polite"`, `aria-atomic="true"` region derived from the current recommendation. It announces the selected title and its `start_action` while leaving visual layout, focus, ranking, skip behaviour, fit controls, refresh, persistence and provider contracts unchanged. Deterministic source-contract coverage protects the announcement semantics.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — Tasks load-summary progressive disclosure |
-| Gate state | VALIDATING — run 410 governance finding repaired; repaired exact head requires canonical validation |
+| Current gate | INTEGRATION — Today next-action live announcement |
+| Gate state | VALIDATING — exact-head canonical validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -68,54 +66,50 @@ Canonical Application validation run 408 reached lint after dependency audit and
 
 | State | Current value |
 | --- | --- |
-| Post-merge baseline | PR #194 merged automatically at `f35be83aee31ce64dc5404c7f2b094e7f00efcf6` after final exact-head run 406 passed |
-| Active outcome | PR #195 — simplify Task Load Analysis |
-| Implemented change | Total task count and urgent attention remain visible; detailed workload metrics move behind native progressive disclosure |
-| Preserved behaviour | Analysis calculations, task priority/recommendation policy, filters, sort, mutations, persistence and provider contracts |
-| Deterministic coverage | `test/task-load-analysis-disclosure.test.mjs` protects summary visibility and detailed-metric availability |
-| Validation findings | Run 408: test-only lint failure (`URL` undefined). Run 410: STATUS governance vocabulary failure. |
-| Validation repairs | Added explicit `URL` import from `node:url`; restored STATUS validation fields to the repository's canonical state vocabulary. Application behaviour unchanged by either repair. |
-| Validation | Repaired exact-head canonical validation pending |
+| Post-merge baseline | PR #195 merged at `9c4c67a77a33440f99502f1290f90cd450a7d983` after final exact-head validation passed |
+| Active outcome | PR #196 — announce next-action selection changes |
+| Implemented change | Current recommendation title and concrete start action are exposed through a polite atomic hidden status region |
+| Preserved behaviour | Recommendation eligibility/ranking, selection cycling, skip/restore, fit controls, refresh, persistence and provider boundaries |
+| Deterministic coverage | `test/next-action-selection-announcement.test.mjs` protects the live-announcement contract |
+| Validation | Exact-head canonical Application validation pending |
 | Review/thread audit | Pending final exact-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Revalidate the repaired exact PR #195 head and repair any remaining in-scope finding on the same PR |
+| Next action | Complete canonical validation on the exact PR #196 head and repair any in-scope finding on the same PR |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, validating PR #195. |
-| What is already happening? | PR #195 reduces Tasks-page metric competition without removing workload information. |
-| What has been validated? | Run 408 passed dependency audit/governance before the repaired test lint finding. Run 410 passed dependency audit and then exposed the repaired STATUS governance-state defect. |
-| What changed? | Task Load now presents a compact default summary with detailed metrics available on demand; the regression harness and durable validation-state vocabulary have both been repaired. |
-| What is next? | Run exact-head canonical validation, repair any remaining in-scope finding, audit reviews/threads, then complete lifecycle if clean. |
+| Where am I? | Stage 3 — execution and next-action experience, validating PR #196. |
+| What is already happening? | PR #196 improves Today next-action interaction accessibility without changing policy or persistence. |
+| What has been validated? | PR #195 passed its final canonical gate and merged. PR #196 exact-head validation is pending. |
+| What changed? | Recommendation changes now have an assistive-technology announcement containing the selected title and start action. |
+| What is next? | Validate the exact head, repair any in-scope finding, audit reviews/threads, then complete lifecycle if clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Evidence for this slice
 
-- `src/components/tasks/TaskLoadAnalysis.jsx` retains the existing analysis input and calculations.
-- Total active tasks remain visible without interaction.
-- Overdue and critical work are summarized into a visible attention count.
-- Detailed total/critical/high/overdue/due-today/estimated-time information remains available behind native progressive disclosure.
-- No task loading, filtering, sorting, recommendation, mutation, persistence or provider code changed.
-- `test/task-load-analysis-disclosure.test.mjs` protects the presentation contract and explicitly imports `URL` from `node:url` for lint-clean deterministic execution.
-- Application validation run 408 passed audit/governance and then exposed the repaired test-only lint finding.
-- Application validation run 410 passed dependency audit with zero vulnerabilities and then exposed the repaired STATUS governance-state vocabulary finding.
+- `src/components/today/NextActionPanel.jsx` now includes a visually hidden polite atomic status region when a recommendation is selected.
+- The announcement includes `selected.title` and `selected.start_action`.
+- `Give me another option` continues to change only `selectedIndex`; focus behaviour and recommendation policy are unchanged.
+- Existing visible feedback for skip/restore remains intact.
+- `test/next-action-selection-announcement.test.mjs` protects the new semantic contract.
+- No data model, API, persistence, provider or durable execution-session behaviour changed.
 
 ## Backend / provider work — intentionally deferred
 
-Keep provider mappings fail-closed and do not let provider uncertainty block independent frontend/accessibility/testing work.
+Keep provider mappings fail-closed and do not let provider uncertainty block independent frontend accessibility, interaction-integrity, testing or cognitive-load work.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the repaired exact PR #195 head;
+1. complete canonical Application validation on the exact PR #196 head;
 2. repair any remaining in-scope failure on this PR;
 3. re-audit review submissions and inline review threads;
 4. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
 5. allow repository automation to own Ready -> Mergeable -> Merged;
-6. inspect fresh `main` and open PRs before selecting the next Stage 3 slice.
+6. inspect fresh `main` and open PRs before selecting the next Stage 3 accessibility slice.
 
 ## Stage 3 exit conditions
 
