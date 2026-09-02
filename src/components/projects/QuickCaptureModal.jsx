@@ -33,6 +33,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
   const handleRemoveItem = (index) => {
     if (isSaving) return
     setItems(items.filter((_, i) => i !== index))
+    inputRef.current?.focus()
   }
 
   const handleSaveAll = async () => {
