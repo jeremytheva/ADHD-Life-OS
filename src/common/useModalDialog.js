@@ -56,7 +56,7 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
       if (!isTopModal(dialogRef)) return
 
       const initialTarget = initialFocusRef?.current
-      if (initialTarget && !initialTarget.disabled) {
+      if (initialTarget && !initialTarget.disabled && isVisibleFocusable(initialTarget)) {
         initialTarget.focus()
         return
       }
