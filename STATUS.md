@@ -11,7 +11,7 @@ current_work:
   pr: 196
   branch: feat/next-action-live-announcement
 next_actions:
-  - Run canonical Application validation on the exact PR #196 head.
+  - Run canonical Application validation on the final exact PR #196 head after this durable-state update.
   - Repair any in-scope validation finding on the same PR.
   - Re-audit review submissions and inline review threads on the final exact head.
   - Apply lifecycle:implementation-complete only after final exact-head validation and review/thread evidence remain clean.
@@ -32,9 +32,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #195 passed canonical Application validation run 411 on exact head fe19cc9ed0cad5cc78d166626329a3b505b2a993 and merged into main at 9c4c67a77a33440f99502f1290f90cd450a7d983. Fresh inspection found no competing open PRs. PR #196 adds a polite atomic visually hidden status announcement for the currently selected Today recommendation plus deterministic source-contract coverage; exact-head canonical validation is pending.
-last_verified_commit: 9c4c67a77a33440f99502f1290f90cd450a7d983
-last_updated: 2026-09-02T11:15:00+10:00
+validation_basis: PR #196 implementation head 3a3a80671954f645f2e9811337c04926a9143a10 passed canonical Application validation run 413. This STATUS.md checkpoint records that evidence and the post-merge continuation path; because this documentation commit changes the PR head, final exact-head canonical validation is required again before lifecycle completion.
+last_verified_commit: 3a3a80671954f645f2e9811337c04926a9143a10
+last_updated: 2026-09-02T12:11:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -52,12 +52,14 @@ The Today next-action panel already exposes loading and skip/restore feedback as
 
 PR #196 adds a visually hidden `role="status"`, `aria-live="polite"`, `aria-atomic="true"` region derived from the current recommendation. It announces the selected title and its `start_action` while leaving visual layout, focus, ranking, skip behaviour, fit controls, refresh, persistence and provider contracts unchanged. Deterministic source-contract coverage protects the announcement semantics.
 
+Canonical Application validation run 413 passed on implementation head `3a3a80671954f645f2e9811337c04926a9143a10`. This durable-state update now records the successful implementation validation and preserves the post-merge continuation checkpoint. Because the STATUS update itself changes the PR head, the repository contract requires one final canonical validation run on the new exact head before lifecycle completion.
+
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — Today next-action live announcement |
-| Gate state | VALIDATING — exact-head canonical validation pending |
+| Gate state | VALIDATING — implementation head passed run 413; final documentation head requires exact-head validation |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -71,11 +73,11 @@ PR #196 adds a visually hidden `role="status"`, `aria-live="polite"`, `aria-atom
 | Implemented change | Current recommendation title and concrete start action are exposed through a polite atomic hidden status region |
 | Preserved behaviour | Recommendation eligibility/ranking, selection cycling, skip/restore, fit controls, refresh, persistence and provider boundaries |
 | Deterministic coverage | `test/next-action-selection-announcement.test.mjs` protects the live-announcement contract |
-| Validation | Exact-head canonical Application validation pending |
+| Validation | Application validation run 413 passed on implementation head; final documentation head validation pending |
 | Review/thread audit | Pending final exact-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Complete canonical validation on the exact PR #196 head and repair any in-scope finding on the same PR |
+| Next action | Validate the final exact PR #196 head, then audit reviews/threads and complete lifecycle if clean |
 
 ## Autonomous continuation entry answers
 
@@ -83,20 +85,21 @@ PR #196 adds a visually hidden `role="status"`, `aria-live="polite"`, `aria-atom
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience, validating PR #196. |
 | What is already happening? | PR #196 improves Today next-action interaction accessibility without changing policy or persistence. |
-| What has been validated? | PR #195 passed its final canonical gate and merged. PR #196 exact-head validation is pending. |
-| What changed? | Recommendation changes now have an assistive-technology announcement containing the selected title and start action. |
-| What is next? | Validate the exact head, repair any in-scope finding, audit reviews/threads, then complete lifecycle if clean. |
+| What has been validated? | PR #196 implementation head passed canonical Application validation run 413. |
+| What changed? | Recommendation changes now have an assistive-technology announcement containing the selected title and start action; durable STATUS now records the passing implementation evidence and post-merge handoff. |
+| What is next? | Validate the final exact head, audit reviews/threads, then complete lifecycle if clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Evidence for this slice
 
-- `src/components/today/NextActionPanel.jsx` now includes a visually hidden polite atomic status region when a recommendation is selected.
+- `src/components/today/NextActionPanel.jsx` includes a visually hidden polite atomic status region when a recommendation is selected.
 - The announcement includes `selected.title` and `selected.start_action`.
 - `Give me another option` continues to change only `selectedIndex`; focus behaviour and recommendation policy are unchanged.
 - Existing visible feedback for skip/restore remains intact.
 - `test/next-action-selection-announcement.test.mjs` protects the new semantic contract.
 - No data model, API, persistence, provider or durable execution-session behaviour changed.
+- Canonical Application validation run 413 passed on implementation head `3a3a80671954f645f2e9811337c04926a9143a10`.
 
 ## Backend / provider work — intentionally deferred
 
@@ -104,7 +107,7 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. complete canonical Application validation on the exact PR #196 head;
+1. run canonical Application validation on the final exact PR #196 head after this STATUS update;
 2. repair any remaining in-scope failure on this PR;
 3. re-audit review submissions and inline review threads;
 4. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
