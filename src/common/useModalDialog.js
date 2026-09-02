@@ -11,9 +11,22 @@ const FOCUSABLE_SELECTOR = [
 
 const modalStack = []
 
+const isVisibleFocusable = (element) => {
+  if (
+    element.hasAttribute('hidden') ||
+    element.getAttribute('aria-hidden') === 'true' ||
+    element.closest('[hidden], [aria-hidden="true"], [inert]')
+  ) {
+    return false
+  }
+
+  const style = window.getComputedStyle(element)
+  return style.display !== 'none' && style.visibility !== 'hidden' && element.getClientRects().length > 0
+}
+
 const getFocusableElements = (container) => Array.from(
   container?.querySelectorAll(FOCUSABLE_SELECTOR) ?? []
-).filter((element) => !element.hasAttribute('hidden') && element.getAttribute('aria-hidden') !== 'true')
+).filter(isVisibleFocusable)
 
 const isTopModal = (dialogRef) => modalStack[modalStack.length - 1] === dialogRef
 
