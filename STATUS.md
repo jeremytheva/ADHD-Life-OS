@@ -4,19 +4,16 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: VALIDATING
+execution_state: READY
 current_work:
-  objective: Complete PR #197, which makes the existing Reduce Motion preference govern shared Framer Motion animations while preserving OS-level reduced-motion support.
+  objective: After PR #198 merges, inspect fresh main and continue the next evidence-backed independent Stage 3 frontend accessibility and interaction-integrity slice.
   issue: null
-  pr: 197
-  branch: fix/reduced-motion-framer-policy
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the repaired exact PR #197 head.
-  - Repair any further in-scope validation finding on the same PR.
-  - Re-audit review submissions and inline review threads on the final exact head.
-  - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence remain clean.
-  - Allow repository automation to own Ready -> Mergeable -> Merged.
-  - After merge, inspect fresh main and continue the next evidence-backed independent Stage 3 accessibility task.
+  - Inspect fresh main, open PRs, checks, relevant architecture and existing accessibility implementation before selecting new work.
+  - Continue the highest-priority evidence-backed frontend accessibility and interaction-integrity gap without duplicating existing work.
+  - Prefer shared interaction corrections and deterministic regression coverage over isolated cosmetic changes.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -25,16 +22,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: PENDING
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: Application validation run 416 failed on PR #197 head e5c82e320bddf5db4546185ec5d816d47a28ad45 during canonical platform validation after checkout, dependency installation and Chromium setup passed. The new source-contract test referenced URL without an explicit node:url import; that lint-safety defect was repaired on the same PR. Canonical exact-head revalidation is pending after this durable-state update.
-last_verified_commit: null
-last_updated: 2026-09-02T15:15:00+10:00
+validation_basis: Canonical Application validation run 422 passed on PR #198 implementation head d0d36111dba9d9577159b88b7ca8f18478d90f41 after the stale accessibility-description test contract was repaired. The final lifecycle exact-head gate must still pass for any later handoff commit before repository automation may merge the PR.
+last_verified_commit: d0d36111dba9d9577159b88b7ca8f18478d90f41
+last_updated: 2026-09-02T19:10:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,21 +43,19 @@ last_updated: 2026-09-02T15:15:00+10:00
 
 ## Current objective
 
-Complete PR #197, the next independent Stage 3 frontend-accessibility slice after PR #196 merged into `main` at `f785fc726924bf2594281828818dcd640aca5ca8`.
+PR #198 completes the current independent Stage 3 accessibility slice by exposing the three binary Accessibility Settings controls — **Reduce Motion**, **Focus Mode**, and **Dyslexia-Friendly Font** — with switch semantics matching their visual and interaction model.
 
-The application already exposes a saved **Reduce Motion** preference, but its implementation only sets a CSS animation-duration variable. Framer Motion components use JavaScript-driven motion configuration and therefore were not governed by that application preference. PR #197 repairs the shared accessibility boundary by wrapping application children in `MotionConfig`: saved `reduceMotion: true` forces reduced motion, while the disabled application preference continues to defer to the user's operating-system reduced-motion preference.
+The implementation preserves native button keyboard activation, labels, descriptions, state changes, preview behaviour, persistence, styling, and provider boundaries while exposing `role="switch"` with `aria-checked`. Deterministic coverage protects both the switch-role/state contract and each visible-description relationship.
 
-No individual animation, recommendation policy, persistence schema, provider mapping, or execution-session behaviour changes.
-
-Application validation run 416 reached `npm run platform:validate` after checkout, locked dependency installation and Chromium setup all passed, then failed on the new deterministic source-contract test because it used the Node `URL` global without the explicit `node:url` import required by repository linting. The test harness has been repaired on the same PR; application behaviour did not change. This STATUS update records that evidence, so one new exact-head canonical validation is required before lifecycle completion.
+Canonical Application validation run 422 passed on implementation head `d0d36111dba9d9577159b88b7ca8f18478d90f41`. This durable checkpoint intentionally points the next repository entry to fresh `main` after #198 merges rather than back to a soon-to-close PR.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — shared reduced-motion policy |
-| Gate state | VALIDATING — run 416 finding repaired; final exact-head validation pending |
-| Execution state | VALIDATING |
+| Current gate | INTEGRATION — frontend accessibility and interaction integrity |
+| Gate state | READY FOR NEXT SLICE after repository-owned completion of PR #198 |
+| Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -68,37 +63,37 @@ Application validation run 416 reached `npm run platform:validate` after checkou
 
 | State | Current value |
 | --- | --- |
-| Post-merge baseline | PR #196 merged at `f785fc726924bf2594281828818dcd640aca5ca8` |
-| Active outcome | PR #197 — make reduced-motion preference govern Framer Motion |
-| Implemented change | AccessibilityPreferencesProvider now supplies shared Framer Motion reduced-motion policy |
-| Preserved behaviour | Existing preference persistence/CSS application, all individual animation definitions, provider and execution behaviour |
-| Deterministic coverage | `test/reduced-motion-framer-policy.test.mjs` protects the shared motion-policy wiring and now explicitly imports `URL` from `node:url` |
-| Validation | Run 416 failed in canonical platform validation on the test-harness lint defect; repaired exact-head validation pending |
-| Review/thread audit | Pending final exact-head audit |
+| Current delivery | PR #198 — Accessibility Settings switch semantics |
+| Implemented change | Reduce Motion, Focus Mode, and Dyslexia-Friendly Font expose `role="switch"` and `aria-checked` |
+| Preserved behaviour | Existing labels/descriptions, keyboard/click activation, preview/save/cancel behaviour, preference persistence, styling, provider and execution behaviour |
+| Deterministic coverage | `test/accessibility-toggle-switch-semantics.test.mjs` and `test/accessibility-toggle-description-semantics.test.mjs` |
+| Validation | Canonical Application validation run 422 passed on implementation head `d0d36111dba9d9577159b88b7ca8f18478d90f41` |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Validate the repaired final PR #197 head, then audit reviews/threads and complete lifecycle if clean |
+| Next action | After #198 merges, inspect fresh `main` and continue the next evidence-backed Stage 3 accessibility/interaction-integrity slice |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, validating PR #197. |
-| What is already happening? | PR #197 repairs the shared reduced-motion accessibility policy. |
-| What has been validated? | Run 416 proved checkout/dependency/Chromium setup and exposed an in-scope test-harness lint defect; the defect is repaired and exact-head revalidation is pending. |
-| What changed? | Saved Reduce Motion now controls Framer Motion globally; otherwise OS reduced-motion preference is respected. The deterministic test is now lint-safe. |
-| What is next? | Run canonical exact-head validation, repair any further finding, audit reviews/threads, then complete lifecycle if clean. |
+| Where am I? | Stage 3 — execution and next-action experience; frontend accessibility/interaction integrity remains the highest independent priority while backend work is deferred. |
+| What is already happening? | PR #198 is the current delivery slice and repository automation owns its final lifecycle once exact-head evidence is clean. |
+| What has been validated? | Application validation run 422 passed on the repaired #198 implementation head. |
+| What changed? | Three visually binary accessibility controls now expose specific switch role/state semantics without changing their existing behaviour or persistence. |
+| What is next? | Inspect fresh `main` and existing work after #198 merges, then continue the highest-priority evidence-backed accessibility/interaction-integrity gap. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
-## Evidence for this slice
+## Evidence for the completed slice
 
-- `src/contexts/AccessibilityPreferencesContext.jsx` imports and applies Framer Motion `MotionConfig` at the shared application-preferences boundary.
-- `reduceMotion: true` maps to `reducedMotion="always"`.
-- When the application preference is disabled, `reducedMotion="user"` preserves operating-system preference handling.
-- `test/reduced-motion-framer-policy.test.mjs` protects the shared wiring and explicitly imports `URL` from `node:url` for lint-safe Node execution.
-- Application validation run 416 failed only after entering the canonical validation command; checkout, dependency installation and Chromium setup had passed.
-- No data model, API, persistence schema, provider, recommendation, or durable execution-session behaviour changed.
+- `src/components/accessibility/AccessibilitySettings.jsx` exposes `role="switch"` on Reduce Motion, Focus Mode, and Dyslexia-Friendly Font.
+- Each binary control exposes its current state with the corresponding `aria-checked` value.
+- Existing `aria-label` and `aria-describedby` relationships remain intact.
+- The controls remain native `<button type="button">` elements, preserving keyboard activation without custom keyboard handling.
+- `test/accessibility-toggle-switch-semantics.test.mjs` protects the semantic contract.
+- `test/accessibility-toggle-description-semantics.test.mjs` protects each visible-description association while asserting the switch state contract.
+- Canonical Application validation run 422 passed on the repaired implementation head.
+- No preference schema, persistence, styling, provider, recommendation, or durable execution-session behaviour changed.
 
 ## Backend / provider work — intentionally deferred
 
@@ -106,12 +101,11 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the repaired exact PR #197 head;
-2. repair any remaining in-scope failure on this PR;
-3. re-audit review submissions and inline review threads;
-4. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
-5. allow repository automation to own Ready -> Mergeable -> Merged;
-6. inspect fresh `main` and open PRs before selecting the next Stage 3 accessibility slice.
+1. allow repository automation to complete PR #198 only after final exact-head validation and review/thread evidence remain clean;
+2. inspect fresh `main`, open PRs and current checks after merge before selecting new work;
+3. continue the next evidence-backed frontend accessibility and interaction-integrity gap, preferring shared interaction patterns over isolated cosmetic changes;
+4. add deterministic/browser regression coverage where the behaviour is material;
+5. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 

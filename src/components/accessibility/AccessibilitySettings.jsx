@@ -205,10 +205,11 @@ const AccessibilitySettings = ({ onClose }) => {
               </div>
               <button
                 type="button"
+                role="switch"
                 onClick={() => handleChange('reduceMotion', !settings.reduceMotion)}
                 aria-label="Reduce motion"
                 aria-describedby="accessibility-reduce-motion-description"
-                aria-pressed={settings.reduceMotion}
+                aria-checked={settings.reduceMotion}
                 className={`
                   w-12 h-6 rounded-full transition-colors
                   ${settings.reduceMotion ? 'bg-green-500' : 'bg-slate-300'}
@@ -236,10 +237,11 @@ const AccessibilitySettings = ({ onClose }) => {
               </div>
               <button
                 type="button"
+                role="switch"
                 onClick={() => handleChange('focusMode', !settings.focusMode)}
                 aria-label="Focus mode"
                 aria-describedby="accessibility-focus-mode-description"
-                aria-pressed={settings.focusMode}
+                aria-checked={settings.focusMode}
                 className={`
                   w-12 h-6 rounded-full transition-colors
                   ${settings.focusMode ? 'bg-green-500' : 'bg-slate-300'}
@@ -267,10 +269,11 @@ const AccessibilitySettings = ({ onClose }) => {
               </div>
               <button
                 type="button"
+                role="switch"
                 onClick={() => handleChange('dyslexicFont', !settings.dyslexicFont)}
                 aria-label="Dyslexia-friendly font"
                 aria-describedby="accessibility-dyslexic-font-description"
-                aria-pressed={settings.dyslexicFont}
+                aria-checked={settings.dyslexicFont}
                 className={`
                   w-12 h-6 rounded-full transition-colors
                   ${settings.dyslexicFont ? 'bg-green-500' : 'bg-slate-300'}
