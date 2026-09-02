@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -30,6 +30,7 @@ const TaskSelector = ({ onSelectTask }) => {
   const [showFilters, setShowFilters] = useState(false)
   const [selectedPath, setSelectedPath] = useState('all')
   const [loading, setLoading] = useState(true)
+  const filterToggleRef = useRef(null)
 
   const loadTasksAndRecommendations = useCallback(async () => {
     try {
@@ -64,6 +65,11 @@ const TaskSelector = ({ onSelectTask }) => {
 
   const handleUpdateUserState = (field, value) => {
     setUserState(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleCloseFilters = () => {
+    setShowFilters(false)
+    filterToggleRef.current?.focus()
   }
 
   const getPathIcon = (path) => {
@@ -150,6 +156,7 @@ const TaskSelector = ({ onSelectTask }) => {
             </p>
           </div>
           <button
+            ref={filterToggleRef}
             type="button"
             aria-label={showFilters ? 'Hide recommendation filters' : 'Show recommendation filters'}
             aria-expanded={showFilters}
@@ -221,7 +228,7 @@ const TaskSelector = ({ onSelectTask }) => {
               <button
                 type="button"
                 aria-label="Hide recommendation filters"
-                onClick={() => setShowFilters(false)}
+                onClick={handleCloseFilters}
                 className="p-1 text-slate-400 hover:text-slate-600"
               >
                 <SafeIcon icon={FiX} className="w-5 h-5" />
