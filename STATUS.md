@@ -6,15 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #196, which makes Today next-action selection changes perceivable to assistive technology without changing recommendation behaviour.
+  objective: Complete PR #197, which makes the existing Reduce Motion preference govern shared Framer Motion animations while preserving OS-level reduced-motion support.
   issue: null
-  pr: 196
-  branch: feat/next-action-live-announcement
+  pr: 197
+  branch: fix/reduced-motion-framer-policy
 next_actions:
-  - Run canonical Application validation on the final exact PR #196 head after this durable-state update.
-  - Repair any in-scope validation finding on the same PR.
+  - Run canonical Application validation on the repaired exact PR #197 head.
+  - Repair any further in-scope validation finding on the same PR.
   - Re-audit review submissions and inline review threads on the final exact head.
-  - Apply lifecycle:implementation-complete only after final exact-head validation and review/thread evidence remain clean.
+  - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence remain clean.
   - Allow repository automation to own Ready -> Mergeable -> Merged.
   - After merge, inspect fresh main and continue the next evidence-backed independent Stage 3 accessibility task.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
@@ -32,9 +32,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #196 implementation head 3a3a80671954f645f2e9811337c04926a9143a10 passed canonical Application validation run 413. This STATUS.md checkpoint records that evidence and the post-merge continuation path; because this documentation commit changes the PR head, final exact-head canonical validation is required again before lifecycle completion.
-last_verified_commit: 3a3a80671954f645f2e9811337c04926a9143a10
-last_updated: 2026-09-02T12:11:00+10:00
+validation_basis: Application validation run 416 failed on PR #197 head e5c82e320bddf5db4546185ec5d816d47a28ad45 during canonical platform validation after checkout, dependency installation and Chromium setup passed. The new source-contract test referenced URL without an explicit node:url import; that lint-safety defect was repaired on the same PR. Canonical exact-head revalidation is pending after this durable-state update.
+last_verified_commit: null
+last_updated: 2026-09-02T15:15:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,20 +46,20 @@ last_updated: 2026-09-02T12:11:00+10:00
 
 ## Current objective
 
-Complete PR #196, the next independent Stage 3 frontend-accessibility slice after PR #195 merged into `main` at `9c4c67a77a33440f99502f1290f90cd450a7d983`.
+Complete PR #197, the next independent Stage 3 frontend-accessibility slice after PR #196 merged into `main` at `f785fc726924bf2594281828818dcd640aca5ca8`.
 
-The Today next-action panel already exposes loading and skip/restore feedback as status messages, but the `Give me another option` action changes the selected recommendation while keyboard focus remains on the initiating button. Without a dedicated live announcement, assistive-technology users may not be told that the recommendation title and concrete start action changed.
+The application already exposes a saved **Reduce Motion** preference, but its implementation only sets a CSS animation-duration variable. Framer Motion components use JavaScript-driven motion configuration and therefore were not governed by that application preference. PR #197 repairs the shared accessibility boundary by wrapping application children in `MotionConfig`: saved `reduceMotion: true` forces reduced motion, while the disabled application preference continues to defer to the user's operating-system reduced-motion preference.
 
-PR #196 adds a visually hidden `role="status"`, `aria-live="polite"`, `aria-atomic="true"` region derived from the current recommendation. It announces the selected title and its `start_action` while leaving visual layout, focus, ranking, skip behaviour, fit controls, refresh, persistence and provider contracts unchanged. Deterministic source-contract coverage protects the announcement semantics.
+No individual animation, recommendation policy, persistence schema, provider mapping, or execution-session behaviour changes.
 
-Canonical Application validation run 413 passed on implementation head `3a3a80671954f645f2e9811337c04926a9143a10`. This durable-state update now records the successful implementation validation and preserves the post-merge continuation checkpoint. Because the STATUS update itself changes the PR head, the repository contract requires one final canonical validation run on the new exact head before lifecycle completion.
+Application validation run 416 reached `npm run platform:validate` after checkout, locked dependency installation and Chromium setup all passed, then failed on the new deterministic source-contract test because it used the Node `URL` global without the explicit `node:url` import required by repository linting. The test harness has been repaired on the same PR; application behaviour did not change. This STATUS update records that evidence, so one new exact-head canonical validation is required before lifecycle completion.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — Today next-action live announcement |
-| Gate state | VALIDATING — implementation head passed run 413; final documentation head requires exact-head validation |
+| Current gate | INTEGRATION — shared reduced-motion policy |
+| Gate state | VALIDATING — run 416 finding repaired; final exact-head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -68,38 +68,37 @@ Canonical Application validation run 413 passed on implementation head `3a3a8067
 
 | State | Current value |
 | --- | --- |
-| Post-merge baseline | PR #195 merged at `9c4c67a77a33440f99502f1290f90cd450a7d983` after final exact-head validation passed |
-| Active outcome | PR #196 — announce next-action selection changes |
-| Implemented change | Current recommendation title and concrete start action are exposed through a polite atomic hidden status region |
-| Preserved behaviour | Recommendation eligibility/ranking, selection cycling, skip/restore, fit controls, refresh, persistence and provider boundaries |
-| Deterministic coverage | `test/next-action-selection-announcement.test.mjs` protects the live-announcement contract |
-| Validation | Application validation run 413 passed on implementation head; final documentation head validation pending |
+| Post-merge baseline | PR #196 merged at `f785fc726924bf2594281828818dcd640aca5ca8` |
+| Active outcome | PR #197 — make reduced-motion preference govern Framer Motion |
+| Implemented change | AccessibilityPreferencesProvider now supplies shared Framer Motion reduced-motion policy |
+| Preserved behaviour | Existing preference persistence/CSS application, all individual animation definitions, provider and execution behaviour |
+| Deterministic coverage | `test/reduced-motion-framer-policy.test.mjs` protects the shared motion-policy wiring and now explicitly imports `URL` from `node:url` |
+| Validation | Run 416 failed in canonical platform validation on the test-harness lint defect; repaired exact-head validation pending |
 | Review/thread audit | Pending final exact-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Validate the final exact PR #196 head, then audit reviews/threads and complete lifecycle if clean |
+| Next action | Validate the repaired final PR #197 head, then audit reviews/threads and complete lifecycle if clean |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience, validating PR #196. |
-| What is already happening? | PR #196 improves Today next-action interaction accessibility without changing policy or persistence. |
-| What has been validated? | PR #196 implementation head passed canonical Application validation run 413. |
-| What changed? | Recommendation changes now have an assistive-technology announcement containing the selected title and start action; durable STATUS now records the passing implementation evidence and post-merge handoff. |
-| What is next? | Validate the final exact head, audit reviews/threads, then complete lifecycle if clean. |
+| Where am I? | Stage 3 — execution and next-action experience, validating PR #197. |
+| What is already happening? | PR #197 repairs the shared reduced-motion accessibility policy. |
+| What has been validated? | Run 416 proved checkout/dependency/Chromium setup and exposed an in-scope test-harness lint defect; the defect is repaired and exact-head revalidation is pending. |
+| What changed? | Saved Reduce Motion now controls Framer Motion globally; otherwise OS reduced-motion preference is respected. The deterministic test is now lint-safe. |
+| What is next? | Run canonical exact-head validation, repair any further finding, audit reviews/threads, then complete lifecycle if clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Evidence for this slice
 
-- `src/components/today/NextActionPanel.jsx` includes a visually hidden polite atomic status region when a recommendation is selected.
-- The announcement includes `selected.title` and `selected.start_action`.
-- `Give me another option` continues to change only `selectedIndex`; focus behaviour and recommendation policy are unchanged.
-- Existing visible feedback for skip/restore remains intact.
-- `test/next-action-selection-announcement.test.mjs` protects the new semantic contract.
-- No data model, API, persistence, provider or durable execution-session behaviour changed.
-- Canonical Application validation run 413 passed on implementation head `3a3a80671954f645f2e9811337c04926a9143a10`.
+- `src/contexts/AccessibilityPreferencesContext.jsx` imports and applies Framer Motion `MotionConfig` at the shared application-preferences boundary.
+- `reduceMotion: true` maps to `reducedMotion="always"`.
+- When the application preference is disabled, `reducedMotion="user"` preserves operating-system preference handling.
+- `test/reduced-motion-framer-policy.test.mjs` protects the shared wiring and explicitly imports `URL` from `node:url` for lint-safe Node execution.
+- Application validation run 416 failed only after entering the canonical validation command; checkout, dependency installation and Chromium setup had passed.
+- No data model, API, persistence schema, provider, recommendation, or durable execution-session behaviour changed.
 
 ## Backend / provider work — intentionally deferred
 
@@ -107,7 +106,7 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the final exact PR #196 head after this STATUS update;
+1. run canonical Application validation on the repaired exact PR #197 head;
 2. repair any remaining in-scope failure on this PR;
 3. re-audit review submissions and inline review threads;
 4. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
