@@ -11,8 +11,8 @@ current_work:
   pr: 197
   branch: fix/reduced-motion-framer-policy
 next_actions:
-  - Run canonical Application validation on the exact PR #197 head.
-  - Repair any in-scope validation finding on the same PR.
+  - Run canonical Application validation on the repaired exact PR #197 head.
+  - Repair any further in-scope validation finding on the same PR.
   - Re-audit review submissions and inline review threads on the final exact head.
   - Apply lifecycle:implementation-complete only after exact-head validation and review/thread evidence remain clean.
   - Allow repository automation to own Ready -> Mergeable -> Merged.
@@ -32,9 +32,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #197 implementation and durable-state changes are complete on the current branch; canonical exact-head validation is pending.
+validation_basis: Application validation run 416 failed on PR #197 head e5c82e320bddf5db4546185ec5d816d47a28ad45 during canonical platform validation after checkout, dependency installation and Chromium setup passed. The new source-contract test referenced URL without an explicit node:url import; that lint-safety defect was repaired on the same PR. Canonical exact-head revalidation is pending after this durable-state update.
 last_verified_commit: null
-last_updated: 2026-09-02T14:14:00+10:00
+last_updated: 2026-09-02T15:15:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -52,12 +52,14 @@ The application already exposes a saved **Reduce Motion** preference, but its im
 
 No individual animation, recommendation policy, persistence schema, provider mapping, or execution-session behaviour changes.
 
+Application validation run 416 reached `npm run platform:validate` after checkout, locked dependency installation and Chromium setup all passed, then failed on the new deterministic source-contract test because it used the Node `URL` global without the explicit `node:url` import required by repository linting. The test harness has been repaired on the same PR; application behaviour did not change. This STATUS update records that evidence, so one new exact-head canonical validation is required before lifecycle completion.
+
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — shared reduced-motion policy |
-| Gate state | VALIDATING — implementation and durable-state update complete; exact-head validation pending |
+| Gate state | VALIDATING — run 416 finding repaired; final exact-head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -70,12 +72,12 @@ No individual animation, recommendation policy, persistence schema, provider map
 | Active outcome | PR #197 — make reduced-motion preference govern Framer Motion |
 | Implemented change | AccessibilityPreferencesProvider now supplies shared Framer Motion reduced-motion policy |
 | Preserved behaviour | Existing preference persistence/CSS application, all individual animation definitions, provider and execution behaviour |
-| Deterministic coverage | `test/reduced-motion-framer-policy.test.mjs` protects the shared motion-policy wiring |
-| Validation | Canonical exact-head Application validation pending |
+| Deterministic coverage | `test/reduced-motion-framer-policy.test.mjs` protects the shared motion-policy wiring and now explicitly imports `URL` from `node:url` |
+| Validation | Run 416 failed in canonical platform validation on the test-harness lint defect; repaired exact-head validation pending |
 | Review/thread audit | Pending final exact-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
-| Next action | Validate PR #197 exact head, repair any in-scope finding, then complete lifecycle if clean |
+| Next action | Validate the repaired final PR #197 head, then audit reviews/threads and complete lifecycle if clean |
 
 ## Autonomous continuation entry answers
 
@@ -83,9 +85,9 @@ No individual animation, recommendation policy, persistence schema, provider map
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience, validating PR #197. |
 | What is already happening? | PR #197 repairs the shared reduced-motion accessibility policy. |
-| What has been validated? | The prior PR #196 is merged; PR #197 exact-head validation is pending. |
-| What changed? | Saved Reduce Motion now controls Framer Motion globally; otherwise OS reduced-motion preference is respected. |
-| What is next? | Run canonical exact-head validation, repair any finding, audit reviews/threads, then complete lifecycle if clean. |
+| What has been validated? | Run 416 proved checkout/dependency/Chromium setup and exposed an in-scope test-harness lint defect; the defect is repaired and exact-head revalidation is pending. |
+| What changed? | Saved Reduce Motion now controls Framer Motion globally; otherwise OS reduced-motion preference is respected. The deterministic test is now lint-safe. |
+| What is next? | Run canonical exact-head validation, repair any further finding, audit reviews/threads, then complete lifecycle if clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -94,7 +96,8 @@ No individual animation, recommendation policy, persistence schema, provider map
 - `src/contexts/AccessibilityPreferencesContext.jsx` imports and applies Framer Motion `MotionConfig` at the shared application-preferences boundary.
 - `reduceMotion: true` maps to `reducedMotion="always"`.
 - When the application preference is disabled, `reducedMotion="user"` preserves operating-system preference handling.
-- `test/reduced-motion-framer-policy.test.mjs` protects the shared wiring.
+- `test/reduced-motion-framer-policy.test.mjs` protects the shared wiring and explicitly imports `URL` from `node:url` for lint-safe Node execution.
+- Application validation run 416 failed only after entering the canonical validation command; checkout, dependency installation and Chromium setup had passed.
 - No data model, API, persistence schema, provider, recommendation, or durable execution-session behaviour changed.
 
 ## Backend / provider work — intentionally deferred
@@ -103,7 +106,7 @@ Keep provider mappings fail-closed and do not let provider uncertainty block ind
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact PR #197 head;
+1. run canonical Application validation on the repaired exact PR #197 head;
 2. repair any remaining in-scope failure on this PR;
 3. re-audit review submissions and inline review threads;
 4. apply `lifecycle:implementation-complete` only when final exact-head evidence remains clean;
