@@ -14,6 +14,7 @@ const modalStack = []
 const isVisibleFocusable = (element) => {
   if (
     element.disabled ||
+    element.tabIndex < 0 ||
     element.hasAttribute('hidden') ||
     element.getAttribute('aria-hidden') === 'true' ||
     element.closest('[hidden], [aria-hidden="true"], [inert]')
