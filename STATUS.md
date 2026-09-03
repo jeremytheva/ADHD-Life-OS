@@ -6,13 +6,13 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: After PR #203 merges, inspect fresh main and continue the next evidence-backed Stage 3 frontend accessibility and interaction-integrity gap.
+  objective: After PR #204 merges, inspect fresh main and continue the next evidence-backed Stage 3 frontend accessibility and interaction-integrity gap.
   issue: null
   pr: null
   branch: null
 next_actions:
-  - Require canonical exact-head Application validation for the final PR #203 handoff commit.
-  - Repair any in-scope validation or review finding on PR #203 rather than creating competing work.
+  - Require canonical exact-head Application validation for the final PR #204 handoff commit.
+  - Repair any in-scope validation or review finding on PR #204 rather than creating competing work.
   - When final exact-head evidence is clean, complete the repository-owned Ready/Mergeable/Merged lifecycle.
   - After merge, inspect fresh main, current GitHub state and relevant frontend interaction paths before selecting the next accessibility/interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
@@ -30,9 +30,9 @@ validation:
   build: PASS
   ci: PASS
   runtime: UNVERIFIED
-validation_basis: Application validation run 440 passed on PR #203 implementation head d725253231011c4c539aef6c16c7478742f2b65b with no submitted reviews or inline review threads. This post-merge durable-handoff commit changes the exact head and therefore requires fresh canonical validation before lifecycle completion.
-last_verified_commit: d725253231011c4c539aef6c16c7478742f2b65b
-last_updated: 2026-09-03T14:15:00+10:00
+validation_basis: Application validation run 443 passed on PR #204 implementation head d16e28815aa69fa7eac53242685af23d63bee184 with no submitted reviews or inline review threads. This post-merge durable-handoff commit changes the exact head and therefore requires fresh canonical validation before lifecycle completion.
+last_verified_commit: d16e28815aa69fa7eac53242685af23d63bee184
+last_updated: 2026-09-03T17:15:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,16 +44,16 @@ last_updated: 2026-09-03T14:15:00+10:00
 
 ## Current objective
 
-PR #203 is the active delivery slice. Its implementation-head canonical validation passed in Application validation run 440 on `d725253231011c4c539aef6c16c7478742f2b65b`. The shared modal hook now restores focus only when the captured opener remains connected, enabled and satisfies the same visible-focusable predicate used by modal focus management. Connected-but-hidden, aria-hidden, inert, CSS-hidden, non-rendered or disabled openers are not programmatically refocused. Deterministic coverage is in `test/modal-opener-focus-restoration.test.mjs`.
+PR #204 is the active delivery slice. Its implementation-head canonical validation passed in Application validation run 443 on `d16e28815aa69fa7eac53242685af23d63bee184`. The shared modal focusability predicate now rejects native-disabled controls before hidden, inert and layout eligibility checks, preventing disabled controls with an explicit eligible `tabindex` from remaining in the modal Tab candidate set. Deterministic coverage is in `test/modal-focus-trap-visibility.test.mjs`.
 
-The durable handoff is now written to the checkpoint that should exist after PR #203 merges: re-enter from fresh `main`, inspect current GitHub/repository evidence, and continue the next concrete Stage 3 frontend accessibility and interaction-integrity gap. Because this status update creates a new PR head, exact-head canonical validation must pass again before implementation-complete handoff.
+The durable handoff is now written to the checkpoint that should exist after PR #204 merges: re-enter from fresh `main`, inspect current GitHub/repository evidence, and continue the next concrete Stage 3 frontend accessibility and interaction-integrity gap. Because this status update creates a new PR head, exact-head canonical validation must pass again before implementation-complete handoff.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | PR #203 final exact-head validation required |
+| Gate state | PR #204 final exact-head validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -62,12 +62,13 @@ The durable handoff is now written to the checkpoint that should exist after PR 
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #202 — modal initial-focus visibility guard; merged at `8ab7e37df6aafc0c6be1d5aaf6413cfe03932dbc` |
-| Current delivery | PR #203 — shared modal opener focus-restoration guard; implementation validated, final status-only head pending revalidation |
-| Implemented change | Restore focus only when the captured opener is connected, enabled and still satisfies the shared visible-focusable predicate |
-| Preserved behaviour | Modal stack ordering, Escape policy, initial focus, Tab wrapping and nested-modal containment |
-| Deterministic coverage | `test/modal-opener-focus-restoration.test.mjs` |
-| Validation evidence | Application validation run 440 passed on implementation head `d725253231011c4c539aef6c16c7478742f2b65b`; final handoff head requires fresh exact-head validation |
+| Latest merged delivery | PR #203 — shared modal opener focus-restoration guard; merged at `fa5319c420b246111cfe8b9806cc2fcff012e038` |
+| Current delivery | PR #204 — shared modal disabled-control focus-trap guard; implementation validated, final status-only head pending revalidation |
+| Implemented change | `isVisibleFocusable` rejects `element.disabled` before hidden/inert/layout eligibility checks |
+| Root cause | A disabled native control with explicit `tabindex` can match the generic selector branch even though native disabled-control selectors exclude it |
+| Preserved behaviour | Modal stack ordering, Escape policy, initial focus, Tab wrapping, opener-focus restoration, and existing hidden/inert/non-rendered filtering |
+| Deterministic coverage | `test/modal-focus-trap-visibility.test.mjs` |
+| Validation evidence | Application validation run 443 passed on implementation head `d16e28815aa69fa7eac53242685af23d63bee184`; final handoff head requires fresh exact-head validation |
 | Review evidence | No submitted reviews and no inline review threads at the implementation-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
@@ -76,10 +77,10 @@ The durable handoff is now written to the checkpoint that should exist after PR 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience; PR #203 is in final exact-head validation before repository-owned lifecycle completion. |
-| What is already happening? | Shared modal opener-focus restoration is implemented and implementation-head validation passed; this durable post-merge handoff now requires exact-head revalidation. |
-| What has been validated? | Application validation run 440 passed on `d725253231011c4c539aef6c16c7478742f2b65b`; reviews and inline threads were clean at that audit. |
-| What is next? | Revalidate the final PR #203 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
+| Where am I? | Stage 3 — execution and next-action experience; PR #204 is in final exact-head validation before repository-owned lifecycle completion. |
+| What is already happening? | Shared modal disabled-control focus filtering is implemented and implementation-head validation passed; this durable post-merge handoff now requires exact-head revalidation. |
+| What has been validated? | Application validation run 443 passed on `d16e28815aa69fa7eac53242685af23d63bee184`; reviews and inline threads were clean at that audit. |
+| What is next? | Revalidate the final PR #204 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -89,7 +90,7 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. inspect canonical exact-head validation for the final PR #203 handoff head;
+1. inspect canonical exact-head validation for the final PR #204 handoff head;
 2. repair any in-scope validation or review finding on the existing PR;
 3. once evidence is clean, audit acceptance criteria and review/thread state and apply implementation-complete lifecycle evidence;
 4. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
