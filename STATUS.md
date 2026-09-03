@@ -11,7 +11,7 @@ current_work:
   pr: 207
   branch: fix/modal-programmatic-focus-semantics
 next_actions:
-  - Require fresh canonical exact-head Application validation for PR #207 after repairing the run 452 test-contract drift.
+  - Require fresh canonical exact-head Application validation for PR #207 after repairing the run 455 governance-state defect.
   - Repair any further in-scope validation or review finding on PR #207 rather than creating competing work.
   - When exact-head evidence is clean, complete the implementation-complete and repository-owned Ready/Mergeable/Merged lifecycle.
   - Before lifecycle handoff, move durable status to the post-merge fresh-main checkpoint.
@@ -23,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
-  ci: PENDING
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 452 failed on PR #207 implementation head fa4ef043e3c2ae4523b551a62e6dcc047306e974 because two older structural tests still asserted the retired isVisibleFocusable helper name. The implementation and new predicate-separation regression passed. Both stale assertions were repaired on the same PR branch; a new exact-head canonical run is required because the corrective commits invalidate earlier evidence.
+validation_basis: Application validation run 455 failed before lint/typecheck/tests/build because STATUS.md used PENDING for governance, lint, typecheck, tests and build, while the repository governance validator permits only PASS, FAIL, NOT_RUN or NOT_APPLICABLE for those fields. The durable-state schema has been repaired on the same PR; the new exact head requires fresh canonical validation.
 last_verified_commit: fe791fb7a190b42acb406d2c55107cec90d3f8e0
-last_updated: 2026-09-04T01:12:00+10:00
+last_updated: 2026-09-04T02:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -48,14 +48,14 @@ PR #207 is the sole active delivery slice. Fresh-main inspection after PR #206 i
 
 The shared modal hook now separates `isProgrammaticallyFocusable` from `isSequentiallyFocusable`: sequential Tab candidates require a non-negative resolved `tabIndex`, while explicit initial-focus targets and opener restoration retain programmatic-focus semantics. Existing disabled, hidden, `aria-hidden`, inert and non-rendered guards remain shared. Deterministic predicate-separation coverage is maintained in `test/modal-focus-trap-visibility.test.mjs`.
 
-Application validation run 452 exposed test-contract drift rather than a product-code regression: `test/modal-initial-focus-visibility.test.mjs` and `test/modal-opener-focus-restoration.test.mjs` still asserted the superseded helper name `isVisibleFocusable`. Those assertions have been updated on PR #207 to verify the intended `isProgrammaticallyFocusable` path. Fresh exact-head validation is now required.
+Application validation run 452 exposed test-contract drift rather than a product-code regression: `test/modal-initial-focus-visibility.test.mjs` and `test/modal-opener-focus-restoration.test.mjs` still asserted the superseded helper name `isVisibleFocusable`. Those assertions were repaired on PR #207. Application validation run 455 then stopped immediately at the governance gate because this status file used `PENDING` for validation fields whose schema permits only `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE`. The durable-state schema is now repaired; fresh exact-head canonical validation is required.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | PR #207 exact-head canonical revalidation required after in-scope test repair |
+| Gate state | PR #207 exact-head canonical revalidation required after governance-state repair |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -70,7 +70,7 @@ Application validation run 452 exposed test-contract drift rather than a product
 | Root cause | PR #206 correctly hardened sequential focus filtering but reused the same predicate for programmatic focus paths |
 | Preserved behaviour | Disabled/hidden/inert/non-rendered guards, modal stack ownership, Escape handling, zero-candidate fallback, outside-dialog containment and opener restoration |
 | Deterministic coverage | `test/modal-focus-trap-visibility.test.mjs`, `test/modal-initial-focus-visibility.test.mjs`, `test/modal-opener-focus-restoration.test.mjs` |
-| Validation evidence | Run 452 failed only because two existing structural assertions referenced the retired helper name; corrective assertions are committed and fresh exact-head canonical validation is pending |
+| Validation evidence | Run 452 exposed two stale helper-name assertions that were repaired; run 455 then failed only because STATUS.md contained governance-invalid PENDING values in five validation fields; that durable-state defect is repaired and fresh exact-head validation is pending |
 | Review evidence | Pending final exact-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
@@ -80,8 +80,8 @@ Application validation run 452 exposed test-contract drift rather than a product
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 — execution and next-action experience; PR #207 is the sole active frontend accessibility delivery thread. |
-| What is already happening? | Modal programmatic and sequential focus eligibility have been separated; stale structural tests discovered by run 452 were repaired on the same PR. |
-| What has been validated? | The new predicate-separation test passed in run 452, while two older helper-name assertions failed and have now been corrected; fresh exact-head validation is required. |
+| What is already happening? | Modal programmatic and sequential focus eligibility have been separated; stale structural tests and the subsequent STATUS.md governance-state defect were repaired on the same PR. |
+| What has been validated? | Run 452 confirmed the new predicate-separation regression while exposing stale structural assertions; run 455 reached the canonical governance gate and identified only invalid durable validation-state values before later validation stages ran. |
 | What is next? | Revalidate PR #207, repair any further findings on the same PR, audit acceptance/review state, then complete repository-owned lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
@@ -92,7 +92,7 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. inspect fresh canonical exact-head validation for PR #207 after the run 452 test repair;
+1. require fresh canonical exact-head validation for PR #207 after the run 455 governance-state repair;
 2. repair any further in-scope validation or review finding on the existing PR;
 3. once evidence is clean, audit acceptance criteria and review/thread state;
 4. before implementation-complete handoff, update this file to the post-merge fresh-`main` checkpoint;
