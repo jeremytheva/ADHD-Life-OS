@@ -10,7 +10,7 @@ test('modal initial focus ignores hidden or inert targets and falls back to the 
 
   assert.match(
     source,
-    /initialTarget && !initialTarget\.disabled && isVisibleFocusable\(initialTarget\)/
+    /initialTarget && !initialTarget\.disabled && isProgrammaticallyFocusable\(initialTarget\)/
   )
   assert.match(source, /initialTarget\.focus\(\)/)
   assert.match(source, /dialogRef\.current\?\.focus\(\)/)
