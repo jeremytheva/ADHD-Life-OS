@@ -6,15 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: After PR #205 merges, inspect fresh main and continue the next evidence-backed Stage 3 frontend accessibility and interaction-integrity gap.
+  objective: Complete PR #206 shared modal negative-tabindex focus-order guard, then continue from fresh main to the next evidence-backed Stage 3 frontend accessibility and interaction-integrity gap.
   issue: null
-  pr: null
-  branch: null
+  pr: 206
+  branch: fix/modal-negative-tabindex-guard
 next_actions:
-  - Require canonical exact-head Application validation for the final PR #205 handoff commit.
-  - Repair any in-scope validation or review finding on PR #205 rather than creating competing work.
-  - When final exact-head evidence is clean, complete the repository-owned Ready/Mergeable/Merged lifecycle.
-  - After merge, inspect fresh main, current GitHub state and relevant frontend interaction paths before selecting the next accessibility/interaction-integrity slice.
+  - Require canonical exact-head Application validation for PR #206.
+  - Repair any in-scope validation or review finding on PR #206 rather than creating competing work.
+  - When implementation evidence is clean, write the post-merge durable handoff checkpoint and revalidate that exact head.
+  - Complete the repository-owned Ready/Mergeable/Merged lifecycle before starting the next implementation branch.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -23,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 446 passed on PR #205 implementation head cd6c17952fa31429af19e820e9b23104a31ac3cd with no submitted reviews or inline review threads. This post-merge durable-handoff commit changes the exact head and therefore requires fresh canonical validation before lifecycle completion.
-last_verified_commit: cd6c17952fa31429af19e820e9b23104a31ac3cd
-last_updated: 2026-09-03T19:14:30+10:00
+validation_basis: PR #206 changed the exact head after implementation and durable status synchronization; canonical Application validation is required on the resulting current head before any implementation-complete claim.
+last_verified_commit: cfc493875d0d706e8a66788c0c62d034e04381d7
+last_updated: 2026-09-03T21:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,16 +44,16 @@ last_updated: 2026-09-03T19:14:30+10:00
 
 ## Current objective
 
-PR #205 is the active delivery slice. Its implementation-head canonical validation passed in Application validation run 446 on `cd6c17952fa31429af19e820e9b23104a31ac3cd`. The shared modal keyboard trap now recaptures forward Tab when focus is unexpectedly outside the active top dialog, moving focus to the first eligible modal control and preserving the existing reverse-Tab recovery to the last eligible control. Deterministic coverage is in `test/modal-focus-trap-containment.test.mjs`.
+PR #205 completed the repository-owned lifecycle and merged into `main` at `f5b553303134d03cea85249bc286d3f35c65dac6`. Fresh-main inspection then identified the next concrete shared-modal keyboard-integrity gap: the focus candidate selector excludes only literal `tabindex="-1"`, while other negative tabindex values are also outside sequential keyboard navigation.
 
-The durable handoff is now written to the checkpoint that should exist after PR #205 merges: re-enter from fresh `main`, inspect current GitHub/repository evidence, and continue the next concrete Stage 3 frontend accessibility and interaction-integrity gap. Because this status update creates a new PR head, exact-head canonical validation must pass again before implementation-complete handoff.
+PR #206 is now the sole active delivery slice. The shared modal focusability predicate rejects any candidate whose resolved `tabIndex` is less than zero, preventing values such as `tabindex="-2"` from being treated as sequential Tab stops while preserving programmatic-focus semantics. Existing disabled, hidden, `aria-hidden`, inert, non-rendered, modal-stack, Escape, initial-focus, outside-dialog containment and opener-restoration behaviour remains unchanged. The existing `test/modal-focus-trap-visibility.test.mjs` regression suite now records the negative-tabindex invariant.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | PR #205 final exact-head validation required |
+| Gate state | PR #206 exact-head validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -62,14 +62,14 @@ The durable handoff is now written to the checkpoint that should exist after PR 
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #204 — shared modal disabled-control focus-trap guard; merged at `20916cef571ab46c441c8b4dc5c1af3e7393afa3` |
-| Current delivery | PR #205 — shared modal forward-Tab focus containment; implementation validated, final status-only head pending revalidation |
-| Implemented change | Forward Tab now recaptures focus to the first eligible modal control when the active element is outside the top dialog |
-| Root cause | The shared hook handled outside-dialog focus only in the Shift+Tab branch; the forward-Tab branch checked only whether focus was on the last modal control |
-| Preserved behaviour | Modal stack ownership, Escape handling, normal first/last wrapping, initial focus, opener-focus restoration, and focusability filtering |
-| Deterministic coverage | `test/modal-focus-trap-containment.test.mjs` |
-| Validation evidence | Application validation run 446 passed on implementation head `cd6c17952fa31429af19e820e9b23104a31ac3cd`; final handoff head requires fresh exact-head validation |
-| Review evidence | No submitted reviews and no inline review threads at the implementation-head audit |
+| Latest merged delivery | PR #205 — shared modal forward-Tab focus containment; merged at `f5b553303134d03cea85249bc286d3f35c65dac6` |
+| Current delivery | PR #206 — shared modal negative-tabindex sequential-focus guard |
+| Implemented change | Shared modal focus filtering now rejects candidates with resolved `tabIndex < 0` |
+| Root cause | The candidate selector excluded only literal `tabindex="-1"`, allowing other negative tabindex values to reach the shared sequential-focus candidate set |
+| Preserved behaviour | Native controls, visible non-negative tabindex controls, modal stack ownership, Escape handling, initial focus, zero-candidate fallback, outside-dialog recapture and opener-focus restoration |
+| Deterministic coverage | `test/modal-focus-trap-visibility.test.mjs` |
+| Validation evidence | Exact-head canonical validation pending after durable status synchronization |
+| Review evidence | Final current-head review/thread audit pending |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -77,10 +77,10 @@ The durable handoff is now written to the checkpoint that should exist after PR 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience; PR #205 is in final exact-head validation before repository-owned lifecycle completion. |
-| What is already happening? | Shared modal forward-Tab containment is implemented and implementation-head validation passed; this durable post-merge handoff now requires exact-head revalidation. |
-| What has been validated? | Application validation run 446 passed on `cd6c17952fa31429af19e820e9b23104a31ac3cd`; reviews and inline threads were clean at that audit. |
-| What is next? | Revalidate the final PR #205 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
+| Where am I? | Stage 3 — execution and next-action experience; PR #206 is the sole active implementation thread. |
+| What is already happening? | The shared modal negative-tabindex sequential-focus guard and regression coverage are implemented; exact-head validation is next. |
+| What has been validated? | PR #205 exact head `cfc493875d0d706e8a66788c0c62d034e04381d7` passed Application validation run 447 before merge; PR #206 has not yet completed canonical exact-head validation. |
+| What is next? | Validate PR #206, repair any in-scope findings on the same PR, then complete the documented lifecycle and continue from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -90,12 +90,13 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. inspect canonical exact-head validation for the final PR #205 handoff head;
+1. inspect canonical exact-head validation for PR #206;
 2. repair any in-scope validation or review finding on the existing PR;
-3. once evidence is clean, audit acceptance criteria and review/thread state and apply implementation-complete lifecycle evidence;
-4. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
-5. inspect fresh `main` and continue the next concrete accessibility/interaction-integrity gap;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+3. once implementation evidence is clean, update durable `STATUS.md` to the post-merge fresh-`main` checkpoint;
+4. re-run canonical validation on that exact final head and complete the acceptance/review audit;
+5. apply repository lifecycle evidence and allow Ready/Mergeable/Merged automation to complete;
+6. inspect fresh `main` and continue the next concrete accessibility/interaction-integrity gap;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
