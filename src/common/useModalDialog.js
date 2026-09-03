@@ -103,7 +103,7 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
       removeModal(dialogRef)
 
       const opener = openerRef.current
-      if (opener?.isConnected) {
+      if (opener?.isConnected && !opener.disabled && isVisibleFocusable(opener)) {
         window.requestAnimationFrame(() => {
           const activeDialog = modalStack[modalStack.length - 1]?.current
           if (!activeDialog || activeDialog.contains(opener)) opener.focus()
