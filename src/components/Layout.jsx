@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../common/SafeIcon'
+import { getFocusableElements } from '../common/useModalDialog'
 import { useAuth } from '../contexts/AuthContext'
 import { useMode } from '../contexts/ModeContext'
 import ModeSwitcher from './mode/ModeSwitcher'
@@ -194,6 +195,7 @@ const Layout = ({ children, enabledModules = [] }) => {
   const [showAccessibility, setShowAccessibility] = useState(false)
   const mobileMenuButtonRef = useRef(null)
   const mobileCloseButtonRef = useRef(null)
+  const mobileNavigationRef = useRef(null)
   const stats = gamificationService.getUserStats()
   const currency = gamificationService.getCurrency()
 
@@ -206,9 +208,36 @@ const Layout = ({ children, enabledModules = [] }) => {
 
     mobileCloseButtonRef.current?.focus()
     const handleKeyDown = (event) => {
-      if (event.key !== 'Escape') return
-      setMobileNavOpen(false)
-      window.requestAnimationFrame(() => mobileMenuButtonRef.current?.focus())
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        setMobileNavOpen(false)
+        window.requestAnimationFrame(() => mobileMenuButtonRef.current?.focus())
+        return
+      }
+
+      if (event.key !== 'Tab') return
+
+      const navigation = mobileNavigationRef.current
+      if (!navigation) return
+
+      const focusable = getFocusableElements(navigation)
+      if (focusable.length === 0) {
+        event.preventDefault()
+        navigation.focus()
+        return
+      }
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      const active = document.activeElement
+
+      if (event.shiftKey && (active === first || !navigation.contains(active))) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && (active === last || !navigation.contains(active))) {
+        event.preventDefault()
+        first.focus()
+      }
     }
 
     document.addEventListener('keydown', handleKeyDown)
@@ -288,8 +317,10 @@ const Layout = ({ children, enabledModules = [] }) => {
             className="absolute inset-0 bg-black bg-opacity-40"
           />
           <aside
+            ref={mobileNavigationRef}
             id="mobile-app-navigation"
             aria-label="Mobile application navigation"
+            tabIndex={-1}
             className="relative z-10 flex h-full w-72 max-w-[calc(100vw-3rem)] flex-col bg-white shadow-xl"
           >
             <SidebarContent

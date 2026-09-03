@@ -29,7 +29,7 @@ const isSequentiallyFocusable = (element) => (
   element.tabIndex >= 0 && isProgrammaticallyFocusable(element)
 )
 
-const getFocusableElements = (container) => Array.from(
+export const getFocusableElements = (container) => Array.from(
   container?.querySelectorAll(FOCUSABLE_SELECTOR) ?? []
 ).filter(isSequentiallyFocusable)
 
