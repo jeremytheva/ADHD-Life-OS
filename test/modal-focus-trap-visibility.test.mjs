@@ -9,7 +9,8 @@ test('modal focus trapping separates sequential tab order from programmatic focu
   const source = await read('src/common/useModalDialog.js')
 
   assert.match(source, /const isProgrammaticallyFocusable = \(element\) =>/)
-  assert.match(source, /element\.disabled/)
+  assert.match(source, /element\.matches\(':disabled'\)/)
+  assert.doesNotMatch(source, /element\.disabled/)
   assert.match(source, /element\.closest\('\[hidden\], \[aria-hidden="true"\], \[inert\]'\)/)
   assert.match(source, /window\.getComputedStyle\(element\)/)
   assert.match(source, /style\.display !== 'none'/)
