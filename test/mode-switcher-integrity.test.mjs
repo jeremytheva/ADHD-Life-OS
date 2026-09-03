@@ -34,3 +34,14 @@ test('Mode Switcher owns keyboard dismissal, roving navigation and trigger resto
   assert.match(source, /onKeyDown=\{handleMenuKeyDown\}/)
   assert.match(source, /onClick=\{\(\) => closeMenu\(\)\}/)
 })
+
+test('Mode Switcher closes after Tab moves focus outside without forcing trigger focus', async () => {
+  const source = await read('src/components/mode/ModeSwitcher.jsx')
+
+  assert.match(source, /const popupRef = useRef\(null\)/)
+  assert.match(source, /ref=\{popupRef\}/)
+  assert.match(source, /case 'Tab':/)
+  assert.match(source, /const popup = popupRef\.current/)
+  assert.match(source, /!popup\.contains\(document\.activeElement\)/)
+  assert.match(source, /setIsOpen\(false\)/)
+})
