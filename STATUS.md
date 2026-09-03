@@ -4,17 +4,18 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: VALIDATING
+execution_state: IMPLEMENTING
 current_work:
-  objective: After PR #202 merges, inspect fresh main and continue the next evidence-backed Stage 3 frontend accessibility and interaction-integrity gap.
+  objective: Keep modal focus restoration on a connected, visible and enabled opener after dialog close.
   issue: null
-  pr: null
-  branch: null
+  pr: pending
+  branch: fix/modal-opener-focus-restoration
 next_actions:
-  - Require canonical exact-head Application validation for the final PR #202 handoff commit.
-  - Repair any in-scope validation or review finding on PR #202 rather than creating competing work.
-  - When final exact-head evidence is clean, complete the repository-owned Ready/Mergeable/Merged lifecycle.
-  - After merge, inspect fresh main, current GitHub state and relevant frontend interaction paths before selecting the next accessibility/interaction-integrity slice.
+  - Open one focused Draft PR for the modal opener focus-restoration correction.
+  - Run canonical exact-head Application validation and repair any in-scope failure on the same PR.
+  - Audit acceptance criteria plus review/thread state, then apply implementation-complete lifecycle evidence only when exact-head validation is clean.
+  - Allow the repository-owned Ready/Mergeable/Merged lifecycle to complete.
+  - After merge, inspect fresh main for the next evidence-backed Stage 3 accessibility/interaction-integrity gap.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -23,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: PENDING
+  lint: PENDING
+  typecheck: PENDING
+  tests: PENDING
+  build: PENDING
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Application validation run 436 passed on PR #202 implementation head b67ffd36fecf9fa2953cb99f9d8bdcf8c372affa with no submitted reviews or inline review threads. This post-merge durable-handoff commit changes the exact head and therefore requires fresh canonical validation before lifecycle completion.
-last_verified_commit: b67ffd36fecf9fa2953cb99f9d8bdcf8c372affa
-last_updated: 2026-09-03T09:10:00+10:00
+validation_basis: PR #202 merged into main at 8ab7e37df6aafc0c6be1d5aaf6413cfe03932dbc. Fresh main inspection found no open competing PR. The shared modal hook could restore focus to an opener that remained connected but had become hidden, aria-hidden, inert, CSS-hidden, non-rendered, or disabled while the modal was open. The active branch now reuses the existing visibility predicate and disabled guard for opener restoration; canonical validation is pending.
+last_verified_commit: 8ab7e37df6aafc0c6be1d5aaf6413cfe03932dbc
+last_updated: 2026-09-03T11:12:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,17 +45,17 @@ last_updated: 2026-09-03T09:10:00+10:00
 
 ## Current objective
 
-PR #202 is the active delivery slice. Its implementation-head canonical validation passed in Application validation run 436. The shared modal hook now requires `initialFocusRef` targets to satisfy the same visible-focusable predicate already used for Tab trapping, so hidden, aria-hidden, inert, CSS-hidden, non-rendered, or disabled requested targets no longer receive programmatic initial focus. The dialog container remains the fallback focus target. Deterministic coverage is in `test/modal-initial-focus-visibility.test.mjs`.
+PR #202 has merged. Fresh `main` inspection found no open competing implementation PRs. The next independent Stage 3 accessibility/interaction-integrity slice is the shared modal opener-focus restoration path.
 
-The durable handoff is now written to the checkpoint that should exist after PR #202 merges: re-enter from fresh `main`, inspect current GitHub/repository evidence, and continue the next concrete Stage 3 frontend accessibility and interaction-integrity gap. Because this status update creates a new PR head, exact-head canonical validation must pass again before implementation-complete handoff.
+The modal hook previously restored focus whenever the captured opener remained connected to the document. That is insufficient when application state changes while a dialog is open: a connected opener may become disabled, hidden, aria-hidden, inert, CSS-hidden or non-rendered. The active branch now requires the opener to remain enabled and satisfy the shared visible-focusable predicate before restoring focus. Nested-modal containment behaviour remains unchanged.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | PR #202 final exact-head validation required |
-| Execution state | VALIDATING |
+| Gate state | Active implementation requires canonical validation |
+| Execution state | IMPLEMENTING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -62,14 +63,13 @@ The durable handoff is now written to the checkpoint that should exist after PR 
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #201 — shared modal visible-focus trapping; merged at `64a23713ff796f3bb11a431704e6fae0539f5466` |
-| Current delivery | PR #202 — shared modal initial-focus visibility guard; implementation validated, final status-only head pending revalidation |
-| Implemented change | `initialFocusRef` targets must satisfy the shared visible-focusable predicate as well as the disabled guard |
-| Fallback behaviour | Hidden/inert/non-rendered requested initial targets leave focus on the dialog container rather than receiving programmatic focus |
-| Preserved behaviour | Modal stack ordering, Escape policy, Tab wrapping and opener-focus restoration |
-| Deterministic coverage | `test/modal-initial-focus-visibility.test.mjs` |
-| Validation evidence | Application validation run 436 passed on implementation head `b67ffd36fecf9fa2953cb99f9d8bdcf8c372affa`; final handoff head requires fresh exact-head validation |
-| Review evidence | No submitted reviews and no inline review threads at the implementation-head audit |
+| Latest merged delivery | PR #202 — modal initial-focus visibility guard; merged at `8ab7e37df6aafc0c6be1d5aaf6413cfe03932dbc` |
+| Current delivery | `fix/modal-opener-focus-restoration` — shared modal focus-restoration guard |
+| Implemented change | Restore focus only when the captured opener is connected, enabled and still satisfies the shared visible-focusable predicate |
+| Preserved behaviour | Modal stack ordering, Escape policy, initial focus, Tab wrapping and nested-modal containment |
+| Deterministic coverage | `test/modal-opener-focus-restoration.test.mjs` |
+| Validation evidence | Canonical validation pending for the active branch |
+| Review evidence | Pending Draft PR |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -77,10 +77,10 @@ The durable handoff is now written to the checkpoint that should exist after PR 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience; PR #202 is in final exact-head validation before repository-owned lifecycle completion. |
-| What is already happening? | Shared modal initial-focus visibility is implemented and implementation-head validation passed; this durable post-merge handoff now requires exact-head revalidation. |
-| What has been validated? | Application validation run 436 passed on `b67ffd36fecf9fa2953cb99f9d8bdcf8c372affa`; reviews and inline threads were clean at that audit. |
-| What is next? | Revalidate the final PR #202 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
+| Where am I? | Stage 3 — execution and next-action experience; shared modal opener-focus restoration is the active independent accessibility slice. |
+| What is already happening? | The shared hook and focused regression coverage are implemented on `fix/modal-opener-focus-restoration`; Draft PR and canonical validation are next. |
+| What has been validated? | PR #202 is merged at `8ab7e37df6aafc0c6be1d5aaf6413cfe03932dbc`; the active branch has not yet passed canonical validation. |
+| What is next? | Open the focused Draft PR, validate its exact head, repair in-scope findings, then complete repository-owned lifecycle gates. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -90,12 +90,13 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. inspect canonical exact-head validation for the final PR #202 handoff head;
-2. repair any in-scope validation or review finding on the existing PR;
-3. once evidence is clean, audit acceptance criteria and review/thread state and apply implementation-complete lifecycle evidence;
-4. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
-5. inspect fresh `main` and continue the next concrete accessibility/interaction-integrity gap;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. open one focused Draft PR for the active shared modal restoration correction;
+2. run canonical exact-head validation;
+3. repair any in-scope validation or review finding on the same PR;
+4. when evidence is clean, audit acceptance criteria and review/thread state and apply implementation-complete lifecycle evidence;
+5. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
+6. inspect fresh `main` and continue the next concrete accessibility/interaction-integrity gap;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
