@@ -5,9 +5,10 @@ import { URL } from 'node:url'
 
 const read = (path) => fs.readFile(new URL(`../${path}`, import.meta.url), 'utf8')
 
-test('modal focus trapping excludes controls hidden directly or by ancestors', async () => {
+test('modal focus trapping excludes disabled, hidden, inert, and non-rendered controls', async () => {
   const source = await read('src/common/useModalDialog.js')
 
+  assert.match(source, /element\.disabled/)
   assert.match(source, /element\.closest\('\[hidden\], \[aria-hidden="true"\], \[inert\]'\)/)
   assert.match(source, /window\.getComputedStyle\(element\)/)
   assert.match(source, /style\.display !== 'none'/)
