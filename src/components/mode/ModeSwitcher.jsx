@@ -11,6 +11,7 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [showStats, setShowStats] = useState(false)
   const triggerRef = useRef(null)
+  const popupRef = useRef(null)
   const modeItemRefs = useRef([])
 
   const stats = getModeStats()
@@ -73,6 +74,14 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
       case 'End':
         event.preventDefault()
         focusModeItem(allModes.length - 1)
+        break
+      case 'Tab':
+        window.requestAnimationFrame(() => {
+          const popup = popupRef.current
+          if (popup && !popup.contains(document.activeElement)) {
+            setIsOpen(false)
+          }
+        })
         break
       default:
         break
@@ -138,6 +147,7 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
 
             {/* Popup */}
             <motion.div
+              ref={popupRef}
               initial={{ opacity: 0, y: -10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
