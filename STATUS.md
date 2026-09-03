@@ -11,8 +11,8 @@ current_work:
   pr: 208
   branch: fix/modal-disabled-fieldset-focus
 next_actions:
-  - Require canonical exact-head Application validation for PR #208.
-  - Repair any in-scope validation or review finding on PR #208 rather than creating competing work.
+  - Require fresh canonical exact-head Application validation for PR #208 after repairing run 459 test-contract drift.
+  - Repair any further in-scope validation or review finding on PR #208 rather than creating competing work.
   - When implementation-head evidence is clean, update durable status to the post-merge fresh-main checkpoint and revalidate that exact head.
   - Complete the repository-owned Ready/Mergeable/Merged lifecycle.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
@@ -30,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #208 changes the shared modal focusability predicate to use resolved browser :disabled semantics so controls disabled by an ancestor fieldset are excluded alongside directly disabled controls. Existing modal focus regression coverage was updated; fresh exact-head canonical validation is required.
+validation_basis: Application validation run 459 passed governance, lint and typecheck, then failed two structural modal tests that still asserted redundant direct `.disabled` checks at initial-focus and opener-restoration call sites. Those tests now assert the centralized `isProgrammaticallyFocusable` contract, which contains resolved `:disabled` semantics. Fresh exact-head canonical validation is required.
 last_verified_commit: d430c2cc837439ea79e24226d8151aa61d24cc87
-last_updated: 2026-09-04T02:31:00+10:00
+last_updated: 2026-09-04T02:35:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,14 +46,16 @@ last_updated: 2026-09-04T02:31:00+10:00
 
 PR #208 is the sole active delivery thread. PR #207 merged at `e73baa3af99f64532ecfd10099018449d1eb84e2`; fresh-main inspection then identified an inherited-disabled focus gap in the shared modal hook.
 
-`TemplateEditModal` disables its editable controls during apply with `<fieldset disabled={isApplying}>`. The shared modal focus predicate previously checked `element.disabled`, which does not express all inherited disabled semantics. It now uses `element.matches(':disabled')`, allowing the browser's resolved disabled state to exclude both directly disabled controls and controls disabled through an ancestor fieldset. The same predicate continues to govern sequential candidates, explicit initial focus and opener restoration.
+`TemplateEditModal` disables its editable controls during apply with `<fieldset disabled={isApplying}>`. Shared modal focusability now uses `element.matches(':disabled')`, allowing the browser's resolved disabled state to exclude both directly disabled controls and controls disabled through an ancestor fieldset. The same predicate governs sequential candidates, explicit initial focus and opener restoration.
+
+Application validation run 459 passed governance, lint and typecheck and reached the Node test suite. 209 of 211 tests passed; the only failures were two stale source-structure assertions that still required `!initialTarget.disabled` and `!opener.disabled` outside the centralized predicate. Those assertions have been repaired on PR #208 without changing product behaviour. Fresh exact-head validation is required because the test and status repairs created a new head.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | PR #208 exact-head canonical validation required |
+| Gate state | PR #208 exact-head revalidation required after run 459 test-contract repair |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -64,8 +66,9 @@ PR #208 is the sole active delivery thread. PR #207 merged at `e73baa3af99f64532
 | --- | --- |
 | Latest merged delivery | PR #207 — modal sequential/programmatic focus predicate separation; merged at `e73baa3af99f64532ecfd10099018449d1eb84e2` |
 | Current delivery | PR #208 — exclude inherited-disabled controls from shared modal focus targets |
-| Implemented change | Shared focusability now rejects `element.matches(':disabled')` rather than checking only `element.disabled`; redundant direct-disabled checks at initial-focus and opener-restoration call sites were removed |
-| Evidence | Template Edit uses an ancestor disabled fieldset during apply; existing modal focus regression now asserts the resolved disabled-state guard |
+| Implemented change | Shared focusability rejects `element.matches(':disabled')`; redundant direct-disabled call-site checks removed |
+| Evidence | Template Edit uses an ancestor disabled fieldset during apply; modal focus regression asserts the resolved disabled-state guard |
+| Validation evidence | Run 459: governance/lint/typecheck passed; 209/211 Node tests passed; only two stale structural assertions failed and are repaired |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -74,9 +77,9 @@ PR #208 is the sole active delivery thread. PR #207 merged at `e73baa3af99f64532
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; PR #208 is the sole active frontend accessibility delivery thread. |
-| What is already happening? | Shared modal focusability has been hardened for inherited disabled form semantics and regression coverage updated. |
-| What has been validated? | Prior PR #207 completed exact-head validation and merged; PR #208 requires fresh canonical exact-head validation. |
-| What is next? | Validate PR #208, repair any finding on the same PR, perform final review/thread audit, prepare post-merge durable handoff, then complete lifecycle. |
+| What is already happening? | Shared modal focusability is hardened for inherited disabled form semantics; run 459 test-contract drift has been repaired. |
+| What has been validated? | Run 459 passed governance/lint/typecheck and 209 Node tests before two stale structural assertions failed. |
+| What is next? | Revalidate PR #208, repair any further finding on the same PR, audit reviews/threads, prepare post-merge durable handoff, then complete lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -86,8 +89,8 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. require canonical exact-head validation for PR #208;
-2. repair any in-scope validation or review finding on the existing PR;
+1. require fresh canonical exact-head validation for PR #208;
+2. repair any further in-scope validation or review finding on the existing PR;
 3. audit acceptance criteria and review/thread state when implementation-head evidence is clean;
 4. update this file to the post-merge fresh-main checkpoint and revalidate that exact head;
 5. complete repository-owned lifecycle;
