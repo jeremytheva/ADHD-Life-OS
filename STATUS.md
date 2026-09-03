@@ -6,14 +6,14 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #211 mobile-navigation keyboard focus containment, then re-enter from fresh main for the next evidence-backed Stage 3 accessibility or interaction-integrity gap.
+  objective: After PR #211 merges, re-enter from fresh main and continue the next evidence-backed Stage 3 frontend accessibility or interaction-integrity gap.
   issue: null
-  pr: 211
-  branch: fix/mobile-navigation-focus-containment
+  pr: null
+  branch: null
 next_actions:
-  - Require canonical exact-head Application validation for PR #211 after this durable status update.
+  - Require canonical exact-head Application validation for the final PR #211 durable-handoff commit.
   - Repair any in-scope validation or review finding on PR #211 rather than creating competing work.
-  - When exact-head evidence and review/thread audit are clean, complete the repository-owned lifecycle and merge.
+  - When final exact-head evidence is clean, complete the repository-owned Ready/Mergeable/Merged lifecycle.
   - After merge, inspect fresh main and current GitHub/repository evidence before selecting the next Stage 3 slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
@@ -30,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #211 implements mobile-navigation Tab and Shift+Tab containment using the shared sequential-focus filter and adds deterministic regression coverage. This durable status commit creates a new exact head and therefore requires fresh canonical validation before lifecycle completion.
-last_verified_commit: e4fcb49d8e1321a965f7ca5748b169a158ee01ce
-last_updated: 2026-09-04T04:23:00+10:00
+validation_basis: Application validation passed on PR #211 implementation head 04ecd957eaded42a41e58fad9ef2bbe3f9edde09, and the implementation-head audit found no submitted reviews or inline review threads. This post-merge durable-handoff commit creates a new exact head and therefore requires fresh canonical validation before lifecycle completion.
+last_verified_commit: 04ecd957eaded42a41e58fad9ef2bbe3f9edde09
+last_updated: 2026-09-04T05:14:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,20 +44,18 @@ last_updated: 2026-09-04T04:23:00+10:00
 
 ## Current objective
 
-PR #209 completed its repository-owned lifecycle and merged into `main` at `e4fcb49d8e1321a965f7ca5748b169a158ee01ce`. Fresh-main inspection found no competing open pull request and identified the next active-path accessibility defect in the mobile application navigation.
+PR #211 has completed implementation-head validation and review audit. Mobile navigation now contains forward and reverse keyboard focus within the blocking drawer, recaptures focus that moves outside while the drawer remains open, and uses the drawer itself as a fallback focus target when no eligible child control exists. Existing Escape, overlay-click, explicit-close, route-navigation and focus-restoration behavior remains unchanged.
 
-The mobile navigation already moved initial focus to its close button and restored focus for Escape and explicit close actions, but its keyboard handler did not contain Tab navigation. Keyboard users could therefore move focus behind the blocking overlay into underlying page controls. PR #211 repairs that gap while preserving route navigation, overlay dismissal, explicit focus restoration and downstream modal behavior.
+Application validation passed on implementation head `04ecd957eaded42a41e58fad9ef2bbe3f9edde09`, and the implementation-head audit found no submitted reviews or inline review threads.
 
-The implementation reuses the shared modal focusability filter rather than defining a second eligibility contract. Forward and reverse Tab wrap inside the drawer, and focus moved outside the drawer while it remains open is recaptured on the next Tab operation. A deterministic regression test records the containment contract.
-
-Because this durable status update creates a new exact head, canonical validation must pass on the resulting PR #211 head before lifecycle progression.
+The durable handoff now points to the required post-merge checkpoint: re-enter from fresh `main`, inspect current GitHub/repository evidence and continue the next concrete Stage 3 frontend accessibility/interaction-integrity gap. Because this status update creates a new exact head, canonical validation must pass again before lifecycle handoff.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | PR #211 exact-head validation required |
+| Gate state | PR #211 final exact-head validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -67,11 +65,11 @@ Because this durable status update creates a new exact head, canonical validatio
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #209 — Template Edit form-control accessibility labels; merged at `e4fcb49d8e1321a965f7ca5748b169a158ee01ce` |
-| Current delivery | PR #211 — mobile navigation keyboard focus containment |
-| Implemented change | Shared sequential-focus filtering exposed for overlay reuse; mobile drawer Tab/Shift+Tab containment and outside-focus recapture; drawer fallback focus target |
+| Current delivery | PR #211 — mobile navigation keyboard focus containment; implementation validated, final status-bearing head pending revalidation |
+| Implemented change | Shared sequential-focus filtering reused by the mobile drawer; Tab/Shift+Tab containment; outside-focus recapture; drawer fallback focus target |
 | Deterministic coverage | `test/mobile-navigation-focus-containment.test.mjs` |
-| Validation evidence | Fresh exact-head canonical Application validation required after this status-bearing commit |
-| Review evidence | Final current-head review/thread audit required after validation |
+| Validation evidence | Exact-head Application validation passed on implementation head `04ecd957eaded42a41e58fad9ef2bbe3f9edde09`; final handoff head requires fresh validation |
+| Review evidence | No submitted reviews and no inline review threads at implementation-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -79,10 +77,10 @@ Because this durable status update creates a new exact head, canonical validatio
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #211 is the sole active delivery thread and is in exact-head validation. |
-| What is already happening? | Mobile navigation keyboard focus containment is implemented with deterministic regression coverage. |
-| What has been validated? | Fresh `main` at the PR #209 merge was inspected before starting PR #211; PR #211 itself requires canonical exact-head validation after this status commit. |
-| What is next? | Inspect PR #211 Application validation, repair any finding on the same PR, audit reviews/threads, complete lifecycle, then continue from fresh `main`. |
+| Where am I? | Stage 3; PR #211 is in final exact-head validation before repository-owned lifecycle completion. |
+| What is already happening? | Mobile-navigation keyboard focus containment is implemented and implementation-head evidence is clean. |
+| What has been validated? | Application validation passed on `04ecd957eaded42a41e58fad9ef2bbe3f9edde09`; reviews and inline threads were clean at that audit. |
+| What is next? | Revalidate the final PR #211 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -92,7 +90,7 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. inspect canonical exact-head Application validation for PR #211;
+1. inspect canonical exact-head Application validation for the final PR #211 handoff head;
 2. repair any in-scope validation or review finding on the existing PR;
 3. once evidence is clean, audit acceptance criteria and review/thread state and apply implementation-complete lifecycle evidence;
 4. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
