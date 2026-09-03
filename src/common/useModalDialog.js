@@ -11,10 +11,9 @@ const FOCUSABLE_SELECTOR = [
 
 const modalStack = []
 
-const isVisibleFocusable = (element) => {
+const isProgrammaticallyFocusable = (element) => {
   if (
     element.disabled ||
-    element.tabIndex < 0 ||
     element.hasAttribute('hidden') ||
     element.getAttribute('aria-hidden') === 'true' ||
     element.closest('[hidden], [aria-hidden="true"], [inert]')
@@ -26,9 +25,13 @@ const isVisibleFocusable = (element) => {
   return style.display !== 'none' && style.visibility !== 'hidden' && element.getClientRects().length > 0
 }
 
+const isSequentiallyFocusable = (element) => (
+  element.tabIndex >= 0 && isProgrammaticallyFocusable(element)
+)
+
 const getFocusableElements = (container) => Array.from(
   container?.querySelectorAll(FOCUSABLE_SELECTOR) ?? []
-).filter(isVisibleFocusable)
+).filter(isSequentiallyFocusable)
 
 const isTopModal = (dialogRef) => modalStack[modalStack.length - 1] === dialogRef
 
@@ -58,7 +61,7 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
       if (!isTopModal(dialogRef)) return
 
       const initialTarget = initialFocusRef?.current
-      if (initialTarget && !initialTarget.disabled && isVisibleFocusable(initialTarget)) {
+      if (initialTarget && !initialTarget.disabled && isProgrammaticallyFocusable(initialTarget)) {
         initialTarget.focus()
         return
       }
@@ -105,7 +108,7 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
       removeModal(dialogRef)
 
       const opener = openerRef.current
-      if (opener?.isConnected && !opener.disabled && isVisibleFocusable(opener)) {
+      if (opener?.isConnected && !opener.disabled && isProgrammaticallyFocusable(opener)) {
         window.requestAnimationFrame(() => {
           const activeDialog = modalStack[modalStack.length - 1]?.current
           if (!activeDialog || activeDialog.contains(opener)) opener.focus()

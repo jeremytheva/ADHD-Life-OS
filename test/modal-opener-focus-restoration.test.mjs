@@ -10,7 +10,7 @@ test('modal close restores focus only to a connected visible enabled opener', as
 
   assert.match(
     source,
-    /opener\?\.isConnected && !opener\.disabled && isVisibleFocusable\(opener\)/
+    /opener\?\.isConnected && !opener\.disabled && isProgrammaticallyFocusable\(opener\)/
   )
   assert.match(source, /if \(!activeDialog \|\| activeDialog\.contains\(opener\)\) opener\.focus\(\)/)
 })
