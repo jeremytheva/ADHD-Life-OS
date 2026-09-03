@@ -5,12 +5,12 @@ import { URL } from 'node:url'
 
 const read = (path) => fs.readFile(new URL(`../${path}`, import.meta.url), 'utf8')
 
-test('modal initial focus ignores hidden or inert targets and falls back to the dialog', async () => {
+test('modal initial focus ignores hidden, inert, or disabled targets and falls back to the dialog', async () => {
   const source = await read('src/common/useModalDialog.js')
 
   assert.match(
     source,
-    /initialTarget && !initialTarget\.disabled && isProgrammaticallyFocusable\(initialTarget\)/
+    /initialTarget && isProgrammaticallyFocusable\(initialTarget\)/
   )
   assert.match(source, /initialTarget\.focus\(\)/)
   assert.match(source, /dialogRef\.current\?\.focus\(\)/)
