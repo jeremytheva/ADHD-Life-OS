@@ -101,6 +101,22 @@ test('Mode Switcher supports keyboard navigation, selection and focus restoratio
   await expect(workTrigger).toBeFocused()
 })
 
+test('Mode Switcher closes after forward Tab leaves the popup and preserves natural focus order', async ({ page }) => {
+  await createModeMock(page)
+  await register(page, 'mode-switcher-tab-exit@example.test')
+
+  const trigger = page.getByRole('button', { name: 'All', exact: true })
+  await trigger.click()
+
+  const menu = page.getByRole('menu', { name: 'Available contexts' })
+  await expect(menu.getByRole('menuitemradio', { name: /All/ })).toBeFocused()
+
+  await page.keyboard.press('Tab')
+
+  await expect(menu).toHaveCount(0)
+  await expect(page.getByRole('button', { name: /Level \d+/ })).toBeFocused()
+})
+
 test('Mode Switcher Escape closes the nested menu before mobile navigation', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await createModeMock(page)

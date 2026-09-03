@@ -6,13 +6,13 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: After PR #208 merges, inspect fresh main and continue the next evidence-backed Stage 3 frontend accessibility and interaction-integrity gap.
+  objective: After PR #210 merges, re-enter from fresh main and continue the next evidence-backed Stage 3 frontend accessibility or interaction-integrity gap.
   issue: null
   pr: null
   branch: null
 next_actions:
-  - Require canonical exact-head Application validation for the final PR #208 handoff commit.
-  - Repair any in-scope validation or review finding on PR #208 rather than creating competing work.
+  - Require canonical exact-head Application validation for the final PR #210 handoff commit.
+  - Repair any in-scope validation or review finding on PR #210 rather than creating competing work.
   - When final exact-head evidence is clean, complete the repository-owned Ready/Mergeable/Merged lifecycle.
   - After merge, inspect fresh main and current GitHub/repository evidence before selecting the next Stage 3 slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
@@ -28,11 +28,11 @@ validation:
   typecheck: NOT_RUN
   tests: NOT_RUN
   build: NOT_RUN
-  ci: NOT_RUN
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Application validation run 462 passed on PR #208 implementation head 0bb7215ad4f08853fb1945ae8d85420391e51b61 after the run 459 structural-test repair, and the implementation-head audit found no submitted reviews or inline review threads. This post-merge durable-handoff commit creates a new exact head and therefore requires fresh canonical validation before lifecycle completion.
-last_verified_commit: 0bb7215ad4f08853fb1945ae8d85420391e51b61
-last_updated: 2026-09-04T02:40:00+10:00
+validation_basis: Application validation run 467 passed on PR #210 implementation head 4a55970093487d0bbe5ac29cc336042ff5190749, and the implementation-head audit found no submitted reviews or inline review threads. This post-merge durable-handoff commit creates a new exact head and therefore requires fresh canonical validation before lifecycle completion.
+last_verified_commit: 4a55970093487d0bbe5ac29cc336042ff5190749
+last_updated: 2026-09-04T02:53:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,9 +44,9 @@ last_updated: 2026-09-04T02:40:00+10:00
 
 ## Current objective
 
-PR #208 has completed implementation-head validation and review audit. Shared modal focusability now uses the browser's resolved `:disabled` state, so controls disabled directly or through an ancestor `<fieldset disabled>` are excluded from sequential candidates, explicit initial focus and opener restoration while existing hidden, aria-hidden, inert and rendering guards remain intact.
+PR #210 has completed implementation-head validation and review audit. The Mode Switcher now allows native Tab navigation to complete and then closes its popup only when focus has actually moved outside it. This prevents the menu from remaining visually and semantically open after a keyboard user continues to the next shell control, without forcing focus back to the trigger or disturbing focus movement within the popup.
 
-Run 459 exposed only stale structural assertions after the disabled-state rule was centralized. Those assertions were repaired on the same PR. Application validation run 462 then passed on implementation head `0bb7215ad4f08853fb1945ae8d85420391e51b61`, and the exact-head review audit found no submitted reviews or inline review threads.
+Application validation run 467 passed on implementation head `4a55970093487d0bbe5ac29cc336042ff5190749`, and the exact-head review audit found no submitted reviews or inline review threads.
 
 The durable handoff now points to the required post-merge checkpoint: re-enter from fresh `main`, inspect current GitHub/repository evidence and continue the next concrete Stage 3 frontend accessibility/interaction-integrity gap. Because this status update creates a new exact head, canonical validation must pass again before lifecycle handoff.
 
@@ -55,7 +55,7 @@ The durable handoff now points to the required post-merge checkpoint: re-enter f
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | PR #208 final exact-head validation required |
+| Gate state | PR #210 final exact-head validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -64,11 +64,11 @@ The durable handoff now points to the required post-merge checkpoint: re-enter f
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #207 — modal sequential/programmatic focus predicate separation; merged at `e73baa3af99f64532ecfd10099018449d1eb84e2` |
-| Current delivery | PR #208 — inherited-disabled modal focus guard; implementation validated, final status-only head pending revalidation |
-| Implemented change | Shared focusability rejects resolved `:disabled` state; redundant direct-disabled call-site checks removed |
-| Evidence | Template Edit uses an ancestor disabled fieldset during apply; modal focus regressions assert the centralized resolved-disabled rule |
-| Validation evidence | Run 462 passed on implementation head `0bb7215ad4f08853fb1945ae8d85420391e51b61`; final handoff head requires fresh exact-head validation |
+| Latest merged delivery | PR #208 — inherited-disabled modal focus guard; merged at `4cb1c5cddd9deb9ef37b0703f8e8caaf372cbd9c` |
+| Current delivery | PR #210 — Mode Switcher keyboard focus-exit dismissal; implementation validated, final status-bearing head pending revalidation |
+| Implemented change | Tab moves naturally; the popup closes on the next animation frame only if focus is outside it |
+| Evidence | Deterministic focus-exit regression plus Playwright proof that forward Tab reaches the next shell control and dismisses the popup |
+| Validation evidence | Run 467 passed on implementation head `4a55970093487d0bbe5ac29cc336042ff5190749`; final handoff head requires fresh exact-head validation |
 | Review evidence | No submitted reviews and no inline review threads at implementation-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
@@ -77,10 +77,10 @@ The durable handoff now points to the required post-merge checkpoint: re-enter f
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #208 is in final exact-head validation before repository-owned lifecycle completion. |
-| What is already happening? | Inherited disabled form semantics are handled by the shared modal focus predicate; implementation-head validation and review audit are clean. |
-| What has been validated? | Application validation run 462 passed on `0bb7215ad4f08853fb1945ae8d85420391e51b61`; reviews and inline threads were clean at that audit. |
-| What is next? | Revalidate the final PR #208 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
+| Where am I? | Stage 3; PR #210 is in final exact-head validation before repository-owned lifecycle completion. |
+| What is already happening? | Mode Switcher focus-exit dismissal is implemented and implementation-head evidence is clean. |
+| What has been validated? | Application validation run 467 passed on `4a55970093487d0bbe5ac29cc336042ff5190749`; reviews and inline threads were clean at that audit. |
+| What is next? | Revalidate the final PR #210 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -90,7 +90,7 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. inspect canonical exact-head validation for the final PR #208 handoff head;
+1. inspect canonical exact-head validation for the final PR #210 handoff head;
 2. repair any in-scope validation or review finding on the existing PR;
 3. once evidence is clean, audit acceptance criteria and review/thread state and apply implementation-complete lifecycle evidence;
 4. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
