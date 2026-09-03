@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 import { onboardingService } from '../../services/onboardingService'
 import WelcomeStep from './steps/WelcomeStep'
 import LifeRolesStep from './steps/LifeRolesStep'
@@ -28,6 +29,7 @@ const OnboardingFlow = ({ onComplete, onSkip }) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [onboardingData, setOnboardingData] = useState(onboardingService.getDefaultOnboardingData())
   const totalSteps = ONBOARDING_FLOW.length
+  const dialogRef = useModalDialog()
 
   useEffect(() => {
     let active = true
@@ -83,6 +85,11 @@ const OnboardingFlow = ({ onComplete, onSkip }) => {
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="onboarding-step-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
@@ -91,7 +98,7 @@ const OnboardingFlow = ({ onComplete, onSkip }) => {
         <div className="p-6 border-b border-slate-200">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 id="onboarding-step-title" className="text-2xl font-bold text-slate-900">
                 {ONBOARDING_FLOW[currentStep].title}
               </h2>
               <p className="text-sm text-slate-600 mt-1">
@@ -109,12 +116,21 @@ const OnboardingFlow = ({ onComplete, onSkip }) => {
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+          <div
+            className="w-full bg-slate-200 rounded-full h-2 overflow-hidden"
+            role="progressbar"
+            aria-label="Onboarding progress"
+            aria-valuemin={1}
+            aria-valuemax={totalSteps}
+            aria-valuenow={currentStep + 1}
+            aria-valuetext={`Step ${currentStep + 1} of ${totalSteps}`}
+          >
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3 }}
               className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full"
+              aria-hidden="true"
             />
           </div>
         </div>
