@@ -6,15 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: After PR #207 merges, inspect fresh main and continue the next evidence-backed Stage 3 frontend accessibility and interaction-integrity gap.
+  objective: Exclude form controls disabled through ancestor fieldset semantics from shared modal focus targets.
   issue: null
-  pr: null
-  branch: null
+  pr: 208
+  branch: fix/modal-disabled-fieldset-focus
 next_actions:
-  - Require canonical exact-head Application validation for the final PR #207 handoff commit.
-  - Repair any in-scope validation or review finding on PR #207 rather than creating competing work.
-  - When final exact-head evidence is clean, complete the repository-owned Ready/Mergeable/Merged lifecycle.
-  - After merge, inspect fresh main, current GitHub state and relevant frontend interaction paths before selecting the next accessibility/interaction-integrity slice.
+  - Require canonical exact-head Application validation for PR #208.
+  - Repair any in-scope validation or review finding on PR #208 rather than creating competing work.
+  - When implementation-head evidence is clean, update durable status to the post-merge fresh-main checkpoint and revalidate that exact head.
+  - Complete the repository-owned Ready/Mergeable/Merged lifecycle.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -30,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 456 passed on PR #207 implementation head 1596bf7835ee3a773b771e2096d3774b45ffc9d3, and the exact-head audit found no submitted reviews or inline review threads. This post-merge durable-handoff commit changes the exact head and therefore requires fresh canonical validation before lifecycle completion.
-last_verified_commit: 1596bf7835ee3a773b771e2096d3774b45ffc9d3
-last_updated: 2026-09-04T02:22:00+10:00
+validation_basis: PR #208 changes the shared modal focusability predicate to use resolved browser :disabled semantics so controls disabled by an ancestor fieldset are excluded alongside directly disabled controls. Existing modal focus regression coverage was updated; fresh exact-head canonical validation is required.
+last_verified_commit: d430c2cc837439ea79e24226d8151aa61d24cc87
+last_updated: 2026-09-04T02:31:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,18 +44,16 @@ last_updated: 2026-09-04T02:22:00+10:00
 
 ## Current objective
 
-PR #207 has completed its implementation-head validation and review audit. The shared modal hook now separates `isProgrammaticallyFocusable` from `isSequentiallyFocusable`: sequential Tab candidates require a non-negative resolved `tabIndex`, while explicit initial-focus targets and opener restoration retain legitimate programmatic-focus semantics. Existing disabled, hidden, `aria-hidden`, inert and non-rendered guards remain shared. Deterministic coverage is maintained across the modal focus regression tests.
+PR #208 is the sole active delivery thread. PR #207 merged at `e73baa3af99f64532ecfd10099018449d1eb84e2`; fresh-main inspection then identified an inherited-disabled focus gap in the shared modal hook.
 
-Application validation run 452 exposed two stale structural helper-name assertions, which were repaired on the same PR. Run 455 then exposed invalid durable validation-state values in this file, which were also repaired. Application validation run 456 passed on implementation head `1596bf7835ee3a773b771e2096d3774b45ffc9d3`, and the exact-head review audit found no submitted reviews or inline review threads.
-
-The durable handoff is now written to the checkpoint that should exist after PR #207 merges: re-enter from fresh `main`, inspect current GitHub/repository evidence, and continue the next concrete Stage 3 frontend accessibility and interaction-integrity gap. Because this status update creates a new PR head, exact-head canonical validation must pass again before implementation-complete handoff.
+`TemplateEditModal` disables its editable controls during apply with `<fieldset disabled={isApplying}>`. The shared modal focus predicate previously checked `element.disabled`, which does not express all inherited disabled semantics. It now uses `element.matches(':disabled')`, allowing the browser's resolved disabled state to exclude both directly disabled controls and controls disabled through an ancestor fieldset. The same predicate continues to govern sequential candidates, explicit initial focus and opener restoration.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | PR #207 final exact-head validation required |
+| Gate state | PR #208 exact-head canonical validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -64,14 +62,10 @@ The durable handoff is now written to the checkpoint that should exist after PR 
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #206 — shared modal negative-tabindex sequential-focus guard; merged at `d0a24e272433472a8ac2e42ff8fce4850f5f646b` |
-| Current delivery | PR #207 — modal sequential/programmatic focus predicate separation; implementation validated, final status-only head pending revalidation |
-| Implemented change | Sequential candidates require `tabIndex >= 0`; explicit initial focus and opener restoration use programmatic-focus eligibility without that restriction |
-| Root cause | PR #206 correctly hardened sequential focus filtering but reused the same predicate for programmatic focus paths |
-| Preserved behaviour | Disabled/hidden/inert/non-rendered guards, modal stack ownership, Escape handling, zero-candidate fallback, outside-dialog containment and opener restoration |
-| Deterministic coverage | `test/modal-focus-trap-visibility.test.mjs`, `test/modal-initial-focus-visibility.test.mjs`, `test/modal-opener-focus-restoration.test.mjs` |
-| Validation evidence | Application validation run 456 passed on implementation head `1596bf7835ee3a773b771e2096d3774b45ffc9d3`; final handoff head requires fresh exact-head validation |
-| Review evidence | No submitted reviews and no inline review threads at the implementation-head audit |
+| Latest merged delivery | PR #207 — modal sequential/programmatic focus predicate separation; merged at `e73baa3af99f64532ecfd10099018449d1eb84e2` |
+| Current delivery | PR #208 — exclude inherited-disabled controls from shared modal focus targets |
+| Implemented change | Shared focusability now rejects `element.matches(':disabled')` rather than checking only `element.disabled`; redundant direct-disabled checks at initial-focus and opener-restoration call sites were removed |
+| Evidence | Template Edit uses an ancestor disabled fieldset during apply; existing modal focus regression now asserts the resolved disabled-state guard |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -79,25 +73,25 @@ The durable handoff is now written to the checkpoint that should exist after PR 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience; PR #207 is in final exact-head validation before repository-owned lifecycle completion. |
-| What is already happening? | Modal programmatic and sequential focus eligibility are separated; implementation-head validation and review audit are clean; this durable post-merge handoff now requires exact-head revalidation. |
-| What has been validated? | Application validation run 456 passed on `1596bf7835ee3a773b771e2096d3774b45ffc9d3`; reviews and inline threads were clean at that audit. |
-| What is next? | Revalidate the final PR #207 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
+| Where am I? | Stage 3; PR #208 is the sole active frontend accessibility delivery thread. |
+| What is already happening? | Shared modal focusability has been hardened for inherited disabled form semantics and regression coverage updated. |
+| What has been validated? | Prior PR #207 completed exact-head validation and merged; PR #208 requires fresh canonical exact-head validation. |
+| What is next? | Validate PR #208, repair any finding on the same PR, perform final review/thread audit, prepare post-merge durable handoff, then complete lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. Do not let provider uncertainty block independent frontend accessibility, interaction-integrity, cognitive-load, testing or maintainability work.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. Independent frontend accessibility, interaction-integrity, cognitive-load, testing and maintainability work remains actionable.
 
 ## Next dependency-correct work
 
-1. inspect canonical exact-head validation for the final PR #207 handoff head;
+1. require canonical exact-head validation for PR #208;
 2. repair any in-scope validation or review finding on the existing PR;
-3. once evidence is clean, audit acceptance criteria and review/thread state and apply implementation-complete lifecycle evidence;
-4. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
-5. inspect fresh `main` and continue the next concrete accessibility/interaction-integrity gap;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+3. audit acceptance criteria and review/thread state when implementation-head evidence is clean;
+4. update this file to the post-merge fresh-main checkpoint and revalidate that exact head;
+5. complete repository-owned lifecycle;
+6. inspect fresh `main` for the next evidence-backed Stage 3 accessibility/interaction-integrity gap.
 
 ## Stage 3 exit conditions
 
