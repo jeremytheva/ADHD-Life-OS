@@ -6,15 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: After PR #210 merges, re-enter from fresh main and continue the next evidence-backed Stage 3 frontend accessibility or interaction-integrity gap.
+  objective: Complete PR #209 after rebasing its Template Edit accessible-labeling work onto fresh main following PR #210.
   issue: null
-  pr: null
-  branch: null
+  pr: 209
+  branch: fix/template-editor-form-labels
 next_actions:
-  - Require canonical exact-head Application validation for the final PR #210 handoff commit.
-  - Repair any in-scope validation or review finding on PR #210 rather than creating competing work.
-  - When final exact-head evidence is clean, complete the repository-owned Ready/Mergeable/Merged lifecycle.
-  - After merge, inspect fresh main and current GitHub/repository evidence before selecting the next Stage 3 slice.
+  - Require canonical exact-head Application validation for rebased PR #209.
+  - Repair any in-scope validation or review finding on PR #209 rather than creating competing work.
+  - When implementation-head evidence is clean, update durable status to the post-merge fresh-main checkpoint and revalidate that exact head.
+  - Complete the repository-owned Ready/Mergeable/Merged lifecycle.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -30,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Application validation run 467 passed on PR #210 implementation head 4a55970093487d0bbe5ac29cc336042ff5190749, and the implementation-head audit found no submitted reviews or inline review threads. This post-merge durable-handoff commit creates a new exact head and therefore requires fresh canonical validation before lifecycle completion.
-last_verified_commit: 4a55970093487d0bbe5ac29cc336042ff5190749
-last_updated: 2026-09-04T02:53:00+10:00
+validation_basis: Application validation run 465 passed on the pre-rebase PR #209 head edab99c6d24dcaac8818ea7f3dc67e5bc596b9f7. PR #210 subsequently merged to main at b261ff70f3bb40070687f7ca3e8201bdbb4ec340, requiring PR #209 to be rebased and freshly validated on its new exact head before any completion claim.
+last_verified_commit: edab99c6d24dcaac8818ea7f3dc67e5bc596b9f7
+last_updated: 2026-09-04T02:59:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,18 +44,18 @@ last_updated: 2026-09-04T02:53:00+10:00
 
 ## Current objective
 
-PR #210 has completed implementation-head validation and review audit. The Mode Switcher now allows native Tab navigation to complete and then closes its popup only when focus has actually moved outside it. This prevents the menu from remaining visually and semantically open after a keyboard user continues to the next shell control, without forcing focus back to the trigger or disturbing focus movement within the popup.
+PR #210 completed its repository-owned lifecycle and merged at `b261ff70f3bb40070687f7ca3e8201bdbb4ec340`. A pre-existing concurrent PR #209 was then rediscovered during fresh-main inspection. Its implementation had already passed Application validation run 465 on the old base, but it became stale because both deliveries maintained `STATUS.md`.
 
-Application validation run 467 passed on implementation head `4a55970093487d0bbe5ac29cc336042ff5190749`, and the exact-head review audit found no submitted reviews or inline review threads.
+PR #209 is being preserved and rebased onto current `main`. Its product change gives Template Edit controls stable programmatic labels: visible Basic Information labels are associated with their inputs, dynamic routine-step name and duration fields receive explicit accessible names, and checkbox ids are scoped to the active template editor instance. Editing, applying, dismissal and modal-stack behaviour remain unchanged.
 
-The durable handoff now points to the required post-merge checkpoint: re-enter from fresh `main`, inspect current GitHub/repository evidence and continue the next concrete Stage 3 frontend accessibility/interaction-integrity gap. Because this status update creates a new exact head, canonical validation must pass again before lifecycle handoff.
+Because the rebase creates a new exact head, prior run 465 is historical evidence only. Canonical validation must pass again before lifecycle progression.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | PR #210 final exact-head validation required |
+| Gate state | PR #209 rebased exact-head canonical validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -64,12 +64,11 @@ The durable handoff now points to the required post-merge checkpoint: re-enter f
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #208 — inherited-disabled modal focus guard; merged at `4cb1c5cddd9deb9ef37b0703f8e8caaf372cbd9c` |
-| Current delivery | PR #210 — Mode Switcher keyboard focus-exit dismissal; implementation validated, final status-bearing head pending revalidation |
-| Implemented change | Tab moves naturally; the popup closes on the next animation frame only if focus is outside it |
-| Evidence | Deterministic focus-exit regression plus Playwright proof that forward Tab reaches the next shell control and dismisses the popup |
-| Validation evidence | Run 467 passed on implementation head `4a55970093487d0bbe5ac29cc336042ff5190749`; final handoff head requires fresh exact-head validation |
-| Review evidence | No submitted reviews and no inline review threads at implementation-head audit |
+| Latest merged delivery | PR #210 — Mode Switcher keyboard focus-exit dismissal; merged at `b261ff70f3bb40070687f7ca3e8201bdbb4ec340` |
+| Current delivery | PR #209 — Template Edit form-label associations and dynamic step accessible names; rebased onto fresh main |
+| Implemented change | Template-scoped ids and `htmlFor` associations for visible labels; explicit accessible names for dynamic step name/duration fields; scoped checkbox ids |
+| Deterministic coverage | `test/template-edit-modal-form-labels.test.mjs` |
+| Validation evidence | Run 465 passed on the pre-rebase head; the new exact head requires fresh canonical validation |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -77,10 +76,10 @@ The durable handoff now points to the required post-merge checkpoint: re-enter f
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #210 is in final exact-head validation before repository-owned lifecycle completion. |
-| What is already happening? | Mode Switcher focus-exit dismissal is implemented and implementation-head evidence is clean. |
-| What has been validated? | Application validation run 467 passed on `4a55970093487d0bbe5ac29cc336042ff5190749`; reviews and inline threads were clean at that audit. |
-| What is next? | Revalidate the final PR #210 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
+| Where am I? | Stage 3; PR #209 is the sole active delivery thread after reconciliation with fresh `main`. |
+| What is already happening? | Template Edit labeling work and deterministic regression coverage are preserved on top of the PR #210 merge. |
+| What has been validated? | Pre-rebase run 465 passed; that evidence is invalid for the new exact head and must be refreshed. |
+| What is next? | Validate the rebased PR #209 head, repair findings on the same PR, prepare the post-merge handoff, then complete repository-owned lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -90,12 +89,12 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. inspect canonical exact-head validation for the final PR #210 handoff head;
+1. require canonical exact-head validation for rebased PR #209;
 2. repair any in-scope validation or review finding on the existing PR;
-3. once evidence is clean, audit acceptance criteria and review/thread state and apply implementation-complete lifecycle evidence;
-4. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
-5. inspect fresh `main` and continue the next concrete accessibility/interaction-integrity gap;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+3. audit acceptance criteria and review/thread state when implementation-head evidence is clean;
+4. update this file to the post-merge fresh-main checkpoint and revalidate that exact head;
+5. complete repository-owned lifecycle;
+6. inspect fresh `main` for the next evidence-backed Stage 3 accessibility/interaction-integrity gap.
 
 ## Stage 3 exit conditions
 
