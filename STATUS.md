@@ -3,19 +3,18 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Change
-execution_state: IMPLEMENTING
+gate: Integration
+execution_state: VALIDATING
 current_work:
-  objective: Contain keyboard focus within the blocking onboarding workflow and expose its dialog/progress semantics without changing onboarding state transitions.
+  objective: After PR #212 merges, re-enter from fresh main and continue the next evidence-backed Stage 3 frontend accessibility or interaction-integrity gap.
   issue: null
-  pr: 212
-  branch: fix/onboarding-focus-containment
+  pr: null
+  branch: null
 next_actions:
-  - Run canonical exact-head Application validation for PR #212.
+  - Require canonical exact-head Application validation for this final PR #212 durable-handoff commit.
   - Repair any in-scope validation or review finding on PR #212 rather than creating competing work.
-  - After implementation-head evidence is clean, update this file to the post-merge fresh-main re-entry checkpoint and revalidate that final exact head.
-  - Complete the repository-owned implementation-complete, Ready and merge-finalizer lifecycle when exact-head evidence is clean.
-  - After merge, inspect fresh main before selecting the next Stage 3 frontend accessibility/interaction-integrity slice.
+  - When final exact-head evidence is clean, complete the repository-owned implementation-complete, Ready, Mergeable and Merged lifecycle.
+  - After merge, inspect fresh main and current GitHub/repository evidence before selecting the next Stage 3 slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: PENDING
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #212 is a new frontend-only accessibility slice on fresh main after PR #211 merged. Prior validation evidence does not apply to this new head; canonical exact-head platform validation is required.
-last_verified_commit: 52d57c0a4cc56ca4d094a3100ebed2c9fa0e97e0
-last_updated: 2026-09-04T06:20:00+10:00
+validation_basis: Application validation run 475 passed on PR #212 implementation head 44a8e9deea3c83a55a9b39f1094089eba247fafe, and the implementation-head audit found no submitted reviews or inline review threads. This post-merge durable-handoff commit creates a new exact head and therefore requires fresh canonical validation before lifecycle completion.
+last_verified_commit: 44a8e9deea3c83a55a9b39f1094089eba247fafe
+last_updated: 2026-09-04T07:16:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,17 +44,19 @@ last_updated: 2026-09-04T06:20:00+10:00
 
 ## Current objective
 
-PR #212 is the sole active delivery thread. Fresh-main inspection after PR #211 identified that `OnboardingFlow` is a fixed, full-screen blocking workflow but did not participate in the shared modal focus stack. Keyboard focus could therefore leave onboarding and reach controls behind the overlay. The visual onboarding step bar also lacked progress semantics.
+PR #212 has completed implementation-head validation and review audit. The blocking onboarding workflow now reuses the shared `useModalDialog` contract so keyboard focus remains contained within onboarding, while the onboarding surface exposes labelled modal-dialog semantics and the step indicator exposes progressbar min/max/current/text semantics. Existing onboarding navigation, persistence, skip and completion behaviour remains unchanged.
 
-PR #212 reuses `useModalDialog` so the onboarding workflow inherits the same modal-stack ownership, sequential-focus containment and fallback focus behaviour as other blocking dialogs. The onboarding surface now exposes labelled modal-dialog semantics and its step indicator exposes progressbar min/max/current/text semantics. Existing onboarding navigation, persistence, skip and completion behaviour is unchanged; Escape is deliberately not mapped to skip/close because no such dismissal contract exists for later steps.
+Application validation run 475 passed on implementation head `44a8e9deea3c83a55a9b39f1094089eba247fafe`, and the implementation-head audit found no submitted reviews or inline review threads.
+
+The durable handoff now points to the required post-merge checkpoint: re-enter from fresh `main`, inspect current GitHub/repository evidence and continue the next concrete Stage 3 frontend accessibility/interaction-integrity gap. Because this status update creates a new exact head, canonical validation must pass again before lifecycle handoff.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — frontend accessibility and interaction integrity |
-| Gate state | PR #212 implementation requires exact-head validation |
-| Execution state | IMPLEMENTING |
+| Current gate | INTEGRATION — frontend accessibility and interaction integrity |
+| Gate state | PR #212 final exact-head validation required |
+| Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -64,11 +65,11 @@ PR #212 reuses `useModalDialog` so the onboarding workflow inherits the same mod
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #211 — mobile navigation keyboard focus containment; merged at `52d57c0a4cc56ca4d094a3100ebed2c9fa0e97e0` |
-| Current delivery | PR #212 — onboarding keyboard focus containment and dialog/progress semantics |
+| Current delivery | PR #212 — onboarding keyboard focus containment and dialog/progress semantics; implementation validated, final status-bearing head pending revalidation |
 | Implemented change | Shared modal focus contract reused by onboarding; labelled modal dialog; programmatic fallback focus; semantic step progress |
 | Deterministic coverage | `test/onboarding-dialog-focus-integrity.test.mjs` |
-| Validation evidence | New PR #212 exact head requires canonical Application validation |
-| Review evidence | Final exact-head review/thread audit not yet run |
+| Validation evidence | Application validation run 475 passed on implementation head `44a8e9deea3c83a55a9b39f1094089eba247fafe`; final handoff head requires fresh exact-head validation |
+| Review evidence | No submitted reviews and no inline review threads at implementation-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -76,10 +77,10 @@ PR #212 reuses `useModalDialog` so the onboarding workflow inherits the same mod
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #212 is the sole active frontend accessibility thread. |
-| What is already happening? | Onboarding now reuses the shared modal focus contract and exposes dialog/progress semantics. |
-| What has been validated? | PR #211 is merged; PR #212 has no transferable validation evidence yet. |
-| What is next? | Run exact-head canonical validation, repair findings on PR #212, then complete its durable handoff and lifecycle. |
+| Where am I? | Stage 3; PR #212 is in final exact-head validation before repository-owned lifecycle completion. |
+| What is already happening? | Onboarding focus containment and dialog/progress semantics are implemented and implementation-head evidence is clean. |
+| What has been validated? | Application validation run 475 passed on `44a8e9deea3c83a55a9b39f1094089eba247fafe`; reviews and inline threads were clean at that audit. |
+| What is next? | Revalidate the final PR #212 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -89,13 +90,12 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. inspect canonical exact-head Application validation for PR #212;
-2. repair any in-scope validation or review finding on the existing PR rather than starting competing work;
-3. once implementation-head evidence is clean, update `STATUS.md` to the required post-merge fresh-main checkpoint;
-4. revalidate that final exact head and run the final review/thread audit;
-5. apply implementation-complete lifecycle evidence and allow repository-owned Ready/Mergeable/Merged progression;
-6. after merge, inspect fresh `main` and continue the next concrete accessibility/interaction-integrity gap;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. inspect canonical exact-head Application validation for the final PR #212 handoff head;
+2. repair any in-scope validation or review finding on the existing PR;
+3. once evidence is clean, audit acceptance criteria and review/thread state and apply implementation-complete lifecycle evidence;
+4. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
+5. inspect fresh `main` and continue the next concrete accessibility/interaction-integrity gap;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
