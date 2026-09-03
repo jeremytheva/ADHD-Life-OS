@@ -13,7 +13,7 @@ const modalStack = []
 
 const isProgrammaticallyFocusable = (element) => {
   if (
-    element.disabled ||
+    element.matches(':disabled') ||
     element.hasAttribute('hidden') ||
     element.getAttribute('aria-hidden') === 'true' ||
     element.closest('[hidden], [aria-hidden="true"], [inert]')
@@ -61,7 +61,7 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
       if (!isTopModal(dialogRef)) return
 
       const initialTarget = initialFocusRef?.current
-      if (initialTarget && !initialTarget.disabled && isProgrammaticallyFocusable(initialTarget)) {
+      if (initialTarget && isProgrammaticallyFocusable(initialTarget)) {
         initialTarget.focus()
         return
       }
@@ -108,7 +108,7 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
       removeModal(dialogRef)
 
       const opener = openerRef.current
-      if (opener?.isConnected && !opener.disabled && isProgrammaticallyFocusable(opener)) {
+      if (opener?.isConnected && isProgrammaticallyFocusable(opener)) {
         window.requestAnimationFrame(() => {
           const activeDialog = modalStack[modalStack.length - 1]?.current
           if (!activeDialog || activeDialog.contains(opener)) opener.focus()
