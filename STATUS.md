@@ -6,16 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Keep shared modal keyboard focus contained when focus is unexpectedly outside the active dialog.
+  objective: After PR #205 merges, inspect fresh main and continue the next evidence-backed Stage 3 frontend accessibility and interaction-integrity gap.
   issue: null
-  pr: 205
-  branch: fix/modal-forward-tab-containment
+  pr: null
+  branch: null
 next_actions:
-  - Require canonical exact-head Application validation for PR #205.
+  - Require canonical exact-head Application validation for the final PR #205 handoff commit.
   - Repair any in-scope validation or review finding on PR #205 rather than creating competing work.
-  - When exact-head evidence is clean, write the post-merge durable handoff and revalidate that final head.
-  - Complete the repository-owned Ready/Mergeable/Merged lifecycle only after exact-head evidence and review state are clean.
-  - After merge, inspect fresh main and continue the next evidence-backed Stage 3 frontend accessibility and interaction-integrity gap.
+  - When final exact-head evidence is clean, complete the repository-owned Ready/Mergeable/Merged lifecycle.
+  - After merge, inspect fresh main, current GitHub state and relevant frontend interaction paths before selecting the next accessibility/interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #205 implementation and durable active-thread status are committed; canonical exact-head validation has not yet completed for this head.
-last_verified_commit: null
-last_updated: 2026-09-03T18:20:00+10:00
+validation_basis: Application validation run 446 passed on PR #205 implementation head cd6c17952fa31429af19e820e9b23104a31ac3cd with no submitted reviews or inline review threads. This post-merge durable-handoff commit changes the exact head and therefore requires fresh canonical validation before lifecycle completion.
+last_verified_commit: cd6c17952fa31429af19e820e9b23104a31ac3cd
+last_updated: 2026-09-03T19:14:30+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,16 +44,16 @@ last_updated: 2026-09-03T18:20:00+10:00
 
 ## Current objective
 
-PR #205 is the sole active delivery slice. Fresh `main` after PR #204 exposed an asymmetry in the shared modal keyboard trap: reverse Tab already recaptured focus when the active element was outside the top modal, while forward Tab only wrapped from the last eligible control. If focus was moved outside the active dialog programmatically, a forward Tab was therefore not recaptured by the shared hook.
+PR #205 is the active delivery slice. Its implementation-head canonical validation passed in Application validation run 446 on `cd6c17952fa31429af19e820e9b23104a31ac3cd`. The shared modal keyboard trap now recaptures forward Tab when focus is unexpectedly outside the active top dialog, moving focus to the first eligible modal control and preserving the existing reverse-Tab recovery to the last eligible control. Deterministic coverage is in `test/modal-focus-trap-containment.test.mjs`.
 
-The implementation makes forward Tab mirror the existing reverse-Tab recovery rule. When focus is outside the active dialog, forward Tab is prevented and transferred to the first eligible modal control; reverse Tab continues to transfer to the last eligible control. Deterministic coverage is in `test/modal-focus-trap-containment.test.mjs`.
+The durable handoff is now written to the checkpoint that should exist after PR #205 merges: re-enter from fresh `main`, inspect current GitHub/repository evidence, and continue the next concrete Stage 3 frontend accessibility and interaction-integrity gap. Because this status update creates a new PR head, exact-head canonical validation must pass again before implementation-complete handoff.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | PR #205 exact-head canonical validation required |
+| Gate state | PR #205 final exact-head validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -64,13 +63,13 @@ The implementation makes forward Tab mirror the existing reverse-Tab recovery ru
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #204 — shared modal disabled-control focus-trap guard; merged at `20916cef571ab46c441c8b4dc5c1af3e7393afa3` |
-| Current delivery | PR #205 — shared modal forward-Tab focus containment; Draft and awaiting exact-head validation |
+| Current delivery | PR #205 — shared modal forward-Tab focus containment; implementation validated, final status-only head pending revalidation |
 | Implemented change | Forward Tab now recaptures focus to the first eligible modal control when the active element is outside the top dialog |
 | Root cause | The shared hook handled outside-dialog focus only in the Shift+Tab branch; the forward-Tab branch checked only whether focus was on the last modal control |
 | Preserved behaviour | Modal stack ownership, Escape handling, normal first/last wrapping, initial focus, opener-focus restoration, and focusability filtering |
 | Deterministic coverage | `test/modal-focus-trap-containment.test.mjs` |
-| Validation evidence | Canonical exact-head validation required for the current PR #205 head |
-| Review evidence | Final review/thread audit required after validation |
+| Validation evidence | Application validation run 446 passed on implementation head `cd6c17952fa31429af19e820e9b23104a31ac3cd`; final handoff head requires fresh exact-head validation |
+| Review evidence | No submitted reviews and no inline review threads at the implementation-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -78,10 +77,10 @@ The implementation makes forward Tab mirror the existing reverse-Tab recovery ru
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 — execution and next-action experience; PR #205 is the sole active delivery thread. |
-| What is already happening? | Shared modal forward-Tab containment and deterministic regression coverage are implemented. |
-| What has been validated? | No completion claim applies to the current exact head until canonical Application validation passes. |
-| What is next? | Inspect exact-head validation, repair any finding on this PR, audit review/thread state, then complete the durable handoff and lifecycle. |
+| Where am I? | Stage 3 — execution and next-action experience; PR #205 is in final exact-head validation before repository-owned lifecycle completion. |
+| What is already happening? | Shared modal forward-Tab containment is implemented and implementation-head validation passed; this durable post-merge handoff now requires exact-head revalidation. |
+| What has been validated? | Application validation run 446 passed on `cd6c17952fa31429af19e820e9b23104a31ac3cd`; reviews and inline threads were clean at that audit. |
+| What is next? | Revalidate the final PR #205 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -91,13 +90,12 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. inspect canonical exact-head validation for PR #205;
-2. repair any in-scope validation or review finding on the same PR;
-3. once implementation-head evidence is clean, audit acceptance criteria and review/thread state;
-4. write the post-merge STATUS checkpoint, revalidate the resulting final exact head, and only then apply implementation-complete lifecycle evidence;
-5. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
-6. after merge, inspect fresh `main` and continue the next concrete accessibility/interaction-integrity gap;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. inspect canonical exact-head validation for the final PR #205 handoff head;
+2. repair any in-scope validation or review finding on the existing PR;
+3. once evidence is clean, audit acceptance criteria and review/thread state and apply implementation-complete lifecycle evidence;
+4. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
+5. inspect fresh `main` and continue the next concrete accessibility/interaction-integrity gap;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
