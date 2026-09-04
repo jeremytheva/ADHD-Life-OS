@@ -6,14 +6,14 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete PR #224 mode preferences dialog accessibility semantics without changing preference behaviour or persistence.
+  objective: Complete final exact-head evidence for PR #224, then re-enter from fresh main and select the next evidence-backed provider-independent Stage 3 slice.
   issue: null
-  pr: 224
-  branch: fix/mode-preferences-dialog-semantics
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical npm run platform:validate on the current PR #224 head.
-  - Audit submitted reviews and inline review threads on the exact validated head and repair any in-scope finding.
-  - Before implementation-complete progression, update STATUS.md to the post-merge fresh-main handoff and refresh exact-head evidence.
+  - Complete final exact-head canonical validation and review/thread audit for PR #224, then allow repository lifecycle automation to merge it when clean.
+  - After merge, re-enter from fresh main and reconcile current GitHub state before starting new implementation.
+  - Select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice from current repository evidence.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -29,9 +29,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #224 implements provider-independent mode preferences dialog semantics with deterministic regression coverage. Canonical validation has not yet completed on the current status-bearing head.
-last_verified_commit: 788d5648ae54c1798f9a98c049b6f63f35468bd7
-last_updated: 2026-09-05T04:38:00+10:00
+validation_basis: PR #224 implementation/status head ab076d00fc83800cc00c54f421c0be8a3abec60c passed canonical Application validation run 513 with a clean submitted-review and inline-thread audit. This post-merge handoff commit changes the exact head and therefore requires fresh canonical validation before completion signalling.
+last_verified_commit: ab076d00fc83800cc00c54f421c0be8a3abec60c
+last_updated: 2026-09-05T05:13:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,18 +43,18 @@ last_updated: 2026-09-05T04:38:00+10:00
 
 ## Current objective
 
-PR #223 completed its repository lifecycle and merged into `main` at `63c03415bf8a4c75c32a4a184da670300a540822` after final exact-head Application validation run 511 passed and the submitted-review/inline-thread audit remained clean.
+PR #224 implements the current provider-independent accessibility slice. In `src/components/mode/ModePreferences.jsx`, the existing mode-preferences overlay now exposes explicit modal-dialog semantics, is named by its existing mode-specific heading, and gives its icon-only header close control a programmatic label while keeping the decorative close glyph out of the accessibility tree. Deterministic regression coverage is in `test/mode-preferences-dialog-semantics.test.mjs`.
 
-Fresh-main reconciliation found no competing open PR. PR #224 is now the sole active Stage 3 delivery thread. It addresses a provider-independent accessibility gap in `src/components/mode/ModePreferences.jsx`: the existing overlay visually behaves as a modal but previously exposed no dialog/modal semantics or programmatic dialog name, and its header close control was icon-only without an accessible name. The overlay is now an `aria-modal` dialog named by its existing mode-specific heading, while the close control is explicitly labelled and its glyph is decorative. Deterministic regression coverage is in `test/mode-preferences-dialog-semantics.test.mjs`.
+Its implementation/status head `ab076d00fc83800cc00c54f421c0be8a3abec60c` passed canonical Application validation run 513 and had no submitted reviews or inline review threads. This file is intentionally written as the post-merge handoff so that, once PR #224 lands on `main`, the repository does not retain a closed PR as its active re-entry target.
 
-The change is frontend-only. Mode preference values, update logic, persistence, schemas, authorization, provider mappings, execution policy and destructive behaviour are unchanged.
+The change remains frontend-only. Mode preference values, update logic, persistence, schemas, authorization, provider mappings, execution policy, destructive behaviour and external integrations are unchanged.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #224 implementation/status state is ready for exact-head validation |
-| Gate state | Canonical validation and review/thread evidence pending |
+| Current gate | INTEGRATION — PR #224 final status-bearing head requires fresh exact-head validation before implementation-complete signalling |
+| Gate state | Final exact-head canonical validation pending after the STATUS handoff commit |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -64,11 +64,12 @@ The change is frontend-only. Mode preference values, update logic, persistence, 
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #223 — settings mode icon accessibility semantics; merged at `63c03415bf8a4c75c32a4a184da670300a540822` |
-| Active lifecycle delivery | PR #224 — mode preferences dialog accessibility semantics |
-| Implemented change | Named modal dialog semantics plus labelled icon-only close control |
+| Completing lifecycle delivery | PR #224 — mode preferences dialog accessibility semantics |
+| Implemented change | Named modal-dialog semantics plus labelled icon-only close control |
 | Deterministic coverage | `test/mode-preferences-dialog-semantics.test.mjs` |
-| Exact-head validation evidence | Pending on current status-bearing PR #224 head |
-| Review evidence | Pending final exact-head audit |
+| Previous exact-head validation evidence | Application validation run 513 PASS on `ab076d00fc83800cc00c54f421c0be8a3abec60c` |
+| Review evidence | No submitted reviews and no inline review threads on validated implementation/status head |
+| Final exact-head evidence | Pending after this durable handoff commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -76,10 +77,10 @@ The change is frontend-only. Mode preference values, update logic, persistence, 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #224 is the sole active provider-independent accessibility delivery thread. |
-| What is already happening? | Mode preferences dialog and close-control semantics are implemented with deterministic regression coverage. |
-| What has been validated? | PR #223 final exact head passed canonical validation before merge; PR #224 current status-bearing head still requires canonical validation. |
-| What is next? | Run `npm run platform:validate`, audit reviews/threads, repair any in-scope finding, then prepare the post-merge fresh-main handoff and repeat exact-head evidence before implementation-complete progression. |
+| Where am I? | Stage 3; PR #224 is completing its repository lifecycle, after which continuation re-enters from fresh `main`. |
+| What is already happening? | Mode preferences dialog semantics are implemented and implementation-head validated with deterministic regression coverage. |
+| What has been validated? | Application validation run 513 passed on `ab076d00fc83800cc00c54f421c0be8a3abec60c`; submitted-review and inline-thread audits were clean on that head. |
+| What is next? | Validate and audit the final status-bearing PR #224 head, signal implementation complete when clean, allow repository lifecycle automation to merge, then reconcile fresh `main` and choose the next provider-independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -89,13 +90,12 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. obtain canonical Application validation for the current exact PR #224 head;
-2. audit submitted reviews and inline review threads on that exact head;
-3. repair any in-scope finding on PR #224 and repeat exact-head evidence as necessary;
-4. before completion signalling, update this file to the repository-required post-merge fresh-main handoff;
-5. validate/audit the resulting final exact head and, when clean, signal implementation complete so repository lifecycle automation can finalize the PR;
-6. after merge, re-enter from fresh `main` and select the next evidence-backed provider-independent Stage 3 slice;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. obtain canonical Application validation for the final exact PR #224 head after this STATUS handoff commit;
+2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding if necessary;
+3. when final exact-head evidence is clean, signal `lifecycle:implementation-complete` and allow the repository lifecycle controller/finalizer to complete the merge;
+4. after merge, re-enter from fresh `main`, reconcile open PRs/branches/checks and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+5. continue client-side cognitive-load and repository-quality work only when it is dependency-correct and evidence-backed;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
