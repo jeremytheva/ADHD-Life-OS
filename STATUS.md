@@ -6,16 +6,14 @@ stage: execution and next-action experience
 gate: Change
 execution_state: IMPLEMENTING
 current_work:
-  objective: Make project task and subtask controls programmatically understandable without changing project persistence behaviour.
+  objective: Re-enter from fresh main and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
-  pr: 215
-  branch: fix/project-task-control-semantics
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the exact current PR #215 head.
-  - Audit submitted reviews and inline review threads on that exact head.
-  - Repair any in-scope findings on PR #215 before lifecycle progression.
-  - Before implementation-complete, update STATUS.md to the required post-merge fresh-main checkpoint and revalidate the resulting exact final head.
-  - After merge, continue from fresh main with the next evidence-backed provider-independent Stage 3 slice.
+  - After PR #215 merges, reconcile fresh main and confirm there is no newer active delivery thread.
+  - Select the next evidence-backed provider-independent Stage 3 accessibility, interaction-integrity, cognitive-load, testing, or maintainability slice.
+  - Reuse or repair any existing overlapping branch or work before creating a new implementation thread.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +29,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #215 is a new provider-independent accessibility slice based on fresh main 8ee39d7b49fc1bf28c513c4d3b25dd4abb4950ec. Canonical exact-head validation has not yet completed for this branch state.
-last_verified_commit: 8ee39d7b49fc1bf28c513c4d3b25dd4abb4950ec
-last_updated: 2026-09-04T13:18:00+10:00
+validation_basis: PR #215 implementation head 78e409abf35a7fd635e7d4446a16a07ef3e36905 passed canonical Application validation run 485 and had a clean submitted-review and inline-thread audit. This STATUS handoff commit changes the exact head and therefore requires fresh canonical validation before lifecycle completion.
+last_verified_commit: 78e409abf35a7fd635e7d4446a16a07ef3e36905
+last_updated: 2026-09-04T16:14:42+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,17 +43,17 @@ last_updated: 2026-09-04T13:18:00+10:00
 
 ## Current objective
 
-PR #215 is the sole active delivery thread. It closes an evidence-backed accessibility gap in the project task/subtask interaction path while preserving current project persistence, service and provider behaviour.
+PR #215 has completed its implementation-head validation and review/thread audit. This file now records the checkpoint that should be authoritative after PR #215 merges: return to fresh `main`, reconcile live repository/GitHub state, and continue with the next evidence-backed provider-independent Stage 3 slice.
 
-Fresh `main` after PR #214 was `8ee39d7b49fc1bf28c513c4d3b25dd4abb4950ec`, with no open competing pull requests. Current code inspection found icon-only task/subtask actions without accessible names, visual-only subtask progress, and an expand/collapse control without exposed expanded state. The correction adds task-specific accessible names, subtask toggle state, programmatic progress semantics, expansion state, and an accessible name for the new-subtask input. Deterministic coverage is in `test/project-task-control-semantics.test.mjs`.
+PR #215 closes an accessibility gap in the project task/subtask interaction path while preserving project persistence, service, provider, data-shape, authorization and execution-policy behaviour. It adds task-specific accessible names, subtask toggle state, programmatic progress semantics, expansion state, and an accessible name for the new-subtask input. Deterministic coverage is in `test/project-task-control-semantics.test.mjs`.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — PR #215 implementation and deterministic regression are present; exact-head validation is required |
-| Gate state | Canonical validation pending on the current branch head |
-| Execution state | IMPLEMENTING |
+| Current gate | CHANGE — durable post-merge handoff committed; final exact-head validation is required before lifecycle completion |
+| Gate state | Final canonical validation pending on the STATUS-bearing PR #215 head |
+| Execution state | IMPLEMENTING until exact-head evidence is current and the repository lifecycle completes |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -64,11 +62,12 @@ Fresh `main` after PR #214 was `8ee39d7b49fc1bf28c513c4d3b25dd4abb4950ec`, with 
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #214 — routine-step removal focus recovery; merged at `8ee39d7b49fc1bf28c513c4d3b25dd4abb4950ec` |
-| Active delivery | PR #215 — project task/subtask control semantics |
+| Delivery completing | PR #215 — project task/subtask control semantics |
 | Implemented change | Accessible names/state for task and subtask controls plus programmatic subtask progress semantics |
 | Deterministic coverage | `test/project-task-control-semantics.test.mjs` |
-| Validation evidence | Pending canonical exact-head Application validation |
-| Review evidence | Exact-head audit required after validation evidence is current |
+| Implementation-head validation evidence | Application validation run 485 passed on `78e409abf35a7fd635e7d4446a16a07ef3e36905` |
+| Implementation-head review evidence | No submitted reviews and no inline review threads on the validated implementation head |
+| Final-head evidence | Required because this durable handoff commit changed the exact PR head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -76,10 +75,10 @@ Fresh `main` after PR #214 was `8ee39d7b49fc1bf28c513c4d3b25dd4abb4950ec`, with 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #215 is the sole active implementation thread. |
-| What is already happening? | Project task/subtask control semantics are implemented with focused deterministic coverage. |
-| What has been validated? | The fresh-main base through PR #214 is repository-integrated; PR #215 exact-head canonical validation is pending. |
-| What is next? | Validate and audit PR #215, repair findings on the same thread, then complete its repository lifecycle only from exact-head evidence. |
+| Where am I? | Stage 3; PR #215 is completing its repository lifecycle, with fresh `main` as the intended post-merge re-entry point. |
+| What is already happening? | Project task/subtask control semantics are implemented; implementation-head canonical validation and review/thread audit are clean. |
+| What has been validated? | PR #215 implementation head `78e409abf35a7fd635e7d4446a16a07ef3e36905` passed canonical Application validation run 485. |
+| What is next? | Validate and audit this final STATUS-bearing head, complete PR #215 lifecycle, then reconcile fresh `main` and select the next provider-independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -89,15 +88,13 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the current PR #215 head;
-2. audit submitted reviews and inline review threads on that exact head;
+1. run canonical Application validation on the final STATUS-bearing PR #215 head;
+2. audit submitted reviews and inline review threads on that exact final head;
 3. repair any in-scope finding on PR #215 and repeat exact-head evidence as required;
-4. when implementation-head evidence is clean, commit the required post-merge fresh-`main` STATUS checkpoint;
-5. re-run canonical validation and final review/thread audit on that status-bearing exact head;
-6. add the implementation-complete signal only after all exact-head acceptance evidence is current;
-7. let the repository lifecycle controller/finalizer own Ready/Mergeable/Merged transitions;
-8. after merge, re-enter from fresh `main` and select the next evidence-backed provider-independent Stage 3 slice;
-9. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+4. add the implementation-complete signal only after all exact-head acceptance evidence is current;
+5. let the repository lifecycle controller/finalizer own Ready/Mergeable/Merged transitions;
+6. after merge, re-enter from fresh `main`, inspect live PRs/branches/checks and select the next evidence-backed provider-independent Stage 3 slice;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
