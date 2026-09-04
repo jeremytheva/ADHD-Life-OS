@@ -14,20 +14,23 @@ const AdaptiveRewardSuggestion = ({ reward, onClose, onClaim }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
       className="fixed top-20 right-6 z-[70] max-w-sm"
+      role="region"
+      aria-label="Reward suggestion"
     >
       <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-lg shadow-2xl border-2 border-yellow-300 overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-yellow-400 to-amber-500 p-4 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <SafeIcon icon={FiGift} className="w-5 h-5" />
+              <SafeIcon icon={FiGift} className="w-5 h-5" aria-hidden="true" />
               <span className="font-bold">Reward Time!</span>
             </div>
             <button
               onClick={onClose}
               className="p-1 hover:bg-white hover:bg-opacity-20 rounded transition-colors"
+              aria-label="Dismiss reward suggestion"
             >
-              <SafeIcon icon={FiX} className="w-4 h-4" />
+              <SafeIcon icon={FiX} className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -51,13 +54,13 @@ const AdaptiveRewardSuggestion = ({ reward, onClose, onClaim }) => {
                     className="w-full p-3 bg-white rounded-lg border-2 border-yellow-300 hover:border-yellow-400 hover:shadow-md transition-all text-left"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="text-2xl">{suggestion.icon}</div>
+                      <div className="text-2xl" aria-hidden="true">{suggestion.icon}</div>
                       <div className="flex-1">
                         <div className="font-medium text-slate-900">{suggestion.name}</div>
                         <div className="text-xs text-slate-600">{suggestion.description}</div>
                       </div>
                       <div className="text-yellow-600 font-bold text-sm">
-                        💰 {suggestion.cost}
+                        <span aria-hidden="true">💰</span> {suggestion.cost}
                       </div>
                     </div>
                   </motion.button>
