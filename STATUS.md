@@ -6,14 +6,16 @@ stage: execution and next-action experience
 gate: Change
 execution_state: IMPLEMENTING
 current_work:
-  objective: Inspect fresh main after PR #214 merges and select the next evidence-backed provider-independent Stage 3 slice.
+  objective: Make project task and subtask controls programmatically understandable without changing project persistence behaviour.
   issue: null
-  pr: null
-  branch: main
+  pr: 215
+  branch: fix/project-task-control-semantics
 next_actions:
-  - Inspect fresh main and current GitHub work surfaces after PR #214 merges.
-  - Reconcile architecture, roadmap, accepted decisions and implementation evidence before selecting the next Stage 3 slice.
-  - Continue the highest-priority provider-independent accessibility, interaction-integrity, cognitive-load, testing or maintainability work that is evidence-backed and dependency-correct.
+  - Run canonical Application validation on the exact current PR #215 head.
+  - Audit submitted reviews and inline review threads on that exact head.
+  - Repair any in-scope findings on PR #215 before lifecycle progression.
+  - Before implementation-complete, update STATUS.md to the required post-merge fresh-main checkpoint and revalidate the resulting exact final head.
+  - After merge, continue from fresh main with the next evidence-backed provider-independent Stage 3 slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -29,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #214 implementation head 9b245817ab3930700256f8bd07ea0faa09ae737c passed canonical Application validation run 482 and had a clean submitted-review and inline-thread audit. This post-merge handoff commit changes durable state only and requires fresh exact-head canonical validation before lifecycle completion.
-last_verified_commit: 9b245817ab3930700256f8bd07ea0faa09ae737c
-last_updated: 2026-09-04T12:20:00+10:00
+validation_basis: PR #215 is a new provider-independent accessibility slice based on fresh main 8ee39d7b49fc1bf28c513c4d3b25dd4abb4950ec. Canonical exact-head validation has not yet completed for this branch state.
+last_verified_commit: 8ee39d7b49fc1bf28c513c4d3b25dd4abb4950ec
+last_updated: 2026-09-04T13:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,18 +45,16 @@ last_updated: 2026-09-04T12:20:00+10:00
 
 ## Current objective
 
-After PR #214 merges, resume from fresh `main`, reconcile current GitHub/repository evidence, and select the next highest-priority provider-independent Stage 3 slice. Do not revive stale branches or create duplicate work when equivalent implementation already exists.
+PR #215 is the sole active delivery thread. It closes an evidence-backed accessibility gap in the project task/subtask interaction path while preserving current project persistence, service and provider behaviour.
 
-PR #214 repairs keyboard-focus recovery in `RoutineForm`: removing a step now returns focus to the persistent Add Step control rather than leaving focus on a removed DOM node. Existing saving-state guards, routine data shape, save payload and provider behaviour remain unchanged. Deterministic coverage is in `test/routine-step-remove-focus-recovery.test.mjs`.
-
-The implementation head `9b245817ab3930700256f8bd07ea0faa09ae737c` passed canonical Application validation run 482 after the earlier governance-state schema repair and transient npm advisory-service interruption. Its submitted-review and inline-thread audit was clean. This status-bearing handoff commit intentionally invalidates that exact-head completion evidence and therefore requires fresh canonical validation before the lifecycle controller may complete PR #214.
+Fresh `main` after PR #214 was `8ee39d7b49fc1bf28c513c4d3b25dd4abb4950ec`, with no open competing pull requests. Current code inspection found icon-only task/subtask actions without accessible names, visual-only subtask progress, and an expand/collapse control without exposed expanded state. The correction adds task-specific accessible names, subtask toggle state, programmatic progress semantics, expansion state, and an accessible name for the new-subtask input. Deterministic coverage is in `test/project-task-control-semantics.test.mjs`.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — PR #214 implementation validated; durable post-merge handoff committed; final exact-head evidence required |
-| Gate state | Fresh canonical validation required on the final status-bearing head |
+| Current gate | CHANGE — PR #215 implementation and deterministic regression are present; exact-head validation is required |
+| Gate state | Canonical validation pending on the current branch head |
 | Execution state | IMPLEMENTING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -63,13 +63,12 @@ The implementation head `9b245817ab3930700256f8bd07ea0faa09ae737c` passed canoni
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #213 — Enhanced Task form accessibility alignment; merged at `cdb57cf4f52cb27377ead88e0f9990f82ca987df` |
-| Delivery completing | PR #214 — routine-step removal focus recovery |
-| Implemented change | A stable Add Step ref receives focus after a removable routine step is deleted |
-| Deterministic coverage | `test/routine-step-remove-focus-recovery.test.mjs` |
-| Implementation validation evidence | Application validation run 482 passed on `9b245817ab3930700256f8bd07ea0faa09ae737c` |
-| Review evidence | No submitted reviews and no inline review threads on the validated implementation head |
-| Final lifecycle evidence | Fresh exact-head validation required after this durable-state-only commit |
+| Latest merged delivery | PR #214 — routine-step removal focus recovery; merged at `8ee39d7b49fc1bf28c513c4d3b25dd4abb4950ec` |
+| Active delivery | PR #215 — project task/subtask control semantics |
+| Implemented change | Accessible names/state for task and subtask controls plus programmatic subtask progress semantics |
+| Deterministic coverage | `test/project-task-control-semantics.test.mjs` |
+| Validation evidence | Pending canonical exact-head Application validation |
+| Review evidence | Exact-head audit required after validation evidence is current |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -77,25 +76,28 @@ The implementation head `9b245817ab3930700256f8bd07ea0faa09ae737c` passed canoni
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #214 is completing its final lifecycle checkpoint. After merge, re-enter from fresh `main`. |
-| What is already happening? | Routine-step removal focus recovery is implemented, deterministically covered, implementation-head validated and review-clean. |
-| What has been validated? | PR #214 implementation head `9b245817ab3930700256f8bd07ea0faa09ae737c` passed canonical Application validation run 482. The final status-bearing head still requires fresh exact-head validation. |
-| What is next? | Complete PR #214 lifecycle, then inspect fresh `main` and current GitHub state before selecting the next provider-independent Stage 3 slice. |
+| Where am I? | Stage 3; PR #215 is the sole active implementation thread. |
+| What is already happening? | Project task/subtask control semantics are implemented with focused deterministic coverage. |
+| What has been validated? | The fresh-main base through PR #214 is repository-integrated; PR #215 exact-head canonical validation is pending. |
+| What is next? | Validate and audit PR #215, repair findings on the same thread, then complete its repository lifecycle only from exact-head evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #214 does not alter the data model or provider boundary. Independent frontend accessibility, interaction-integrity, cognitive-load, testing and maintainability work remains actionable.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #215 does not alter persisted shapes, data services, provider mappings, authentication, authorization, or execution policy. Independent frontend accessibility, interaction-integrity, cognitive-load, testing and maintainability work remains actionable.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the final status-bearing PR #214 head;
-2. audit submitted reviews and inline review threads on that exact final head;
-3. let the repository lifecycle controller/finalizer progress PR #214 only when all exact-head gates are satisfied;
-4. after merge, inspect fresh `main`, open PRs, visible branches and current repository evidence before selecting any new work;
-5. choose the next evidence-backed provider-independent Stage 3 slice and reuse/repair existing work where present;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical Application validation on the current PR #215 head;
+2. audit submitted reviews and inline review threads on that exact head;
+3. repair any in-scope finding on PR #215 and repeat exact-head evidence as required;
+4. when implementation-head evidence is clean, commit the required post-merge fresh-`main` STATUS checkpoint;
+5. re-run canonical validation and final review/thread audit on that status-bearing exact head;
+6. add the implementation-complete signal only after all exact-head acceptance evidence is current;
+7. let the repository lifecycle controller/finalizer own Ready/Mergeable/Merged transitions;
+8. after merge, re-enter from fresh `main` and select the next evidence-backed provider-independent Stage 3 slice;
+9. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
