@@ -149,7 +149,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
                 aria-pressed={selectedRoom === room.value}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${selectedRoom === room.value ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
               >
-                <span>{room.icon}</span>
+                <span aria-hidden="true">{room.icon}</span>
                 <span>{room.label}</span>
               </button>
             ))}
