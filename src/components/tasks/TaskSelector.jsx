@@ -345,7 +345,7 @@ const TaskSelector = ({ onSelectTask }) => {
                         }
                       `}
                     >
-                      <span className="mr-1">{mood.emoji}</span>
+                      <span aria-hidden="true" className="mr-1">{mood.emoji}</span>
                       {mood.value.charAt(0).toUpperCase() + mood.value.slice(1)}
                     </button>
                   ))}
