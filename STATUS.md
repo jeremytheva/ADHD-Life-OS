@@ -6,15 +6,14 @@ stage: execution and next-action experience
 gate: Change
 execution_state: IMPLEMENTING
 current_work:
-  objective: Preserve keyboard focus when a routine step is removed from the dynamic Routine form.
+  objective: Inspect fresh main after PR #214 merges and select the next evidence-backed provider-independent Stage 3 slice.
   issue: null
-  pr: 214
-  branch: fix/routine-step-remove-focus-recovery
+  pr: null
+  branch: main
 next_actions:
-  - Re-run canonical exact-head validation for PR #214 after repairing invalid STATUS.md validation-state enums.
-  - Audit submitted reviews and inline review threads on the exact validated head.
-  - Repair any in-scope findings on the existing PR before starting competing work.
-  - When implementation evidence is complete, prepare the durable post-merge fresh-main handoff and progress the repository lifecycle.
+  - Inspect fresh main and current GitHub work surfaces after PR #214 merges.
+  - Reconcile architecture, roadmap, accepted decisions and implementation evidence before selecting the next Stage 3 slice.
+  - Continue the highest-priority provider-independent accessibility, interaction-integrity, cognitive-load, testing or maintainability work that is evidence-backed and dependency-correct.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -30,9 +29,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Application validation run 481 reached canonical platform validation but failed at governance because STATUS.md used unsupported PENDING values for repository validation-state fields. The durable-state schema defect is repaired on the same PR; fresh exact-head canonical validation is required.
-last_verified_commit: cdb57cf4f52cb27377ead88e0f9990f82ca987df
-last_updated: 2026-09-04T11:14:00+10:00
+validation_basis: PR #214 implementation head 9b245817ab3930700256f8bd07ea0faa09ae737c passed canonical Application validation run 482 and had a clean submitted-review and inline-thread audit. This post-merge handoff commit changes durable state only and requires fresh exact-head canonical validation before lifecycle completion.
+last_verified_commit: 9b245817ab3930700256f8bd07ea0faa09ae737c
+last_updated: 2026-09-04T12:20:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,18 +43,18 @@ last_updated: 2026-09-04T11:14:00+10:00
 
 ## Current objective
 
-PR #214 is the sole active delivery thread. Fresh-main inspection after PR #213 merged identified a keyboard-focus integrity gap in `RoutineForm`: activating a step's Remove button immediately deleted the focused DOM element and did not provide an explicit recovery target.
+After PR #214 merges, resume from fresh `main`, reconcile current GitHub/repository evidence, and select the next highest-priority provider-independent Stage 3 slice. Do not revive stale branches or create duplicate work when equivalent implementation already exists.
 
-The existing repository pattern for dynamic removal interactions is to move focus to a stable, persistent control. PR #214 therefore gives the existing Add Step control a ref and returns focus there after step removal. Existing saving-state guards, routine data shape, save payload and provider behaviour are unchanged. Deterministic coverage is in `test/routine-step-remove-focus-recovery.test.mjs`.
+PR #214 repairs keyboard-focus recovery in `RoutineForm`: removing a step now returns focus to the persistent Add Step control rather than leaving focus on a removed DOM node. Existing saving-state guards, routine data shape, save payload and provider behaviour remain unchanged. Deterministic coverage is in `test/routine-step-remove-focus-recovery.test.mjs`.
 
-Canonical Application validation run 481 reached `npm run platform:validate` but failed at the governance step before lint/typecheck/tests/build because this PR's `STATUS.md` front matter used `PENDING` for validation fields whose repository schema permits only `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE`. That durable-state defect is repaired on the existing PR; product implementation is unchanged and fresh exact-head validation is required.
+The implementation head `9b245817ab3930700256f8bd07ea0faa09ae737c` passed canonical Application validation run 482 after the earlier governance-state schema repair and transient npm advisory-service interruption. Its submitted-review and inline-thread audit was clean. This status-bearing handoff commit intentionally invalidates that exact-head completion evidence and therefore requires fresh canonical validation before the lifecycle controller may complete PR #214.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — PR #214 implementation complete; governance-state repair committed; fresh exact-head evidence pending |
-| Gate state | Canonical validation required on the exact current head |
+| Current gate | CHANGE — PR #214 implementation validated; durable post-merge handoff committed; final exact-head evidence required |
+| Gate state | Fresh canonical validation required on the final status-bearing head |
 | Execution state | IMPLEMENTING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -65,11 +64,12 @@ Canonical Application validation run 481 reached `npm run platform:validate` but
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #213 — Enhanced Task form accessibility alignment; merged at `cdb57cf4f52cb27377ead88e0f9990f82ca987df` |
-| Current delivery | PR #214 — routine-step removal focus recovery |
-| Implemented change | A stable Add Step ref now receives focus after a removable routine step is deleted |
+| Delivery completing | PR #214 — routine-step removal focus recovery |
+| Implemented change | A stable Add Step ref receives focus after a removable routine step is deleted |
 | Deterministic coverage | `test/routine-step-remove-focus-recovery.test.mjs` |
-| Validation evidence | Run 481 failed at governance because STATUS.md contained invalid pending-state enums; schema repair committed; fresh exact-head validation pending |
-| Review evidence | Pending exact-head submitted-review/thread audit |
+| Implementation validation evidence | Application validation run 482 passed on `9b245817ab3930700256f8bd07ea0faa09ae737c` |
+| Review evidence | No submitted reviews and no inline review threads on the validated implementation head |
+| Final lifecycle evidence | Fresh exact-head validation required after this durable-state-only commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -77,10 +77,10 @@ Canonical Application validation run 481 reached `npm run platform:validate` but
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #214 is the sole active delivery thread. |
-| What is already happening? | Routine-step removal focus recovery is implemented with deterministic regression coverage; the validation-state schema defect from run 481 has been repaired. |
-| What has been validated? | PR #213 passed final exact-head validation and merged. PR #214 run 481 reached canonical validation but failed at governance before product checks because STATUS.md used invalid validation-state enums. |
-| What is next? | Revalidate PR #214 on the repaired exact head, audit reviews/threads, repair any in-scope findings, then prepare post-merge handoff and lifecycle progression. |
+| Where am I? | Stage 3; PR #214 is completing its final lifecycle checkpoint. After merge, re-enter from fresh `main`. |
+| What is already happening? | Routine-step removal focus recovery is implemented, deterministically covered, implementation-head validated and review-clean. |
+| What has been validated? | PR #214 implementation head `9b245817ab3930700256f8bd07ea0faa09ae737c` passed canonical Application validation run 482. The final status-bearing head still requires fresh exact-head validation. |
+| What is next? | Complete PR #214 lifecycle, then inspect fresh `main` and current GitHub state before selecting the next provider-independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -90,13 +90,12 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. re-run canonical exact-head Application validation for PR #214 after the governance-state repair;
-2. inspect submitted reviews and inline review threads on that exact head;
-3. repair any material in-scope finding on PR #214 rather than creating competing work;
-4. once implementation evidence is complete, commit the durable post-merge fresh-`main` re-entry checkpoint and revalidate that final status-bearing head;
-5. let the repository lifecycle controller and merge finalizer progress the PR when all exact-head gates are satisfied;
-6. after merge, inspect fresh `main` and current GitHub work surfaces before selecting another evidence-backed Stage 3 slice;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical Application validation on the final status-bearing PR #214 head;
+2. audit submitted reviews and inline review threads on that exact final head;
+3. let the repository lifecycle controller/finalizer progress PR #214 only when all exact-head gates are satisfied;
+4. after merge, inspect fresh `main`, open PRs, visible branches and current repository evidence before selecting any new work;
+5. choose the next evidence-backed provider-independent Stage 3 slice and reuse/repair existing work where present;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
