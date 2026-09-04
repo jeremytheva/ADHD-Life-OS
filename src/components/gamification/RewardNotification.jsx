@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 
-const { FiStar, FiAward, FiTrendingUp } = FiIcons
+const { FiStar, FiAward } = FiIcons
 
 const RewardNotification = ({ reward, onClose }) => {
   useEffect(() => {
@@ -22,6 +22,9 @@ const RewardNotification = ({ reward, onClose }) => {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -50, scale: 0.8 }}
       className="fixed top-20 right-6 z-[70] max-w-sm"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
     >
       {/* Level Up Notification */}
       {reward.leveled_up && (
@@ -34,6 +37,7 @@ const RewardNotification = ({ reward, onClose }) => {
               }}
               transition={{ duration: 0.6 }}
               className="text-4xl"
+              aria-hidden="true"
             >
               🎉
             </motion.div>
@@ -51,7 +55,7 @@ const RewardNotification = ({ reward, onClose }) => {
       <div className="bg-white rounded-lg shadow-2xl border-2 border-yellow-300 overflow-hidden">
         <div className="bg-gradient-to-r from-yellow-400 to-amber-500 p-3">
           <div className="flex items-center gap-2">
-            <SafeIcon icon={FiStar} className="w-5 h-5 text-white" />
+            <SafeIcon icon={FiStar} className="w-5 h-5 text-white" aria-hidden="true" />
             <span className="text-white font-bold">
               +{reward.points_awarded} Points!
             </span>
@@ -63,7 +67,7 @@ const RewardNotification = ({ reward, onClose }) => {
           {/* Streak Bonus */}
           {reward.streak > 0 && (
             <div className="flex items-center gap-2 text-sm text-orange-600">
-              <span>🔥</span>
+              <span aria-hidden="true">🔥</span>
               <span>{reward.streak}-day streak bonus!</span>
             </div>
           )}
@@ -74,7 +78,14 @@ const RewardNotification = ({ reward, onClose }) => {
               <span>Level {reward.level}</span>
               <span>{reward.xp} / {reward.xp_to_next_level} XP</span>
             </div>
-            <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+            <div
+              className="w-full bg-slate-200 rounded-full h-2 overflow-hidden"
+              role="progressbar"
+              aria-label={`Level ${reward.level} XP progress`}
+              aria-valuemin={0}
+              aria-valuemax={reward.xp_to_next_level}
+              aria-valuenow={reward.xp}
+            >
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${(reward.xp / reward.xp_to_next_level) * 100}%` }}
@@ -110,12 +121,13 @@ const RewardNotification = ({ reward, onClose }) => {
                   }}
                   transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
                   className="text-3xl"
+                  aria-hidden="true"
                 >
                   {achievement.icon}
                 </motion.div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <SafeIcon icon={FiAward} className="w-4 h-4 text-yellow-600" />
+                    <SafeIcon icon={FiAward} className="w-4 h-4 text-yellow-600" aria-hidden="true" />
                     <span className="font-bold text-slate-900">
                       Achievement Unlocked!
                     </span>
