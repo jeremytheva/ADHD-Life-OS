@@ -37,6 +37,9 @@ const ModePreferences = ({ modeId, onClose }) => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mode-preferences-title"
         className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
       >
         {/* Header */}
@@ -45,7 +48,7 @@ const ModePreferences = ({ modeId, onClose }) => {
             <div className="flex items-center gap-3">
               <div className="text-4xl">{mode.icon}</div>
               <div>
-                <h2 className="text-2xl font-bold">{mode.label} Mode Preferences</h2>
+                <h2 id="mode-preferences-title" className="text-2xl font-bold">{mode.label} Mode Preferences</h2>
                 <p className="text-white text-opacity-90 text-sm mt-1">
                   Customize your {mode.label.toLowerCase()} experience
                 </p>
@@ -53,9 +56,10 @@ const ModePreferences = ({ modeId, onClose }) => {
             </div>
             <button
               onClick={onClose}
+              aria-label="Close mode preferences"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
             >
-              <SafeIcon icon={FiX} className="w-6 h-6" />
+              <SafeIcon icon={FiX} className="w-6 h-6" aria-hidden="true" />
             </button>
           </div>
         </div>
