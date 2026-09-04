@@ -49,6 +49,7 @@ const PriorityBadge = ({ level, score, urgencyReason }) => {
       <SafeIcon icon={config.icon} className="w-3 h-3" />
       <span>{config.label}</span>
       <span className="opacity-75">({score})</span>
+      {urgencyReason && <span className="sr-only">. {urgencyReason}</span>}
     </motion.div>
   )
 }
