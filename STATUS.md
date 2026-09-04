@@ -6,15 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: After PR #212 merges, re-enter from fresh main and continue the next evidence-backed Stage 3 frontend accessibility or interaction-integrity gap.
+  objective: Re-enter from fresh main after PR #213 and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity gap.
   issue: null
   pr: null
-  branch: null
+  branch: main
 next_actions:
-  - Require canonical exact-head Application validation for this final PR #212 durable-handoff commit.
-  - Repair any in-scope validation or review finding on PR #212 rather than creating competing work.
-  - When final exact-head evidence is clean, complete the repository-owned implementation-complete, Ready, Mergeable and Merged lifecycle.
-  - After merge, inspect fresh main and current GitHub/repository evidence before selecting the next Stage 3 slice.
+  - Complete final exact-head validation and review/thread audit for PR #213.
+  - Allow the repository lifecycle controller and merge finalizer to complete PR #213 when all exact-head gates remain satisfied.
+  - After merge, inspect fresh main and current GitHub state before selecting further work.
+  - Continue the next evidence-backed frontend accessibility or interaction-integrity slice without duplicating existing work.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -28,11 +28,11 @@ validation:
   typecheck: PASS
   tests: PASS
   build: PASS
-  ci: PASS
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Application validation run 475 passed on PR #212 implementation head 44a8e9deea3c83a55a9b39f1094089eba247fafe, and the implementation-head audit found no submitted reviews or inline review threads. This post-merge durable-handoff commit creates a new exact head and therefore requires fresh canonical validation before lifecycle completion.
-last_verified_commit: 44a8e9deea3c83a55a9b39f1094089eba247fafe
-last_updated: 2026-09-04T07:16:00+10:00
+validation_basis: PR #213 implementation head f06cce81e062e0261eb7b8e415afea410ca26fa2 passed canonical Application validation run 478 and had a clean submitted-review/thread audit. This STATUS.md handoff commit changes the exact PR head, so fresh canonical exact-head validation and final review/thread evidence are required before implementation-complete progression.
+last_verified_commit: f06cce81e062e0261eb7b8e415afea410ca26fa2
+last_updated: 2026-09-04T08:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,18 +44,16 @@ last_updated: 2026-09-04T07:16:00+10:00
 
 ## Current objective
 
-PR #212 has completed implementation-head validation and review audit. The blocking onboarding workflow now reuses the shared `useModalDialog` contract so keyboard focus remains contained within onboarding, while the onboarding surface exposes labelled modal-dialog semantics and the step indicator exposes progressbar min/max/current/text semantics. Existing onboarding navigation, persistence, skip and completion behaviour remains unchanged.
+PR #213 has completed its implementation-head evidence gate. The Enhanced Task form now reuses the repository's shared modal contract, provides initial title focus and existing Escape-to-cancel behaviour, exposes labelled modal-dialog semantics and programmatic fallback focus, explicitly associates its basic field labels, and gives the icon-only close action an accessible name. Deterministic regression coverage is in `test/enhanced-task-form-accessibility.test.mjs`.
 
-Application validation run 475 passed on implementation head `44a8e9deea3c83a55a9b39f1094089eba247fafe`, and the implementation-head audit found no submitted reviews or inline review threads.
-
-The durable handoff now points to the required post-merge checkpoint: re-enter from fresh `main`, inspect current GitHub/repository evidence and continue the next concrete Stage 3 frontend accessibility/interaction-integrity gap. Because this status update creates a new exact head, canonical validation must pass again before lifecycle handoff.
+Canonical Application validation run 478 passed on implementation head `f06cce81e062e0261eb7b8e415afea410ca26fa2`, and the corresponding submitted-review/thread audit was clean. This durable handoff intentionally points the default post-merge re-entry state to fresh `main` rather than leaving a soon-to-be-closed PR as active work. Because this STATUS.md update creates a new exact head, final exact-head validation and review/thread evidence must pass again before lifecycle completion.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — frontend accessibility and interaction integrity |
-| Gate state | PR #212 final exact-head validation required |
+| Current gate | INTEGRATION — final exact-head evidence for PR #213 |
+| Gate state | Fresh exact-head canonical validation required after durable handoff commit |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -64,12 +62,12 @@ The durable handoff now points to the required post-merge checkpoint: re-enter f
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #211 — mobile navigation keyboard focus containment; merged at `52d57c0a4cc56ca4d094a3100ebed2c9fa0e97e0` |
-| Current delivery | PR #212 — onboarding keyboard focus containment and dialog/progress semantics; implementation validated, final status-bearing head pending revalidation |
-| Implemented change | Shared modal focus contract reused by onboarding; labelled modal dialog; programmatic fallback focus; semantic step progress |
-| Deterministic coverage | `test/onboarding-dialog-focus-integrity.test.mjs` |
-| Validation evidence | Application validation run 475 passed on implementation head `44a8e9deea3c83a55a9b39f1094089eba247fafe`; final handoff head requires fresh exact-head validation |
-| Review evidence | No submitted reviews and no inline review threads at implementation-head audit |
+| Latest merged delivery | PR #212 — onboarding keyboard focus containment and dialog/progress semantics; merged at `53f995f713bde5f3cbef87f5b6e7156fc9a77442` |
+| Current delivery | PR #213 — Enhanced Task form accessibility alignment; implementation-head evidence complete, final status-bearing head validating |
+| Implemented change | Shared modal focus contract; initial title focus; dialog semantics; associated basic-field labels; accessible icon-only close control |
+| Deterministic coverage | `test/enhanced-task-form-accessibility.test.mjs` |
+| Validation evidence | Application validation run 478 PASS on implementation head `f06cce81e062e0261eb7b8e415afea410ca26fa2`; fresh exact-head validation required after this handoff commit |
+| Review evidence | Clean on implementation head; final exact-head audit required after this handoff commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -77,25 +75,24 @@ The durable handoff now points to the required post-merge checkpoint: re-enter f
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #212 is in final exact-head validation before repository-owned lifecycle completion. |
-| What is already happening? | Onboarding focus containment and dialog/progress semantics are implemented and implementation-head evidence is clean. |
-| What has been validated? | Application validation run 475 passed on `44a8e9deea3c83a55a9b39f1094089eba247fafe`; reviews and inline threads were clean at that audit. |
-| What is next? | Revalidate the final PR #212 head, repair any finding on the same PR, complete lifecycle, then continue from fresh `main`. |
+| Where am I? | Stage 3; PR #213 is completing final exact-head evidence before repository-owned merge. |
+| What is already happening? | Enhanced Task form accessibility alignment is implemented and implementation-head validated; the durable post-merge handoff is committed. |
+| What has been validated? | Application validation run 478 passed and the review/thread audit was clean on implementation head `f06cce81e062e0261eb7b8e415afea410ca26fa2`. |
+| What is next? | Revalidate the final status-bearing head, complete final review/thread audit and lifecycle, then inspect fresh main for the next evidence-backed independent Stage 3 gap. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. The data model remains unchanged by PR #212. Independent frontend accessibility, interaction-integrity, cognitive-load, testing and maintainability work remains actionable.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #213 does not alter the data model or provider boundary. Independent frontend accessibility, interaction-integrity, cognitive-load, testing and maintainability work remains actionable.
 
 ## Next dependency-correct work
 
-1. inspect canonical exact-head Application validation for the final PR #212 handoff head;
-2. repair any in-scope validation or review finding on the existing PR;
-3. once evidence is clean, audit acceptance criteria and review/thread state and apply implementation-complete lifecycle evidence;
-4. allow the repository-owned Ready/Mergeable/Merged lifecycle to complete;
-5. inspect fresh `main` and continue the next concrete accessibility/interaction-integrity gap;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. complete canonical exact-head Application validation and final review/thread audit for PR #213;
+2. let the repository lifecycle controller and independent merge finalizer progress the PR when all current-head gates are satisfied;
+3. after merge, inspect fresh `main`, open PRs/branches/checks and relevant implementation before selecting new work;
+4. continue the next evidence-backed provider-independent frontend accessibility or interaction-integrity slice;
+5. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 

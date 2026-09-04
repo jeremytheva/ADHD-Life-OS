@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import useModalDialog from '../../common/useModalDialog'
 import TaskMetadataForm from './TaskMetadataForm'
 
 const { FiX } = FiIcons
@@ -16,6 +17,8 @@ const EnhancedTaskForm = ({ onSave, onCancel, task = null }) => {
   })
 
   const [metadata, setMetadata] = useState(task?.priority_metadata || {})
+  const titleInputRef = useRef(null)
+  const dialogRef = useModalDialog({ onEscape: onCancel, initialFocusRef: titleInputRef })
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -32,20 +35,27 @@ const EnhancedTaskForm = ({ onSave, onCancel, task = null }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <motion.div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="enhanced-task-form-title"
+        tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto"
       >
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-slate-200 sticky top-0 bg-white z-10">
-          <h2 className="text-lg font-medium text-slate-900">
+          <h2 id="enhanced-task-form-title" className="text-lg font-medium text-slate-900">
             {task ? 'Edit Task' : 'New Task'}
           </h2>
           <button
+            type="button"
             onClick={onCancel}
+            aria-label="Close task form"
             className="p-1 text-slate-400 hover:text-slate-600"
           >
-            <SafeIcon icon={FiX} className="w-5 h-5" />
+            <SafeIcon icon={FiX} className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -54,10 +64,12 @@ const EnhancedTaskForm = ({ onSave, onCancel, task = null }) => {
           {/* Basic Task Info */}
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="enhanced-task-title" className="block text-sm font-medium text-slate-700 mb-2">
                 Title *
               </label>
               <input
+                ref={titleInputRef}
+                id="enhanced-task-title"
                 type="text"
                 value={formData.title}
                 onChange={(e) => handleChange('title', e.target.value)}
@@ -67,10 +79,11 @@ const EnhancedTaskForm = ({ onSave, onCancel, task = null }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="enhanced-task-description" className="block text-sm font-medium text-slate-700 mb-2">
                 Description
               </label>
               <textarea
+                id="enhanced-task-description"
                 value={formData.description}
                 onChange={(e) => handleChange('description', e.target.value)}
                 rows={3}
@@ -80,10 +93,11 @@ const EnhancedTaskForm = ({ onSave, onCancel, task = null }) => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="enhanced-task-due-date" className="block text-sm font-medium text-slate-700 mb-2">
                   Due Date
                 </label>
                 <input
+                  id="enhanced-task-due-date"
                   type="date"
                   value={formData.due_date}
                   onChange={(e) => handleChange('due_date', e.target.value)}
@@ -92,10 +106,11 @@ const EnhancedTaskForm = ({ onSave, onCancel, task = null }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label htmlFor="enhanced-task-estimated-duration" className="block text-sm font-medium text-slate-700 mb-2">
                   Estimated Duration (minutes)
                 </label>
                 <input
+                  id="enhanced-task-estimated-duration"
                   type="number"
                   value={formData.estimated_duration}
                   onChange={(e) => handleChange('estimated_duration', parseInt(e.target.value))}
