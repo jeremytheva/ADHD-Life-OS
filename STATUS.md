@@ -25,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
 validation_basis: PR #220 implements a provider-independent accessibility correction in HouseworkSetup and adds deterministic regression coverage. Canonical exact-head validation is pending after this status-bearing commit.
 last_verified_commit: null
-last_updated: 2026-09-05T01:16:00+10:00
+last_updated: 2026-09-05T01:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
