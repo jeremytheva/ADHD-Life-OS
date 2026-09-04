@@ -6,14 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete final exact-head evidence for PR #226, then re-enter from fresh main and select the next evidence-backed provider-independent Stage 3 slice.
+  objective: Validate and complete PR #227, which removes redundant assistive-technology output from the shared ModeAwareLayout active-mode banner.
   issue: null
-  pr: null
-  branch: main
+  pr: 227
+  branch: fix/today-mode-icon-semantics
 next_actions:
-  - Complete final exact-head canonical validation and review/thread audit for PR #226, then allow repository lifecycle automation to merge it when clean.
-  - After merge, re-enter from fresh main and reconcile current GitHub state before starting new implementation.
-  - Select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice from current repository evidence.
+  - Run canonical exact-head Application validation for PR #227 and repair any in-scope failure at root cause.
+  - Audit submitted reviews and inline review threads on the exact validated head.
+  - Before implementation-complete signalling, rewrite this status as the post-merge fresh-main handoff and revalidate that final status-bearing head.
+  - Allow repository lifecycle automation to complete Ready, Mergeable and Merged when all evidence is clean.
+  - Re-enter from fresh main and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -29,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #226 implementation/status head fdbfad631353e4737532869ec2e7bc5705808e19 passed canonical Application validation run 519 with a clean submitted-review and inline-thread audit. This post-merge handoff commit changes the exact head and therefore requires fresh canonical validation before completion signalling.
-last_verified_commit: fdbfad631353e4737532869ec2e7bc5705808e19
-last_updated: 2026-09-05T06:36:00+10:00
+validation_basis: PR #226 final exact head 1bb37376562e5a8ff73bb85e1801bb044649963c passed canonical Application validation run 520 with a clean submitted-review and inline-thread audit and merged to main at 1d7047f72d53d0c724abea58bd5eee96ada8f0a5. PR #227 has new implementation and deterministic coverage and requires canonical validation on its current status-bearing head.
+last_verified_commit: 1bb37376562e5a8ff73bb85e1801bb044649963c
+last_updated: 2026-09-05T07:20:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,18 +45,18 @@ last_updated: 2026-09-05T06:36:00+10:00
 
 ## Current objective
 
-PR #226 implements the current provider-independent accessibility slice. In `src/components/tasks/RecommendedTasks.jsx`, the existing recommendation guidance remains visible and unchanged while its leading light-bulb emoji is explicitly decorative with `aria-hidden="true"`. Deterministic regression coverage is in `test/recommended-tasks-tip-icon-semantics.test.mjs`.
+PR #226 completed its repository lifecycle and merged to `main` at `1d7047f72d53d0c724abea58bd5eee96ada8f0a5`. Fresh-main reconciliation found no competing open PR, so continuation moved to the next provider-independent Stage 3 accessibility finding.
 
-Its implementation/status head `fdbfad631353e4737532869ec2e7bc5705808e19` passed canonical Application validation run 519 and had no submitted reviews or inline review threads. This file is intentionally written as the post-merge handoff so that, once PR #226 lands on `main`, the repository does not retain a closed PR as its active re-entry target.
+PR #227 updates `src/components/mode/ModeAwareLayout.jsx`. Its active-mode banner already communicates the mode through visible `{currentMode.label} Mode` text plus an explanatory filtering sentence, while the adjacent mode emoji was also exposed to assistive technology. The emoji is now explicitly decorative with `aria-hidden="true"`. Deterministic regression coverage is in `test/mode-aware-layout-icon-semantics.test.mjs`.
 
-The change remains frontend-only. Recommendation scoring, task selection, priority semantics, task actions, persistence, schemas, authorization, provider mappings, execution policy, destructive behaviour and external integrations are unchanged.
+The change is frontend-only. Mode selection, mode filtering, preferences, schemas, persistence, authorization, provider mappings, recommendation/execution policy, destructive behaviour and external integrations are unchanged.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #226 final status-bearing head requires fresh exact-head validation before implementation-complete signalling |
-| Gate state | Final exact-head canonical validation pending after the STATUS handoff commit |
+| Current gate | INTEGRATION — PR #227 implementation and status are synchronized; exact-head canonical validation is required |
+| Gate state | Canonical validation and review/thread evidence pending on the current head |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -63,13 +65,13 @@ The change remains frontend-only. Recommendation scoring, task selection, priori
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #225 — Task Selector mood icon accessibility semantics; merged at `df15de6d8d6bc5ee7eba1c759610c05e51e24c71` |
-| Completing lifecycle delivery | PR #226 — Recommended Tasks tip icon accessibility semantics |
-| Implemented change | Decorative light-bulb emoji excluded from assistive technology while visible recommendation guidance remains intact |
-| Deterministic coverage | `test/recommended-tasks-tip-icon-semantics.test.mjs` |
-| Previous exact-head validation evidence | Application validation run 519 PASS on `fdbfad631353e4737532869ec2e7bc5705808e19` |
-| Review evidence | No submitted reviews and no inline review threads on validated implementation/status head |
-| Final exact-head evidence | Pending after this durable handoff commit |
+| Latest merged delivery | PR #226 — Recommended Tasks tip icon accessibility semantics; merged at `1d7047f72d53d0c724abea58bd5eee96ada8f0a5` |
+| Active delivery | PR #227 — ModeAwareLayout mode-banner icon accessibility semantics |
+| Implemented change | Decorative active-mode emoji excluded from assistive technology while visible mode identification and guidance remain intact |
+| Deterministic coverage | `test/mode-aware-layout-icon-semantics.test.mjs` |
+| Previous exact-head validation evidence | PR #226 Application validation run 520 PASS on `1bb37376562e5a8ff73bb85e1801bb044649963c` |
+| PR #227 exact-head evidence | Pending canonical Application validation after this durable status commit |
+| Review evidence | Pending exact-head audit for PR #227 |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -77,25 +79,26 @@ The change remains frontend-only. Recommendation scoring, task selection, priori
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #226 is completing its repository lifecycle, after which continuation re-enters from fresh `main`. |
-| What is already happening? | Recommended Tasks tip icon semantics are implemented and implementation-head validated with deterministic regression coverage. |
-| What has been validated? | Application validation run 519 passed on `fdbfad631353e4737532869ec2e7bc5705808e19`; submitted-review and inline-thread audits were clean on that head. |
-| What is next? | Validate and audit the final status-bearing PR #226 head, signal implementation complete when clean, allow repository lifecycle automation to merge, then reconcile fresh `main` and choose the next provider-independent Stage 3 slice. |
+| Where am I? | Stage 3; PR #227 is the sole active delivery thread and is in validation. |
+| What is already happening? | ModeAwareLayout active-mode icon semantics and deterministic regression coverage are implemented. |
+| What has been validated? | PR #226 final exact-head Application validation run 520 passed and that PR merged; PR #227 still requires exact-head validation. |
+| What is next? | Validate PR #227, repair any in-scope finding, audit review threads, write the post-merge handoff, revalidate the final head, then signal implementation complete. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #226 does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy or execution policy. Independent frontend accessibility, interaction-integrity, cognitive-load, testing and maintainability work remains actionable.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #227 does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy or execution policy. Independent frontend accessibility, interaction-integrity, cognitive-load, testing and maintainability work remains actionable.
 
 ## Next dependency-correct work
 
-1. obtain canonical Application validation for the final exact PR #226 head after this STATUS handoff commit;
+1. obtain canonical Application validation for the current exact PR #227 head;
 2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding if necessary;
-3. when final exact-head evidence is clean, signal `lifecycle:implementation-complete` and allow the repository lifecycle controller/finalizer to complete the merge;
-4. after merge, re-enter from fresh `main`, reconcile open PRs/branches/checks and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-5. continue client-side cognitive-load and repository-quality work only when it is dependency-correct and evidence-backed;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+3. when implementation evidence is clean, update this file to the post-merge fresh-main handoff and run canonical validation again because the status commit changes the exact head;
+4. signal `lifecycle:implementation-complete` only after the final status-bearing head is validated and review-clean;
+5. allow the repository lifecycle controller/finalizer to complete the merge;
+6. after merge, re-enter from fresh `main`, reconcile GitHub state and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
