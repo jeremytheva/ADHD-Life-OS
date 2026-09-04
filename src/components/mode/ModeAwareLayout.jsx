@@ -25,7 +25,7 @@ const ModeAwareLayout = ({ children, showModeBanner = true }) => {
           >
             <div className="max-w-7xl mx-auto px-6 py-3">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">{currentMode.icon}</span>
+                <span className="text-2xl" aria-hidden="true">{currentMode.icon}</span>
                 <div>
                   <div className="font-medium">
                     {currentMode.label} Mode
