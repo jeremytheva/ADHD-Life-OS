@@ -58,12 +58,14 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
           />
           <button
             onClick={onEdit}
+            aria-label={`Edit routine: ${routine.name}`}
             className="p-1 text-slate-400 hover:text-blue-600 transition-colors"
           >
             <SafeIcon icon={FiEdit2} className="w-4 h-4" />
           </button>
           <button
             onClick={onDelete}
+            aria-label={`Delete routine: ${routine.name}`}
             className="p-1 text-slate-400 hover:text-red-600 transition-colors"
           >
             <SafeIcon icon={FiTrash2} className="w-4 h-4" />
