@@ -63,7 +63,7 @@ const RecommendedTasks = ({ tasks, onTaskClick }) => {
       </div>
 
       <div className="mt-3 text-xs text-blue-700 bg-blue-100 rounded px-3 py-2">
-        💡 These tasks are optimal for your current time and energy level
+        <span aria-hidden="true">💡</span> These tasks are optimal for your current time and energy level
       </div>
     </motion.div>
   )
