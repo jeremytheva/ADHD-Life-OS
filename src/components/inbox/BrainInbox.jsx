@@ -264,6 +264,7 @@ const BrainInbox = () => {
                 type="text"
                 value={currentInput}
                 onChange={(e) => setCurrentInput(e.target.value)}
+                aria-label="Capture a thought"
                 placeholder="Type anything... tasks, ideas, reminders, worries..."
                 className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-lg"
                 autoFocus
@@ -321,6 +322,7 @@ const BrainInbox = () => {
                             value={editText}
                             onChange={(e) => setEditText(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit(item.id)}
+                            aria-label={`Edit inbox item: ${item.content}`}
                             className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                             autoFocus
                           />
@@ -462,7 +464,11 @@ const BrainInbox = () => {
                       <p className="text-slate-900 font-medium">{item.content}</p>
                     </div>
 
-                    <div className="flex flex-wrap gap-2">
+                    <div
+                      className="flex flex-wrap gap-2"
+                      role="group"
+                      aria-label={`Choose category for ${item.content}`}
+                    >
                       {categories.map(cat => (
                         <button
                           key={cat.value}
