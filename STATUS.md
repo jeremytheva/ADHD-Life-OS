@@ -3,18 +3,18 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Change
-execution_state: IMPLEMENTING
+gate: Integration
+execution_state: VALIDATING
 current_work:
-  objective: Complete PR #216 Brain Inbox input and category-control accessibility semantics without changing persistence behaviour.
+  objective: Complete PR #216 lifecycle, then re-enter from fresh main and select the next evidence-backed provider-independent Stage 3 slice.
   issue: null
   pr: 216
   branch: fix/brain-inbox-input-semantics
 next_actions:
-  - Run canonical exact-head Application validation for PR #216.
-  - Audit submitted reviews and inline review threads on the exact validated head.
-  - Repair any in-scope finding on PR #216 and repeat exact-head evidence as required.
-  - Before implementation-complete handoff, update this file to the post-merge fresh-main re-entry state.
+  - Run final canonical exact-head Application validation for PR #216 after this post-merge handoff commit.
+  - Audit submitted reviews and inline review threads on the final exact head.
+  - Add lifecycle:implementation-complete only when final exact-head evidence is clean and let repository lifecycle automation own Ready/Mergeable/Merged.
+  - After merge, re-enter from fresh main and select the next evidence-backed provider-independent Stage 3 accessibility, interaction-integrity, cognitive-load, testing, or maintainability slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -30,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #216 implementation and deterministic regression coverage are committed, but the STATUS synchronization commit changes the exact head and requires fresh canonical validation before lifecycle completion.
-last_verified_commit: null
-last_updated: 2026-09-04T17:18:00+10:00
+validation_basis: PR #216 implementation head 06529e553a12576f58996188166ad6b853b696a2 passed canonical Application validation run 488 and had a clean submitted-review/inline-thread audit. This durable post-merge handoff commit changes the exact head, so final current-head validation and review/thread audit are required before implementation-complete progression.
+last_verified_commit: 06529e553a12576f58996188166ad6b853b696a2
+last_updated: 2026-09-04T18:10:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,19 +44,21 @@ last_updated: 2026-09-04T17:18:00+10:00
 
 ## Current objective
 
-PR #216 is the sole active implementation thread. It closes a provider-independent Brain Inbox accessibility gap by giving the capture input a stable programmatic name, giving the inline-edit input item-specific accessible context, and exposing each uncategorized item's category choices as a labelled control group.
+PR #216 is the sole active implementation thread. Its Brain Inbox accessibility change gives the capture input a stable programmatic name, gives the inline-edit input item-specific accessible context, and exposes each uncategorized item's category choices as a labelled control group.
 
-The change is intentionally frontend-only. Inbox schemas, service calls, remote writes, provider mappings, task conversion behaviour, category values, authorization and execution policy remain unchanged. Deterministic regression coverage is in `test/brain-inbox-input-semantics.test.mjs`.
+The implementation head `06529e553a12576f58996188166ad6b853b696a2` passed canonical Application validation run 488 and had a clean submitted-review/inline-thread audit. This STATUS update is the repository-required post-merge fresh-main handoff; because it changes the PR head, final exact-head validation and review/thread evidence must now be refreshed before implementation-complete progression.
 
-PR #215 — project task/subtask control semantics — completed its exact-head validation/review lifecycle and merged into `main` at `2d3c64a46c6d28cfb40a4b40fa513caf0d56baa4` before PR #216 was created from fresh `main`.
+The change remains intentionally frontend-only. Inbox schemas, service calls, remote writes, provider mappings, task conversion behaviour, category values, authorization and execution policy remain unchanged. Deterministic regression coverage is in `test/brain-inbox-input-semantics.test.mjs`.
+
+After PR #216 merges, this file's re-entry instruction is deliberately fresh `main`, not the closed PR: inspect current GitHub/repository state and select the next evidence-backed provider-independent Stage 3 slice. Do not infer or activate NoCodeBackend-dependent durable execution behaviour without real target-instance evidence.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — PR #216 implementation and durable active-thread state committed; exact-head evidence required |
-| Gate state | Canonical validation pending on the current PR #216 head |
-| Execution state | IMPLEMENTING |
+| Current gate | INTEGRATION — implementation-head evidence is clean; final status-bearing head requires fresh evidence |
+| Gate state | Final canonical validation/review audit pending on the current PR #216 head |
+| Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -68,8 +70,9 @@ PR #215 — project task/subtask control semantics — completed its exact-head 
 | Active delivery | PR #216 — Brain Inbox input/category accessibility semantics |
 | Implemented change | Programmatic capture/edit input names plus per-item labelled category-choice groups |
 | Deterministic coverage | `test/brain-inbox-input-semantics.test.mjs` |
-| Exact-head validation evidence | Pending |
-| Review evidence | Pending exact-head audit |
+| Implementation-head validation evidence | Application validation run 488 PASS on `06529e553a12576f58996188166ad6b853b696a2` |
+| Implementation-head review evidence | Clean submitted-review and inline-thread audit on `06529e553a12576f58996188166ad6b853b696a2` |
+| Final exact-head evidence | Pending after durable handoff commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -77,10 +80,10 @@ PR #215 — project task/subtask control semantics — completed its exact-head 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #216 is the sole active delivery thread. |
-| What is already happening? | Brain Inbox input and category-control semantics are implemented with deterministic regression coverage. |
-| What has been validated? | No current-head canonical completion evidence yet; fresh exact-head validation is required after this STATUS commit. |
-| What is next? | Validate PR #216 on its exact head, audit reviews/threads, repair findings if any, then prepare the post-merge fresh-main handoff before implementation-complete progression. |
+| Where am I? | Stage 3; PR #216 is the sole active delivery thread until its lifecycle completes. |
+| What is already happening? | Brain Inbox input/category semantics are implementation-complete in scope; implementation-head validation/review evidence is clean and the post-merge handoff is committed. |
+| What has been validated? | Implementation head `06529e553a12576f58996188166ad6b853b696a2` passed Application validation run 488 and had no submitted reviews or inline threads. Final status-bearing head evidence is still required. |
+| What is next? | Validate and audit the final PR #216 head; if clean, signal implementation complete and let lifecycle automation finalize the PR. After merge, re-enter from fresh `main` and select the next provider-independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -90,14 +93,12 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. obtain canonical Application validation for the exact current PR #216 head;
+1. obtain canonical Application validation for the final exact PR #216 head after this STATUS handoff commit;
 2. audit submitted reviews and inline review threads on that exact head;
-3. repair any in-scope finding on PR #216 and repeat exact-head validation/audit as necessary;
-4. once implementation-head evidence is clean, commit the durable post-merge fresh-`main` handoff required by `AGENTS.md`;
-5. obtain final exact-head validation/review evidence after that handoff commit;
-6. add `lifecycle:implementation-complete` only when all acceptance/evidence is current and let the repository lifecycle/finalizer own Ready/Mergeable/Merged;
-7. after merge, re-enter from fresh `main` and select the next evidence-backed provider-independent Stage 3 slice;
-8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+3. repair any in-scope finding on PR #216 and repeat exact-head evidence as necessary;
+4. once final evidence is clean, add `lifecycle:implementation-complete` and let the repository readiness/finalizer workflows own READY → MERGEABLE → MERGED;
+5. after merge, re-enter from fresh `main`, inspect repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
