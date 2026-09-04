@@ -8,6 +8,7 @@ const { FiX, FiPlus, FiTrash2 } = FiIcons
 
 const RoutineForm = ({ routine = null, onSave, onCancel }) => {
   const nameInputRef = useRef(null)
+  const addStepButtonRef = useRef(null)
   const [saving, setSaving] = useState(false)
   const dialogRef = useModalDialog({
     onEscape: saving ? null : onCancel,
@@ -58,6 +59,7 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
   const removeStep = (index) => {
     if (saving) return
     setSteps(prev => prev.filter((_, i) => i !== index))
+    addStepButtonRef.current?.focus()
   }
 
   const title = routine ? 'Edit Routine' : 'New Routine'
@@ -154,6 +156,7 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-sm font-medium text-slate-700">Steps</h3>
               <button
+                ref={addStepButtonRef}
                 type="button"
                 onClick={addStep}
                 disabled={saving}
