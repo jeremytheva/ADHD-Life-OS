@@ -157,6 +157,7 @@ const Settings = () => {
                 >
                   <div className="flex items-center gap-3">
                     <div
+                      aria-hidden="true"
                       className={`
                       w-10 h-10 rounded-lg
                       bg-gradient-to-br ${mode.gradient}
