@@ -45,7 +45,9 @@ const TaskItem = ({
       <div className="p-4">
         <div className="flex items-start gap-3">
           <button
+            type="button"
             onClick={onComplete}
+            aria-label={`Complete task: ${task.title}`}
             className={`mt-1 p-2 rounded-lg transition-colors ${
               allSubtasksComplete
                 ? 'text-green-600 hover:bg-green-100'
@@ -76,7 +78,9 @@ const TaskItem = ({
                   </span>
                 )}
                 <button
+                  type="button"
                   onClick={onDelete}
+                  aria-label={`Delete task: ${task.title}`}
                   className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                 >
                   <SafeIcon icon={FiTrash2} className="w-4 h-4" />
@@ -111,7 +115,15 @@ const TaskItem = ({
                     {Math.round((completedSubtasks / totalSubtasks) * 100)}%
                   </span>
                 </div>
-                <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                <div
+                  className="w-full bg-slate-200 rounded-full h-2 overflow-hidden"
+                  role="progressbar"
+                  aria-label={`${task.title} subtask progress`}
+                  aria-valuemin={0}
+                  aria-valuemax={totalSubtasks}
+                  aria-valuenow={completedSubtasks}
+                  aria-valuetext={`${completedSubtasks} of ${totalSubtasks} subtasks complete`}
+                >
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{
@@ -119,6 +131,7 @@ const TaskItem = ({
                     }}
                     transition={{ duration: 0.5 }}
                     className="h-full bg-purple-600 rounded-full"
+                    aria-hidden="true"
                   />
                 </div>
               </div>
@@ -128,7 +141,9 @@ const TaskItem = ({
             <div className="flex items-center gap-2">
               {hasSubtasks && (
                 <button
+                  type="button"
                   onClick={() => setExpanded(!expanded)}
+                  aria-expanded={expanded}
                   className="flex items-center gap-2 text-sm text-purple-600 hover:text-purple-700 font-medium"
                 >
                   <SafeIcon
@@ -140,6 +155,7 @@ const TaskItem = ({
               )}
               {!hasSubtasks && (
                 <button
+                  type="button"
                   onClick={() => setShowSubtaskInput(true)}
                   className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
                 >
