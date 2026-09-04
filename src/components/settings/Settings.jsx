@@ -131,7 +131,7 @@ const Settings = () => {
           className="bg-white rounded-lg border border-slate-200 p-6"
         >
           <div className="flex items-center gap-2 mb-4">
-            <SafeIcon icon={FiSliders} className="w-5 h-5 text-purple-600" />
+            <SafeIcon aria-hidden="true" icon={FiSliders} className="w-5 h-5 text-purple-600" />
             <h2 className="text-lg font-medium text-slate-900">
               Mode Preferences
             </h2>
@@ -190,7 +190,7 @@ const Settings = () => {
         >
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <SafeIcon icon={FiEye} className="w-5 h-5 text-blue-600" />
+              <SafeIcon aria-hidden="true" icon={FiEye} className="w-5 h-5 text-blue-600" />
               <h2 className="text-lg font-medium text-slate-900">
                 Accessibility
               </h2>
@@ -199,7 +199,7 @@ const Settings = () => {
               onClick={() => setShowAccessibility(true)}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
             >
-              <SafeIcon icon={FiSettings} className="w-4 h-4" />
+              <SafeIcon aria-hidden="true" icon={FiSettings} className="w-4 h-4" />
               Configure
             </button>
           </div>
