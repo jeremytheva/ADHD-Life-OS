@@ -2,6 +2,7 @@ import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import LoadErrorState from '../../common/LoadErrorState'
 import { taskRecommender } from '../../services/taskRecommender'
 import { taskService } from '../../services/taskService'
 
@@ -30,11 +31,13 @@ const TaskSelector = ({ onSelectTask }) => {
   const [showFilters, setShowFilters] = useState(false)
   const [selectedPath, setSelectedPath] = useState('all')
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
   const filterToggleRef = useRef(null)
 
   const loadTasksAndRecommendations = useCallback(async () => {
     try {
       setLoading(true)
+      setLoadError(false)
       const allTasks = await taskService.getTasks()
       setTasks(allTasks)
 
@@ -54,6 +57,7 @@ const TaskSelector = ({ onSelectTask }) => {
       setRecommendations(recs)
     } catch (error) {
       console.error('Error loading recommendations:', error)
+      setLoadError(true)
     } finally {
       setLoading(false)
     }
@@ -141,6 +145,16 @@ const TaskSelector = ({ onSelectTask }) => {
         ></div>
         <p className="text-slate-600">Finding your perfect next task...</p>
       </div>
+    )
+  }
+
+  if (loadError) {
+    return (
+      <LoadErrorState
+        title="We couldn’t load task recommendations"
+        message="Your tasks have not been changed. Try loading recommendations again."
+        onRetry={loadTasksAndRecommendations}
+      />
     )
   }
 
