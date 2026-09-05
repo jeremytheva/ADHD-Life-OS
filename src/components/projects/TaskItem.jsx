@@ -54,7 +54,7 @@ const TaskItem = ({
                 : 'text-slate-400 hover:text-green-600 hover:bg-green-50'
             }`}
           >
-            <SafeIcon icon={FiCheck} className="w-5 h-5" />
+            <SafeIcon icon={FiCheck} className="w-5 h-5" aria-hidden="true" />
           </button>
 
           <div className="flex-1">
@@ -73,7 +73,7 @@ const TaskItem = ({
                     className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium flex items-center gap-1"
                     title="Essential task"
                   >
-                    <SafeIcon icon={FiStar} className="w-3 h-3" />
+                    <SafeIcon icon={FiStar} className="w-3 h-3" aria-hidden="true" />
                     Essential
                   </span>
                 )}
@@ -83,7 +83,7 @@ const TaskItem = ({
                   aria-label={`Delete task: ${task.title}`}
                   className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                 >
-                  <SafeIcon icon={FiTrash2} className="w-4 h-4" />
+                  <SafeIcon icon={FiTrash2} className="w-4 h-4" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -92,7 +92,7 @@ const TaskItem = ({
             <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600 mb-3">
               {task.estimated_duration && (
                 <div className="flex items-center gap-1">
-                  <SafeIcon icon={FiClock} className="w-4 h-4" />
+                  <SafeIcon icon={FiClock} className="w-4 h-4" aria-hidden="true" />
                   <span>{task.estimated_duration} min</span>
                 </div>
               )}
@@ -149,6 +149,7 @@ const TaskItem = ({
                   <SafeIcon
                     icon={expanded ? FiChevronDown : FiChevronRight}
                     className="w-4 h-4"
+                    aria-hidden="true"
                   />
                   {expanded ? 'Hide' : 'Show'} Subtasks ({totalSubtasks})
                 </button>
@@ -159,7 +160,7 @@ const TaskItem = ({
                   onClick={() => setShowSubtaskInput(true)}
                   className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
                 >
-                  <SafeIcon icon={FiPlus} className="w-4 h-4" />
+                  <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
                   Add Subtasks
                 </button>
               )}
