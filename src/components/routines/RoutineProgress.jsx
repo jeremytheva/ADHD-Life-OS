@@ -214,7 +214,7 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
               aria-label="Cancel routine session"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:opacity-50"
             >
-              <SafeIcon icon={FiX} className="w-6 h-6" />
+              <SafeIcon icon={FiX} className="w-6 h-6" aria-hidden="true" />
             </button>
           </div>
 
@@ -265,13 +265,13 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
               <div className="flex items-center justify-center gap-6 text-sm text-slate-500">
                 {currentStep.duration_minutes && (
                   <div className="flex items-center gap-2">
-                    <SafeIcon icon={FiClock} className="w-4 h-4" />
+                    <SafeIcon icon={FiClock} className="w-4 h-4" aria-hidden="true" />
                     <span>{currentStep.duration_minutes} min</span>
                   </div>
                 )}
                 {currentStep.is_essential && (
                   <div className="flex items-center gap-2">
-                    <SafeIcon icon={FiAlertCircle} className="w-4 h-4 text-blue-600" />
+                    <SafeIcon icon={FiAlertCircle} className="w-4 h-4 text-blue-600" aria-hidden="true" />
                     <span className="text-blue-600 font-medium">Essential</span>
                   </div>
                 )}
@@ -289,7 +289,7 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
                   disabled={actionPending}
                   className="flex-1 px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  <SafeIcon icon={FiSkipForward} className="w-5 h-5" />
+                  <SafeIcon icon={FiSkipForward} className="w-5 h-5" aria-hidden="true" />
                   <span>{actionPending ? 'Saving…' : 'Skip'}</span>
                 </button>
                 <button
@@ -298,7 +298,7 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
                   disabled={actionPending}
                   className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  <SafeIcon icon={FiCheck} className="w-5 h-5" />
+                  <SafeIcon icon={FiCheck} className="w-5 h-5" aria-hidden="true" />
                   <span>{actionPending ? 'Saving…' : 'Complete'}</span>
                 </button>
               </div>
