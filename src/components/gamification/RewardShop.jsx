@@ -70,7 +70,7 @@ const RewardShop = ({ onClose }) => {
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <SafeIcon icon={FiShoppingCart} className="w-6 h-6" />
+                <SafeIcon icon={FiShoppingCart} className="w-6 h-6" aria-hidden="true" />
               </div>
               <div>
                 <h2 id="reward-shop-title" className="text-2xl font-bold">Reward Shop</h2>
@@ -83,7 +83,7 @@ const RewardShop = ({ onClose }) => {
               aria-label="Close Reward Shop"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
             >
-              <SafeIcon icon={FiX} className="w-6 h-6" />
+              <SafeIcon icon={FiX} className="w-6 h-6" aria-hidden="true" />
             </button>
           </div>
 
@@ -93,7 +93,7 @@ const RewardShop = ({ onClose }) => {
               <div>
                 <div className="text-sm text-yellow-100 mb-1">Your Balance</div>
                 <div className="text-3xl font-bold flex items-center gap-2">
-                  💰 {currency.coins} coins
+                  <span aria-hidden="true">💰</span> {currency.coins} coins
                 </div>
               </div>
               <div className="text-right">
@@ -122,7 +122,7 @@ const RewardShop = ({ onClose }) => {
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <SafeIcon icon={cat.icon} className="w-4 h-4" />
+              <SafeIcon icon={cat.icon} className="w-4 h-4" aria-hidden="true" />
               <span className="font-medium">{cat.label}</span>
             </button>
           ))}
@@ -160,12 +160,12 @@ const RewardShop = ({ onClose }) => {
                 {/* Cost & Purchase */}
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1 text-yellow-600 font-bold">
-                    💰 {reward.cost}
+                    <span aria-hidden="true">💰</span> {reward.cost}
                   </div>
                   
                   {reward.purchased ? (
                     <div className="flex items-center gap-1 text-green-600 text-sm font-medium">
-                      <SafeIcon icon={FiCheck} className="w-4 h-4" />
+                      <SafeIcon icon={FiCheck} className="w-4 h-4" aria-hidden="true" />
                       Owned
                     </div>
                   ) : reward.affordable ? (
@@ -178,7 +178,7 @@ const RewardShop = ({ onClose }) => {
                     </button>
                   ) : (
                     <div className="flex items-center gap-1 text-slate-400 text-sm">
-                      <SafeIcon icon={FiLock} className="w-4 h-4" />
+                      <SafeIcon icon={FiLock} className="w-4 h-4" aria-hidden="true" />
                       Locked
                     </div>
                   )}
@@ -210,9 +210,12 @@ const RewardShop = ({ onClose }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               className="fixed bottom-6 right-6 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-[70]"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
             >
               <div className="flex items-center gap-3">
-                <SafeIcon icon={FiCheck} className="w-6 h-6" />
+                <SafeIcon icon={FiCheck} className="w-6 h-6" aria-hidden="true" />
                 <div>
                   <div className="font-bold">{purchaseSuccess.message}</div>
                   <div className="text-sm text-green-100">
