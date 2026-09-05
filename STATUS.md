@@ -3,20 +3,19 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Change
+gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #236, which removes redundant assistive-technology exposure from the Home-mode Add Chores action without changing Housework behaviour.
+  objective: Finish PR #236 lifecycle, then re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
-  pr: 236
-  branch: fix/home-mode-add-chore-icon-semantics
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation for the exact PR #236 implementation/status head.
-  - Audit submitted reviews and inline review threads for that exact head; repair any in-scope finding on PR #236.
-  - If implementation-head evidence is clean, prepare the durable post-merge fresh-main handoff in STATUS.md and revalidate the resulting final head.
-  - Synchronize the PR implementation contract and signal lifecycle:implementation-complete only after final exact-head evidence is clean.
+  - Run canonical Application validation for the exact final PR #236 head after this durable post-merge handoff commit.
+  - Audit submitted reviews and inline review threads for that exact final head; repair any in-scope finding on PR #236.
+  - If final exact-head evidence is clean, synchronize the PR implementation contract and signal lifecycle:implementation-complete.
   - Allow repository lifecycle automation to advance PR #236 through Ready, Mergeable, and Merged.
-  - Re-enter from fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Re-enter from fresh main after merge, reconcile GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -32,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #235 merged after canonical Application validation run 551 passed on exact head 1e7aaec0fb67e003b00170fe65cf7666662c1202 with a clean review/thread audit. PR #236 has implementation and deterministic coverage committed and requires fresh exact-head canonical validation after this durable-state update.
-last_verified_commit: 1e7aaec0fb67e003b00170fe65cf7666662c1202
-last_updated: 2026-09-05T21:30:00+10:00
+validation_basis: PR #236 implementation/status head 3b0c465cfed8664a0d9d8b30dea31e2cee5ff136 passed canonical Application validation run 553 and had a clean submitted-review/inline-thread audit. This durable handoff commit invalidates that exact-head evidence and requires fresh canonical validation before lifecycle completion.
+last_verified_commit: 3b0c465cfed8664a0d9d8b30dea31e2cee5ff136
+last_updated: 2026-09-05T21:34:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,20 +45,20 @@ last_updated: 2026-09-05T21:30:00+10:00
 
 ## Current objective
 
-PR #235 completed its lifecycle and merged into `main` at `a58f8421e2048de93dad2c6b93fd0e8d4d83fa83`. Its exact final head `1e7aaec0fb67e003b00170fe65cf7666662c1202` passed canonical Application validation run 551 and had a clean submitted-review and inline-thread audit. That delivery also stabilized the Routine Statistics browser fixture by pinning its clock after run 549 exposed an aging hard-coded date; production statistics behaviour was unchanged.
+PR #236 has completed its implementation-head evidence gate. Canonical Application validation run 553 passed on `3b0c465cfed8664a0d9d8b30dea31e2cee5ff136`, and the submitted-review and inline-thread audit was clean on that head.
 
-Fresh-main reconciliation found no competing open PRs. The current highest-priority provider-independent Stage 3 work remains frontend accessibility and interaction integrity.
+This `STATUS.md` update is the required durable post-merge handoff. After PR #236 merges, fresh `main` is the authoritative re-entry point for the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice; PR #236 must not remain the default active target in durable state after it closes.
 
-PR #236 is now the sole active delivery thread. `HomeModeTaskContainer` displays an `Add Chores` button whose visible text already provides the action name, so its adjacent plus glyph is redundant for assistive technology. The glyph is now marked `aria-hidden="true"`; deterministic coverage in `test/home-mode-add-chore-icon-semantics.test.mjs` protects that semantic contract.
+PR #236 keeps the Home-mode `Add Chores` action concise for assistive technology by marking its redundant `FiPlus` glyph `aria-hidden="true"` while preserving visible `Add Chores` text as the authoritative action name. Deterministic regression coverage is in `test/home-mode-add-chore-icon-semantics.test.mjs`.
 
-This change does not alter Add Chores interaction, Housework setup behaviour, chore data, persistence, schemas, authorization, provider mappings, recommendation/execution policy, destructive behaviour, external integrations, or room-emoji semantics. The canonical data model therefore remains unchanged and NoCodeBackend-dependent execution persistence remains deferred.
+Add Chores interaction, Housework setup behaviour, chore data, persistence, schemas, authorization, provider mappings, recommendation/execution policy, destructive behaviour, external integrations, and room-emoji semantics are unchanged. The canonical data model therefore remains unchanged and NoCodeBackend-dependent execution persistence remains deferred.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE / INTEGRATION — exact-head canonical validation and review/thread evidence required for PR #236 |
-| Gate state | Implementation and deterministic coverage committed; exact-head evidence pending |
+| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #236 |
+| Gate state | Implementation-head evidence passed; durable post-merge handoff committed; final-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -68,13 +67,14 @@ This change does not alter Add Chores interaction, Housework setup behaviour, ch
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #235 — hide decorative Chore Checklist icons from assistive technology and stabilize the Routine Statistics browser fixture; merged at `a58f8421e2048de93dad2c6b93fd0e8d4d83fa83` |
-| Active delivery | PR #236 — hide decorative Add Chores icon from assistive technology |
-| Active branch | `fix/home-mode-add-chore-icon-semantics` |
+| Latest merged delivery | PR #235 — hide decorative Chore Checklist icons and stabilize the Routine Statistics browser fixture; merged at `a58f8421e2048de93dad2c6b93fd0e8d4d83fa83` |
+| Delivery completing | PR #236 — hide decorative Add Chores icon from assistive technology |
+| Post-merge handoff | Fresh `main`; reconcile live GitHub state before choosing the next slice |
 | Implemented change | The Add Chores plus glyph is decorative while visible `Add Chores` text remains authoritative |
 | Deterministic coverage | `test/home-mode-add-chore-icon-semantics.test.mjs` |
-| Prior delivery canonical evidence | PASS — Application validation run 551 on PR #235 exact head `1e7aaec0fb67e003b00170fe65cf7666662c1202` |
-| Current exact-head canonical evidence | PENDING for PR #236 after this STATUS.md commit |
+| Prior-head canonical evidence | PASS — Application validation run 553 on `3b0c465cfed8664a0d9d8b30dea31e2cee5ff136` |
+| Prior-head review evidence | CLEAN — no submitted reviews or inline review threads |
+| Final-head canonical evidence | PENDING after this handoff commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -82,10 +82,10 @@ This change does not alter Add Chores interaction, Housework setup behaviour, ch
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #236 is the sole active provider-independent accessibility thread. |
+| Where am I? | Stage 3; PR #236 is completing lifecycle, with fresh `main` designated as the post-merge re-entry point. |
 | What is already happening? | The Add Chores decorative glyph is hidden from assistive technology and deterministic coverage is committed. |
-| What has been validated? | The previous delivery, PR #235, passed exact-head Application validation run 551 and clean review/thread audit. PR #236 requires fresh exact-head validation after this status commit. |
-| What is next? | Validate and audit PR #236, repair any finding, prepare the durable fresh-main handoff if clean, revalidate final head, then signal implementation-complete and allow lifecycle automation to merge. |
+| What has been validated? | Application validation run 553 passed and the review/thread audit was clean on prior head `3b0c465cfed8664a0d9d8b30dea31e2cee5ff136`; this handoff commit requires fresh exact-head evidence. |
+| What is next? | Validate and audit the exact final PR #236 head, synchronize its contract, signal implementation-complete if clean, allow lifecycle automation to merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -95,13 +95,12 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact PR #236 implementation/status head;
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #236 head;
 2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #236;
-3. if implementation-head evidence is clean, prepare the durable post-merge fresh-main `STATUS.md` handoff and revalidate the resulting final head;
-4. synchronize the PR implementation contract and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
-5. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
-6. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+3. synchronize the PR implementation contract and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
+4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
