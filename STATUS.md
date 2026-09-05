@@ -6,15 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #246, which clarifies Reward Shop accessibility semantics without changing reward, currency, persistence, or provider behaviour.
+  objective: Complete PR #247, which hides decorative Template Preview icons without changing template behaviour or provider contracts.
   issue: null
-  pr: 246
-  branch: fix/reward-shop-accessibility-semantics
+  pr: 247
+  branch: fix/template-preview-icon-semantics
 next_actions:
-  - Run canonical Application validation for the exact final PR #246 head containing this durable post-merge handoff.
-  - Re-audit submitted reviews and inline review threads for that exact final validated head; repair any in-scope finding on PR #246.
+  - Run canonical Application validation for the exact PR #247 implementation/status head.
+  - Audit submitted reviews and inline review threads for that exact validated head; repair any in-scope finding on PR #247.
+  - Commit the durable post-merge fresh-main handoff after implementation-head evidence is clean, then revalidate the resulting final head.
   - Synchronize the PR contract and signal lifecycle:implementation-complete only when final exact-head evidence is clean.
-  - Allow repository lifecycle automation to advance PR #246 through Ready, Mergeable, and Merged.
+  - Allow repository lifecycle automation to advance PR #247 through Ready, Mergeable, and Merged.
   - Re-enter from fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
@@ -24,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 584 passed on implementation/status head c5837158ed523191157c002a58ec456019146c90, with no submitted reviews or inline review threads. This durable handoff commit changes the PR head, so one final exact-head canonical validation and review/thread audit are required before implementation-complete signalling.
-last_verified_commit: c5837158ed523191157c002a58ec456019146c90
-last_updated: 2026-09-06T08:29:00+10:00
+validation_basis: PR #246 final-head Application validation run 585 passed before merge. PR #247 has new Template Preview semantic markup, deterministic coverage, and this durable active-thread status commit, so exact-head canonical validation is required before any completion signal.
+last_verified_commit: 7ce85ef11775e1f8acadc5063e0f2026b58dac32
+last_updated: 2026-09-06T08:32:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,18 +46,18 @@ last_updated: 2026-09-06T08:29:00+10:00
 
 ## Current objective
 
-PR #246 is the sole active delivery thread. It reduces redundant assistive-technology output in the Reward Shop and ensures successful purchases are announced as an atomic polite status.
+PR #247 is the sole active delivery thread. It removes redundant assistive-technology output from Template Preview metadata and text-labelled controls while retaining the preview's meaningful routine/task type artwork.
 
-Header, close-control, category-filter, owned/locked-state, and coin glyphs are hidden where explicit visible text or accessible control names already carry the same meaning. Dynamic reward artwork remains unchanged. Purchase-success feedback now has status/live-region semantics while retaining its existing visible message and remaining-coin information.
+The named close control, category/duration/repeat metadata, essential-task message, Edit First action, and Apply Now/Applying action now hide glyphs whose meaning is already carried by explicit text or accessible names. Template type artwork, visible metadata, apply-state text, focus/dialog behaviour, and existing application flow remain unchanged.
 
-Reward pricing, affordability, purchase logic, currency behaviour, persistence, schemas, authorization, provider mappings, execution/recommendation policy, external integrations, and persisted data remain unchanged. NoCodeBackend-dependent execution persistence remains deferred.
+Template loading, editing, applying, persistence, schemas, authorization, provider mappings, execution/recommendation policy, external integrations, and persisted data remain unchanged. NoCodeBackend-dependent execution persistence remains deferred.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #246 |
-| Gate state | Implementation/status head passed run 584 and review/thread audit; durable post-merge handoff is committed and requires final-head evidence |
+| Current gate | INTEGRATION — exact-head canonical validation and review/thread evidence required for PR #247 |
+| Gate state | Template Preview semantic implementation, deterministic coverage, and durable active-thread status are committed; exact-head evidence has not yet been established |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -65,14 +66,14 @@ Reward pricing, affordability, purchase logic, currency behaviour, persistence, 
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #245 — Chore Checklist emoji semantics; merged into `main` at `e4be8c130ddfe328d488e67024cdccd8d5937fe4` |
-| Active delivery | PR #246 — clarify Reward Shop accessibility semantics |
-| Active branch | `fix/reward-shop-accessibility-semantics` |
-| Implemented change | Hide redundant Reward Shop glyphs and expose purchase-success feedback as an atomic polite status |
-| Deterministic coverage | `test/reward-shop-accessibility-semantics.test.mjs` |
-| Validation evidence | Application validation run 584 PASS on implementation/status head `c5837158ed523191157c002a58ec456019146c90`; final durable-handoff head must be revalidated |
-| Review evidence | No submitted reviews or inline review threads on the successful run-584 head; re-audit after final exact-head validation |
-| Durable handoff | Fresh `main` is the required post-merge re-entry point; after merge reconcile GitHub state and continue the next evidence-backed provider-independent Stage 3 accessibility/interaction-integrity slice |
+| Latest merged delivery | PR #246 — Reward Shop accessibility semantics; merged into `main` at `d777cae9257d1000ddbf68fb14ad382393218f5e` |
+| Active delivery | PR #247 — hide decorative Template Preview icons |
+| Active branch | `fix/template-preview-icon-semantics` |
+| Implemented change | Hide redundant Template Preview close, metadata, essential-state, and text-labelled action glyphs while retaining template-type artwork |
+| Deterministic coverage | `test/template-preview-icon-semantics.test.mjs` |
+| Validation evidence | NOT RUN on the current PR #247 implementation/status head; canonical Application validation is required |
+| Review evidence | Not yet audited against a successful exact validated PR #247 head |
+| Durable handoff | Not yet committed; after implementation-head evidence is clean, record fresh `main` as the required post-merge re-entry point and revalidate that final head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -80,25 +81,27 @@ Reward pricing, affordability, purchase logic, currency behaviour, persistence, 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #246 is the sole active delivery thread. |
-| What is already happening? | Reward Shop accessibility semantics and deterministic regression coverage are implemented; implementation/status head run 584 passed and the durable post-merge handoff is now committed. |
-| What has been validated? | Application validation run 584 passed on exact head `c5837158ed523191157c002a58ec456019146c90`; submitted reviews and inline threads were empty on that head. |
-| What is next? | Validate the final handoff head, re-audit reviews/threads, signal implementation complete, allow lifecycle automation to merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; PR #247 is the sole active delivery thread. |
+| What is already happening? | Template Preview decorative-icon semantics and deterministic regression coverage are implemented, and durable active-thread state is synchronized. |
+| What has been validated? | The previous delivery, PR #246, passed final-head Application validation run 585 before merge. PR #247 still requires exact-head canonical validation. |
+| What is next? | Validate the current PR #247 head, audit reviews/threads, repair any in-scope findings, then commit the post-merge handoff and revalidate its final head. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #246 changes frontend semantic markup and deterministic test coverage only. It does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #247 changes frontend semantic markup and deterministic test coverage only. It does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #246 durable-handoff head;
-2. re-audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #246;
-3. synchronize the PR acceptance checklist and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
-4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact PR #247 implementation/status head;
+2. audit submitted reviews and inline review threads for that exact successful head and repair any in-scope finding on PR #247;
+3. commit the durable post-merge fresh-`main` handoff after implementation-head evidence is clean;
+4. rerun canonical validation and review/thread audit on the resulting final exact head;
+5. synchronize the PR acceptance checklist and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
+6. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
+7. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
+8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
