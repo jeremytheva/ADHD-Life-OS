@@ -25,7 +25,7 @@ const HomeModeTaskContainer = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-end">
-        <button onClick={() => setShowSetup(true)} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"><SafeIcon icon={FiPlus} className="w-4 h-4" /><span>Add Chores</span></button>
+        <button onClick={() => setShowSetup(true)} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"><SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" /><span>Add Chores</span></button>
       </div>
 
       <ChoreChecklist key={refreshKey} onSelectTask={setSelectedTask} mode="home" />
