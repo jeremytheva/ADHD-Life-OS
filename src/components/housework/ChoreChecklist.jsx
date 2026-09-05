@@ -187,7 +187,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
                   <div className="flex items-start gap-3 flex-1">
                     <button onClick={() => handleCompleteTask(task.id)} className="mt-1 p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" aria-label={`Complete ${task.title}`}><SafeIcon icon={FiCheck} className="w-5 h-5" aria-hidden="true" /></button>
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1"><span className="text-xl">{getRoomIcon(task.room)}</span><h4 className="font-medium text-slate-900">{task.title}</h4></div>
+                      <div className="flex items-center gap-2 mb-1"><span className="text-xl" aria-hidden="true">{getRoomIcon(task.room)}</span><h4 className="font-medium text-slate-900">{task.title}</h4></div>
                       <div className="flex items-center gap-3 text-sm text-slate-600">
                         <div className="flex items-center gap-1"><SafeIcon icon={FiClock} className="w-4 h-4" aria-hidden="true" /><span>{task.estimated_duration} min</span></div>
                         <span className="text-slate-400">•</span><span className="capitalize">{task.room.replace('_', ' ')}</span>
@@ -226,7 +226,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
         <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><SafeIcon icon={FiCheck} className="w-8 h-8 text-green-600" aria-hidden="true" /></div>
           <h3 className="text-lg font-medium text-slate-900 mb-2">All caught up!</h3>
-          <p className="text-slate-600">No chores due right now. Great job keeping your space tidy! ✨</p>
+          <p className="text-slate-600">No chores due right now. Great job keeping your space tidy! <span aria-hidden="true">✨</span></p>
         </div>
       )}
     </div>
