@@ -74,7 +74,7 @@ const SidebarContent = ({
             aria-label="Close navigation"
             className="-mr-2 -mt-2 rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <SafeIcon icon={FiX} className="h-5 w-5" />
+            <SafeIcon icon={FiX} className="h-5 w-5" aria-hidden="true" />
           </button>
         )}
       </div>
@@ -92,7 +92,7 @@ const SidebarContent = ({
       >
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <SafeIcon icon={FiAward} className="w-4 h-4 text-purple-600" />
+            <SafeIcon icon={FiAward} className="w-4 h-4 text-purple-600" aria-hidden="true" />
             <span className="text-sm font-medium text-purple-900">
               Level {stats.level}
             </span>
@@ -124,7 +124,7 @@ const SidebarContent = ({
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <SafeIcon icon={FiShoppingCart} className="w-4 h-4 text-yellow-600" />
+            <SafeIcon icon={FiShoppingCart} className="w-4 h-4 text-yellow-600" aria-hidden="true" />
             <span className="text-sm font-medium text-yellow-900">
               Reward Shop
             </span>
@@ -151,7 +151,7 @@ const SidebarContent = ({
             }`
           }
         >
-          <SafeIcon icon={item.icon} className="text-xl" />
+          <SafeIcon icon={item.icon} className="text-xl" aria-hidden="true" />
           <span className="font-medium">{item.label}</span>
         </NavLink>
       ))}
@@ -163,12 +163,12 @@ const SidebarContent = ({
         onClick={onOpenAccessibility}
         className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors"
       >
-        <SafeIcon icon={FiEye} className="text-xl" />
+        <SafeIcon icon={FiEye} className="text-xl" aria-hidden="true" />
         <span className="font-medium text-sm">Accessibility</span>
       </button>
 
       <div className="flex items-center gap-3 px-4 py-2 text-sm text-slate-600 bg-slate-50 rounded-lg">
-        <SafeIcon icon={FiUser} />
+        <SafeIcon icon={FiUser} aria-hidden="true" />
         <span className="truncate flex-1">{user?.email}</span>
       </div>
 
@@ -177,7 +177,7 @@ const SidebarContent = ({
         onClick={onSignOut}
         className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors"
       >
-        <SafeIcon icon={FiLogOut} className="text-xl" />
+        <SafeIcon icon={FiLogOut} className="text-xl" aria-hidden="true" />
         <span className="font-medium">Switch Profile</span>
       </button>
     </div>
@@ -295,7 +295,7 @@ const Layout = ({ children, enabledModules = [] }) => {
             aria-controls="mobile-app-navigation"
             className="rounded-lg p-2 text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <SafeIcon icon={FiMenu} className="h-6 w-6" />
+            <SafeIcon icon={FiMenu} className="h-6 w-6" aria-hidden="true" />
           </button>
           <div className="min-w-0">
             <div className="truncate text-base font-semibold text-slate-900">ADHD Life-OS</div>
