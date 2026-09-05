@@ -3,18 +3,19 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Change
+gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Re-enter from fresh main after PR #231 and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Complete PR #232, then re-enter from fresh main for the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
-  pr: null
-  branch: main
+  pr: 232
+  branch: fix/task-card-icon-semantics
 next_actions:
-  - Re-run canonical validation for the repaired final PR #231 handoff head.
-  - If exact-head validation and review/thread audit pass, complete the PR lifecycle and merge.
-  - Reconcile fresh main after merge and confirm there is no competing open implementation thread.
-  - Continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Run canonical Application validation for this final PR #232 head after the post-merge handoff commit.
+  - Audit submitted reviews and inline review threads for the exact final head; repair any in-scope finding on PR #232.
+  - If exact-head evidence is clean, synchronize the PR implementation contract and signal lifecycle:implementation-complete.
+  - Allow repository lifecycle automation to advance PR #232 through Ready, Mergeable, and Merged.
+  - Re-enter from fresh main after merge, reconcile GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -30,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Application validation run 536 failed on final handoff head c9dd8942aa137f0c8ec6c98ae1637aed31113527 because STATUS.md used non-canonical execution_state ACTIONABLE. The durable state is repaired to canonical VALIDATING; exact-head canonical validation must pass before lifecycle completion. Prior implementation/status head 8918fc212cd58583ba16797c590131d8d9dec992 passed run 535 with a clean review/thread audit.
-last_verified_commit: 8918fc212cd58583ba16797c590131d8d9dec992
-last_updated: 2026-09-05T12:12:31+10:00
+validation_basis: PR #232 implementation/status head ef90756122b176f6f137d6965c469db8d19cf768 passed canonical Application validation run 539 and had a clean submitted-review and inline-thread audit. This post-merge handoff commit invalidates that exact-head evidence and requires a new canonical validation pass before implementation-complete signalling.
+last_verified_commit: ef90756122b176f6f137d6965c469db8d19cf768
+last_updated: 2026-09-05T14:14:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,20 +45,18 @@ last_updated: 2026-09-05T12:12:31+10:00
 
 ## Current objective
 
-PR #231 completes the provider-independent routine-card accessibility slice by making active/inactive status explicit to assistive technology while preserving existing routine behaviour. Its implementation/status head `8918fc212cd58583ba16797c590131d8d9dec992` passed canonical Application validation run 535 and had no submitted reviews or inline review threads.
+PR #232 is the sole active Stage 3 delivery thread and is at its final exact-head evidence gate. It addresses an evidence-backed accessibility defect in the active Tasks workflow: `TaskCard` already provides explicit accessible names for its Complete/Delete icon-only buttons and visible text for duration/due-date metadata, but the corresponding glyphs were still exposed redundantly to assistive technology.
 
-The first post-merge handoff head `c9dd8942aa137f0c8ec6c98ae1637aed31113527` failed Application validation run 536 at governance validation because the machine-readable `execution_state` value was `ACTIONABLE`, which is not one of the repository's canonical execution states. This status file repairs that defect by using `VALIDATING` and resets exact-head validation evidence to pending. No application behaviour changed.
+The PR marks those redundant glyphs decorative with `aria-hidden="true"` and adds deterministic regression coverage in `test/task-card-icon-semantics.test.mjs`. Task completion/deletion behaviour, pending state, task data, persistence, schemas, sorting, recommendation policy, provider mappings, authorization, destructive behaviour, and external integrations are unchanged.
 
-This file remains intentionally prepared as the durable **post-merge fresh-main handoff**. After PR #231 merges, the default re-entry point is fresh `main`, not the soon-to-close PR branch. The next action is to reconcile repository state and continue the next evidence-backed provider-independent frontend accessibility or interaction-integrity slice from current code and GitHub evidence.
-
-The NoCodeBackend-dependent durable execution path remains intentionally deferred and fail-closed pending real target-instance provider evidence.
+The implementation/status head `ef90756122b176f6f137d6965c469db8d19cf768` passed canonical Application validation run 539 and its submitted-review and inline-thread audits were clean. This STATUS update deliberately prepares the durable state that should remain true on `main` after PR #232 merges, so the new exact head must be revalidated before lifecycle completion.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — finish exact-head validation/lifecycle evidence for PR #231, then select the next provider-independent Stage 3 accessibility/interaction-integrity slice from fresh `main` |
-| Gate state | PR #231 implementation evidence is clean; the final handoff head is validating after repair of a STATUS.md governance-state defect found by run 536 |
+| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #232 |
+| Gate state | Implementation evidence passed on the prior head; post-merge handoff is committed and final-head evidence is pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -66,39 +65,44 @@ The NoCodeBackend-dependent durable execution path remains intentionally deferre
 
 | State | Current value |
 | --- | --- |
-| Latest completed slice | PR #231 — expose routine active status semantics; lifecycle completion/merge follows final exact-head validation of the repaired handoff commit |
-| Default re-entry after merge | fresh `main` |
-| Implemented change | Routine active/inactive state exposed as explicit screen-reader text; visual toggle glyph marked decorative |
-| Deterministic coverage | `test/routine-card-status-semantics.test.mjs` |
-| Canonical evidence | Application validation run 535 PASS on `8918fc212cd58583ba16797c590131d8d9dec992`; run 536 failed only at governance on `c9dd8942aa137f0c8ec6c98ae1637aed31113527` because of invalid STATUS.md execution_state; repaired exact-head validation pending |
-| Review evidence | No submitted reviews or inline review threads on PR #231 at the implementation/status-head audit; exact-final-head audit required after validation |
-| Current blocker | None; governance-state defect repaired on the existing PR |
+| Latest merged delivery | PR #231 — expose routine active status semantics; merged at `b600f15c102f1658fbddbc5658b2a0b6e96d2b75` |
+| Active delivery | PR #232 — hide decorative Task Card icons from assistive technology |
+| Active branch | `fix/task-card-icon-semantics` |
+| Implemented change | Complete/Delete button glyphs and duration/due-date metadata glyphs are decorative while explicit button names and visible metadata text remain authoritative |
+| Deterministic coverage | `test/task-card-icon-semantics.test.mjs` |
+| Prior canonical evidence | Application validation run 539 PASS on `ef90756122b176f6f137d6965c469db8d19cf768` |
+| Final exact-head evidence | PENDING after this post-merge handoff commit |
+| Review evidence | Clean on prior implementation/status head; final-head audit required after revalidation |
+| Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #231 is in final exact-head validation, then re-enter from fresh `main` after merge. |
-| What is already happening? | The routine-card accessibility slice is complete; a machine-readable STATUS.md governance defect found by run 536 has been repaired and exact-head validation is pending. |
-| What has been validated? | PR #231 implementation/status head passed run 535 and had a clean review/thread audit; the repaired final handoff head still requires canonical validation. |
-| What is next? | Complete exact-head validation and lifecycle for PR #231, reconcile fresh `main`, confirm there is no competing active work, then continue the next evidence-backed provider-independent accessibility or interaction-integrity slice. |
+| Where am I? | Stage 3; PR #232 is the sole active implementation thread and is at its final exact-head evidence gate. |
+| What is already happening? | Task Card decorative icon semantics and deterministic coverage are implemented; the durable post-merge handoff is prepared. |
+| What has been validated? | PR #232 implementation/status head `ef90756122b176f6f137d6965c469db8d19cf768` passed Application validation run 539 with clean review/thread evidence. The new final head still requires canonical validation. |
+| What is next? | Revalidate the final PR #232 head, repeat the review/thread audit, signal implementation-complete if clean, allow lifecycle automation to merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
+## Post-merge fresh-main handoff
+
+After PR #232 merges, treat the PR and its source branch as completed history rather than an active re-entry target. Re-enter from fresh `main`, reconcile open PRs/branches/checks and durable repository state, then continue the highest-priority evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice. Do not create a competing provider-dependent execution implementation while the real NoCodeBackend target contract remains deferred and unverified.
+
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #231 does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations. Independent frontend accessibility, interaction-integrity, cognitive-load, testing, and maintainability work remains actionable.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #232 is frontend semantic markup and deterministic test coverage only. It does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
 
 ## Next dependency-correct work
 
-1. validate the repaired final PR #231 handoff head with canonical `npm run platform:validate` and complete a final review/thread audit;
-2. if clean, signal implementation completion and allow the repository lifecycle to progress PR #231 through Ready/Mergeable/Merged;
-3. re-enter from fresh `main` and reconcile current PRs/branches/checks before creating new work;
-4. inspect current frontend accessibility and interaction-integrity evidence for the next highest-priority provider-independent defect or gap;
-5. reuse/repair equivalent existing work if present, otherwise open one focused Draft PR;
-6. run canonical validation, maintain the PR lifecycle contract, and update this durable handoff again after material work;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the final exact PR #232 head;
+2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #232;
+3. synchronize the PR implementation contract and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
+4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
