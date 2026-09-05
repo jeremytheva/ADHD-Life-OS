@@ -6,16 +6,18 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Finish PR #242 lifecycle, then re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Complete PR #243, which removes redundant assistive-technology exposure from shared application-shell icons without changing navigation or provider behaviour.
   issue: null
-  pr: null
-  branch: main
+  pr: 243
+  branch: fix/layout-icon-semantics
 next_actions:
-  - Run canonical Application validation for the exact final PR #242 head after this durable post-merge handoff commit.
-  - Audit submitted reviews and inline review threads for that exact final head; repair any in-scope finding on PR #242.
-  - If final exact-head evidence is clean, synchronize the PR implementation contract and signal lifecycle:implementation-complete.
-  - Allow repository lifecycle automation to advance PR #242 through Ready, Mergeable, and Merged.
-  - Re-enter from fresh main after merge, reconcile GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Run canonical Application validation for the exact PR #243 implementation/status head.
+  - Audit submitted reviews and inline review threads for that exact validated head; repair any in-scope finding on PR #243.
+  - If implementation-head evidence is clean, commit the durable post-merge fresh-main handoff.
+  - Re-run canonical validation and review/thread audits for the exact final head.
+  - Synchronize the PR implementation contract and signal lifecycle:implementation-complete only after final exact-head evidence is clean.
+  - Allow repository lifecycle automation to advance PR #243 through Ready, Mergeable, and Merged.
+  - Re-enter from fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +33,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #242 implementation/status head 2bb3be4975220fe6bc94a9be587c6bb993604d66 passed canonical Application validation run 571 and had a clean submitted-review/inline-thread audit. This durable handoff commit invalidates that exact-head evidence and requires fresh canonical validation before lifecycle completion.
-last_verified_commit: 2bb3be4975220fe6bc94a9be587c6bb993604d66
-last_updated: 2026-09-06T01:18:00+10:00
+validation_basis: PR #243 changes shared frontend semantic markup and deterministic source-contract coverage only. Canonical exact-head validation is pending for the implementation/status head.
+last_verified_commit: 51d1861430b6c97ddc9724eebe164e4cf67a60fd
+last_updated: 2026-09-06T02:19:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +47,20 @@ last_updated: 2026-09-06T01:18:00+10:00
 
 ## Current objective
 
-PR #242 has completed its implementation-head evidence gate. Canonical Application validation run 571 passed on `2bb3be4975220fe6bc94a9be587c6bb993604d66`, and the submitted-review and inline-thread audit was clean on that head.
+PR #242 completed its repository-managed lifecycle and merged into `main` at `51d1861430b6c97ddc9724eebe164e4cf67a60fd` after exact-final-head Application validation run 572 passed and the submitted-review/inline-thread audit was clean.
 
-This `STATUS.md` update is the required durable post-merge handoff. After PR #242 merges, fresh `main` is the authoritative re-entry point for the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice; PR #242 must not remain the default active target in durable state after it closes.
+Fresh-main reconciliation found no competing open pull request. The next dependency-correct provider-independent slice is therefore PR #243, which improves the shared application shell's accessibility semantics.
 
-PR #242 hides redundant TemplateCard glyphs from assistive technology where explicit control names, visible status/duration text, or the Template Library's Routine Templates / Task Templates section headings already carry the meaning. Deterministic regression coverage is in `test/template-card-icon-semantics.test.mjs`.
+PR #243 marks shared `SafeIcon` glyphs decorative when authoritative visible text or an explicit accessible name already carries the meaning. This covers mobile navigation open/close controls, primary navigation destinations, Accessibility, user/account display, Switch Profile, the gamification level action, and Reward Shop. Existing emoji-based streak/currency content is intentionally unchanged.
 
-Template filtering, apply/edit/preview behaviour, apply-menu keyboard and focus behaviour, persistence, schemas, authorization, provider mappings, execution/recommendation policy, destructive semantics, external integrations, and persisted data are unchanged. NoCodeBackend-dependent execution persistence remains deferred.
+Navigation destinations, mobile focus trapping and dismissal, gamification behaviour, authentication, persistence, schemas, authorization, provider mappings, execution/recommendation policy, destructive semantics, external integrations, and persisted data are unchanged. NoCodeBackend-dependent execution persistence remains deferred.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #242 |
-| Gate state | Implementation-head evidence passed; durable post-merge handoff committed; final-head evidence pending |
+| Current gate | INTEGRATION — exact-head canonical validation and review/thread evidence required for PR #243 |
+| Gate state | Implementation and deterministic coverage committed; durable active-thread state synchronized; canonical evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -67,14 +69,13 @@ Template filtering, apply/edit/preview behaviour, apply-menu keyboard and focus 
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #241 — Routine Statistics decorative icon semantics; merged at `167d48284a4d8852a37b0ec9ba31183bbb6a584b` |
-| Delivery completing | PR #242 — hide decorative TemplateCard icons from assistive technology |
-| Post-merge handoff | Fresh `main`; reconcile live GitHub state before choosing the next slice |
-| Implemented change | TemplateCard apply/status/duration/preview/type glyphs are decorative where authoritative text or context carries the meaning |
-| Deterministic coverage | `test/template-card-icon-semantics.test.mjs` |
-| Prior-head canonical evidence | PASS — Application validation run 571 on `2bb3be4975220fe6bc94a9be587c6bb993604d66` |
-| Prior-head review evidence | CLEAN — no submitted reviews or inline review threads |
-| Final-head canonical evidence | PENDING after this handoff commit |
+| Latest merged delivery | PR #242 — TemplateCard decorative icon semantics; merged at `51d1861430b6c97ddc9724eebe164e4cf67a60fd` |
+| Active delivery | PR #243 — hide decorative application-shell icons from assistive technology |
+| Active branch | `fix/layout-icon-semantics` |
+| Implemented change | Redundant shared-shell `SafeIcon` glyphs are hidden where explicit text or accessible control names are authoritative |
+| Deterministic coverage | `test/layout-icon-semantics.test.mjs` |
+| Canonical evidence | PENDING for the exact implementation/status head |
+| Review evidence | PENDING after exact-head validation |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -82,25 +83,27 @@ Template filtering, apply/edit/preview behaviour, apply-menu keyboard and focus 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #242 is completing lifecycle, with fresh `main` designated as the post-merge re-entry point. |
-| What is already happening? | Redundant TemplateCard glyphs are hidden from assistive technology while authoritative names, text, duration/status labels, section context, and apply-menu keyboard/focus behaviour are preserved. |
-| What has been validated? | Application validation run 571 passed and the review/thread audit was clean on prior head `2bb3be4975220fe6bc94a9be587c6bb993604d66`; this handoff commit requires fresh exact-head evidence. |
-| What is next? | Validate and audit the exact final PR #242 head, synchronize its contract, signal implementation-complete if clean, allow lifecycle automation to merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; PR #243 is the sole active delivery thread. |
+| What is already happening? | Shared application-shell icons that duplicate authoritative text or control names are hidden from assistive technology, with deterministic regression coverage added. |
+| What has been validated? | PR #242 final evidence was clean and merged. PR #243 exact-head canonical evidence is pending. |
+| What is next? | Validate and audit the exact PR #243 implementation/status head, repair any in-scope finding, then commit/revalidate the durable post-merge handoff and complete its repository-managed lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #242 changes frontend semantic markup and deterministic test coverage only. It does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #243 changes frontend semantic markup and deterministic test coverage only. It does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #242 head;
-2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #242;
-3. synchronize the PR implementation contract and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
-4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact PR #243 implementation/status head;
+2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #243;
+3. if clean, commit the durable post-merge fresh-`main` handoff, which invalidates prior exact-head evidence;
+4. re-run canonical validation and review/thread audits for the exact final PR #243 head;
+5. synchronize the PR implementation contract and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
+6. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
+7. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
+8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
