@@ -6,15 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Re-enter from fresh main after PR #228 merges and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Restore the Add Another Subtask interaction so existing tasks can reopen the subtask input without changing persistence or provider behaviour.
   issue: null
-  pr: null
-  branch: null
+  pr: 229
+  branch: fix/subtask-add-another-interaction
 next_actions:
-  - Complete final exact-head canonical validation and review/thread audit for PR #228 after this durable handoff commit.
-  - Allow repository lifecycle automation to advance PR #228 through Ready, Mergeable, and Merged when exact-head evidence is clean.
-  - Re-enter from fresh main after merge and reconcile repository and GitHub state before selecting new implementation work.
-  - Continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Run canonical Application validation for the exact PR #229 head.
+  - Audit submitted reviews and inline review threads and repair any in-scope finding on PR #229.
+  - Prepare the durable post-merge fresh-main handoff before signalling implementation-complete.
+  - Allow repository lifecycle automation to advance and merge PR #229 when exact-head evidence is clean.
+  - Re-enter from fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -30,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #228 implementation/status head 40bf06402a69ed007b2225ab4a1a2051c846de0b passed canonical Application validation run 525 with no submitted reviews or inline review threads. This post-merge handoff commit creates a new exact head that must be revalidated before implementation-complete is signalled.
-last_verified_commit: 40bf06402a69ed007b2225ab4a1a2051c846de0b
-last_updated: 2026-09-05T10:10:00+10:00
+validation_basis: PR #229 implementation and deterministic regression coverage are committed; canonical exact-head validation is pending after this durable status synchronization commit.
+last_verified_commit: 910a7b71299ffc8ffa65cc3168f5faa300f61892
+last_updated: 2026-09-05T10:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,16 +45,16 @@ last_updated: 2026-09-05T10:10:00+10:00
 
 ## Current objective
 
-PR #228 has completed its scoped implementation and its implementation/status head passed canonical validation with a clean review/thread audit. This file is now deliberately prepared as the durable checkpoint that should remain true after PR #228 merges: re-enter from fresh `main`, reconcile live repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+PR #229 is the sole active Stage 3 delivery thread. It repairs a concrete interaction-integrity defect in the project task experience: when a task already contained subtasks, the visible **Add Another Subtask** control called the child component's hide-input callback, so the existing subtask input remained closed. The repair introduces an explicit show-input callback and wires it to the parent `showSubtaskInput` state.
 
-The PR #228 change is frontend-only. It excludes the decorative Mode Preferences, Accessibility, and Configure icons from the accessibility tree while preserving adjacent visible text as the meaningful section/action content. Preferences persistence, mode logic, accessibility preference logic, schemas, authorization, provider mappings, recommendation/execution policy, destructive behaviour, and external integrations remain unchanged.
+The change is UI-state-only. Subtask creation/deletion/completion persistence, task/project schemas, authorization, provider mappings, recommendation/execution policy, destructive behaviour, and external integrations remain unchanged.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head validation is required after this durable handoff commit |
-| Gate state | Revalidation required because the handoff commit changed the PR head |
+| Current gate | INTEGRATION — canonical exact-head validation for PR #229 |
+| Gate state | Implementation committed; validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -62,13 +63,12 @@ The PR #228 change is frontend-only. It excludes the decorative Mode Preferences
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #227 — ModeAwareLayout mode-banner icon accessibility semantics; merged at `36fcdfe03d801cbb912ee84ba5a40b920ea23e35` |
-| Delivery awaiting lifecycle completion | PR #228 — Settings decorative icon semantics |
-| Implemented change | Decorative Settings section/action icons use `aria-hidden="true"`; visible text retains semantic meaning |
-| Deterministic coverage | `test/settings-decorative-icon-semantics.test.mjs` |
-| Implementation/status-head validation | PASS — Application validation run 525 at `40bf06402a69ed007b2225ab4a1a2051c846de0b` |
-| Review evidence at implementation/status head | CLEAN — no submitted reviews and no inline review threads |
-| Final exact-head validation | Required after this STATUS handoff commit |
+| Latest merged delivery | PR #228 — Settings decorative icon accessibility semantics; merged at `910a7b71299ffc8ffa65cc3168f5faa300f61892` |
+| Active delivery | PR #229 — restore Add Another Subtask interaction |
+| Implemented change | `SubtaskList` invokes `onShowInput`; `TaskItem` wires it to `setShowSubtaskInput(true)`; successful creation still closes through `onHideInput` |
+| Deterministic coverage | `test/subtask-add-another-interaction.test.mjs` |
+| Exact-head validation | Pending after this STATUS synchronization commit |
+| Review evidence | Pending final exact-head audit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -76,25 +76,27 @@ The PR #228 change is frontend-only. It excludes the decorative Mode Preferences
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #228 is finishing repository lifecycle, with the durable post-merge handoff already prepared. |
-| What is already happening? | Settings decorative-icon semantics are implemented and validated on the prior exact head; the final handoff head requires canonical revalidation. |
-| What has been validated? | PR #228 implementation/status head `40bf06402a69ed007b2225ab4a1a2051c846de0b` passed Application validation run 525 and had a clean review/thread audit. |
-| What is next? | Revalidate the final exact head, re-audit review/thread state, signal implementation-complete when clean, allow lifecycle automation to merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; Draft PR #229 is the sole active delivery thread. |
+| What is already happening? | The broken Add Another Subtask state transition is repaired and regression coverage is committed. |
+| What has been validated? | Fresh `main` was reconciled after PR #228 merged; PR #229 exact-head canonical validation is pending. |
+| What is next? | Validate exact head, audit reviews/threads, prepare the post-merge handoff, revalidate if the head changes, then signal implementation-complete. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #228 does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, or execution policy. Independent frontend accessibility, interaction-integrity, cognitive-load, testing, and maintainability work remains actionable.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #229 does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, or execution policy. Independent frontend accessibility, interaction-integrity, cognitive-load, testing, and maintainability work remains actionable.
 
 ## Next dependency-correct work
 
-1. obtain canonical Application validation for the final exact PR #228 head created by this handoff commit;
-2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #228;
-3. when clean, synchronize the PR implementation contract and signal `lifecycle:implementation-complete`;
-4. allow repository lifecycle automation to complete Ready/Mergeable/Merged transitions;
-5. after merge, re-enter from fresh `main`, reconcile GitHub state, and select the next evidence-backed provider-independent accessibility or interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. obtain canonical Application validation for the exact PR #229 head;
+2. audit submitted reviews and inline review threads and repair any in-scope finding on PR #229;
+3. prepare `STATUS.md` as the durable post-merge fresh-main handoff before implementation-complete signalling;
+4. revalidate the resulting final exact head and repeat the review/thread audit;
+5. when clean, synchronize the PR implementation contract and signal `lifecycle:implementation-complete`;
+6. allow repository lifecycle automation to complete Ready/Mergeable/Merged transitions;
+7. after merge, re-enter from fresh `main`, reconcile GitHub state, and select the next evidence-backed provider-independent accessibility or interaction-integrity slice;
+8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
