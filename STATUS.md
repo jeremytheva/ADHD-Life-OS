@@ -6,15 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Finish PR #241 lifecycle, then re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Finish PR #242 lifecycle, then re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
   pr: null
   branch: main
 next_actions:
-  - Run canonical Application validation for the exact final PR #241 head after this durable post-merge handoff commit.
-  - Audit submitted reviews and inline review threads for that exact final head; repair any in-scope finding on PR #241.
+  - Run canonical Application validation for the exact final PR #242 head after this durable post-merge handoff commit.
+  - Audit submitted reviews and inline review threads for that exact final head; repair any in-scope finding on PR #242.
   - If final exact-head evidence is clean, synchronize the PR implementation contract and signal lifecycle:implementation-complete.
-  - Allow repository lifecycle automation to advance PR #241 through Ready, Mergeable, and Merged.
+  - Allow repository lifecycle automation to advance PR #242 through Ready, Mergeable, and Merged.
   - Re-enter from fresh main after merge, reconcile GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
@@ -31,33 +31,33 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #241 implementation/status head 7e80d28f611a345e5493051993aeb851e911b809 passed canonical Application validation run 568 and had a clean submitted-review/inline-thread audit. This durable handoff commit invalidates that exact-head evidence and requires fresh canonical validation before lifecycle completion.
-last_verified_commit: 7e80d28f611a345e5493051993aeb851e911b809
-last_updated: 2026-09-05T23:14:00+10:00
+validation_basis: PR #242 implementation/status head 2bb3be4975220fe6bc94a9be587c6bb993604d66 passed canonical Application validation run 571 and had a clean submitted-review/inline-thread audit. This durable handoff commit invalidates that exact-head evidence and requires fresh canonical validation before lifecycle completion.
+last_verified_commit: 2bb3be4975220fe6bc94a9be587c6bb993604d66
+last_updated: 2026-09-06T01:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
 
-**Snapshot date:** 5 September 2026  
+**Snapshot date:** 6 September 2026  
 **Default branch:** `main`  
 **Overall status:** Active development / backend provider work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
 ## Current objective
 
-PR #241 has completed its implementation-head evidence gate. Canonical Application validation run 568 passed on `7e80d28f611a345e5493051993aeb851e911b809`, and the submitted-review and inline-thread audit was clean on that head.
+PR #242 has completed its implementation-head evidence gate. Canonical Application validation run 571 passed on `2bb3be4975220fe6bc94a9be587c6bb993604d66`, and the submitted-review and inline-thread audit was clean on that head.
 
-This `STATUS.md` update is the required durable post-merge handoff. After PR #241 merges, fresh `main` is the authoritative re-entry point for the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice; PR #241 must not remain the default active target in durable state after it closes.
+This `STATUS.md` update is the required durable post-merge handoff. After PR #242 merges, fresh `main` is the authoritative re-entry point for the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice; PR #242 must not remain the default active target in durable state after it closes.
 
-PR #241 hides redundant Routine Statistics Close, key-metric, Recent Completions, and empty-state calendar glyphs from assistive technology while preserving the explicit Close accessible name, metric definition-term labels, headings, empty-state text, and existing emoji-based history/insight content. Deterministic regression coverage is in `test/routine-stats-icon-semantics.test.mjs`.
+PR #242 hides redundant TemplateCard glyphs from assistive technology where explicit control names, visible status/duration text, or the Template Library's Routine Templates / Task Templates section headings already carry the meaning. Deterministic regression coverage is in `test/template-card-icon-semantics.test.mjs`.
 
-Statistics calculation, timeframe behaviour, routine history, persistence, schemas, authorization, provider mappings, recommendation/execution policy, destructive semantics, external integrations, and persisted data are unchanged. NoCodeBackend-dependent execution persistence remains deferred.
+Template filtering, apply/edit/preview behaviour, apply-menu keyboard and focus behaviour, persistence, schemas, authorization, provider mappings, execution/recommendation policy, destructive semantics, external integrations, and persisted data are unchanged. NoCodeBackend-dependent execution persistence remains deferred.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #241 |
+| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #242 |
 | Gate state | Implementation-head evidence passed; durable post-merge handoff committed; final-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
@@ -67,12 +67,12 @@ Statistics calculation, timeframe behaviour, routine history, persistence, schem
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #240 — hide decorative Routine Progress icons from assistive technology; merged at `fab772736464c4bcdc5b2bb866b2fcfec9843cb5` |
-| Delivery completing | PR #241 — hide decorative Routine Statistics icons from assistive technology |
+| Latest merged delivery | PR #241 — Routine Statistics decorative icon semantics; merged at `167d48284a4d8852a37b0ec9ba31183bbb6a584b` |
+| Delivery completing | PR #242 — hide decorative TemplateCard icons from assistive technology |
 | Post-merge handoff | Fresh `main`; reconcile live GitHub state before choosing the next slice |
-| Implemented change | Routine Statistics control/metric/history/empty-state glyphs are decorative while explicit text and names remain authoritative |
-| Deterministic coverage | `test/routine-stats-icon-semantics.test.mjs` |
-| Prior-head canonical evidence | PASS — Application validation run 568 on `7e80d28f611a345e5493051993aeb851e911b809` |
+| Implemented change | TemplateCard apply/status/duration/preview/type glyphs are decorative where authoritative text or context carries the meaning |
+| Deterministic coverage | `test/template-card-icon-semantics.test.mjs` |
+| Prior-head canonical evidence | PASS — Application validation run 571 on `2bb3be4975220fe6bc94a9be587c6bb993604d66` |
 | Prior-head review evidence | CLEAN — no submitted reviews or inline review threads |
 | Final-head canonical evidence | PENDING after this handoff commit |
 | Current blocker | None |
@@ -82,21 +82,21 @@ Statistics calculation, timeframe behaviour, routine history, persistence, schem
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #241 is completing lifecycle, with fresh `main` designated as the post-merge re-entry point. |
-| What is already happening? | Redundant Routine Statistics glyphs are hidden from assistive technology while authoritative names, labels, headings, empty-state text, and existing emoji content are preserved. |
-| What has been validated? | Application validation run 568 passed and the review/thread audit was clean on prior head `7e80d28f611a345e5493051993aeb851e911b809`; this handoff commit requires fresh exact-head evidence. |
-| What is next? | Validate and audit the exact final PR #241 head, synchronize its contract, signal implementation-complete if clean, allow lifecycle automation to merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; PR #242 is completing lifecycle, with fresh `main` designated as the post-merge re-entry point. |
+| What is already happening? | Redundant TemplateCard glyphs are hidden from assistive technology while authoritative names, text, duration/status labels, section context, and apply-menu keyboard/focus behaviour are preserved. |
+| What has been validated? | Application validation run 571 passed and the review/thread audit was clean on prior head `2bb3be4975220fe6bc94a9be587c6bb993604d66`; this handoff commit requires fresh exact-head evidence. |
+| What is next? | Validate and audit the exact final PR #242 head, synchronize its contract, signal implementation-complete if clean, allow lifecycle automation to merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #241 is frontend semantic markup and deterministic test coverage only. It does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #242 changes frontend semantic markup and deterministic test coverage only. It does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #241 head;
-2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #241;
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #242 head;
+2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #242;
 3. synchronize the PR implementation contract and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
 4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
 5. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
