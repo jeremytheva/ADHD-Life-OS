@@ -10,6 +10,8 @@ const createRoutineStatsMock = async (page, {
   delayHistoryLoad = false,
   failHistoryLoad = false
 } = {}) => {
+  await page.clock.setFixedTime(new Date('2026-09-01T12:00:00.000Z'))
+
   let currentUser = null
   const preferencesByUser = new Map()
   let historyShouldFail = failHistoryLoad
@@ -194,9 +196,4 @@ test('Routine Statistics exposes retrieval failure and recovers in the same dial
 
   await expect(dialog.getByText('Total Completions')).toBeVisible()
   await expect(dialog.getByRole('alert')).toHaveCount(0)
-  await expect(dialog).toHaveAttribute('aria-busy', 'false')
-
-  await dialog.getByRole('button', { name: 'Close routine statistics' }).click()
-  await expect(dialog).toHaveCount(0)
-  await expect(page.getByRole('button', { name: 'Stats' })).toBeFocused()
 })

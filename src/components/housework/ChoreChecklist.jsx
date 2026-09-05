@@ -140,7 +140,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
-              <SafeIcon icon={FiHome} className="w-6 h-6 text-white" />
+              <SafeIcon icon={FiHome} className="w-6 h-6 text-white" aria-hidden="true" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-slate-900">Home Chores</h2>
@@ -148,7 +148,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
             </div>
           </div>
           <button onClick={retryLoad} className="p-2 text-purple-600 hover:bg-purple-100 rounded-lg transition-colors" aria-label="Refresh chores">
-            <SafeIcon icon={FiRefreshCw} className="w-5 h-5" />
+            <SafeIcon icon={FiRefreshCw} className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -179,25 +179,25 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
 
       {todayTasks.length > 0 && (
         <div>
-          <h3 className="text-lg font-medium text-slate-900 mb-3 flex items-center gap-2"><SafeIcon icon={FiSun} className="w-5 h-5 text-amber-500" />Ready to Do ({todayTasks.length})</h3>
+          <h3 className="text-lg font-medium text-slate-900 mb-3 flex items-center gap-2"><SafeIcon icon={FiSun} className="w-5 h-5 text-amber-500" aria-hidden="true" />Ready to Do ({todayTasks.length})</h3>
           <div className="space-y-2">
             {todayTasks.map((task, index) => (
               <motion.div key={task.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }} className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-all">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3 flex-1">
-                    <button onClick={() => handleCompleteTask(task.id)} className="mt-1 p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" aria-label={`Complete ${task.title}`}><SafeIcon icon={FiCheck} className="w-5 h-5" /></button>
+                    <button onClick={() => handleCompleteTask(task.id)} className="mt-1 p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" aria-label={`Complete ${task.title}`}><SafeIcon icon={FiCheck} className="w-5 h-5" aria-hidden="true" /></button>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1"><span className="text-xl">{getRoomIcon(task.room)}</span><h4 className="font-medium text-slate-900">{task.title}</h4></div>
                       <div className="flex items-center gap-3 text-sm text-slate-600">
-                        <div className="flex items-center gap-1"><SafeIcon icon={FiClock} className="w-4 h-4" /><span>{task.estimated_duration} min</span></div>
+                        <div className="flex items-center gap-1"><SafeIcon icon={FiClock} className="w-4 h-4" aria-hidden="true" /><span>{task.estimated_duration} min</span></div>
                         <span className="text-slate-400">•</span><span className="capitalize">{task.room.replace('_', ' ')}</span>
                       </div>
                       {task.checklist?.length > 0 && <div className="mt-2 text-xs text-slate-500">{task.checklist.length} steps</div>}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button onClick={() => handleSnoozeTask(task.id)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Move to tomorrow" aria-label={`Move ${task.title} to tomorrow`}><SafeIcon icon={FiMoon} className="w-4 h-4" /></button>
-                    <button onClick={() => onSelectTask && onSelectTask(task)} className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors" aria-label={`Open ${task.title}`}><SafeIcon icon={FiChevronRight} className="w-5 h-5" /></button>
+                    <button onClick={() => handleSnoozeTask(task.id)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Move to tomorrow" aria-label={`Move ${task.title} to tomorrow`}><SafeIcon icon={FiMoon} className="w-4 h-4" aria-hidden="true" /></button>
+                    <button onClick={() => onSelectTask && onSelectTask(task)} className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors" aria-label={`Open ${task.title}`}><SafeIcon icon={FiChevronRight} className="w-5 h-5" aria-hidden="true" /></button>
                   </div>
                 </div>
               </motion.div>
@@ -208,13 +208,13 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
 
       {filter === 'all' && upcomingTasks.length > 0 && (
         <div>
-          <h3 className="text-lg font-medium text-slate-900 mb-3 flex items-center gap-2"><SafeIcon icon={FiMoon} className="w-5 h-5 text-slate-400" />Upcoming ({upcomingTasks.length})</h3>
+          <h3 className="text-lg font-medium text-slate-900 mb-3 flex items-center gap-2"><SafeIcon icon={FiMoon} className="w-5 h-5 text-slate-400" aria-hidden="true" />Upcoming ({upcomingTasks.length})</h3>
           <div className="space-y-2">
             {upcomingTasks.map((task, index) => (
               <motion.div key={task.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }} className="bg-white rounded-lg border border-slate-200 p-4 opacity-75">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3"><span className="text-xl">{getRoomIcon(task.room)}</span><div><h4 className="font-medium text-slate-900">{task.title}</h4><div className="text-sm text-slate-600">Due {format(parseISO(task.next_due_date), 'MMM d')}</div></div></div>
-                  <button onClick={() => onSelectTask && onSelectTask(task)} className="p-2 text-slate-400 hover:text-purple-600 transition-colors" aria-label={`Open ${task.title}`}><SafeIcon icon={FiChevronRight} className="w-5 h-5" /></button>
+                  <button onClick={() => onSelectTask && onSelectTask(task)} className="p-2 text-slate-400 hover:text-purple-600 transition-colors" aria-label={`Open ${task.title}`}><SafeIcon icon={FiChevronRight} className="w-5 h-5" aria-hidden="true" /></button>
                 </div>
               </motion.div>
             ))}
@@ -224,7 +224,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
 
       {tasks.length === 0 && (
         <div className="bg-white rounded-lg border border-slate-200 p-12 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><SafeIcon icon={FiCheck} className="w-8 h-8 text-green-600" /></div>
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><SafeIcon icon={FiCheck} className="w-8 h-8 text-green-600" aria-hidden="true" /></div>
           <h3 className="text-lg font-medium text-slate-900 mb-2">All caught up!</h3>
           <p className="text-slate-600">No chores due right now. Great job keeping your space tidy! ✨</p>
         </div>
