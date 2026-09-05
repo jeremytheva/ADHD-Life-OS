@@ -11,6 +11,7 @@ const SubtaskList = ({
   subtasks,
   onCompleteSubtask,
   showInput,
+  onShowInput,
   onHideInput
 }) => {
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('')
@@ -159,8 +160,7 @@ const SubtaskList = ({
         <button
           type="button"
           onClick={() => {
-            if (onHideInput) onHideInput()
-            // This will trigger parent to show input
+            if (onShowInput) onShowInput()
           }}
           className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-purple-300 hover:text-purple-600 transition-colors flex items-center justify-center gap-2"
         >
