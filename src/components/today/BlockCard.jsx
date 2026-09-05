@@ -52,7 +52,7 @@ const BlockCard = ({ block, onComplete, pending = false }) => {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <SafeIcon icon={getBlockIcon()} className="w-5 h-5 text-slate-600" />
+          <SafeIcon icon={getBlockIcon()} className="w-5 h-5 text-slate-600" aria-hidden="true" />
           <div>
             <h3 className="font-medium text-slate-900">{block.label}</h3>
             <p className="text-sm text-slate-600">{startTime} - {endTime}</p>
@@ -67,7 +67,7 @@ const BlockCard = ({ block, onComplete, pending = false }) => {
             aria-label={`Complete ${block.label}`}
             className="p-2 text-slate-600 hover:text-green-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <SafeIcon icon={FiCheck} className="w-5 h-5" />
+            <SafeIcon icon={FiCheck} className="w-5 h-5" aria-hidden="true" />
           </button>
         )}
       </div>
