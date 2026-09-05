@@ -6,15 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete PR #228, which removes decorative Settings-page icons from the accessibility tree without changing settings behaviour.
+  objective: Re-enter from fresh main after PR #228 merges and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
-  pr: 228
-  branch: fix/settings-decorative-icon-semantics
+  pr: null
+  branch: null
 next_actions:
-  - Obtain canonical Application validation for the exact PR #228 head.
-  - Audit submitted reviews and inline review threads; repair any in-scope finding on the same PR.
-  - When exact-head evidence is clean, prepare the post-merge fresh-main STATUS handoff, revalidate that final head, and signal lifecycle:implementation-complete.
-  - After merge, re-enter from fresh main and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Complete final exact-head canonical validation and review/thread audit for PR #228 after this durable handoff commit.
+  - Allow repository lifecycle automation to advance PR #228 through Ready, Mergeable, and Merged when exact-head evidence is clean.
+  - Re-enter from fresh main after merge and reconcile repository and GitHub state before selecting new implementation work.
+  - Continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -30,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #228 implementation and regression coverage are committed; canonical exact-head validation is pending after this durable STATUS synchronization commit.
-last_verified_commit: 36fcdfe03d801cbb912ee84ba5a40b920ea23e35
-last_updated: 2026-09-05T09:13:00+10:00
+validation_basis: PR #228 implementation/status head 40bf06402a69ed007b2225ab4a1a2051c846de0b passed canonical Application validation run 525 with no submitted reviews or inline review threads. This post-merge handoff commit creates a new exact head that must be revalidated before implementation-complete is signalled.
+last_verified_commit: 40bf06402a69ed007b2225ab4a1a2051c846de0b
+last_updated: 2026-09-05T10:10:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,16 +44,16 @@ last_updated: 2026-09-05T09:13:00+10:00
 
 ## Current objective
 
-PR #228 is the sole active delivery thread. It keeps the existing Settings UI and behaviour intact while explicitly excluding the decorative Mode Preferences, Accessibility, and Configure icons from the accessibility tree. Adjacent visible text continues to provide the section/action meaning. Deterministic regression coverage is in `test/settings-decorative-icon-semantics.test.mjs`.
+PR #228 has completed its scoped implementation and its implementation/status head passed canonical validation with a clean review/thread audit. This file is now deliberately prepared as the durable checkpoint that should remain true after PR #228 merges: re-enter from fresh `main`, reconcile live repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
 
-This work is provider-independent and frontend-only. Preferences persistence, mode logic, accessibility preference logic, schemas, authorization, provider mappings, recommendation/execution policy, destructive behaviour, and external integrations are unchanged.
+The PR #228 change is frontend-only. It excludes the decorative Mode Preferences, Accessibility, and Configure icons from the accessibility tree while preserving adjacent visible text as the meaningful section/action content. Preferences persistence, mode logic, accessibility preference logic, schemas, authorization, provider mappings, recommendation/execution policy, destructive behaviour, and external integrations remain unchanged.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #228 requires canonical exact-head validation and clean review/thread evidence |
-| Gate state | Validation pending after durable STATUS synchronization |
+| Current gate | INTEGRATION — final exact-head validation is required after this durable handoff commit |
+| Gate state | Revalidation required because the handoff commit changed the PR head |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -63,11 +63,12 @@ This work is provider-independent and frontend-only. Preferences persistence, mo
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #227 — ModeAwareLayout mode-banner icon accessibility semantics; merged at `36fcdfe03d801cbb912ee84ba5a40b920ea23e35` |
-| Active delivery | PR #228 — Settings decorative icon semantics |
+| Delivery awaiting lifecycle completion | PR #228 — Settings decorative icon semantics |
 | Implemented change | Decorative Settings section/action icons use `aria-hidden="true"`; visible text retains semantic meaning |
 | Deterministic coverage | `test/settings-decorative-icon-semantics.test.mjs` |
-| Exact-head validation | Pending after this STATUS commit |
-| Review evidence | Pending exact-head audit |
+| Implementation/status-head validation | PASS — Application validation run 525 at `40bf06402a69ed007b2225ab4a1a2051c846de0b` |
+| Review evidence at implementation/status head | CLEAN — no submitted reviews and no inline review threads |
+| Final exact-head validation | Required after this STATUS handoff commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -75,10 +76,10 @@ This work is provider-independent and frontend-only. Preferences persistence, mo
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #228 is the sole active provider-independent accessibility delivery. |
-| What is already happening? | Settings decorative icon semantics and deterministic regression coverage are implemented. |
-| What has been validated? | Fresh `main` through PR #227 is integrated; PR #228 exact-head canonical validation is pending. |
-| What is next? | Validate PR #228, audit review/thread state, repair findings if any, prepare a fresh-main handoff, then allow lifecycle automation to merge. |
+| Where am I? | Stage 3; PR #228 is finishing repository lifecycle, with the durable post-merge handoff already prepared. |
+| What is already happening? | Settings decorative-icon semantics are implemented and validated on the prior exact head; the final handoff head requires canonical revalidation. |
+| What has been validated? | PR #228 implementation/status head `40bf06402a69ed007b2225ab4a1a2051c846de0b` passed Application validation run 525 and had a clean review/thread audit. |
+| What is next? | Revalidate the final exact head, re-audit review/thread state, signal implementation-complete when clean, allow lifecycle automation to merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -88,9 +89,9 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. obtain canonical Application validation for the exact PR #228 head;
-2. audit submitted reviews and inline review threads and repair any in-scope finding on PR #228;
-3. when clean, update this file to the post-merge fresh-main handoff, revalidate the resulting final exact head, and signal `lifecycle:implementation-complete`;
+1. obtain canonical Application validation for the final exact PR #228 head created by this handoff commit;
+2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #228;
+3. when clean, synchronize the PR implementation contract and signal `lifecycle:implementation-complete`;
 4. allow repository lifecycle automation to complete Ready/Mergeable/Merged transitions;
 5. after merge, re-enter from fresh `main`, reconcile GitHub state, and select the next evidence-backed provider-independent accessibility or interaction-integrity slice;
 6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
