@@ -11,10 +11,9 @@ current_work:
   pr: 244
   branch: fix/chore-detail-icon-semantics
 next_actions:
-  - Run canonical Application validation for the exact PR #244 implementation/status head.
-  - Audit submitted reviews and inline review threads for that exact validated head; repair any in-scope finding on PR #244.
-  - Commit the durable post-merge fresh-main handoff after implementation-head evidence is clean.
-  - Re-run exact-final-head validation and review/thread audits, then synchronize the PR contract and signal lifecycle:implementation-complete only when all evidence is clean.
+  - Run canonical Application validation for the exact final PR #244 head containing this durable post-merge handoff.
+  - Re-audit submitted reviews and inline review threads for that exact final validated head; repair any in-scope finding on PR #244.
+  - Synchronize the PR contract and signal lifecycle:implementation-complete only when final exact-head evidence is clean.
   - Allow repository lifecycle automation to advance PR #244 through Ready, Mergeable, and Merged.
   - Re-enter from fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
@@ -25,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: PENDING
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: Application validation run 577 failed before the implementation checks because STATUS.md used non-canonical PENDING values for governance, lint, typecheck, tests, and build. Those fields now use the governance-contract NOT_RUN state; exact-head canonical validation must be repeated.
-last_verified_commit: 8ed0dc40d908857d8e2aa1e593a9c563d15ff266
-last_updated: 2026-09-06T04:19:45+10:00
+validation_basis: Application validation run 578 passed on implementation/status head 16e0dec35018f690a7486e17b47992a6f2aeccb7, with no submitted reviews or inline review threads. This durable handoff commit changes the PR head, so one final exact-head canonical validation and review/thread audit are required before implementation-complete signalling.
+last_verified_commit: 16e0dec35018f690a7486e17b47992a6f2aeccb7
+last_updated: 2026-09-06T05:15:15+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -54,8 +53,8 @@ The room emoji remains exposed because the Chore Detail title area does not othe
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head canonical validation and review/thread evidence required for PR #244 |
-| Gate state | Implementation and deterministic coverage committed; run 577 exposed and repaired an invalid STATUS.md validation-state value; canonical evidence must be repeated |
+| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #244 |
+| Gate state | Implementation/status head passed run 578 and review/thread audit; durable post-merge handoff is committed and requires final-head evidence |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -69,9 +68,9 @@ The room emoji remains exposed because the Chore Detail title area does not othe
 | Active branch | `fix/chore-detail-icon-semantics` |
 | Implemented change | Redundant Chore Detail glyphs are hidden where explicit text, accessible names, pressed state, or live completion feedback are authoritative |
 | Deterministic coverage | `test/chore-detail-icon-semantics.test.mjs` |
-| Validation evidence | Run 577 FAIL due solely to invalid STATUS.md front-matter state values; repair committed and exact-head rerun required |
-| Review evidence | No submitted reviews or inline threads at the run-577 head; re-audit after successful exact-head validation |
-| Durable handoff | After implementation-head evidence is clean, commit a fresh-`main` post-merge handoff before final-head validation |
+| Validation evidence | Application validation run 578 PASS on implementation/status head `16e0dec35018f690a7486e17b47992a6f2aeccb7`; final durable-handoff head must be revalidated |
+| Review evidence | No submitted reviews or inline review threads on the successful run-578 head; re-audit after final exact-head validation |
+| Durable handoff | Fresh `main` is the required post-merge re-entry point; after merge reconcile GitHub state and continue the next evidence-backed provider-independent Stage 3 accessibility/interaction-integrity slice |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -80,9 +79,9 @@ The room emoji remains exposed because the Chore Detail title area does not othe
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; PR #244 is the sole active delivery thread. |
-| What is already happening? | Chore Detail decorative icon semantics and deterministic regression coverage are implemented; the first canonical run exposed a STATUS.md governance-value defect that has been repaired. |
-| What has been validated? | Run 577 reached canonical platform validation and failed on the invalid STATUS.md state values before implementation checks; no product-code failure was established. |
-| What is next? | Re-run canonical validation on the repaired exact head, audit reviews/threads, then commit the durable post-merge handoff and repeat exact-final-head evidence before lifecycle completion. |
+| What is already happening? | Chore Detail decorative icon semantics and deterministic regression coverage are implemented; implementation/status head run 578 passed and the durable post-merge handoff is now committed. |
+| What has been validated? | Application validation run 578 passed on exact head `16e0dec35018f690a7486e17b47992a6f2aeccb7`; submitted reviews and inline threads were empty on that head. |
+| What is next? | Validate the final handoff head, re-audit reviews/threads, signal implementation complete, allow lifecycle automation to merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -92,14 +91,12 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. re-run canonical `npm run platform:validate` through the repository Application validation workflow for the exact repaired PR #244 implementation/status head;
-2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #244;
-3. commit the durable post-merge fresh-`main` handoff once implementation-head evidence is clean;
-4. re-run exact-final-head canonical validation and review/thread audits;
-5. synchronize the PR acceptance checklist and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
-6. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
-7. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
-8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #244 durable-handoff head;
+2. re-audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #244;
+3. synchronize the PR acceptance checklist and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
+4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
