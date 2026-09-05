@@ -78,7 +78,7 @@ const RoutineStats = ({ routine, onClose }) => {
             aria-label="Close routine statistics"
             className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
           >
-            <SafeIcon icon={FiX} className="w-6 h-6" />
+            <SafeIcon icon={FiX} className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
 
@@ -140,7 +140,7 @@ const RoutineStats = ({ routine, onClose }) => {
               <dl className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
                   <dt className="flex items-center gap-2 mb-2 text-xs text-purple-700 font-medium">
-                    <SafeIcon icon={FiTrendingUp} className="w-4 h-4 text-purple-600" />
+                    <SafeIcon icon={FiTrendingUp} className="w-4 h-4 text-purple-600" aria-hidden="true" />
                     Total Completions
                   </dt>
                   <dd className="text-3xl font-bold text-purple-900">
@@ -150,7 +150,7 @@ const RoutineStats = ({ routine, onClose }) => {
 
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
                   <dt className="flex items-center gap-2 mb-2 text-xs text-green-700 font-medium">
-                    <SafeIcon icon={FiActivity} className="w-4 h-4 text-green-600" />
+                    <SafeIcon icon={FiActivity} className="w-4 h-4 text-green-600" aria-hidden="true" />
                     Completion Rate
                   </dt>
                   <dd className="text-3xl font-bold text-green-900">
@@ -160,7 +160,7 @@ const RoutineStats = ({ routine, onClose }) => {
 
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
                   <dt className="flex items-center gap-2 mb-2 text-xs text-blue-700 font-medium">
-                    <SafeIcon icon={FiClock} className="w-4 h-4 text-blue-600" />
+                    <SafeIcon icon={FiClock} className="w-4 h-4 text-blue-600" aria-hidden="true" />
                     Avg. Time
                   </dt>
                   <dd className="text-3xl font-bold text-blue-900">
@@ -170,7 +170,7 @@ const RoutineStats = ({ routine, onClose }) => {
 
                 <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
                   <dt className="flex items-center gap-2 mb-2 text-xs text-orange-700 font-medium">
-                    <SafeIcon icon={FiAward} className="w-4 h-4 text-orange-600" />
+                    <SafeIcon icon={FiAward} className="w-4 h-4 text-orange-600" aria-hidden="true" />
                     Current Streak
                   </dt>
                   <dd className="text-3xl font-bold text-orange-900">
@@ -186,7 +186,7 @@ const RoutineStats = ({ routine, onClose }) => {
                     id={recentHistoryHeadingId}
                     className="text-lg font-medium text-slate-900 mb-4 flex items-center gap-2"
                   >
-                    <SafeIcon icon={FiCalendar} className="w-5 h-5" />
+                    <SafeIcon icon={FiCalendar} className="w-5 h-5" aria-hidden="true" />
                     Recent Completions
                   </h3>
                   <div
@@ -275,7 +275,7 @@ const RoutineStats = ({ routine, onClose }) => {
             </div>
           ) : (
             <div className="text-center py-12">
-              <SafeIcon icon={FiCalendar} className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+              <SafeIcon icon={FiCalendar} className="w-12 h-12 text-slate-300 mx-auto mb-4" aria-hidden="true" />
               <p className="text-slate-600 mb-2">No data available yet</p>
               <p className="text-sm text-slate-500">
                 Complete this routine to start tracking your progress
