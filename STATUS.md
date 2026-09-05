@@ -6,18 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #238 Project Detail accessibility semantics, then re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Finish PR #238 lifecycle, then re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
-  pr: 238
-  branch: fix/project-detail-icon-semantics
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation for the exact current PR #238 head.
-  - Audit submitted reviews and inline review threads for that exact validated head; repair any in-scope finding on PR #238.
-  - When implementation-head evidence is clean, commit the required durable post-merge fresh-main handoff.
-  - Re-run canonical Application validation and review/thread audit for the exact final head.
-  - Synchronize the PR implementation contract and signal lifecycle:implementation-complete only after final exact-head evidence is clean.
+  - Run canonical Application validation for the exact final PR #238 head after this durable post-merge handoff commit.
+  - Audit submitted reviews and inline review threads for that exact final head; repair any in-scope finding on PR #238.
+  - If final exact-head evidence is clean, synchronize the PR implementation contract and signal lifecycle:implementation-complete.
   - Allow repository lifecycle automation to advance PR #238 through Ready, Mergeable, and Merged.
-  - Re-enter from fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Re-enter from fresh main after merge, reconcile GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -33,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #238 changes Project Detail assistive-technology semantics and deterministic regression coverage only. No exact-head canonical validation has run after this durable active-state commit.
-last_verified_commit: 634f646827a1ad0f5c9fe29f52eb4625cd2329c2
-last_updated: 2026-09-05T22:29:00+10:00
+validation_basis: PR #238 implementation/status head 9668a259d1d4d32d6622512085fab0c4a63d9130 passed canonical Application validation run 559 and had a clean submitted-review/inline-thread audit. This durable handoff commit invalidates that exact-head evidence and requires fresh canonical validation before lifecycle completion.
+last_verified_commit: 9668a259d1d4d32d6622512085fab0c4a63d9130
+last_updated: 2026-09-05T22:34:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -47,18 +45,20 @@ last_updated: 2026-09-05T22:29:00+10:00
 
 ## Current objective
 
-PR #237 merged successfully into `main` at `634f646827a1ad0f5c9fe29f52eb4625cd2329c2`. Fresh-main reconciliation found no competing open delivery thread, so the next dependency-correct provider-independent Stage 3 slice is PR #238: Project Detail accessibility semantics.
+PR #238 has completed its implementation-head evidence gate. Canonical Application validation run 559 passed on `9668a259d1d4d32d6622512085fab0c4a63d9130`, and the submitted-review and inline-thread audit was clean on that head.
+
+This `STATUS.md` update is the required durable post-merge handoff. After PR #238 merges, fresh `main` is the authoritative re-entry point for the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice; PR #238 must not remain the default active target in durable state after it closes.
 
 PR #238 hides redundant Project Detail identity, control, metadata, action, task-state and empty-state glyphs from assistive technology where explicit control names, headings, grouping or visible text already carries the meaning. Deterministic regression coverage is in `test/project-detail-icon-semantics.test.mjs`.
 
-Project behaviour, dialog/focus handling, task mutation, persistence, schemas, authorization, provider mappings, recommendation/execution policy, destructive semantics, external integrations, and persisted data are unchanged. NoCodeBackend-dependent execution persistence therefore remains deferred.
+Project behaviour, dialog/focus handling, task mutation, persistence, schemas, authorization, provider mappings, recommendation/execution policy, destructive semantics, external integrations, and persisted data are unchanged. NoCodeBackend-dependent execution persistence remains deferred.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head canonical validation and review/thread evidence required for PR #238 |
-| Gate state | Implementation and deterministic coverage committed; exact-head evidence pending |
+| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #238 |
+| Gate state | Implementation-head evidence passed; durable post-merge handoff committed; final-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -68,12 +68,13 @@ Project behaviour, dialog/focus handling, task mutation, persistence, schemas, a
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #237 — hide decorative Project Card icons from assistive technology; merged at `634f646827a1ad0f5c9fe29f52eb4625cd2329c2` |
-| Active delivery | PR #238 — hide decorative Project Detail icons from assistive technology |
-| Active branch | `fix/project-detail-icon-semantics` |
+| Delivery completing | PR #238 — hide decorative Project Detail icons from assistive technology |
+| Post-merge handoff | Fresh `main`; reconcile live GitHub state before choosing the next slice |
 | Implemented change | Redundant Project Detail identity/control/metadata/action/state glyphs are decorative while explicit text and names remain authoritative |
 | Deterministic coverage | `test/project-detail-icon-semantics.test.mjs` |
-| Canonical evidence | PENDING for exact current head |
-| Review evidence | PENDING until exact-head validation is established |
+| Prior-head canonical evidence | PASS — Application validation run 559 on `9668a259d1d4d32d6622512085fab0c4a63d9130` |
+| Prior-head review evidence | CLEAN — no submitted reviews or inline review threads |
+| Final-head canonical evidence | PENDING after this handoff commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -81,10 +82,10 @@ Project behaviour, dialog/focus handling, task mutation, persistence, schemas, a
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #238 is the sole active delivery thread and is at exact-head validation. |
+| Where am I? | Stage 3; PR #238 is completing lifecycle, with fresh `main` designated as the post-merge re-entry point. |
 | What is already happening? | Redundant Project Detail glyphs are hidden from assistive technology and deterministic regression coverage is committed. |
-| What has been validated? | Fresh `main` through merged PR #237 is the last verified repository baseline; PR #238 exact-head validation is pending after this status commit. |
-| What is next? | Validate/audit PR #238, repair any in-scope failure, commit the required post-merge fresh-main handoff, revalidate the final head, signal implementation-complete if clean, and allow lifecycle automation to merge. |
+| What has been validated? | Application validation run 559 passed and the review/thread audit was clean on prior head `9668a259d1d4d32d6622512085fab0c4a63d9130`; this handoff commit requires fresh exact-head evidence. |
+| What is next? | Validate and audit the exact final PR #238 head, synchronize its contract, signal implementation-complete if clean, allow lifecycle automation to merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -94,14 +95,12 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact current PR #238 head;
-2. audit submitted reviews and inline review threads for that exact validated head and repair any in-scope finding on PR #238;
-3. when implementation-head evidence is clean, update this file to the required post-merge fresh-`main` handoff;
-4. re-run canonical validation and review/thread audit for the exact final PR head;
-5. synchronize the PR implementation contract and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
-6. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
-7. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
-8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #238 head;
+2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #238;
+3. synchronize the PR implementation contract and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
+4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
