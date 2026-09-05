@@ -101,7 +101,7 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
               aria-haspopup="menu"
               className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
             >
-              <SafeIcon icon={FiMoreVertical} className="w-5 h-5" />
+              <SafeIcon icon={FiMoreVertical} className="w-5 h-5" aria-hidden="true" />
             </button>
 
             {showMenu && (
@@ -135,7 +135,7 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
                       }}
                       className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${action.className}`}
                     >
-                      <SafeIcon icon={action.icon} className="w-4 h-4" />
+                      <SafeIcon icon={action.icon} className="w-4 h-4" aria-hidden="true" />
                       {action.label}
                     </button>
                   ))}
@@ -197,7 +197,7 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
         className="w-full p-3 border-t border-slate-200 hover:bg-white hover:bg-opacity-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium text-slate-700"
       >
         <span>View Details</span>
-        <SafeIcon icon={FiChevronRight} className="w-4 h-4" />
+        <SafeIcon icon={FiChevronRight} className="w-4 h-4" aria-hidden="true" />
       </button>
     </motion.div>
   )
