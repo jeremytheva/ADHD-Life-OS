@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #242 TemplateCard accessibility semantics, validate the exact head, then hand off to fresh main.
+  objective: Finish PR #242 lifecycle, then re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
-  pr: 242
-  branch: fix/template-card-icon-semantics
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation for the exact PR #242 implementation/status head.
-  - Audit submitted reviews and inline review threads for that exact validated head and repair any in-scope finding.
-  - Commit the durable post-merge fresh-main handoff after implementation-head evidence is clean.
-  - Revalidate the exact final head, synchronize the PR contract, and signal lifecycle:implementation-complete only when evidence is clean.
-  - Allow repository lifecycle automation to advance and merge PR #242, then re-enter from fresh main.
+  - Run canonical Application validation for the exact final PR #242 head after this durable post-merge handoff commit.
+  - Audit submitted reviews and inline review threads for that exact final head; repair any in-scope finding on PR #242.
+  - If final exact-head evidence is clean, synchronize the PR implementation contract and signal lifecycle:implementation-complete.
+  - Allow repository lifecycle automation to advance PR #242 through Ready, Mergeable, and Merged.
+  - Re-enter from fresh main after merge, reconcile GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #242 is a provider-independent frontend semantic change based on fresh main after PR #241 merged. Exact-head canonical validation is required for this STATUS commit before lifecycle advancement.
-last_verified_commit: eebe44bbacd32693913b41997c56cb9e55d14024
-last_updated: 2026-09-06T00:20:00+10:00
+validation_basis: PR #242 implementation/status head 2bb3be4975220fe6bc94a9be587c6bb993604d66 passed canonical Application validation run 571 and had a clean submitted-review/inline-thread audit. This durable handoff commit invalidates that exact-head evidence and requires fresh canonical validation before lifecycle completion.
+last_verified_commit: 2bb3be4975220fe6bc94a9be587c6bb993604d66
+last_updated: 2026-09-06T01:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,9 +45,11 @@ last_updated: 2026-09-06T00:20:00+10:00
 
 ## Current objective
 
-PR #241 completed its repository-managed lifecycle and merged into `main` at `167d48284a4d8852a37b0ec9ba31183bbb6a584b`. Fresh-main reconciliation found no competing open delivery thread.
+PR #242 has completed its implementation-head evidence gate. Canonical Application validation run 571 passed on `2bb3be4975220fe6bc94a9be587c6bb993604d66`, and the submitted-review and inline-thread audit was clean on that head.
 
-PR #242 is now the sole active Stage 3 implementation thread. It hides redundant TemplateCard glyphs from assistive technology where explicit control names, visible status/duration text, or the Template Library's Routine Templates / Task Templates section headings already carry the meaning. Deterministic regression coverage is in `test/template-card-icon-semantics.test.mjs`.
+This `STATUS.md` update is the required durable post-merge handoff. After PR #242 merges, fresh `main` is the authoritative re-entry point for the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice; PR #242 must not remain the default active target in durable state after it closes.
+
+PR #242 hides redundant TemplateCard glyphs from assistive technology where explicit control names, visible status/duration text, or the Template Library's Routine Templates / Task Templates section headings already carry the meaning. Deterministic regression coverage is in `test/template-card-icon-semantics.test.mjs`.
 
 Template filtering, apply/edit/preview behaviour, apply-menu keyboard and focus behaviour, persistence, schemas, authorization, provider mappings, execution/recommendation policy, destructive semantics, external integrations, and persisted data are unchanged. NoCodeBackend-dependent execution persistence remains deferred.
 
@@ -55,8 +57,8 @@ Template filtering, apply/edit/preview behaviour, apply-menu keyboard and focus 
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head canonical validation and review/thread evidence required for PR #242 |
-| Gate state | Implementation and deterministic coverage committed; durable active-thread status synchronized; validation pending |
+| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #242 |
+| Gate state | Implementation-head evidence passed; durable post-merge handoff committed; final-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -66,12 +68,13 @@ Template filtering, apply/edit/preview behaviour, apply-menu keyboard and focus 
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #241 — Routine Statistics decorative icon semantics; merged at `167d48284a4d8852a37b0ec9ba31183bbb6a584b` |
-| Active delivery | PR #242 — hide decorative TemplateCard icons from assistive technology |
-| Active branch | `fix/template-card-icon-semantics` |
+| Delivery completing | PR #242 — hide decorative TemplateCard icons from assistive technology |
+| Post-merge handoff | Fresh `main`; reconcile live GitHub state before choosing the next slice |
 | Implemented change | TemplateCard apply/status/duration/preview/type glyphs are decorative where authoritative text or context carries the meaning |
 | Deterministic coverage | `test/template-card-icon-semantics.test.mjs` |
-| Canonical evidence | PENDING on the exact implementation/status head |
-| Review evidence | PENDING after canonical exact-head PASS |
+| Prior-head canonical evidence | PASS — Application validation run 571 on `2bb3be4975220fe6bc94a9be587c6bb993604d66` |
+| Prior-head review evidence | CLEAN — no submitted reviews or inline review threads |
+| Final-head canonical evidence | PENDING after this handoff commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -79,10 +82,10 @@ Template filtering, apply/edit/preview behaviour, apply-menu keyboard and focus 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #242 is the sole active provider-independent accessibility delivery thread. |
-| What is already happening? | TemplateCard redundant glyph semantics and deterministic regression coverage are implemented. |
-| What has been validated? | PR #241 final-head evidence passed before merge; PR #242 exact implementation/status head still requires canonical validation. |
-| What is next? | Validate PR #242 exactly, audit review/thread state, repair findings if any, then commit/revalidate the fresh-main handoff before lifecycle completion. |
+| Where am I? | Stage 3; PR #242 is completing lifecycle, with fresh `main` designated as the post-merge re-entry point. |
+| What is already happening? | Redundant TemplateCard glyphs are hidden from assistive technology while authoritative names, text, duration/status labels, section context, and apply-menu keyboard/focus behaviour are preserved. |
+| What has been validated? | Application validation run 571 passed and the review/thread audit was clean on prior head `2bb3be4975220fe6bc94a9be587c6bb993604d66`; this handoff commit requires fresh exact-head evidence. |
+| What is next? | Validate and audit the exact final PR #242 head, synchronize its contract, signal implementation-complete if clean, allow lifecycle automation to merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -92,13 +95,12 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact PR #242 implementation/status head;
-2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding;
-3. after clean implementation-head evidence, commit the durable post-merge fresh-`main` handoff;
-4. re-run canonical validation for that exact final head and repeat the review/thread audit;
-5. synchronize the PR implementation contract and signal `lifecycle:implementation-complete` only when final exact-head evidence is clean;
-6. allow the lifecycle controller/finalizer to merge, then re-enter from fresh `main` for the next evidence-backed provider-independent slice;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #242 head;
+2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #242;
+3. synchronize the PR implementation contract and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
+4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
