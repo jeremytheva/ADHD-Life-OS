@@ -171,7 +171,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
         <div className={`bg-gradient-to-r ${colorClasses[project.color]} p-6 text-white`}>
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3 flex-1">
-              <span className="text-4xl">{project.icon}</span>
+              <span className="text-4xl" aria-hidden="true">{project.icon}</span>
               <div className="flex-1">
                 <h2 id="project-detail-title" className="text-2xl font-bold mb-2">{project.title}</h2>
                 {project.description && (
@@ -185,7 +185,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
               aria-label="Close project details"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
             >
-              <SafeIcon icon={FiX} className="w-6 h-6" />
+              <SafeIcon icon={FiX} className="w-6 h-6" aria-hidden="true" />
             </button>
           </div>
 
@@ -238,7 +238,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
             {stats.estimated_time_remaining > 0 && (
               <div className="mt-3 pt-3 border-t border-slate-200 text-center">
                 <div className="flex items-center justify-center gap-2 text-sm text-slate-600">
-                  <SafeIcon icon={FiClock} className="w-4 h-4" />
+                  <SafeIcon icon={FiClock} className="w-4 h-4" aria-hidden="true" />
                   <span>~{Math.round(stats.estimated_time_remaining / 60)} hours remaining</span>
                 </div>
               </div>
@@ -265,7 +265,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
           {project.goal && (
             <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
-                <SafeIcon icon={FiTarget} className="w-5 h-5 text-blue-600" />
+                <SafeIcon icon={FiTarget} className="w-5 h-5 text-blue-600" aria-hidden="true" />
                 <h3 className="font-medium text-blue-900">Project Goal</h3>
               </div>
               <p className="text-blue-800">{project.goal}</p>
@@ -275,7 +275,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
           {project.target_date && (
             <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
               <div className="flex items-center gap-2">
-                <SafeIcon icon={FiCalendar} className="w-5 h-5 text-purple-600" />
+                <SafeIcon icon={FiCalendar} className="w-5 h-5 text-purple-600" aria-hidden="true" />
                 <span className="font-medium text-purple-900">Target Date:</span>
                 <span className="text-purple-800">{new Date(project.target_date).toLocaleDateString()}</span>
               </div>
@@ -291,7 +291,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
               }}
               className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
             >
-              <SafeIcon icon={FiPlus} className="w-5 h-5" />
+              <SafeIcon icon={FiPlus} className="w-5 h-5" aria-hidden="true" />
               Add Task
             </button>
           </div>
@@ -299,7 +299,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
           {pendingTasks.length > 0 && (
             <div className="mb-6">
               <h3 id="project-pending-tasks-heading" className="text-lg font-medium text-slate-900 mb-3 flex items-center gap-2">
-                <SafeIcon icon={FiAlertCircle} className="w-5 h-5 text-blue-600" />
+                <SafeIcon icon={FiAlertCircle} className="w-5 h-5 text-blue-600" aria-hidden="true" />
                 To Do ({pendingTasks.length})
               </h3>
               <div role="list" aria-labelledby="project-pending-tasks-heading" className="space-y-3">
@@ -322,7 +322,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
           {completedTasks.length > 0 && (
             <div>
               <h3 id="project-completed-tasks-heading" className="text-lg font-medium text-slate-900 mb-3 flex items-center gap-2">
-                <SafeIcon icon={FiCheckCircle} className="w-5 h-5 text-green-600" />
+                <SafeIcon icon={FiCheckCircle} className="w-5 h-5 text-green-600" aria-hidden="true" />
                 Completed ({completedTasks.length})
               </h3>
               <div role="list" aria-labelledby="project-completed-tasks-heading" className="space-y-2">
@@ -336,6 +336,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
                       <SafeIcon
                         icon={FiCheckCircle}
                         className="w-5 h-5 text-green-600 flex-shrink-0"
+                        aria-hidden="true"
                       />
                       <span className="text-slate-700 line-through">{task.title}</span>
                     </div>
@@ -348,7 +349,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
           {pendingTasks.length === 0 && completedTasks.length === 0 && !detailLoadError && (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <SafeIcon icon={FiPlus} className="w-8 h-8 text-blue-600" />
+                <SafeIcon icon={FiPlus} className="w-8 h-8 text-blue-600" aria-hidden="true" />
               </div>
               <h3 className="text-lg font-medium text-slate-900 mb-2">No tasks yet</h3>
               <p className="text-slate-600 mb-4">Break this project down into smaller, manageable tasks</p>
