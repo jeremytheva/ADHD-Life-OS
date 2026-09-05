@@ -3,10 +3,10 @@ import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 
-const { 
-  FiZap, 
-  FiClock, 
-  FiMapPin, 
+const {
+  FiZap,
+  FiClock,
+  FiMapPin,
   FiPackage,
   FiHeart,
   FiAlertTriangle,
@@ -32,16 +32,24 @@ const TaskMetadataForm = ({ metadata = {}, onChange }) => {
       <div className="space-y-4">
         {/* Energy Required */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
-            <SafeIcon icon={FiZap} className="w-4 h-4 inline mr-1" />
+          <div
+            id="task-energy-required-label"
+            className="block text-sm font-medium text-slate-700 mb-2"
+          >
+            <SafeIcon icon={FiZap} className="w-4 h-4 inline mr-1" aria-hidden="true" />
             Energy Required
-          </label>
-          <div className="flex gap-2">
+          </div>
+          <div
+            className="flex gap-2"
+            role="group"
+            aria-labelledby="task-energy-required-label"
+          >
             {['low', 'medium', 'high'].map(level => (
               <button
                 key={level}
                 type="button"
                 onClick={() => handleChange('energy_required', level)}
+                aria-pressed={metadata.energy_required === level}
                 className={`
                   flex-1 px-3 py-2 rounded-lg text-sm transition-colors
                   ${metadata.energy_required === level
@@ -63,11 +71,15 @@ const TaskMetadataForm = ({ metadata = {}, onChange }) => {
 
         {/* Time Required */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
-            <SafeIcon icon={FiClock} className="w-4 h-4 inline mr-1" />
+          <label
+            htmlFor="task-time-required"
+            className="block text-sm font-medium text-slate-700 mb-2"
+          >
+            <SafeIcon icon={FiClock} className="w-4 h-4 inline mr-1" aria-hidden="true" />
             Time Required (minutes)
           </label>
           <input
+            id="task-time-required"
             type="number"
             value={metadata.time_required || ''}
             onChange={(e) => handleChange('time_required', parseInt(e.target.value) || null)}
@@ -80,16 +92,25 @@ const TaskMetadataForm = ({ metadata = {}, onChange }) => {
 
         {/* Interest Level */}
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
-            <SafeIcon icon={FiHeart} className="w-4 h-4 inline mr-1" />
+          <div
+            id="task-interest-level-label"
+            className="block text-sm font-medium text-slate-700 mb-2"
+          >
+            <SafeIcon icon={FiHeart} className="w-4 h-4 inline mr-1" aria-hidden="true" />
             Interest Level
-          </label>
-          <div className="flex gap-2">
+          </div>
+          <div
+            className="flex gap-2"
+            role="group"
+            aria-labelledby="task-interest-level-label"
+          >
             {[1, 2, 3, 4, 5].map(level => (
               <button
                 key={level}
                 type="button"
                 onClick={() => handleChange('interest_level', level)}
+                aria-label={`Interest level ${level} of 5`}
+                aria-pressed={metadata.interest_level === level}
                 className={`
                   flex-1 px-3 py-2 rounded-lg text-sm transition-colors
                   ${metadata.interest_level === level
@@ -112,20 +133,24 @@ const TaskMetadataForm = ({ metadata = {}, onChange }) => {
       <button
         type="button"
         onClick={() => setShowAdvanced(!showAdvanced)}
+        aria-expanded={showAdvanced}
+        aria-controls="task-metadata-advanced-options"
         className="w-full flex items-center justify-between px-4 py-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
       >
         <span className="text-sm font-medium text-slate-700">
           Advanced Options
         </span>
-        <SafeIcon 
-          icon={showAdvanced ? FiChevronUp : FiChevronDown} 
-          className="w-4 h-4 text-slate-600" 
+        <SafeIcon
+          icon={showAdvanced ? FiChevronUp : FiChevronDown}
+          className="w-4 h-4 text-slate-600"
+          aria-hidden="true"
         />
       </button>
 
       {/* Advanced Metadata */}
       {showAdvanced && (
         <motion.div
+          id="task-metadata-advanced-options"
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
@@ -133,16 +158,25 @@ const TaskMetadataForm = ({ metadata = {}, onChange }) => {
         >
           {/* Aversiveness */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              <SafeIcon icon={FiAlertTriangle} className="w-4 h-4 inline mr-1" />
+            <div
+              id="task-aversiveness-label"
+              className="block text-sm font-medium text-slate-700 mb-2"
+            >
+              <SafeIcon icon={FiAlertTriangle} className="w-4 h-4 inline mr-1" aria-hidden="true" />
               Aversiveness (How much you dread it)
-            </label>
-            <div className="flex gap-2">
+            </div>
+            <div
+              className="flex gap-2"
+              role="group"
+              aria-labelledby="task-aversiveness-label"
+            >
               {[1, 2, 3, 4, 5].map(level => (
                 <button
                   key={level}
                   type="button"
                   onClick={() => handleChange('aversiveness', level)}
+                  aria-label={`Aversiveness ${level} of 5`}
+                  aria-pressed={metadata.aversiveness === level}
                   className={`
                     flex-1 px-3 py-2 rounded-lg text-sm transition-colors
                     ${metadata.aversiveness === level
@@ -162,11 +196,15 @@ const TaskMetadataForm = ({ metadata = {}, onChange }) => {
 
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              <SafeIcon icon={FiMapPin} className="w-4 h-4 inline mr-1" />
+            <label
+              htmlFor="task-location"
+              className="block text-sm font-medium text-slate-700 mb-2"
+            >
+              <SafeIcon icon={FiMapPin} className="w-4 h-4 inline mr-1" aria-hidden="true" />
               Location
             </label>
             <input
+              id="task-location"
               type="text"
               value={metadata.location || ''}
               onChange={(e) => handleChange('location', e.target.value)}
@@ -180,11 +218,15 @@ const TaskMetadataForm = ({ metadata = {}, onChange }) => {
 
           {/* Available Items */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              <SafeIcon icon={FiPackage} className="w-4 h-4 inline mr-1" />
+            <label
+              htmlFor="task-required-items"
+              className="block text-sm font-medium text-slate-700 mb-2"
+            >
+              <SafeIcon icon={FiPackage} className="w-4 h-4 inline mr-1" aria-hidden="true" />
               Required Items
             </label>
             <input
+              id="task-required-items"
               type="text"
               value={metadata.available_items?.join(', ') || ''}
               onChange={(e) => handleArrayChange('available_items', e.target.value)}
