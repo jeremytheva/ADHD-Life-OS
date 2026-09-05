@@ -52,10 +52,14 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
         <div className="flex items-center space-x-2">
           <SafeIcon
             icon={routine.is_active ? FiToggleRight : FiToggleLeft}
+            aria-hidden="true"
             className={`w-6 h-6 ${
               routine.is_active ? 'text-green-600' : 'text-slate-400'
             }`}
           />
+          <span className="sr-only">
+            {routine.is_active ? 'Active routine' : 'Inactive routine'}
+          </span>
           <button
             onClick={onEdit}
             aria-label={`Edit routine: ${routine.name}`}
