@@ -176,6 +176,7 @@ const TaskItem = ({
             subtasks={task.subtasks || []}
             onCompleteSubtask={onCompleteSubtask}
             showInput={showSubtaskInput}
+            onShowInput={() => setShowSubtaskInput(true)}
             onHideInput={() => setShowSubtaskInput(false)}
           />
         )}
