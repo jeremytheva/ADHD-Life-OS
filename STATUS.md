@@ -11,12 +11,11 @@ current_work:
   pr: 250
   branch: fix/brain-inbox-control-icon-semantics
 next_actions:
-  - Run canonical Application validation for the exact PR #250 implementation/status head.
-  - Audit submitted reviews and inline review threads for that validated head; repair any in-scope finding on PR #250.
-  - Commit the durable fresh-main post-merge handoff after implementation-head evidence is clean.
-  - Run final exact-head validation, re-audit reviews/threads, synchronize the PR contract, and signal lifecycle:implementation-complete only when final evidence is clean.
+  - Run canonical Application validation for the exact final PR #250 head containing this durable post-merge handoff.
+  - Re-audit submitted reviews and inline review threads for that exact final validated head; repair any in-scope finding on PR #250.
+  - Synchronize the PR contract and signal lifecycle:implementation-complete only when final exact-head evidence is clean.
   - Allow repository lifecycle automation to advance PR #250 through Ready, Mergeable, and Merged.
-  - Re-enter from fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Re-enter from fresh main after merge, reconcile GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -25,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #249 final head fd8b9b4e772083a313c65cfcd44fc8ea0676a77f passed canonical Application validation run 596 and merged into main at 7ee07abd73679d7c03102fb6c2efc77ffed96e16. PR #250 implementation and deterministic regression coverage are now committed, but this exact implementation/status head requires fresh canonical validation before lifecycle advancement.
-last_verified_commit: fd8b9b4e772083a313c65cfcd44fc8ea0676a77f
-last_updated: 2026-09-06T13:32:00+10:00
+validation_basis: Application validation run 598 passed on exact implementation/status head 9988b5dda9fcdc57f8e94f7bb871bde24f9eb9d5, with no submitted reviews or inline review threads. This durable handoff commit changes the PR head, so one final exact-head canonical validation and review/thread audit are required before implementation-complete signalling.
+last_verified_commit: 9988b5dda9fcdc57f8e94f7bb871bde24f9eb9d5
+last_updated: 2026-09-06T13:36:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -52,14 +51,16 @@ The Capture Mode, Organize Mode, Add, Ready to organize, Task, Edit, Delete, and
 
 Deterministic regression coverage in `test/brain-inbox-control-icon-semantics.test.mjs` protects the intended control semantics. The source diff was reconciled against fresh `main` and contains only the nine intended `aria-hidden="true"` additions plus the new test.
 
+Canonical Application validation run 598 passed on exact implementation/status head `9988b5dda9fcdc57f8e94f7bb871bde24f9eb9d5`, and submitted reviews and inline review threads were empty on that head. This durable fresh-`main` post-merge handoff is now committed, so the new final head requires one final canonical validation and review/thread audit before implementation-complete signalling.
+
 Inbox loading, capture, editing, categorization, conversion, deletion, persistence, schemas, authorization, provider mappings, execution/recommendation policy, external integrations, and persisted data remain unchanged. NoCodeBackend-dependent execution persistence remains deferred.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical validation and review/thread evidence required for PR #250 |
-| Gate state | Bounded Brain Inbox control-semantic change and regression coverage implemented; exact-head validation pending |
+| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #250 |
+| Gate state | Implementation/status head passed run 598 and review/thread audit; durable post-merge handoff committed and requires final-head evidence |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -73,9 +74,9 @@ Inbox loading, capture, editing, categorization, conversion, deletion, persisten
 | Active branch | `fix/brain-inbox-control-icon-semantics` |
 | Implemented change | Hide redundant mode, add, transition, task-conversion, edit, delete, and remove-category glyphs while retaining visible labels, pressed state, or explicit accessible names |
 | Deterministic coverage | `test/brain-inbox-control-icon-semantics.test.mjs` |
-| Validation evidence | NOT_RUN for the current implementation/status head; canonical Application validation required |
-| Review evidence | Pending successful validation-head audit |
-| Durable handoff | After implementation-head evidence passes, commit fresh `main` as the required post-merge re-entry point and revalidate that final head |
+| Validation evidence | Application validation run 598 PASS on implementation/status head `9988b5dda9fcdc57f8e94f7bb871bde24f9eb9d5`; final durable-handoff head must be revalidated |
+| Review evidence | No submitted reviews or inline review threads on the successful run-598 head; re-audit after final exact-head validation |
+| Durable handoff | Fresh `main` is the required post-merge re-entry point; after merge reconcile GitHub state and continue the next evidence-backed provider-independent Stage 3 accessibility/interaction-integrity slice |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -84,9 +85,9 @@ Inbox loading, capture, editing, categorization, conversion, deletion, persisten
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; PR #250 is the sole active delivery thread. |
-| What is already happening? | Brain Inbox decorative control-icon semantics and deterministic regression coverage are implemented on the active PR branch. |
-| What has been validated? | PR #249 final head passed run 596 before merging. PR #250 current head has not yet completed canonical validation. |
-| What is next? | Validate the exact implementation/status head, audit reviews/threads, then commit and validate the durable post-merge handoff before implementation-complete signalling. |
+| What is already happening? | Brain Inbox decorative control-icon semantics and deterministic regression coverage are implemented; implementation/status head run 598 passed and the durable post-merge handoff is now committed. |
+| What has been validated? | Application validation run 598 passed on exact head `9988b5dda9fcdc57f8e94f7bb871bde24f9eb9d5`; submitted reviews and inline threads were empty on that head. |
+| What is next? | Validate the final handoff head, re-audit reviews/threads, signal implementation complete, allow lifecycle automation to merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -96,14 +97,12 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact PR #250 implementation/status head;
-2. audit submitted reviews and inline review threads for that head and repair any in-scope finding on PR #250;
-3. commit the durable fresh-`main` post-merge handoff after implementation-head evidence is clean;
-4. run final exact-head validation and re-audit reviews/threads;
-5. synchronize the PR acceptance checklist and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
-6. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
-7. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
-8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #250 durable-handoff head;
+2. re-audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #250;
+3. synchronize the PR acceptance checklist and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
+4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
