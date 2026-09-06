@@ -86,8 +86,10 @@ const NCBAuth = ({ mode = 'login' }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700"
+            role="alert"
+            aria-atomic="true"
           >
-            <SafeIcon icon={FiAlertCircle} className="flex-shrink-0" />
+            <SafeIcon icon={FiAlertCircle} className="flex-shrink-0" aria-hidden="true" />
             <span className="text-sm">{error}</span>
           </motion.div>
         )}
@@ -98,7 +100,7 @@ const NCBAuth = ({ mode = 'login' }) => {
               Email
             </label>
             <div className="relative">
-              <SafeIcon icon={FiMail} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <SafeIcon icon={FiMail} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
               <input
                 id="auth-email"
                 type="email"
@@ -117,7 +119,7 @@ const NCBAuth = ({ mode = 'login' }) => {
               Password
             </label>
             <div className="relative">
-              <SafeIcon icon={FiLock} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <SafeIcon icon={FiLock} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" aria-hidden="true" />
               <input
                 id="auth-password"
                 type="password"
@@ -144,7 +146,7 @@ const NCBAuth = ({ mode = 'login' }) => {
               </>
             ) : (
               <>
-                <SafeIcon icon={isRegister ? FiUserPlus : FiLogIn} />
+                <SafeIcon icon={isRegister ? FiUserPlus : FiLogIn} aria-hidden="true" />
                 {copy.submitLabel}
               </>
             )}
