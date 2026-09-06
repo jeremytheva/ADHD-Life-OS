@@ -6,12 +6,12 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Re-enter from fresh main after PR #262 completes its repository lifecycle and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Re-enter from fresh main after PR #263 completes its repository lifecycle and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
   pr: null
   branch: main
 next_actions:
-  - Run canonical Application validation on the exact PR #262 final handoff head.
+  - Run canonical Application validation on the exact PR #263 final handoff head.
   - Audit submitted reviews and inline review threads on that exact head and repair any in-scope finding.
   - Signal lifecycle:implementation-complete only when final exact-head evidence is clean.
   - Allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions.
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #262 implementation/status head e107e3b9261c0c492246f123739fc3957598a831 passed canonical Application validation run 638, and submitted reviews plus inline review threads were empty on that head. This durable fresh-main re-entry handoff commit changes the exact PR head and therefore requires final canonical validation/review evidence before implementation-complete signalling.
-last_verified_commit: e107e3b9261c0c492246f123739fc3957598a831
-last_updated: 2026-09-07T08:30:00+10:00
+validation_basis: PR #263 implementation/status head a9e41b328dc787ff60d71b6572e104dc447b5317 passed canonical Application validation run 641, and submitted reviews plus inline review threads were empty on that head. This durable fresh-main re-entry handoff commit changes the exact PR head and therefore requires final canonical validation/review evidence before implementation-complete signalling.
+last_verified_commit: a9e41b328dc787ff60d71b6572e104dc447b5317
+last_updated: 2026-09-07T08:41:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +45,20 @@ last_updated: 2026-09-07T08:30:00+10:00
 
 ## Current objective
 
-The durable post-merge re-entry target is fresh `main`. PR #262 is completing repository integration for global render-error announcement semantics; after it merges, do not treat that closed PR or its source branch as active work. Reconcile fresh `main` and current GitHub state, then continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+The durable post-merge re-entry target is fresh `main`. PR #263 is completing repository integration for Settings preference-recovery alert semantics; after it merges, do not treat that closed PR or its source branch as active work. Reconcile fresh `main` and current GitHub state, then continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
 
-PR #262 makes the render-failure heading/message/reference ID one atomic alert while keeping the Retry control outside that alert region as a separate recovery action. Deterministic regression coverage is in `test/app-error-boundary-semantics.test.mjs`.
+PR #263 keeps Settings load/save failure copy as atomic alerts while keeping Retry loading / Retry saving outside those alert regions as separate explicit actions. Deterministic regression coverage is in `test/settings-error-alert-semantics.test.mjs`.
 
-The implementation/status head `e107e3b9261c0c492246f123739fc3957598a831` passed canonical Application validation run 638, with no submitted reviews or inline review threads. This durable fresh-main handoff commit changes the exact head, so one final exact-head validation/review audit is required before lifecycle completion.
+The implementation/status head `a9e41b328dc787ff60d71b6572e104dc447b5317` passed canonical Application validation run 641, with no submitted reviews or inline review threads. This durable fresh-main handoff commit changes the exact head, so one final exact-head validation/review audit is required before lifecycle completion.
 
-PR #261 completed its lifecycle: final exact head `9c9ea5dc2246d94b88c3d188907d0242a7e3f5cc` passed canonical Application validation run 636 with clean submitted-review and inline-thread audits, then merged into `main` at `d851fb50ec7dcbc123ce2f455a486a22b5e4e94f`.
+PR #262 completed its lifecycle: final exact head `65983e81c47ca91d6616b12f2216aeceeeeda5dc` passed canonical Application validation run 639 with clean submitted-review and inline-thread audits, then merged into `main` at `14302767ebd5a6fdcc39c688614815423385f512`.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #262 before repository lifecycle completion |
-| Gate state | PR #262 implementation-head validation/review evidence is clean and durable fresh-main handoff is committed; final current-head evidence is pending |
+| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #263 before repository lifecycle completion |
+| Gate state | PR #263 implementation-head validation/review evidence is clean and durable fresh-main handoff is committed; final current-head evidence is pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -67,12 +67,12 @@ PR #261 completed its lifecycle: final exact head `9c9ea5dc2246d94b88c3d188907d0
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #261 — production session-verification failure announcement semantics; final head passed run 636 and merged into `main` at `d851fb50ec7dcbc123ce2f455a486a22b5e4e94f` |
-| Delivery being finalized | PR #262 — separate global render-error alert content from Retry action |
-| Delivery branch | `fix/error-boundary-alert-semantics` |
-| Implemented change | Render-failure heading/message/reference ID use an atomic alert; Retry remains a separate button outside the alert region |
-| Deterministic coverage | `test/app-error-boundary-semantics.test.mjs` |
-| Implementation-head validation | PASS — Application validation run 638 on `e107e3b9261c0c492246f123739fc3957598a831` |
+| Latest merged delivery | PR #262 — global render-error alert/recovery semantics; final head passed run 639 and merged into `main` at `14302767ebd5a6fdcc39c688614815423385f512` |
+| Delivery being finalized | PR #263 — separate Settings preference error alerts from retry actions |
+| Delivery branch | `fix/settings-error-alert-semantics` |
+| Implemented change | Load/save failure copy uses atomic alert semantics; Retry loading/saving remain separate controls |
+| Deterministic coverage | `test/settings-error-alert-semantics.test.mjs` |
+| Implementation-head validation | PASS — Application validation run 641 on `a9e41b328dc787ff60d71b6572e104dc447b5317` |
 | Implementation-head review audit | PASS — no submitted reviews or inline review threads on that head |
 | Durable post-merge handoff | COMMITTED — fresh `main` is the next authoritative re-entry target; no PR/branch is preselected as active work after merge |
 | Final-head validation | NOT_RUN — required because this handoff commit changed the exact head |
@@ -83,22 +83,22 @@ PR #261 completed its lifecycle: final exact head `9c9ea5dc2246d94b88c3d188907d0
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #262 is finishing repository integration, and fresh `main` is the durable post-merge re-entry target. |
-| What is already happening? | Global render-error alert/recovery semantics and deterministic regression coverage are implemented; the fresh-main handoff is committed. |
-| What has been validated? | PR #262 implementation/status head passed canonical run 638 and had a clean review/thread audit. The handoff commit requires exact-head revalidation. |
-| What is next? | Revalidate/audit the final PR #262 head, signal implementation-complete only if clean, allow lifecycle automation to merge, then re-enter from fresh `main` and choose the next evidence-backed independent Stage 3 slice. |
+| Where am I? | Stage 3; PR #263 is finishing repository integration, and fresh `main` is the durable post-merge re-entry target. |
+| What is already happening? | Settings preference-recovery alert semantics and deterministic regression coverage are implemented; the fresh-main handoff is committed. |
+| What has been validated? | PR #263 implementation/status head passed canonical run 641 and had a clean review/thread audit. The handoff commit requires exact-head revalidation. |
+| What is next? | Revalidate/audit the final PR #263 head, signal implementation-complete only if clean, allow lifecycle automation to merge, then re-enter from fresh `main` and choose the next evidence-backed independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #262 changes only render-error presentation semantics, deterministic test coverage, and durable project state. It does not alter error recovery logic, diagnostics, correlation IDs, navigation, persisted shapes, data services, provider mappings, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #263 changes only Settings error presentation semantics, deterministic test coverage, and durable project state. It does not alter preferences repository logic, retry/update behaviour, persisted shapes, authentication, data services, provider mappings, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
 
 The logical data model continues to classify generic `execution-sessions` as planned/provider-unverified. No physical provider operation may be inferred from application-level intent.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #262 handoff head;
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #263 handoff head;
 2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
 3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
 4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
