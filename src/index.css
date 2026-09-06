@@ -62,20 +62,10 @@ body {
   opacity: 1;
 }
 
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Custom Animation Duration Variable */
+/* Shared motion controls */
 :root {
   --animation-duration: 200ms;
+  --scroll-behavior: smooth;
 }
 
 * {
@@ -83,9 +73,22 @@ body {
   transition-duration: var(--animation-duration) !important;
 }
 
-/* Smooth Scrolling */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: var(--scroll-behavior);
+}
+
+/* Respect the operating-system motion preference without being overridden by the shared duration rule above. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --animation-duration: 0.01ms;
+    --scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-iteration-count: 1 !important;
+  }
 }
 
 /* Custom Scrollbar */

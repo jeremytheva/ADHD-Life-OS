@@ -46,6 +46,18 @@ test('startup loads and applies saved accessibility preferences', () => {
   assert.equal(documentRef.classes.has('high-contrast'), true)
   assert.equal(documentRef.classes.has('focus-mode'), true)
   assert.equal(documentRef.properties.get('--animation-duration'), '0.01ms')
+  assert.equal(documentRef.properties.get('--scroll-behavior'), 'auto')
+})
+
+test('disabling reduced motion restores stylesheet motion defaults', () => {
+  const documentRef = createDocument()
+  const reducedPreferences = { ...DEFAULT_ACCESSIBILITY_PREFERENCES, reduceMotion: true }
+
+  applyAccessibilityPreferences(reducedPreferences, documentRef)
+  applyAccessibilityPreferences(DEFAULT_ACCESSIBILITY_PREFERENCES, documentRef)
+
+  assert.equal(documentRef.properties.has('--animation-duration'), false)
+  assert.equal(documentRef.properties.has('--scroll-behavior'), false)
 })
 
 test('save persists only valid accessibility preferences', () => {

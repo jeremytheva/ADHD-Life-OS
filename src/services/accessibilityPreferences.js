@@ -42,8 +42,13 @@ export const applyAccessibilityPreferences = (preferences, documentRef = globalT
   root.classList.toggle('dyslexic-font', settings.dyslexicFont)
   root.classList.toggle('focus-mode', settings.focusMode)
 
-  if (settings.reduceMotion) root.style.setProperty('--animation-duration', '0.01ms')
-  else root.style.removeProperty('--animation-duration')
+  if (settings.reduceMotion) {
+    root.style.setProperty('--animation-duration', '0.01ms')
+    root.style.setProperty('--scroll-behavior', 'auto')
+  } else {
+    root.style.removeProperty('--animation-duration')
+    root.style.removeProperty('--scroll-behavior')
+  }
 
   return true
 }
