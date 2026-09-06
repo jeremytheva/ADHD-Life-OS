@@ -111,7 +111,7 @@ const SidebarContent = ({
 
         {stats.current_streak > 0 && (
           <div className="flex items-center justify-center gap-1 mt-2 text-xs text-orange-600">
-            <span>🔥</span>
+            <span aria-hidden="true">🔥</span>
             <span>{stats.current_streak}-day streak</span>
           </div>
         )}
@@ -130,7 +130,7 @@ const SidebarContent = ({
             </span>
           </div>
           <div className="flex items-center gap-1 text-yellow-700">
-            <span className="text-xs">💰</span>
+            <span className="text-xs" aria-hidden="true">💰</span>
             <span className="text-xs font-bold">{currency.coins}</span>
           </div>
         </div>
