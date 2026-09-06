@@ -75,7 +75,7 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
           <div className="bg-white rounded-lg p-3 text-center">
             <div className="text-2xl font-bold text-orange-600 flex items-center justify-center gap-1">
               {stats.current_streak}
-              <span className="text-lg">🔥</span>
+              <span className="text-lg" aria-hidden="true">🔥</span>
             </div>
             <div className="text-xs text-slate-600">Day Streak</div>
           </div>
@@ -130,7 +130,7 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <SafeIcon icon={FiAward} className="w-8 h-8" />
+                <SafeIcon icon={FiAward} className="w-8 h-8" aria-hidden="true" />
               </div>
               <div>
                 <h2 id="gamification-progress-title" className="text-2xl font-bold mb-1">Your Progress</h2>
@@ -143,7 +143,7 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
               aria-label="Close progress"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
             >
-              <SafeIcon icon={FiX} className="w-6 h-6" />
+              <SafeIcon icon={FiX} className="w-6 h-6" aria-hidden="true" />
             </button>
           </div>
 
@@ -199,7 +199,7 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
                   <div className="flex items-center gap-2 mb-2">
-                    <SafeIcon icon={FiTrendingUp} className="w-5 h-5 text-purple-600" />
+                    <SafeIcon icon={FiTrendingUp} className="w-5 h-5 text-purple-600" aria-hidden="true" />
                     <span className="text-sm font-medium text-purple-900">Level</span>
                   </div>
                   <div className="text-3xl font-bold text-purple-600">{stats.level}</div>
@@ -207,7 +207,7 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
 
                 <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-4 border border-yellow-200">
                   <div className="flex items-center gap-2 mb-2">
-                    <SafeIcon icon={FiStar} className="w-5 h-5 text-yellow-600" />
+                    <SafeIcon icon={FiStar} className="w-5 h-5 text-yellow-600" aria-hidden="true" />
                     <span className="text-sm font-medium text-yellow-900">Points</span>
                   </div>
                   <div className="text-3xl font-bold text-yellow-600">{stats.points}</div>
@@ -215,7 +215,7 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
 
                 <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xl">🔥</span>
+                    <span className="text-xl" aria-hidden="true">🔥</span>
                     <span className="text-sm font-medium text-orange-900">Streak</span>
                   </div>
                   <div className="text-3xl font-bold text-orange-600">{stats.current_streak}</div>
@@ -226,7 +226,7 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
 
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
                   <div className="flex items-center gap-2 mb-2">
-                    <SafeIcon icon={FiAward} className="w-5 h-5 text-green-600" />
+                    <SafeIcon icon={FiAward} className="w-5 h-5 text-green-600" aria-hidden="true" />
                     <span className="text-sm font-medium text-green-900">Badges</span>
                   </div>
                   <div className="text-3xl font-bold text-green-600">
@@ -263,7 +263,7 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
                         animate={{ scale: 1 }}
                         className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-lg p-4 border-2 border-yellow-300"
                       >
-                        <div className="text-3xl mb-2 text-center">{achievement.icon}</div>
+                        <div className="text-3xl mb-2 text-center" aria-hidden="true">{achievement.icon}</div>
                         <div className="text-sm font-medium text-slate-900 text-center mb-1">
                           {achievement.name}
                         </div>
@@ -294,7 +294,7 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
                         transition={{ delay: index * 0.05 }}
                         className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-lg p-4 border-2 border-yellow-300"
                       >
-                        <div className="text-4xl mb-3 text-center">{achievement.icon}</div>
+                        <div className="text-4xl mb-3 text-center" aria-hidden="true">{achievement.icon}</div>
                         <div className="text-center">
                           <div className="font-medium text-slate-900 mb-1">
                             {achievement.name}
@@ -328,7 +328,7 @@ const GamificationDashboard = ({ onClose, compact = false }) => {
                           transition={{ delay: index * 0.05 }}
                           className="bg-slate-50 rounded-lg p-4 border-2 border-slate-200 opacity-60"
                         >
-                          <div className="text-4xl mb-3 text-center grayscale">
+                          <div className="text-4xl mb-3 text-center grayscale" aria-hidden="true">
                             {achievement.icon}
                           </div>
                           <div className="text-center">
