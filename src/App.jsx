@@ -66,8 +66,10 @@ const ProtectedAppShell = ({ enabledModules, showOnboarding, onOnboardingComplet
 const AuthErrorScreen = ({ error, onRetry }) => (
   <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
     <div className="max-w-md rounded-lg bg-white p-6 text-center shadow">
-      <h1 className="text-xl font-semibold text-slate-900">We couldn't verify your session</h1>
-      <p className="mt-2 text-slate-600">{error?.message || 'Please check your connection and try again.'}</p>
+      <div role="alert" aria-atomic="true">
+        <h1 className="text-xl font-semibold text-slate-900">We couldn't verify your session</h1>
+        <p className="mt-2 text-slate-600">{error?.message || 'Please check your connection and try again.'}</p>
+      </div>
       <button type="button" onClick={onRetry} className="mt-5 rounded bg-blue-600 px-4 py-2 text-white">Try again</button>
     </div>
   </div>
