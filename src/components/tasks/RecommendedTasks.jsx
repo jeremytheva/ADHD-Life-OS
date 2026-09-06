@@ -16,7 +16,7 @@ const RecommendedTasks = ({ tasks, onTaskClick }) => {
       className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-4"
     >
       <div className="flex items-center gap-2 mb-3">
-        <SafeIcon icon={FiZap} className="w-5 h-5 text-blue-600" />
+        <SafeIcon icon={FiZap} className="w-5 h-5 text-blue-600" aria-hidden="true" />
         <h3 id="recommended-tasks-heading" className="text-sm font-medium text-blue-900">
           Recommended Right Now
         </h3>
@@ -51,10 +51,10 @@ const RecommendedTasks = ({ tasks, onTaskClick }) => {
 
               <div className="flex items-center gap-3 text-xs text-slate-600">
                 <div className="flex items-center gap-1">
-                  <SafeIcon icon={FiClock} className="w-3 h-3" />
+                  <SafeIcon icon={FiClock} className="w-3 h-3" aria-hidden="true" />
                   <span>{task.estimated_duration || 60} min</span>
                 </div>
-                <span>•</span>
+                <span aria-hidden="true">•</span>
                 <span>{task.urgencyReason}</span>
               </div>
             </button>
