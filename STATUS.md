@@ -11,7 +11,7 @@ current_work:
   pr: 252
   branch: fix/task-selector-icon-semantics
 next_actions:
-  - Run canonical Application validation for the exact PR #252 implementation/status head.
+  - Re-run canonical Application validation for the exact PR #252 implementation/status head after repairing machine-readable validation state.
   - Audit submitted reviews and inline review threads for that exact validated head; repair any in-scope finding on PR #252.
   - Commit the durable fresh-main post-merge handoff after implementation-head evidence is clean.
   - Re-run canonical validation and review/thread audit on the exact final handoff head.
@@ -25,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
-  ci: PENDING
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #252 implementation and deterministic regression coverage are committed, but canonical Application validation has not yet completed for the exact current implementation/status head.
+validation_basis: Application validation run 604 failed on prior head da3b48a2522dea5deed03e279b6c28743afaa8fe because STATUS.md used unsupported PENDING values for machine-validated governance, lint, typecheck, tests, and build fields. The durable state has been repaired to the supported NOT_RUN enum on the current head; canonical validation must be re-run.
 last_verified_commit: null
-last_updated: 2026-09-06T15:14:30+10:00
+last_updated: 2026-09-06T16:11:32+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -52,12 +52,14 @@ The `RecommendedTasks` presentation now marks the heading lightning glyph, durat
 
 PR #251 completed its repository-managed lifecycle immediately before this slice. Its exact final head `04487783d9c481efa799c339fd508b9bad47119d` passed Application validation run 602 with clean submitted-review and inline-thread audits, and it merged into `main` at `36a3c62d84cb9bff6f0e2a96c7df7f24929b543f`.
 
+Application validation run 604 failed on PR #252 prior head `da3b48a2522dea5deed03e279b6c28743afaa8fe` during `validate:governance`. The implementation itself had not yet reached lint, typecheck, tests, build, or browser validation. The failure was caused by `STATUS.md` using `PENDING` for machine-validated fields whose governance schema accepts only `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE`. The current head repairs those durable-state enums to `NOT_RUN`; exact-head canonical validation is required again before lifecycle progress.
+
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — canonical validation and review/thread evidence required for PR #252 |
-| Gate state | Implementation and deterministic source-contract coverage committed; current exact head not yet canonically validated |
+| Gate state | Implementation and deterministic source-contract coverage committed; prior validation failed on STATUS.md machine-readable state; repaired current head requires revalidation |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -71,10 +73,10 @@ PR #251 completed its repository-managed lifecycle immediately before this slice
 | Active branch | `fix/task-selector-icon-semantics` |
 | Implemented change | Hide redundant heading, duration, separator, and hint presentation glyphs while retaining authoritative text |
 | Deterministic coverage | `test/recommended-tasks-icon-semantics.test.mjs` |
-| Validation evidence | PENDING for exact current PR #252 head |
+| Validation evidence | Run 604 FAIL on prior head due invalid STATUS.md validation enums; current repaired head NOT_RUN pending canonical revalidation |
 | Review evidence | PENDING until exact current head is canonically validated |
 | Durable handoff | Not yet committed; after clean implementation-head evidence, update this status for fresh-main post-merge re-entry and revalidate that final head |
-| Current blocker | None |
+| Current blocker | None — governance-state repair is committed and revalidation is actionable |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
 ## Autonomous continuation entry answers
@@ -82,9 +84,9 @@ PR #251 completed its repository-managed lifecycle immediately before this slice
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; PR #252 is the sole active delivery thread. |
-| What is already happening? | Recommended Tasks decorative-icon semantics and deterministic regression coverage are committed. |
-| What has been validated? | The prior PR #251 final head passed run 602. PR #252 has not yet completed canonical exact-head validation. |
-| What is next? | Validate PR #252, audit review/thread state, repair any finding, commit durable post-merge handoff, revalidate final head, then signal implementation complete. |
+| What is already happening? | Recommended Tasks decorative-icon semantics and deterministic regression coverage are committed; a STATUS.md governance enum defect found by run 604 has been repaired. |
+| What has been validated? | The prior PR #251 final head passed run 602. PR #252 run 604 failed on prior-head governance state before implementation validation; the repaired current head has not yet completed canonical validation. |
+| What is next? | Revalidate PR #252, audit review/thread state, repair any finding, commit durable post-merge handoff, revalidate final head, then signal implementation complete. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -94,7 +96,7 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact PR #252 implementation/status head;
+1. re-run canonical `npm run platform:validate` through the repository Application validation workflow for the exact repaired PR #252 implementation/status head;
 2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #252;
 3. when implementation-head evidence is clean, commit the durable fresh-`main` post-merge handoff;
 4. run canonical validation and review/thread audit again on the exact final handoff head;
