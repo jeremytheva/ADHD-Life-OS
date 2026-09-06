@@ -27,15 +27,17 @@ export class AppErrorBoundary extends Component {
     if (!this.state.error) return this.props.children
 
     return (
-      <main className="min-h-screen bg-slate-50 flex items-center justify-center p-4" role="alert">
+      <main className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <section className="max-w-md rounded-lg bg-white p-6 text-center shadow">
-          <h1 className="text-xl font-semibold text-slate-900">Something went wrong</h1>
-          <p className="mt-2 text-slate-600">
-            This part of the app could not be displayed. Please try again.
-          </p>
-          <p className="mt-3 text-xs text-slate-500">
-            Reference ID: {this.state.correlationId}
-          </p>
+          <div role="alert" aria-atomic="true">
+            <h1 className="text-xl font-semibold text-slate-900">Something went wrong</h1>
+            <p className="mt-2 text-slate-600">
+              This part of the app could not be displayed. Please try again.
+            </p>
+            <p className="mt-3 text-xs text-slate-500">
+              Reference ID: {this.state.correlationId}
+            </p>
+          </div>
           <button
             type="button"
             onClick={this.retry}
