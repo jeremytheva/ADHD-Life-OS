@@ -11,7 +11,7 @@ current_work:
   pr: 249
   branch: fix/template-library-icon-semantics
 next_actions:
-  - Run canonical Application validation for the exact PR #249 implementation/status head.
+  - Run canonical Application validation for the exact repaired PR #249 implementation/status head.
   - Audit submitted reviews and inline review threads for that validated head; repair any in-scope finding on PR #249.
   - Commit the durable fresh-main post-merge handoff after implementation-head evidence is clean.
   - Run final exact-head validation, re-audit reviews/threads, synchronize the PR contract, and signal lifecycle:implementation-complete only when final evidence is clean.
@@ -32,9 +32,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #248 final head df010e89475871bc11376814875927224f585ad4 passed Application validation run 591 and merged as f299fc483ee83b5342a35f7d7ad395a935b27330. PR #249 implementation and deterministic coverage are committed but its current head has not yet completed canonical validation.
+validation_basis: Application validation run 593 failed twice on head c691edde00ed3809ce26eb4c663a85d55eb24067 because the new Template Library source-contract test used a [^>]* attribute matcher that stopped at the => token inside JSX onChange handlers. Product markup was not implicated. The assertions were repaired in commit 1a1064458185bf873fde39b05fdb14d30d99839c; the current head requires fresh canonical validation.
 last_verified_commit: df010e89475871bc11376814875927224f585ad4
-last_updated: 2026-09-06T12:19:00+10:00
+last_updated: 2026-09-06T13:16:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -48,7 +48,9 @@ last_updated: 2026-09-06T12:19:00+10:00
 
 PR #249 is the sole active delivery thread. It reduces redundant assistive-technology output in Template Library while preserving all existing search, filtering, view switching, dialog, and template behaviour.
 
-The named close control, named search field, named template-type select, and named/pressed Grid and List view controls now hide glyphs whose meaning is already carried by explicit accessible semantics. No user-visible labels or behaviours are removed.
+The named close control, named search field, named template-type select, and named/pressed Grid and List view controls hide glyphs whose meaning is already carried by explicit accessible semantics. No user-visible labels or behaviours are removed.
+
+Application validation run 593 exposed a deterministic-test defect rather than a product defect: the Search and Template Type assertions used `[^>]*` across JSX elements whose `onChange` handlers contain `=>`, causing the matcher to stop before the accessible label. The test was repaired on the existing PR branch and now requires exact-head revalidation.
 
 Template loading, search/filter logic, view-state behaviour, editing/applying, persistence, schemas, authorization, provider mappings, execution/recommendation policy, external integrations, and persisted data remain unchanged. NoCodeBackend-dependent execution persistence remains deferred.
 
@@ -56,8 +58,8 @@ Template loading, search/filter logic, view-state behaviour, editing/applying, p
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical implementation/status-head validation and review/thread evidence required for PR #249 |
-| Gate state | Semantic markup and deterministic regression coverage committed; canonical validation pending |
+| Current gate | INTEGRATION — canonical validation and review/thread evidence required for repaired PR #249 |
+| Gate state | Semantic markup remains implemented; false-negative deterministic assertion repaired; exact-head canonical validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -70,9 +72,9 @@ Template loading, search/filter logic, view-state behaviour, editing/applying, p
 | Active delivery | PR #249 — hide decorative Template Library control and field icons |
 | Active branch | `fix/template-library-icon-semantics` |
 | Implemented change | Hide redundant Close, Search, Filter, Grid view, and List view glyphs while retaining the controls' existing accessible names and state |
-| Deterministic coverage | `test/template-library-icon-semantics.test.mjs` |
-| Validation evidence | Current PR #249 implementation/status head awaiting canonical Application validation |
-| Review evidence | Pending validation-head audit |
+| Deterministic coverage | `test/template-library-icon-semantics.test.mjs`; assertion boundary repaired after run 593 exposed a false negative |
+| Validation evidence | Run 593 failed twice on prior head `c691edde00ed3809ce26eb4c663a85d55eb24067` solely in the new deterministic test; repaired current head awaiting canonical validation |
+| Review evidence | Pending successful validation-head audit |
 | Durable handoff | After implementation-head evidence passes, commit fresh `main` as the required post-merge re-entry point and revalidate that final head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
@@ -82,9 +84,9 @@ Template loading, search/filter logic, view-state behaviour, editing/applying, p
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; PR #249 is the sole active delivery thread. |
-| What is already happening? | Template Library decorative-icon semantics and deterministic regression coverage are implemented; canonical validation is pending. |
-| What has been validated? | Prior PR #248 final head passed run 591 and merged; PR #249 has not yet completed canonical validation. |
-| What is next? | Validate the implementation/status head, audit reviews/threads, repair any in-scope finding, then commit and validate the durable post-merge handoff before implementation-complete signalling. |
+| What is already happening? | Template Library decorative-icon semantics are implemented; a false-negative deterministic test discovered by run 593 has been repaired on the same PR. |
+| What has been validated? | Prior PR #248 final head passed run 591 and merged. PR #249 run 593 reached Node tests after audit, governance, lint, and typecheck passed, then failed only in the new Template Library assertion; the repaired head is not yet canonically validated. |
+| What is next? | Validate the repaired implementation/status head, audit reviews/threads, then commit and validate the durable post-merge handoff before implementation-complete signalling. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -94,7 +96,7 @@ Provider-dependent durable execution remains fail-closed and intentionally defer
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact PR #249 implementation/status head;
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact repaired PR #249 implementation/status head;
 2. audit submitted reviews and inline review threads for that head and repair any in-scope finding on PR #249;
 3. commit the durable fresh-`main` post-merge handoff after implementation-head evidence is clean;
 4. run final exact-head validation and re-audit reviews/threads;
