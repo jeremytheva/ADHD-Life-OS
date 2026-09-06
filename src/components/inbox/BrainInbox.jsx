@@ -206,7 +206,7 @@ const BrainInbox = () => {
             `}
           >
             <div className="flex items-center justify-center gap-2">
-              <SafeIcon icon={FiInbox} className="w-4 h-4" />
+              <SafeIcon icon={FiInbox} aria-hidden="true" className="w-4 h-4" />
               <span>Capture Mode</span>
             </div>
           </button>
@@ -223,7 +223,7 @@ const BrainInbox = () => {
             `}
           >
             <div className="flex items-center justify-center gap-2">
-              <SafeIcon icon={FiTag} className="w-4 h-4" />
+              <SafeIcon icon={FiTag} aria-hidden="true" className="w-4 h-4" />
               <span>Organize Mode</span>
             </div>
           </button>
@@ -274,7 +274,7 @@ const BrainInbox = () => {
                 disabled={!currentInput.trim()}
                 className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <SafeIcon icon={FiPlus} className="w-5 h-5" />
+                <SafeIcon icon={FiPlus} aria-hidden="true" className="w-5 h-5" />
                 <span className="font-medium">Add</span>
               </button>
             </div>
@@ -368,14 +368,14 @@ const BrainInbox = () => {
                               aria-label={`Edit ${item.content}`}
                               className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                             >
-                              <SafeIcon icon={FiEdit3} className="w-4 h-4" />
+                              <SafeIcon icon={FiEdit3} aria-hidden="true" className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => handleDeleteItem(item.id)}
                               aria-label={`Delete ${item.content}`}
                               className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                             >
-                              <SafeIcon icon={FiTrash2} className="w-4 h-4" />
+                              <SafeIcon icon={FiTrash2} aria-hidden="true" className="w-4 h-4" />
                             </button>
                           </div>
                         </>
@@ -399,7 +399,7 @@ const BrainInbox = () => {
                     className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
                   >
                     <span>Ready to organize?</span>
-                    <SafeIcon icon={FiArrowRight} className="w-4 h-4" />
+                    <SafeIcon icon={FiArrowRight} aria-hidden="true" className="w-4 h-4" />
                   </button>
                 </motion.div>
               )}
@@ -538,7 +538,7 @@ const BrainInbox = () => {
                                 className="px-3 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm flex items-center gap-1"
                                 title="Convert to task"
                               >
-                                <SafeIcon icon={FiZap} className="w-3 h-3" />
+                                <SafeIcon icon={FiZap} aria-hidden="true" className="w-3 h-3" />
                                 <span>Task</span>
                               </button>
                               <button
@@ -546,14 +546,14 @@ const BrainInbox = () => {
                                 className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
                                 aria-label={`Remove category from ${item.content}`}
                               >
-                                <SafeIcon icon={FiTag} className="w-4 h-4" />
+                                <SafeIcon icon={FiTag} aria-hidden="true" className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => handleDeleteItem(item.id)}
                                 className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                 aria-label={`Delete ${item.content}`}
                               >
-                                <SafeIcon icon={FiTrash2} className="w-4 h-4" />
+                                <SafeIcon icon={FiTrash2} aria-hidden="true" className="w-4 h-4" />
                               </button>
                             </div>
                           </div>
