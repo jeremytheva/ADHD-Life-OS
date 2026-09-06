@@ -6,15 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete final exact-head lifecycle evidence for PR #256, then re-enter from fresh main and select the next provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Validate PR #257 application-shell reward emoji semantics on the exact current head, repair any in-scope findings, then complete the repository-managed PR lifecycle.
   issue: null
-  pr: 256
-  branch: fix/today-view-icon-semantics
+  pr: 257
+  branch: fix/layout-reward-emoji-semantics
 next_actions:
-  - Run canonical Application validation on the exact final PR #256 durable-handoff head.
-  - Audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding on PR #256.
+  - Run canonical Application validation on the exact current PR #257 head.
+  - Audit submitted reviews and inline review threads on that exact head and repair any in-scope finding on PR #257.
+  - After clean implementation-head evidence, commit the durable post-merge fresh-main handoff and revalidate the resulting final exact head.
   - Signal lifecycle:implementation-complete only after final exact-head evidence is clean, then allow repository lifecycle automation to complete Ready, Mergeable, and Merged transitions.
-  - Re-enter from fresh main after merge, reconcile GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Re-enter from fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -30,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #256 implementation/status head dff4513fa2bcc3901b211bcd8539f168382fa2df passed canonical Application validation run 617 with clean submitted-review and inline-thread audits. This durable-handoff commit creates a new exact head and therefore requires canonical revalidation before lifecycle completion.
-last_verified_commit: dff4513fa2bcc3901b211bcd8539f168382fa2df
-last_updated: 2026-09-07T01:12:00+10:00
+validation_basis: PR #257 changes application-shell presentation semantics and deterministic source-contract coverage; canonical validation has not yet run on the exact current implementation/status head.
+last_verified_commit: 4b2859930be2cd9427667b18f90548ca09b375ee
+last_updated: 2026-09-07T02:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,20 +45,18 @@ last_updated: 2026-09-07T01:12:00+10:00
 
 ## Current objective
 
-PR #256 is the sole active Stage 3 delivery thread. It improves `TodayView` assistive-technology semantics by making three redundant visual glyphs presentation-only: the active-mode emoji, rewards icon, and refresh icon. The active-mode text and the two icon-only buttons' explicit accessible names remain authoritative. Timeline loading, filtering, task completion, recommendation, persistence, schemas, provider mappings, authorization, execution policy, and external integrations are unchanged.
+PR #257 is the sole active Stage 3 delivery thread. It improves application-shell assistive-technology semantics by making two redundant gamification glyphs presentation-only: the streak flame and coin-bag emoji. Explicit streak-duration text and the numeric coin balance remain authoritative. Gamification calculations, rewards, navigation, persistence, schemas, provider mappings, authorization, recommendation/execution policy, and external integrations are unchanged.
 
-Deterministic regression coverage is in `test/today-view-icon-semantics.test.mjs`.
+Deterministic regression coverage is in `test/layout-reward-emoji-semantics.test.mjs`.
 
-The exact implementation/status head `dff4513fa2bcc3901b211bcd8539f168382fa2df` passed canonical Application validation run 617. Submitted reviews and inline review threads were empty on that validated head. The durable post-merge fresh-`main` handoff is now committed; because that handoff creates a new exact head, final canonical validation and a final review/thread audit are required before lifecycle completion.
-
-PR #255 completed immediately before this slice. Its final durable-handoff head `254e0d019b1a4eb4c89b716d9feb5e0d576aa8d3` passed canonical Application validation run 615 with clean submitted-review and inline-thread audits, then merged into `main` at `5350a8d4ff3cd76a3f31fbbc7c58a564691dfd7b`.
+PR #256 completed immediately before this slice. Its final durable-handoff head `ff8795cf03f183ea16ac89084919cd1a13789def` passed canonical Application validation run 618 with clean submitted-review and inline-thread audits, then merged into `main` at `4b2859930be2cd9427667b18f90548ca09b375ee` through the repository lifecycle finalizer.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #256 |
-| Gate state | Today-view semantic change, deterministic coverage, implementation-head run 617 PASS, clean review/thread audit, and durable fresh-main handoff are present; final-head validation is next |
+| Current gate | INTEGRATION — canonical exact-head validation and review/thread evidence required for PR #257 |
+| Gate state | Application-shell reward emoji semantics and deterministic coverage are implemented; validation is next |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -66,15 +65,14 @@ PR #255 completed immediately before this slice. Its final durable-handoff head 
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #255 — Task List decorative-icon semantics; final head passed run 615 and merged into `main` at `5350a8d4ff3cd76a3f31fbbc7c58a564691dfd7b` |
-| Active delivery | PR #256 — hide redundant Today-view glyphs while preserving authoritative mode text and button accessible names |
-| Delivery branch | `fix/today-view-icon-semantics` |
-| Implemented change | Mark active-mode emoji plus rewards/refresh button glyphs presentation-only |
-| Deterministic coverage | `test/today-view-icon-semantics.test.mjs` |
-| Implementation-head validation | PASS — canonical Application validation run 617 on exact head `dff4513fa2bcc3901b211bcd8539f168382fa2df` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
-| Durable handoff | COMMITTED — fresh-`main` re-entry is the authoritative post-merge next step |
-| Current-head validation | NOT_RUN — this durable-handoff commit creates a new exact head and requires canonical revalidation |
+| Latest merged delivery | PR #256 — Today-view decorative-icon semantics; final head passed run 618 and merged into `main` at `4b2859930be2cd9427667b18f90548ca09b375ee` |
+| Active delivery | PR #257 — hide redundant application-shell streak and coin emoji while preserving explicit streak/balance information |
+| Delivery branch | `fix/layout-reward-emoji-semantics` |
+| Implemented change | Mark streak flame and coin-bag emoji presentation-only |
+| Deterministic coverage | `test/layout-reward-emoji-semantics.test.mjs` |
+| Implementation-head validation | NOT_RUN — canonical validation required on exact current head |
+| Implementation-head review audit | NOT_RUN |
+| Durable handoff | NOT_YET_COMMITTED — commit only after clean implementation-head evidence |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -82,25 +80,26 @@ PR #255 completed immediately before this slice. Its final durable-handoff head 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #256 is the sole active delivery thread and is at the final exact-head validation gate after a clean implementation-head run 617. |
-| What is already happening? | Today-view decorative glyph semantics and deterministic regression coverage are implemented, implementation-head evidence is clean, and the durable fresh-main handoff is committed on `fix/today-view-icon-semantics`. |
-| What has been validated? | PR #256 implementation/status head `dff4513fa2bcc3901b211bcd8539f168382fa2df` passed canonical run 617 with clean submitted-review and inline-thread audits. The new durable-handoff head has not yet completed canonical validation. |
-| What is next? | Validate the exact final PR #256 handoff head, repeat the review/thread audit, signal lifecycle completion only if clean, then re-enter from fresh `main` after merge. |
+| Where am I? | Stage 3; PR #257 is the sole active delivery thread and is at the implementation-head validation gate. |
+| What is already happening? | Application-shell decorative reward emoji semantics and deterministic regression coverage are implemented on `fix/layout-reward-emoji-semantics`. |
+| What has been validated? | Fresh `main` includes merged PR #256 at `4b2859930be2cd9427667b18f90548ca09b375ee`; PR #257 has not yet completed canonical validation on its current head. |
+| What is next? | Run canonical validation and review/thread audits for PR #257, repair any in-scope findings, then commit the durable fresh-main handoff and perform final exact-head validation. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #256 changes frontend semantic markup, deterministic test coverage, and durable project state only. It does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #257 changes frontend semantic markup, deterministic test coverage, and durable project state only. It does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #256 durable-handoff head;
-2. repeat the submitted-review and inline-thread audit for that exact final head and repair any in-scope finding on PR #256;
-3. synchronize the PR acceptance checklist and add `lifecycle:implementation-complete` only after final exact-head evidence is clean;
-4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact current PR #257 implementation/status head;
+2. audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #257;
+3. after clean implementation-head evidence, commit the durable post-merge fresh-`main` handoff, which creates a new exact head requiring canonical revalidation;
+4. repeat the final exact-head review/thread audit and add `lifecycle:implementation-complete` only after all evidence is clean;
+5. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
+6. re-enter from fresh `main` and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
