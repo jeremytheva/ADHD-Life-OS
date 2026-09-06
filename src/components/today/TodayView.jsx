@@ -137,15 +137,15 @@ const TodayView = () => {
     <div className="p-6 space-y-6">
       {currentMode.id !== 'all' && (
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className={`bg-gradient-to-r ${currentMode.gradient} text-white rounded-lg p-4`}>
-          <div className="flex items-center gap-3"><span className="text-2xl">{currentMode.icon}</span><div><div className="font-medium">{currentMode.label} Mode Active</div><div className="text-xs text-white text-opacity-90">Your timeline is filtered to show {currentMode.label.toLowerCase()}-related items</div></div></div>
+          <div className="flex items-center gap-3"><span className="text-2xl" aria-hidden="true">{currentMode.icon}</span><div><div className="font-medium">{currentMode.label} Mode Active</div><div className="text-xs text-white text-opacity-90">Your timeline is filtered to show {currentMode.label.toLowerCase()}-related items</div></div></div>
         </motion.div>
       )}
 
       <div className="flex justify-between items-center">
         <div><h1 className="text-2xl font-medium text-slate-900">Today</h1><p className="text-slate-600">{format(new Date(), 'EEEE, MMMM d')}</p></div>
         <div className="flex gap-2">
-          <button type="button" onClick={() => setShowGamification(true)} aria-label="Open rewards and progress" className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"><SafeIcon icon={FiAward} className="w-5 h-5" /></button>
-          <button type="button" onClick={loadTimeline} aria-label="Refresh Today" className="p-2 text-slate-600 hover:text-slate-900 transition-colors"><SafeIcon icon={FiRefreshCw} className="w-5 h-5" /></button>
+          <button type="button" onClick={() => setShowGamification(true)} aria-label="Open rewards and progress" className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"><SafeIcon icon={FiAward} className="w-5 h-5" aria-hidden="true" /></button>
+          <button type="button" onClick={loadTimeline} aria-label="Refresh Today" className="p-2 text-slate-600 hover:text-slate-900 transition-colors"><SafeIcon icon={FiRefreshCw} className="w-5 h-5" aria-hidden="true" /></button>
         </div>
       </div>
 
