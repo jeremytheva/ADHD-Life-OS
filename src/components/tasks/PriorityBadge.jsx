@@ -46,7 +46,7 @@ const PriorityBadge = ({ level, score, urgencyReason }) => {
       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${config.bg} ${config.text} ${config.border} text-xs font-medium`}
       title={`Priority Score: ${score}/100 - ${urgencyReason}`}
     >
-      <SafeIcon icon={config.icon} className="w-3 h-3" />
+      <SafeIcon icon={config.icon} className="w-3 h-3" aria-hidden="true" />
       <span>{config.label}</span>
       <span className="opacity-75">({score})</span>
       {urgencyReason && <span className="sr-only">. {urgencyReason}</span>}
