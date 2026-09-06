@@ -69,9 +69,9 @@ const SubtaskList = ({
     >
       {/* Subtask List */}
       {subtasks.length > 0 && (
-        <div className="space-y-2 mb-3">
+        <ul className="space-y-2 mb-3" aria-label="Subtasks">
           {subtasks.map((subtask, index) => (
-            <motion.div
+            <motion.li
               key={subtask.id}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
@@ -94,7 +94,7 @@ const SubtaskList = ({
                 }`}
               >
                 {subtask.is_completed && (
-                  <SafeIcon icon={FiCheck} className="w-3 h-3 text-white" />
+                  <SafeIcon icon={FiCheck} className="w-3 h-3 text-white" aria-hidden="true" />
                 )}
               </button>
 
@@ -110,7 +110,7 @@ const SubtaskList = ({
                 </span>
                 {subtask.estimated_duration && (
                   <div className="flex items-center gap-1 text-xs text-slate-500 mt-1">
-                    <SafeIcon icon={FiClock} className="w-3 h-3" />
+                    <SafeIcon icon={FiClock} className="w-3 h-3" aria-hidden="true" />
                     <span>{subtask.estimated_duration} min</span>
                   </div>
                 )}
@@ -122,11 +122,11 @@ const SubtaskList = ({
                 aria-label={`Delete subtask: ${subtask.title}`}
                 className="p-1 text-slate-400 hover:text-red-600 transition-colors"
               >
-                <SafeIcon icon={FiTrash2} className="w-4 h-4" />
+                <SafeIcon icon={FiTrash2} className="w-4 h-4" aria-hidden="true" />
               </button>
-            </motion.div>
+            </motion.li>
           ))}
-        </div>
+        </ul>
       )}
 
       {/* Add Subtask Input */}
@@ -149,7 +149,7 @@ const SubtaskList = ({
             disabled={!newSubtaskTitle.trim() || adding}
             className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
           >
-            <SafeIcon icon={FiPlus} className="w-4 h-4" />
+            <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
             Add
           </button>
         </div>
@@ -164,7 +164,7 @@ const SubtaskList = ({
           }}
           className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-purple-300 hover:text-purple-600 transition-colors flex items-center justify-center gap-2"
         >
-          <SafeIcon icon={FiPlus} className="w-4 h-4" />
+          <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
           Add Another Subtask
         </button>
       )}
