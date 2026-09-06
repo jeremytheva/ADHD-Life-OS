@@ -70,7 +70,7 @@ const TaskLoadAnalysis = ({ analysis }) => {
 
             <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
               <div className="flex items-center gap-2">
-                <SafeIcon icon={FiClock} className="w-4 h-4 text-blue-600" />
+                <SafeIcon icon={FiClock} className="w-4 h-4 text-blue-600" aria-hidden="true" />
                 <span className="text-sm text-blue-900 font-medium">Estimated Time</span>
               </div>
               <div className="text-sm font-bold text-blue-700">
@@ -81,7 +81,7 @@ const TaskLoadAnalysis = ({ analysis }) => {
 
             {(overdue > 0 || critical > 0) && (
               <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2">
-                <SafeIcon icon={FiAlertCircle} className="w-4 h-4 text-amber-600 mt-0.5" />
+                <SafeIcon icon={FiAlertCircle} className="w-4 h-4 text-amber-600 mt-0.5" aria-hidden="true" />
                 <div className="text-xs text-amber-800">
                   {overdue > 0 && <div>• You have {overdue} overdue task{overdue > 1 ? 's' : ''}</div>}
                   {critical > 0 && <div>• {critical} critical task{critical > 1 ? 's' : ''} require immediate attention</div>}
