@@ -6,15 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #248, which hides redundant Template Edit action icons without changing template behaviour or provider contracts.
+  objective: Complete PR #249, which hides redundant Template Library control and field icons without changing template behaviour or provider contracts.
   issue: null
-  pr: 248
-  branch: fix/template-edit-icon-semantics
+  pr: 249
+  branch: fix/template-library-icon-semantics
 next_actions:
-  - Run canonical Application validation for the exact final PR #248 head containing this durable post-merge handoff.
-  - Re-audit submitted reviews and inline review threads for that exact final validated head; repair any in-scope finding on PR #248.
+  - Run canonical Application validation for the exact final PR #249 head containing this durable post-merge handoff.
+  - Re-audit submitted reviews and inline review threads for that exact final validated head; repair any in-scope finding on PR #249.
   - Synchronize the PR contract and signal lifecycle:implementation-complete only when final exact-head evidence is clean.
-  - Allow repository lifecycle automation to advance PR #248 through Ready, Mergeable, and Merged.
+  - Allow repository lifecycle automation to advance PR #249 through Ready, Mergeable, and Merged.
   - Re-enter from fresh main after merge, reconcile GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
@@ -31,9 +31,9 @@ validation:
   build: PASS
   ci: PASS
   runtime: UNVERIFIED
-validation_basis: Application validation run 590 passed on implementation/status head 96eb32ebe52a2be6517785891735e21fe7f444a2, with no submitted reviews or inline review threads. This durable handoff commit changes the PR head, so one final exact-head canonical validation and review/thread audit are required before implementation-complete signalling.
-last_verified_commit: 96eb32ebe52a2be6517785891735e21fe7f444a2
-last_updated: 2026-09-06T11:13:24+10:00
+validation_basis: Application validation run 595 passed on repaired implementation/status head 542cb6b1a3de5f9145879547801f4401295ef498, with no submitted reviews or inline review threads. Run 593 had previously exposed and reproduced a false-negative source-contract assertion, repaired on the same PR. This durable handoff commit changes the PR head, so one final exact-head canonical validation and review/thread audit are required before implementation-complete signalling.
+last_verified_commit: 542cb6b1a3de5f9145879547801f4401295ef498
+last_updated: 2026-09-06T13:21:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,18 +45,20 @@ last_updated: 2026-09-06T11:13:24+10:00
 
 ## Current objective
 
-PR #248 is the sole active delivery thread. It reduces redundant assistive-technology output in Template Edit while preserving the meaningful routine/task type artwork and all existing editing/apply behaviour.
+PR #249 is the sole active delivery thread. It reduces redundant assistive-technology output in Template Library while preserving all existing search, filtering, view switching, dialog, and template behaviour.
 
-The named close control, Add Step action, dynamically named Remove Step action, and Apply Template/Applying action hide glyphs whose meaning is already carried by explicit accessible names or visible text. The routine/task type artwork remains exposed because it remains a meaningful visual type cue.
+The named close control, named search field, named template-type select, and named/pressed Grid and List view controls hide glyphs whose meaning is already carried by explicit accessible semantics. No user-visible labels or behaviours are removed.
 
-Template loading, editing, applying, persistence, schemas, authorization, provider mappings, execution/recommendation policy, external integrations, and persisted data remain unchanged. NoCodeBackend-dependent execution persistence remains deferred.
+Application validation run 593 exposed a deterministic-test defect rather than a product defect: the Search and Template Type assertions used `[^>]*` across JSX elements whose `onChange` handlers contain `=>`, causing the matcher to stop before the accessible label. The assertions were repaired on the existing PR branch. Canonical run 595 then passed on exact repaired implementation/status head `542cb6b1a3de5f9145879547801f4401295ef498`, and submitted reviews and inline review threads were empty.
+
+Template loading, search/filter logic, view-state behaviour, editing/applying, persistence, schemas, authorization, provider mappings, execution/recommendation policy, external integrations, and persisted data remain unchanged. NoCodeBackend-dependent execution persistence remains deferred.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #248 |
-| Gate state | Implementation/status head passed run 590 and review/thread audit; durable post-merge handoff is committed and requires final-head evidence |
+| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #249 |
+| Gate state | Repaired implementation/status head passed run 595 and review/thread audit; durable post-merge handoff is committed and requires final-head evidence |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -65,13 +67,13 @@ Template loading, editing, applying, persistence, schemas, authorization, provid
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #247 — Template Preview accessibility semantics; merged into `main` at `85b65e00f236954d2b34f85313ff16d4a3d51419` |
-| Active delivery | PR #248 — hide decorative Template Edit action icons |
-| Active branch | `fix/template-edit-icon-semantics` |
-| Implemented change | Hide redundant Close, Add Step, Remove Step, and Apply Template glyphs while retaining routine/task type artwork |
-| Deterministic coverage | `test/template-edit-icon-semantics.test.mjs` |
-| Validation evidence | Application validation run 590 PASS on implementation/status head `96eb32ebe52a2be6517785891735e21fe7f444a2`; final durable-handoff head must be revalidated |
-| Review evidence | No submitted reviews or inline review threads on the successful run-590 head; re-audit after final exact-head validation |
+| Latest merged delivery | PR #248 — Template Edit accessibility semantics; merged into `main` at `f299fc483ee83b5342a35f7d7ad395a935b27330` |
+| Active delivery | PR #249 — hide decorative Template Library control and field icons |
+| Active branch | `fix/template-library-icon-semantics` |
+| Implemented change | Hide redundant Close, Search, Filter, Grid view, and List view glyphs while retaining the controls' existing accessible names and state |
+| Deterministic coverage | `test/template-library-icon-semantics.test.mjs`; assertion boundary repaired after run 593 exposed a false negative |
+| Validation evidence | Application validation run 595 PASS on repaired implementation/status head `542cb6b1a3de5f9145879547801f4401295ef498`; final durable-handoff head must be revalidated |
+| Review evidence | No submitted reviews or inline review threads on the successful run-595 head; re-audit after final exact-head validation |
 | Durable handoff | Fresh `main` is the required post-merge re-entry point; after merge reconcile GitHub state and continue the next evidence-backed provider-independent Stage 3 accessibility/interaction-integrity slice |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
@@ -80,21 +82,21 @@ Template loading, editing, applying, persistence, schemas, authorization, provid
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #248 is the sole active delivery thread. |
-| What is already happening? | Template Edit redundant action-icon semantics and deterministic regression coverage are implemented; implementation/status head run 590 passed and the durable post-merge handoff is now committed. |
-| What has been validated? | Application validation run 590 passed on exact head `96eb32ebe52a2be6517785891735e21fe7f444a2`; submitted reviews and inline threads were empty on that head. |
+| Where am I? | Stage 3; PR #249 is the sole active delivery thread. |
+| What is already happening? | Template Library decorative-icon semantics and repaired deterministic regression coverage are implemented; implementation/status head run 595 passed and the durable post-merge handoff is now committed. |
+| What has been validated? | Application validation run 595 passed on exact head `542cb6b1a3de5f9145879547801f4401295ef498`; submitted reviews and inline threads were empty on that head. |
 | What is next? | Validate the final handoff head, re-audit reviews/threads, signal implementation complete, allow lifecycle automation to merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #248 changes frontend semantic markup and deterministic test coverage only. It does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #249 changes frontend semantic markup and deterministic test coverage only. It does not alter persisted shapes, data services, provider mappings, authentication, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #248 durable-handoff head;
-2. re-audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #248;
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #249 durable-handoff head;
+2. re-audit submitted reviews and inline review threads for that exact head and repair any in-scope finding on PR #249;
 3. synchronize the PR acceptance checklist and signal `lifecycle:implementation-complete` only after final exact-head evidence is clean;
 4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
 5. re-enter from fresh `main`, reconcile GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
