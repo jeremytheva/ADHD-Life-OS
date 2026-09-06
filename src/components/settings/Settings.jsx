@@ -88,8 +88,8 @@ const Settings = () => {
       <h1 className="text-2xl font-medium text-slate-900">Settings</h1>
 
       {loadError && (
-        <div role="alert" className="flex items-center justify-between gap-4 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
-          <p>Could not load preferences: {loadError.message}</p>
+        <div className="flex items-center justify-between gap-4 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
+          <p role="alert" aria-atomic="true">Could not load preferences: {loadError.message}</p>
           <button onClick={loadPreferences} className="shrink-0 rounded-md bg-red-700 px-3 py-2 text-sm font-medium text-white hover:bg-red-800">
             Retry loading
           </button>
@@ -97,8 +97,8 @@ const Settings = () => {
       )}
 
       {saveError && (
-        <div role="alert" className="flex items-center justify-between gap-4 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
-          <p>Could not save preferences: {saveError.message}</p>
+        <div className="flex items-center justify-between gap-4 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
+          <p role="alert" aria-atomic="true">Could not save preferences: {saveError.message}</p>
           <button onClick={() => handleUpdatePreferences(lastUpdates)} disabled={!lastUpdates} className="shrink-0 rounded-md bg-red-700 px-3 py-2 text-sm font-medium text-white hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-50">
             Retry saving
           </button>
