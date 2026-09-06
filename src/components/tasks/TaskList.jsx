@@ -274,7 +274,7 @@ const TaskList = () => {
           className={`bg-gradient-to-r ${currentMode.gradient} text-white rounded-lg p-4`}
         >
           <div className="flex items-center gap-3">
-            <span className="text-2xl">{currentMode.icon}</span>
+            <span className="text-2xl" aria-hidden="true">{currentMode.icon}</span>
             <div>
               <div className="font-medium">Viewing {currentMode.label} Tasks</div>
               <div className="text-xs text-white text-opacity-90">Showing only {currentMode.label.toLowerCase()}-related tasks</div>
@@ -291,7 +291,7 @@ const TaskList = () => {
             onClick={() => { setOperationError(null); setShowTemplates(true) }}
             className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 flex items-center space-x-2"
           >
-            <SafeIcon icon={FiBookOpen} className="w-4 h-4" />
+            <SafeIcon icon={FiBookOpen} className="w-4 h-4" aria-hidden="true" />
             <span>Templates</span>
           </button>
           <button
@@ -299,7 +299,7 @@ const TaskList = () => {
             onClick={() => { setOperationError(null); setShowForm(true) }}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
           >
-            <SafeIcon icon={FiPlus} className="w-4 h-4" />
+            <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
             <span>Add Task</span>
           </button>
         </div>
@@ -323,7 +323,7 @@ const TaskList = () => {
 
       <div className="flex flex-wrap items-center gap-4">
         <div role="group" aria-label="Filter tasks by timeframe" className="flex items-center space-x-2">
-          <SafeIcon icon={FiFilter} className="w-5 h-5 text-slate-600" />
+          <SafeIcon icon={FiFilter} className="w-5 h-5 text-slate-600" aria-hidden="true" />
           {filters.map((filterOption) => (
             <button
               type="button"
