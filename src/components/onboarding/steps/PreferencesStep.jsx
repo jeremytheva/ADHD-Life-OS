@@ -31,7 +31,7 @@ const PreferencesStep = ({ onNext, onBack, currentData }) => {
     <div className="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-purple-200 transition-colors">
       <div className="flex items-start gap-3">
         <div className={`p-2 rounded-lg ${value ? 'bg-purple-100 text-purple-600' : 'bg-slate-100 text-slate-400'}`}>
-          <SafeIcon icon={Icon} className="w-5 h-5" />
+          <SafeIcon icon={Icon} className="w-5 h-5" aria-hidden="true" />
         </div>
         <div>
           <h4 className="font-medium text-slate-900">{label}</h4>
@@ -39,12 +39,16 @@ const PreferencesStep = ({ onNext, onBack, currentData }) => {
         </div>
       </div>
       <button
+        type="button"
         onClick={() => togglePreference(id)}
+        aria-label={`${label}: ${value ? 'On' : 'Off'}`}
+        aria-pressed={value}
         className="text-2xl focus:outline-none transition-colors"
       >
         <SafeIcon 
           icon={value ? FiToggleRight : FiToggleLeft} 
-          className={`w-10 h-10 ${value ? 'text-purple-600' : 'text-slate-300'}`} 
+          className={`w-10 h-10 ${value ? 'text-purple-600' : 'text-slate-300'}`}
+          aria-hidden="true"
         />
       </button>
     </div>
@@ -55,7 +59,7 @@ const PreferencesStep = ({ onNext, onBack, currentData }) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-slate-900 mb-3">
-          Fine-tune your experience ⚙️
+          Fine-tune your experience <span aria-hidden="true">⚙️</span>
         </h2>
         <p className="text-lg text-slate-600">
           Small adjustments can make a big difference. Configure these ADHD-friendly settings.
@@ -100,23 +104,25 @@ const PreferencesStep = ({ onNext, onBack, currentData }) => {
       {/* Info Box */}
       <div className="bg-purple-50 rounded-xl p-4 border border-purple-200">
         <p className="text-sm text-purple-800 text-center">
-          ✨ "Celebration" and "Encouragement" are highly recommended for dopamine boosting!
+          <span aria-hidden="true">✨</span> "Celebration" and "Encouragement" are highly recommended for dopamine boosting!
         </p>
       </div>
 
       {/* Navigation */}
       <div className="flex gap-3 pt-6">
         <button
+          type="button"
           onClick={onBack}
           className="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors"
         >
-          ← Back
+          <span aria-hidden="true">←</span> Back
         </button>
         <button
+          type="button"
           onClick={handleNext}
           className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors"
         >
-          Complete Setup →
+          Complete Setup <span aria-hidden="true">→</span>
         </button>
       </div>
     </div>
