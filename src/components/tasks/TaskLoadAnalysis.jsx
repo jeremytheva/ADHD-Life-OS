@@ -82,10 +82,10 @@ const TaskLoadAnalysis = ({ analysis }) => {
             {(overdue > 0 || critical > 0) && (
               <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-2">
                 <SafeIcon icon={FiAlertCircle} className="w-4 h-4 text-amber-600 mt-0.5" aria-hidden="true" />
-                <div className="text-xs text-amber-800">
-                  {overdue > 0 && <div>• You have {overdue} overdue task{overdue > 1 ? 's' : ''}</div>}
-                  {critical > 0 && <div>• {critical} critical task{critical > 1 ? 's' : ''} require immediate attention</div>}
-                </div>
+                <ul className="text-xs text-amber-800 list-disc pl-4">
+                  {overdue > 0 && <li>You have {overdue} overdue task{overdue > 1 ? 's' : ''}</li>}
+                  {critical > 0 && <li>{critical} critical task{critical > 1 ? 's' : ''} require immediate attention</li>}
+                </ul>
               </div>
             )}
           </div>
