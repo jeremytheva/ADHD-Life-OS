@@ -12,6 +12,7 @@ test('reward shop hides decorative glyphs when visible text or control names car
   assert.match(rewardShopSource, /<SafeIcon icon=\{FiShoppingCart\} className="w-6 h-6" aria-hidden="true" \/>/)
   assert.match(rewardShopSource, /aria-label="Close Reward Shop"[\s\S]*?<SafeIcon icon=\{FiX\} className="w-6 h-6" aria-hidden="true" \/>/)
   assert.match(rewardShopSource, /<SafeIcon icon=\{cat\.icon\} className="w-4 h-4" aria-hidden="true" \/>[\s\S]*?\{cat\.label\}/)
+  assert.match(rewardShopSource, /<div className="text-5xl mb-2" aria-hidden="true">\{reward\.icon\}<\/div>[\s\S]*?\{reward\.name\}[\s\S]*?\{reward\.description\}/)
   assert.match(rewardShopSource, /<SafeIcon icon=\{FiCheck\} className="w-4 h-4" aria-hidden="true" \/>[\s\S]*?Owned/)
   assert.match(rewardShopSource, /<SafeIcon icon=\{FiLock\} className="w-4 h-4" aria-hidden="true" \/>[\s\S]*?Locked/)
   assert.match(rewardShopSource, /<span aria-hidden="true">💰<\/span> \{currency\.coins\} coins/)
