@@ -4,17 +4,15 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: VALIDATING
+execution_state: READY
 current_work:
-  objective: Validate and complete PR #280, which exposes Routine Card preview steps as an ordered list while preserving visible numbering and existing routine behaviour.
+  objective: Re-enter from fresh main after PR #280 lifecycle completion and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
-  pr: 280
-  branch: fix/routine-card-step-preview-semantics
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the exact implementation/status head.
-  - Audit submitted reviews and inline review threads on that exact head.
-  - Repair any in-scope validation or review finding on the existing PR.
-  - After clean implementation-head evidence, commit a durable fresh-main handoff and revalidate the resulting exact final head.
+  - Revalidate the exact final PR #280 handoff head through canonical Application validation.
+  - Re-audit submitted reviews and inline review threads on that exact final head.
   - Signal lifecycle:implementation-complete only if final-head validation and review evidence remain clean.
   - Allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions.
   - Reconcile fresh main and continue the next dependency-correct provider-independent Stage 3 slice.
@@ -26,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #280 implementation and deterministic regression coverage are committed; canonical exact-head Application validation is required on the current status-bearing head before implementation-complete signalling.
-last_verified_commit: null
-last_updated: 2026-09-07T19:51:00+10:00
+validation_basis: PR #280 implementation/status head 400df493807f4700e8c95c0856e1720447f90c6f passed canonical Application validation run 699 with no submitted reviews or inline review threads. This durable handoff commit changes the PR head, so final exact-head validation/review evidence must be re-established before lifecycle:implementation-complete.
+last_verified_commit: 400df493807f4700e8c95c0856e1720447f90c6f
+last_updated: 2026-09-07T19:55:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -47,19 +45,21 @@ last_updated: 2026-09-07T19:51:00+10:00
 
 ## Current objective
 
-PR #279 completed its repository-managed lifecycle and merged into fresh `main` at `9c1f002f9199f91fa5a937dade69623f86613c83` after final exact-head Application validation run 697 passed with clean review/thread evidence.
+PR #280 has completed its implementation-head evidence gate. Exact implementation/status head `400df493807f4700e8c95c0856e1720447f90c6f` passed canonical Application validation run 699, and submitted-review plus inline-review-thread audits were clean.
 
-Fresh-main reconciliation found no open PRs or issues and no existing Routine Card step-preview delivery. PR #280 is therefore the sole active Stage 3 delivery thread. It converts the visually ordered Routine Card preview steps from generic containers to native `ol`/`li` structure while preserving the existing visible numeric prefixes and the "+ N more steps" summary.
+The PR exposes the existing visibly numbered Routine Card preview-step sequence as native ordered-list/list-item structure. Existing visible numeric prefixes and the "+ N more steps" summary are preserved.
 
 Routine ordering, step data, durations, activation, start/edit/delete/stats behaviour, persistence, authentication, authorization, schemas, recommendation/execution policy, provider behaviour, and visual presentation are unchanged.
+
+This checkpoint is intentionally post-merge safe: after final exact-head evidence and repository-managed lifecycle completion, resume from fresh `main` and select the next provider-independent Stage 3 accessibility or interaction-integrity slice.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #280 implementation/status head requires canonical exact-head validation and review audit |
-| Gate state | Implementation and deterministic regression coverage committed; validation evidence not yet established for the status-bearing head |
-| Execution state | VALIDATING |
+| Current gate | INTEGRATION — PR #280 durable handoff committed; final exact-head validation/review evidence required before implementation-complete signalling |
+| Gate state | Implementation-head run 699 PASS and review/thread audit clean; handoff commit invalidates exact-head evidence until revalidation |
+| Execution state | READY after lifecycle completion |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
 
@@ -68,13 +68,14 @@ Routine ordering, step data, durations, activation, start/edit/delete/stats beha
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #279 — hide upcoming chore room pictograms while preserving room meaning; merged at `9c1f002f9199f91fa5a937dade69623f86613c83` |
-| Active delivery | PR #280 — expose Routine Card step preview semantics |
+| Delivery completing lifecycle | PR #280 — expose Routine Card step preview semantics |
 | Delivery branch | `fix/routine-card-step-preview-semantics` |
 | Implemented change | Expose the existing visibly numbered preview-step sequence as a native ordered list with list items |
 | Deterministic coverage | Added `test/routine-card-step-preview-semantics.test.mjs` |
-| Canonical validation | NOT_RUN — required on exact implementation/status head |
-| Review audit | NOT_RUN — required on exact implementation/status head |
-| Durable post-merge handoff | NOT_RUN — commit only after implementation-head evidence is clean |
+| Implementation-head validation | PASS — Application validation run 699 on `400df493807f4700e8c95c0856e1720447f90c6f` |
+| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
+| Durable post-merge handoff | COMMITTED |
+| Final exact-head validation | NOT_RUN — required after this handoff commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -82,10 +83,10 @@ Routine ordering, step data, durations, activation, start/edit/delete/stats beha
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #280 is the sole active delivery thread and is validating. |
-| What is already happening? | Routine Card preview steps now carry native ordered-list semantics while visible numbering and behaviour remain unchanged. |
-| What has been validated? | PR #279 final head passed run 697 before merge. PR #280 still requires exact-head canonical validation and review/thread audit. |
-| What is next? | Validate/audit PR #280, repair any finding in place, commit the durable handoff after clean implementation-head evidence, revalidate final head, then allow lifecycle completion. |
+| Where am I? | Stage 3; PR #280 has clean implementation-head evidence and is completing its final repository lifecycle gate. |
+| What is already happening? | Routine Card preview steps carry native ordered-list semantics with existing visible numbering preserved; durable fresh-main handoff is committed. |
+| What has been validated? | Implementation/status head `400df493807f4700e8c95c0856e1720447f90c6f` passed canonical run 699 and review/thread audits are clean. This handoff head requires fresh exact-head evidence. |
+| What is next? | Revalidate/re-audit the final PR #280 head, signal implementation-complete only if clean, allow lifecycle merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -95,14 +96,12 @@ Generic durable `execution-sessions` remains planned/provider-unverified and fai
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the Application validation workflow for the exact PR #280 implementation/status head;
-2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
-3. after clean implementation-head evidence, commit a durable post-merge fresh-`main` handoff;
-4. re-run canonical exact-head validation and review/thread audit after the handoff commit;
-5. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
-6. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-7. re-enter from fresh `main` and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
-8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the Application validation workflow for the exact final PR #280 handoff head;
+2. re-audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
+3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
+4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
