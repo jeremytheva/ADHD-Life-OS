@@ -21,3 +21,10 @@ test('reward feedback is announced and exposes XP progress without decorative ic
   assert.match(rewardSource, /<span aria-hidden="true">🔥<\/span>/);
   assert.match(rewardSource, /className="text-3xl"[\s\S]*?aria-hidden="true"[\s\S]*?>\s*\{achievement\.icon\}/);
 });
+
+test('new achievement feedback exposes collection and item semantics', () => {
+  assert.match(rewardSource, /<motion\.ul[\s\S]*?aria-label="New achievements"/);
+  assert.match(rewardSource, /reward\.new_achievements\.map\(\(achievement, index\) => \(\s*<motion\.li/);
+  assert.match(rewardSource, /<\/motion\.li>/);
+  assert.match(rewardSource, /<\/motion\.ul>/);
+});
