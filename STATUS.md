@@ -6,16 +6,18 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: After PR #285 completes its repository-managed lifecycle, reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Complete PR #286 by validating the Today unscheduled-task list-marker semantics change, auditing review evidence, committing a post-merge-safe handoff, and allowing the repository lifecycle controller/finalizer to merge it.
   issue: null
-  pr: null
-  branch: null
+  pr: 286
+  branch: fix/today-unscheduled-list-marker-semantics
 next_actions:
-  - Revalidate and re-audit the final PR #285 handoff head.
+  - Run canonical Application validation on the exact PR #286 implementation/status head.
+  - Audit submitted reviews and inline review threads on that exact head and repair any in-scope finding.
+  - Commit a durable post-merge-safe fresh-main handoff after clean implementation-head evidence.
+  - Revalidate and re-audit the final handoff head.
   - Signal lifecycle:implementation-complete only after final exact-head validation/review evidence is clean.
   - Allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions.
-  - Reconcile fresh main and inspect current repository/GitHub state before selecting new work.
-  - Continue the next dependency-correct provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +26,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #285 implementation/status head 41da417d2561a99f64278d06563428be08b028df passed canonical Application validation run 715, including governance, lint, typecheck, tests, production build and critical Playwright coverage; submitted reviews and inline review threads were clean. This durable handoff commit requires final exact-head revalidation before lifecycle completion.
-last_verified_commit: 41da417d2561a99f64278d06563428be08b028df
-last_updated: 2026-09-08T02:30:00+10:00
+validation_basis: PR #286 implementation/status head requires canonical Application validation after durable state synchronization; no validation claim is carried forward from PR #285 because the implementation and STATUS commits changed the head.
+last_verified_commit: null
+last_updated: 2026-09-08T02:45:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +47,18 @@ last_updated: 2026-09-08T02:30:00+10:00
 
 ## Current objective
 
-PR #284 completed its repository-managed lifecycle and merged into `main` at `b4b8fc8b2c345272a919b72cf784a691339515a1` after final exact-head Application validation run 713 passed with clean submitted-review and inline-thread evidence.
+PR #285 completed its repository-managed lifecycle and merged into `main` at `18336630ecd217000a93135af927b8a62be9cd1f`.
 
-PR #285 implements the Next Action fit-control group semantics slice. Its implementation/status head `41da417d2561a99f64278d06563428be08b028df` passed canonical Application validation run 715, and submitted reviews plus inline review threads were clean on that exact head.
+PR #286 is the sole active Stage 3 delivery thread. It reuses the existing fresh-main `fix/today-unscheduled-list-marker-semantics` branch and removes a redundant literal `•` prefix from Today’s already-native unscheduled-task `ul` / `li` structure. The existing `test/today-unscheduled-progressive-disclosure.test.mjs` contract is extended to protect the native-list/no-duplicate-marker semantics.
 
-The durable handoff is now post-merge-safe: once PR #285 completes its final exact-head validation and repository-managed lifecycle, continuation returns to fresh `main` rather than treating the soon-to-close PR as the default re-entry target.
-
-Execution/recommendation scoring, task state, persistence, authentication, authorization, provider contracts, schemas, control values and visual behaviour are unchanged.
+Task identity, order, scheduling, recommendation, completion, filtering, persistence, authentication, authorization, provider contracts, schemas, disclosure behaviour and execution policy are unchanged.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #285 durable handoff requires final exact-head validation/review evidence before lifecycle completion |
-| Gate state | Implementation-head run 715 PASS; implementation-head review/thread audit clean; durable fresh-main handoff committed |
+| Current gate | INTEGRATION — PR #286 implementation/status head requires exact-head canonical validation and review/thread evidence |
+| Gate state | Implementation and deterministic coverage are present; canonical evidence not yet recorded for the synchronized head |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -67,15 +67,15 @@ Execution/recommendation scoring, task state, persistence, authentication, autho
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #284 — expose Reward Notification achievement list semantics; merged at `b4b8fc8b2c345272a919b72cf784a691339515a1` |
-| Active delivery | PR #285 — group Next Action fit controls semantically; final lifecycle evidence pending |
-| Delivery branch | `fix/next-action-fit-group-semantics` |
-| Implemented change | Replace the generic fit-controls container with a named native `fieldset` while preserving disclosure and control behaviour |
-| Deterministic coverage | Added `test/next-action-fit-group-semantics.test.mjs` |
-| Implementation-head validation | PASS — Application validation run 715 on `41da417d2561a99f64278d06563428be08b028df` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
-| Durable post-merge handoff | COMMITTED — fresh-main re-entry is the durable next objective |
-| Final exact-head validation | NOT_RUN — required because the handoff commit changes the head |
+| Latest merged delivery | PR #285 — group Next Action fit controls semantically; merged at `18336630ecd217000a93135af927b8a62be9cd1f` |
+| Active delivery | PR #286 — remove redundant Today unscheduled-task literal bullets |
+| Delivery branch | `fix/today-unscheduled-list-marker-semantics` |
+| Implemented change | Remove the literal text bullet from native unscheduled-task list items while preserving the `ul` / `li` structure and disclosure behaviour |
+| Deterministic coverage | Extended `test/today-unscheduled-progressive-disclosure.test.mjs` |
+| Implementation-head validation | NOT_RUN — exact synchronized head requires canonical Application validation |
+| Implementation-head review audit | NOT_RUN |
+| Durable post-merge handoff | NOT_RUN — commit only after clean implementation-head evidence |
+| Final exact-head validation | NOT_RUN |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -83,25 +83,27 @@ Execution/recommendation scoring, task state, persistence, authentication, autho
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #285 has clean implementation-head evidence and is completing its durable handoff/final validation lifecycle. |
-| What is already happening? | Next Action energy/time fit controls expose a named native fieldset with deterministic regression coverage; run 715 passed on the implementation/status head. |
-| What has been validated? | Canonical Application validation run 715 passed on `41da417d2561a99f64278d06563428be08b028df`; submitted reviews and inline review threads were clean on that exact head. |
-| What is next? | Revalidate/re-audit the final handoff head, signal implementation completion if clean, allow lifecycle automation/finalizer to merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; PR #286 is the sole active delivery and is at exact-head validation. |
+| What is already happening? | Today’s unscheduled tasks retain native list semantics without a duplicate literal bullet; existing deterministic disclosure coverage has been extended. |
+| What has been validated? | No canonical validation is yet recorded for the current synchronized PR #286 head. |
+| What is next? | Run exact-head Application validation, audit reviews/threads, repair any in-scope finding, then commit/revalidate the post-merge-safe handoff and complete the repository lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #285 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy or destructive behaviour.
+Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #286 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy or destructive behaviour.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the Application validation workflow for the exact final PR #285 handoff head;
-2. audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
-3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
-4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the Application validation workflow for the exact PR #286 implementation/status head;
+2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
+3. after clean implementation-head evidence, commit the durable post-merge-safe fresh-main handoff;
+4. revalidate/re-audit the final handoff head;
+5. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
+6. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+7. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
+8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
