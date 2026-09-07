@@ -4,18 +4,19 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: READY
+execution_state: ACTIVE
 current_work:
-  objective: Re-enter from fresh main after PR #276 lifecycle completion and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Complete the provider-independent Reward Shop pictogram accessibility slice and advance it through canonical validation and repository-managed PR lifecycle.
   issue: null
   pr: null
-  branch: main
+  branch: fix/reward-shop-pictogram-semantics
 next_actions:
-  - Revalidate the exact final PR #276 handoff head through canonical Application validation.
-  - Re-audit submitted reviews and inline review threads on that exact final head.
-  - Signal lifecycle:implementation-complete only if final-head validation and review evidence remain clean.
-  - Allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions.
-  - Reconcile fresh main and continue the next dependency-correct provider-independent Stage 3 slice.
+  - Create the sole active Draft PR from this fresh-main branch.
+  - Run canonical Application validation on the exact implementation/status head.
+  - Audit submitted reviews and inline review threads and repair any in-scope findings.
+  - Commit a fresh-main post-merge handoff after clean implementation-head evidence.
+  - Revalidate the exact final handoff head and signal lifecycle:implementation-complete only if all evidence remains clean.
+  - Re-enter from fresh main after repository-managed merge and continue the next dependency-correct Stage 3 slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #276 repaired implementation/status head 8c3b3cd6251c0ad7e11f2f9b1cb9ac8be703caca passed canonical Application validation run 683 with no submitted reviews or inline review threads. This durable handoff commit changes the PR head, so final exact-head validation/review evidence must be re-established before lifecycle:implementation-complete.
-last_verified_commit: 8c3b3cd6251c0ad7e11f2f9b1cb9ac8be703caca
-last_updated: 2026-09-07T18:14:38+10:00
+validation_basis: PR #276 final handoff head 78d09c0a08b751aba0c2988828afaf81cdb35bdf passed canonical Application validation run 684 with clean submitted-review and inline-thread evidence and merged into main at 5595e85a39ac137f1ce8b793da4bf7e617725f18. The current Reward Shop slice is newly implemented on fresh main and requires exact-head canonical validation.
+last_verified_commit: 78d09c0a08b751aba0c2988828afaf81cdb35bdf
+last_updated: 2026-09-07T18:24:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,25 +46,19 @@ last_updated: 2026-09-07T18:14:38+10:00
 
 ## Current objective
 
-PR #276 has completed its implementation-head evidence gate. The repaired implementation/status head `8c3b3cd6251c0ad7e11f2f9b1cb9ac8be703caca` passed canonical Application validation run 683, and submitted-review plus inline-review-thread audits were clean.
+PR #276 completed its repository-managed lifecycle after final exact-head Application validation run 684 passed on `78d09c0a08b751aba0c2988828afaf81cdb35bdf` with no submitted reviews or inline review threads. It merged into `main` at `5595e85a39ac137f1ce8b793da4bf7e617725f18`.
 
-The PR exposes adaptive reward suggestions as a named semantic list with list items, makes dismiss and reward-claim controls explicit `type="button"` controls, and extends the existing adaptive reward semantics regression test rather than creating duplicate coverage.
+Fresh-main reconciliation found no competing open PR. The next evidence-backed provider-independent accessibility slice is in `RewardShop.jsx`: each reward card already exposes the reward name and description, while its dynamic reward pictogram duplicated that meaning to assistive technology. The pictogram is now presentation-only with `aria-hidden="true"`, matching the component's established treatment of other redundant icons and emoji.
 
-Reward selection behaviour, gamification policy, persistence, authentication, authorization, schemas, recommendation/execution policy, and NoCodeBackend contracts are unchanged.
-
-Run 682 failed before application validation because `STATUS.md` used unsupported `PENDING` enum values for governed validation fields. That durable-state defect was repaired in place and run 683 subsequently passed the complete canonical gate.
-
-This checkpoint is intentionally post-merge safe: after final exact-head evidence and repository-managed lifecycle completion, resume from fresh `main` and select the next provider-independent Stage 3 accessibility or interaction-integrity slice.
-
-A pre-existing stale branch named `fix/profile-selector-state-semantics` was found and fast-forwarded to fresh `main` during reconciliation. It contained no implementation and no PR. A direct Profile Selector patch could not be submitted because the connector safety filter rejects replacement content containing the existing embedded test credential; no speculative or partial change was made there.
+The existing `test/reward-shop-accessibility-semantics.test.mjs` contract was extended rather than creating duplicate coverage. Reward identity, cost, affordability, purchase behavior, currency state, filtering, persistence, authentication, authorization, schemas, gamification policy, execution/recommendation policy, and NoCodeBackend contracts are unchanged.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #276 durable handoff committed; final exact-head validation/review evidence required before implementation-complete signalling |
-| Gate state | Implementation-head run 683 PASS and review/thread audit clean; handoff commit invalidates exact-head evidence until revalidation |
-| Execution state | READY after lifecycle completion |
+| Current gate | INTEGRATION — implementation/status checkpoint committed; exact-head canonical validation required |
+| Gate state | New provider-independent accessibility slice implemented on fresh `main`; validation not yet established on current head |
+| Execution state | ACTIVE |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
 
@@ -71,17 +66,13 @@ A pre-existing stale branch named `fix/profile-selector-state-semantics` was fou
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #275 — announce Quick Capture progress; merged at `c318efb836b3577ec956f76e4d60682e51785b2f` |
-| Delivery completing lifecycle | PR #276 — expose adaptive reward list semantics |
-| Delivery branch | `fix/adaptive-reward-list-semantics` |
-| Implemented change | Named semantic reward list/list-items plus explicit non-submit dismiss/claim buttons |
-| Deterministic coverage | Extended `test/adaptive-reward-suggestion-semantics.test.mjs` |
-| Initial validation | Run 682 — FAIL at governance only because STATUS.md contained unsupported `PENDING` validation enums; no later validation stages ran |
-| Governance-state repair | COMMITTED |
-| Implementation-head validation | PASS — Application validation run 683 on `8c3b3cd6251c0ad7e11f2f9b1cb9ac8be703caca` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
-| Durable post-merge handoff | COMMITTED |
-| Final exact-head validation | NOT_RUN — required after this handoff commit |
+| Latest merged delivery | PR #276 — expose adaptive reward list semantics; merged at `5595e85a39ac137f1ce8b793da4bf7e617725f18` |
+| Active delivery | Reward Shop pictogram semantics |
+| Delivery branch | `fix/reward-shop-pictogram-semantics` |
+| Implemented change | Hide redundant dynamic reward pictograms from assistive technology while preserving visible reward imagery and explicit name/description text |
+| Deterministic coverage | Extended `test/reward-shop-accessibility-semantics.test.mjs` |
+| Canonical validation | NOT_RUN on current head |
+| Review audit | NOT_RUN on current head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -89,25 +80,26 @@ A pre-existing stale branch named `fix/profile-selector-state-semantics` was fou
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #276 has clean implementation-head evidence and is completing its final repository lifecycle gate. |
-| What is already happening? | Adaptive reward collection/control semantics and focused regression coverage are implemented; durable fresh-main handoff is committed. |
-| What has been validated? | Repaired implementation/status head `8c3b3cd6251c0ad7e11f2f9b1cb9ac8be703caca` passed canonical run 683 and review/thread audits are clean. This handoff head requires fresh exact-head evidence. |
-| What is next? | Revalidate/re-audit the final PR #276 head, signal implementation-complete only if clean, allow lifecycle merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; fresh-main Reward Shop pictogram semantics are implemented on the sole active delivery branch. |
+| What is already happening? | Redundant reward pictograms are presentation-only and existing deterministic accessibility coverage has been extended. |
+| What has been validated? | Prior PR #276 final head passed run 684 and merged. Current branch still requires exact-head canonical validation and review audit. |
+| What is next? | Create Draft PR, validate exact head, audit reviews/threads, repair findings, commit post-merge handoff, revalidate final head, then allow repository-managed lifecycle completion. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #276 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy, or destructive behaviour.
+Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. This accessibility slice does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy, or destructive behaviour.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the Application validation workflow for the exact final PR #276 handoff head;
-2. re-audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
-3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
-4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. open the Draft PR from `fix/reward-shop-pictogram-semantics` as the sole active delivery thread;
+2. run canonical `npm run platform:validate` through the Application validation workflow for the exact implementation/status head;
+3. audit submitted reviews and inline review threads and repair any in-scope finding;
+4. after clean implementation-head evidence, commit a durable fresh-main handoff to this PR;
+5. revalidate and re-audit the exact final handoff head;
+6. signal `lifecycle:implementation-complete` only after final evidence is clean and allow repository lifecycle automation/finalizer to merge;
+7. re-enter from fresh `main` and continue the next evidence-backed provider-independent Stage 3 slice.
 
 ## Stage 3 exit conditions
 
