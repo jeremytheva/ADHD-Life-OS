@@ -6,16 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: After PR #287 completes its repository-managed lifecycle, reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Validate and complete PR #288, which exposes the onboarding welcome guidance cards as one named native list without changing onboarding behaviour.
   issue: null
-  pr: null
-  branch: null
+  pr: 288
+  branch: fix/onboarding-welcome-message-list-semantics
 next_actions:
-  - Revalidate and re-audit the final PR #287 handoff head.
-  - Signal lifecycle:implementation-complete only after final exact-head validation/review evidence is clean.
-  - Allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions.
-  - Reconcile fresh main and inspect current repository/GitHub state before selecting new work.
-  - Continue the next dependency-correct provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Run canonical Application validation for the exact PR #288 implementation/status head.
+  - Audit submitted reviews and inline review threads on that exact head and repair any in-scope finding.
+  - After clean implementation-head evidence, commit a post-merge-safe fresh-main handoff and revalidate its exact head.
+  - Signal lifecycle:implementation-complete only after final exact-head validation and review evidence is clean.
+  - Allow repository lifecycle automation and the merge finalizer to complete the PR lifecycle.
+  - Reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #287 implementation/status head 5148b0f1370ccc069f5e9d776253944967ab1493 passed canonical Application validation run 721, including governance, lint, typecheck, tests, production build and critical Playwright coverage; submitted reviews and inline review threads were clean. This durable handoff commit requires final exact-head revalidation before lifecycle completion.
-last_verified_commit: 5148b0f1370ccc069f5e9d776253944967ab1493
-last_updated: 2026-09-08T03:16:00+10:00
+validation_basis: PR #287 final exact head 7f3704c05b6775e4b2afae6db970fac3f6416328 passed canonical Application validation run 722 with clean submitted-review and inline-thread evidence before repository-managed merge. PR #288 changes the exact head and therefore requires fresh canonical validation.
+last_verified_commit: 7f3704c05b6775e4b2afae6db970fac3f6416328
+last_updated: 2026-09-08T04:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +46,18 @@ last_updated: 2026-09-08T03:16:00+10:00
 
 ## Current objective
 
-PR #286 completed its repository-managed lifecycle and merged into `main` at `8cdc988feecd402f70e3ba0ab0dc7495658106d6` after final exact-head Application validation run 719 passed with clean submitted-review and inline-thread evidence.
+PR #287 completed its repository-managed lifecycle and merged into `main` at `75fe0ff4ffc50987d52b208f1b21b8e55a446cf3` after final exact-head Application validation run 722 passed with clean submitted-review and inline-thread evidence.
 
-PR #287 replaces the Settings Account section's non-control `<label>` / paragraph pair with native `dl` / `dt` / `dd` description semantics while preserving the displayed authenticated email and all surrounding behaviour. Focused deterministic coverage is provided by `test/settings-account-info-semantics.test.mjs`. Its implementation/status head `5148b0f1370ccc069f5e9d776253944967ab1493` passed canonical Application validation run 721, and submitted reviews plus inline review threads were clean on that exact head.
+Fresh-main reconciliation found no competing open delivery PR. PR #288 is now the sole active Stage 3 delivery thread. It replaces the onboarding Welcome step's generic animated key-message container with a named native `motion.ul` and represents the three existing guidance cards as `li` elements. Wording, ordering, visual styling, animation, decorative-icon behaviour and onboarding navigation remain unchanged.
 
-The durable handoff is now post-merge-safe: once PR #287 completes its final exact-head validation and repository-managed lifecycle, continuation returns to fresh `main` rather than treating the soon-to-close PR as the default re-entry target.
-
-Authentication, account mutation, preferences, mode behaviour, accessibility settings behaviour, persistence, provider contracts, schemas and execution policy are unchanged.
+The existing `test/onboarding-welcome-semantics.test.mjs` contract is extended to protect the collection semantics instead of creating duplicate component coverage.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #287 durable handoff requires final exact-head validation/review evidence before lifecycle completion |
-| Gate state | Implementation-head run 721 PASS; implementation-head review/thread audit clean; durable fresh-main handoff committed |
+| Current gate | INTEGRATION — PR #288 implementation/status head requires canonical validation and review evidence |
+| Gate state | Implementation and deterministic coverage committed; exact-head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -67,15 +66,13 @@ Authentication, account mutation, preferences, mode behaviour, accessibility set
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #286 — remove redundant Today unscheduled-task literal bullets; merged at `8cdc988feecd402f70e3ba0ab0dc7495658106d6` |
-| Active delivery | PR #287 — expose Settings static account information semantically; final lifecycle evidence pending |
-| Delivery branch | `fix/settings-account-info-semantics` |
-| Implemented change | Replace the static Account email label/text pair with native description-list semantics |
-| Deterministic coverage | Added `test/settings-account-info-semantics.test.mjs` |
-| Implementation-head validation | PASS — Application validation run 721 on `5148b0f1370ccc069f5e9d776253944967ab1493` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
-| Durable post-merge handoff | COMMITTED — fresh-main re-entry is the durable next objective |
-| Final exact-head validation | NOT_RUN — required because the handoff commit changes the head |
+| Latest merged delivery | PR #287 — expose Settings static account information semantically; merged at `75fe0ff4ffc50987d52b208f1b21b8e55a446cf3` |
+| Active delivery | PR #288 — expose onboarding welcome guidance as a named list |
+| Delivery branch | `fix/onboarding-welcome-message-list-semantics` |
+| Implemented change | Native list semantics for the three onboarding welcome guidance cards |
+| Deterministic coverage | Extended `test/onboarding-welcome-semantics.test.mjs` |
+| Exact-head validation | NOT_RUN |
+| Review audit | NOT_RUN |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -83,25 +80,26 @@ Authentication, account mutation, preferences, mode behaviour, accessibility set
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #287 has clean implementation-head evidence and is completing its durable handoff/final validation lifecycle. |
-| What is already happening? | Settings static Account email information is exposed with description-list semantics and run 721 passed on the implementation/status head. |
-| What has been validated? | Canonical Application validation run 721 passed on `5148b0f1370ccc069f5e9d776253944967ab1493`; submitted reviews and inline review threads were clean on that exact head. |
-| What is next? | Revalidate/re-audit the final handoff head, signal implementation completion if clean, allow lifecycle automation/finalizer to merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; PR #288 is the sole active delivery and is validating. |
+| What is already happening? | The Welcome step's three key guidance cards are implemented as one named native list with existing semantic coverage extended. |
+| What has been validated? | PR #287 final head passed run 722 before merge; PR #288 exact-head validation has not yet run. |
+| What is next? | Validate and review-audit PR #288, repair any finding, commit a post-merge-safe handoff after clean implementation-head evidence, then complete the repository-managed lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #287 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy or destructive behaviour.
+Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #288 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy or destructive behaviour.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the Application validation workflow for the exact final PR #287 handoff head;
-2. audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
-3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
-4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the Application validation workflow for the exact PR #288 implementation/status head;
+2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
+3. after clean implementation-head evidence, commit a post-merge-safe fresh-main handoff and revalidate that final exact head;
+4. signal `lifecycle:implementation-complete` only after all final-head evidence is clean;
+5. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+6. re-enter from fresh `main` and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
