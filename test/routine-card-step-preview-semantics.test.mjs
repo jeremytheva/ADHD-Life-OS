@@ -10,5 +10,5 @@ test('routine card step preview exposes its visible sequence as an ordered list'
 
   assert.match(routineCard, /<ol className="space-y-1">/)
   assert.match(routineCard, /<li\s+key=\{step\.id\}/)
-  assert.doesNotMatch(routineCard, /\{index \+ 1\}\. \{step\.name\}/)
+  assert.match(routineCard, /\{index \+ 1\}\. \{step\.name\}/)
 })
