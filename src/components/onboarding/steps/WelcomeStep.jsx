@@ -15,12 +15,12 @@ const WelcomeStep = ({ onNext }) => {
         transition={{ delay: 0.2 }}
         className="mb-8"
       >
-        <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+        <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg" aria-hidden="true">
           <SafeIcon icon={FiHeart} className="w-12 h-12 text-white" />
         </div>
         
         <h1 className="text-4xl font-bold text-slate-900 mb-4">
-          Welcome to Your ADHD Life-OS! 🎉
+          Welcome to Your ADHD Life-OS! <span aria-hidden="true">🎉</span>
         </h1>
         
         <p className="text-xl text-slate-700 leading-relaxed">
@@ -38,7 +38,7 @@ const WelcomeStep = ({ onNext }) => {
       >
         <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border-2 border-purple-200">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
               <SafeIcon icon={FiStar} className="w-6 h-6 text-white" />
             </div>
             <div className="text-left">
@@ -56,7 +56,7 @@ const WelcomeStep = ({ onNext }) => {
 
         <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
               <SafeIcon icon={FiZap} className="w-6 h-6 text-white" />
             </div>
             <div className="text-left">
@@ -74,7 +74,7 @@ const WelcomeStep = ({ onNext }) => {
 
         <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border-2 border-amber-200">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
               <SafeIcon icon={FiSmile} className="w-6 h-6 text-white" />
             </div>
             <div className="text-left">
@@ -104,7 +104,7 @@ const WelcomeStep = ({ onNext }) => {
           these settings later—nothing is permanent.
         </p>
         <p className="text-sm text-slate-600">
-          This will only take 2-3 minutes. Ready? 🚀
+          This will only take 2-3 minutes. Ready? <span aria-hidden="true">🚀</span>
         </p>
       </motion.div>
 
@@ -115,10 +115,11 @@ const WelcomeStep = ({ onNext }) => {
         transition={{ delay: 0.8 }}
       >
         <button
+          type="button"
           onClick={() => onNext({})}
           className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all text-lg font-medium shadow-lg hover:shadow-xl transform hover:scale-105"
         >
-          Let's Get Started! →
+          Let's Get Started! <span aria-hidden="true">→</span>
         </button>
       </motion.div>
     </div>
