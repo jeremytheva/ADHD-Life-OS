@@ -59,7 +59,7 @@ const UIStyleStep = ({ onNext, onBack, currentData }) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-slate-900 mb-3">
-          Pick the style that feels right 🎨
+          Pick the style that feels right <span aria-hidden="true">🎨</span>
         </h2>
         <p className="text-lg text-slate-600">
           There's no wrong answer! Choose the interface that makes your brain happy.
@@ -91,7 +91,7 @@ const UIStyleStep = ({ onNext, onBack, currentData }) => {
                   w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0
                   ${isSelected ? `bg-${style.color}-500 text-white` : 'bg-slate-100 text-slate-500'}
                 `}>
-                  <SafeIcon icon={style.icon} className="w-6 h-6" />
+                  <SafeIcon icon={style.icon} className="w-6 h-6" aria-hidden="true" />
                 </div>
                 
                 <div className="flex-1">
@@ -100,7 +100,7 @@ const UIStyleStep = ({ onNext, onBack, currentData }) => {
                       {style.name}
                     </h3>
                     {isSelected && (
-                      <div className="bg-green-500 text-white p-1 rounded-full">
+                      <div className="bg-green-500 text-white p-1 rounded-full" aria-hidden="true">
                         <SafeIcon icon={FiCheck} className="w-4 h-4" />
                       </div>
                     )}
@@ -144,16 +144,18 @@ const UIStyleStep = ({ onNext, onBack, currentData }) => {
       {/* Navigation */}
       <div className="flex gap-3 pt-6">
         <button
+          type="button"
           onClick={onBack}
           className="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors"
         >
-          ← Back
+          <span aria-hidden="true">←</span> Back
         </button>
         <button
+          type="button"
           onClick={handleNext}
           className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors"
         >
-          Continue →
+          Continue <span aria-hidden="true">→</span>
         </button>
       </div>
     </div>
