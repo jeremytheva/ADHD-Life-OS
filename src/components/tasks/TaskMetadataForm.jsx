@@ -58,9 +58,9 @@ const TaskMetadataForm = ({ metadata = {}, onChange }) => {
                   }
                 `}
               >
-                {level === 'low' && '🔋 Low'}
-                {level === 'medium' && '⚡ Medium'}
-                {level === 'high' && '🚀 High'}
+                {level === 'low' && <><span aria-hidden="true">🔋</span> Low</>}
+                {level === 'medium' && <><span aria-hidden="true">⚡</span> Medium</>}
+                {level === 'high' && <><span aria-hidden="true">🚀</span> High</>}
               </button>
             ))}
           </div>
@@ -243,7 +243,7 @@ const TaskMetadataForm = ({ metadata = {}, onChange }) => {
       {/* Info Box */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
         <p className="text-sm text-blue-800">
-          💡 <strong>Tip:</strong> The more details you add, the better our recommendations!
+          <span aria-hidden="true">💡</span> <strong>Tip:</strong> The more details you add, the better our recommendations!
           But don't stress - you can always add these later.
         </p>
       </div>
