@@ -137,7 +137,7 @@ const ModulesStep = ({ onNext, onBack, currentData }) => {
       {/* Header */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-slate-900 mb-3">
-          Choose your tools 🛠️
+          Choose your tools <span aria-hidden="true">🛠️</span>
         </h2>
         <p className="text-lg text-slate-600">
           Enable the modules that fit your needs. Don't worry—
@@ -170,7 +170,7 @@ const ModulesStep = ({ onNext, onBack, currentData }) => {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className={`w-12 h-12 bg-${module.color}-500 rounded-lg flex items-center justify-center`}>
-                    <SafeIcon icon={module.icon} className="w-6 h-6 text-white" />
+                    <SafeIcon icon={module.icon} className="w-6 h-6 text-white" aria-hidden="true" />
                   </div>
                   <div>
                     <h4 className="text-lg font-bold text-slate-900">{module.name}</h4>
@@ -186,7 +186,7 @@ const ModulesStep = ({ onNext, onBack, currentData }) => {
               <ul className="space-y-1">
                 {module.benefits.map((benefit, i) => (
                   <li key={i} className="text-sm text-slate-600 flex items-center gap-2">
-                    <span className="text-green-500">✓</span>
+                    <span className="text-green-500" aria-hidden="true">✓</span>
                     {benefit}
                   </li>
                 ))}
@@ -237,7 +237,7 @@ const ModulesStep = ({ onNext, onBack, currentData }) => {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                     <div className={`w-12 h-12 bg-${module.color}-500 rounded-lg flex items-center justify-center`}>
-                      <SafeIcon icon={module.icon} className="w-6 h-6 text-white" />
+                      <SafeIcon icon={module.icon} className="w-6 h-6 text-white" aria-hidden="true" />
                     </div>
                     <div>
                       <h4 className="text-lg font-bold text-slate-900">{module.name}</h4>
@@ -266,7 +266,7 @@ const ModulesStep = ({ onNext, onBack, currentData }) => {
                 <ul className="space-y-1">
                   {module.benefits.map((benefit, i) => (
                     <li key={i} className="text-sm text-slate-600 flex items-center gap-2">
-                      <span className={isEnabled ? 'text-green-500' : 'text-slate-400'}>✓</span>
+                      <span className={isEnabled ? 'text-green-500' : 'text-slate-400'} aria-hidden="true">✓</span>
                       {benefit}
                     </li>
                   ))}
@@ -279,9 +279,9 @@ const ModulesStep = ({ onNext, onBack, currentData }) => {
 
       {/* Info Box */}
       <div className="bg-blue-50 rounded-xl p-4 border border-blue-200 flex items-start gap-3">
-        <SafeIcon icon={FiInfo} className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+        <SafeIcon icon={FiInfo} className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
         <div className="text-sm text-blue-800">
-          <p className="font-medium mb-1">💡 Helpful Tip</p>
+          <p className="font-medium mb-1"><span aria-hidden="true">💡</span> Helpful Tip</p>
           <p>
             Start with just a few modules and add more as you get comfortable. 
             Less is often more when you're building new habits!
@@ -296,14 +296,14 @@ const ModulesStep = ({ onNext, onBack, currentData }) => {
           onClick={onBack}
           className="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors"
         >
-          ← Back
+          <span aria-hidden="true">←</span> Back
         </button>
         <button
           type="button"
           onClick={handleNext}
           className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors"
         >
-          Continue →
+          Continue <span aria-hidden="true">→</span>
         </button>
       </div>
     </div>
