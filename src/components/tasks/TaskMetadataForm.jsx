@@ -119,7 +119,7 @@ const TaskMetadataForm = ({ metadata = {}, onChange }) => {
                   }
                 `}
               >
-                {'❤️'.repeat(level)}
+                <span aria-hidden="true">{'❤️'.repeat(level)}</span>
               </button>
             ))}
           </div>
@@ -185,7 +185,7 @@ const TaskMetadataForm = ({ metadata = {}, onChange }) => {
                     }
                   `}
                 >
-                  {'😓'.repeat(level)}
+                  <span aria-hidden="true">{'😓'.repeat(level)}</span>
                 </button>
               ))}
             </div>
