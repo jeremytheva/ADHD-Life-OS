@@ -152,7 +152,7 @@ const RewardShop = ({ onClose }) => {
               >
                 {/* Reward Icon */}
                 <div className="text-center mb-3">
-                  <div className="text-5xl mb-2">{reward.icon}</div>
+                  <div className="text-5xl mb-2" aria-hidden="true">{reward.icon}</div>
                   <h3 className="font-bold text-slate-900 mb-1">{reward.name}</h3>
                   <p className="text-sm text-slate-600 mb-3">{reward.description}</p>
                 </div>
