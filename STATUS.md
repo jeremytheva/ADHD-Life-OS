@@ -6,17 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: After PR #289 completes its final exact-head validation/review evidence and repository-managed lifecycle, reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Complete PR #290 primary-navigation native-list semantics through exact-head validation/review evidence and repository-managed lifecycle, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
-  pr: null
-  branch: null
+  pr: 290
+  branch: fix/layout-primary-nav-list-semantics
 next_actions:
-  - Run canonical Application validation for the final PR #289 handoff head.
-  - Audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding.
-  - Signal lifecycle:implementation-complete only after final exact-head validation/review evidence is clean.
+  - Run canonical Application validation for the PR #290 implementation/status head.
+  - Audit submitted reviews and inline review threads on that exact head and repair any in-scope finding.
+  - After clean implementation-head evidence, commit a post-merge-safe fresh-main handoff.
+  - Revalidate/re-audit the final handoff head, then signal lifecycle:implementation-complete only if clean.
   - Allow repository lifecycle automation and the merge finalizer to complete Ready/Mergeable/Merged transitions.
-  - Reconcile fresh main and inspect current repository/GitHub state before selecting new work.
-  - Continue the next dependency-correct provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Reconcile fresh main and continue the next dependency-correct provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -25,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: PENDING
+  lint: PENDING
+  typecheck: PENDING
+  tests: PENDING
+  build: PENDING
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #289 implementation/status head 5a015967a0c7cb8d01c873f4671b0e659c1e873f passed canonical Application validation run 727, including governance, lint, typecheck, tests, production build and critical Playwright coverage; submitted reviews and inline review threads were clean. This durable handoff commit changes the exact head and therefore requires final revalidation before lifecycle completion.
-last_verified_commit: 5a015967a0c7cb8d01c873f4671b0e659c1e873f
-last_updated: 2026-09-08T07:14:48+10:00
+validation_basis: PR #290 implements native primary-navigation list semantics and focused deterministic coverage on fresh main. Canonical Application validation has not yet completed on the implementation/status head.
+last_verified_commit: 73ceb4936cd5acf1870214f741a481253249966c
+last_updated: 2026-09-08T09:20:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,18 +46,16 @@ last_updated: 2026-09-08T07:14:48+10:00
 
 ## Current objective
 
-PR #288 completed its repository-managed lifecycle and merged into `main` at `dfcc41f195aac83803b16958cfbb6fff2df5333a` after final exact-head Application validation run 725 passed with clean submitted-review and inline-thread evidence.
+PR #289 completed its repository-managed lifecycle and merged into `main` at `5362cb8ac285812a85cc3c4a5fa61539fae34300` after final exact-head Application validation run 728 passed with clean submitted-review and inline-thread evidence.
 
-PR #289 is the sole active Stage 3 delivery thread. It replaces the Recommended Right Now collection's generic `motion.div` elements plus ARIA `role="list"` / `role="listitem"` with native animated `motion.ul` / `motion.li` semantics. The existing heading association, task buttons, recommendation content, ordering, animation and behaviour are preserved. Existing deterministic coverage in `test/recommended-tasks-list-semantics.test.mjs` is repaired in place rather than duplicated.
-
-Its implementation/status head `5a015967a0c7cb8d01c873f4671b0e659c1e873f` passed canonical Application validation run 727, and submitted reviews plus inline review threads were clean on that exact head. The durable handoff is now post-merge-safe: once PR #289 completes final exact-head validation and repository-managed lifecycle, continuation returns to fresh `main` rather than treating the soon-to-close PR as the default re-entry target.
+PR #290 is now the sole active Stage 3 delivery thread. It exposes the existing primary application navigation links as a native list inside the already named `Primary navigation` landmark. The change wraps `visibleNavItems` with `ul`/`li` semantics while preserving route targets, active styling, ordering, keyboard behaviour, and shared desktop/mobile sidebar rendering. Focused deterministic coverage is added in `test/layout-primary-navigation-list-semantics.test.mjs`.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #289 durable handoff requires final exact-head validation/review evidence before lifecycle completion |
-| Gate state | Implementation-head run 727 PASS; implementation-head review/thread audit clean; durable fresh-main handoff committed |
+| Current gate | INTEGRATION — PR #290 implementation/status head requires canonical exact-head validation/review evidence |
+| Gate state | Implementation and deterministic coverage committed; validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -66,15 +64,15 @@ Its implementation/status head `5a015967a0c7cb8d01c873f4671b0e659c1e873f` passed
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #288 — onboarding Welcome guidance native list semantics; merged at `dfcc41f195aac83803b16958cfbb6fff2df5333a` |
-| Active delivery | PR #289 — native RecommendedTasks list semantics; final lifecycle evidence pending |
-| Delivery branch | `fix/recommended-tasks-native-list-semantics` |
-| Implemented change | Native `motion.ul` / `motion.li` semantics replace generic ARIA-role list containers |
-| Deterministic coverage | Repaired `test/recommended-tasks-list-semantics.test.mjs` in place |
-| Implementation-head validation | PASS — Application validation run 727 on `5a015967a0c7cb8d01c873f4671b0e659c1e873f` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
-| Durable post-merge handoff | COMMITTED — fresh-main re-entry is the durable next objective |
-| Final exact-head validation | NOT_RUN — required because the handoff commit changes the head |
+| Latest merged delivery | PR #289 — RecommendedTasks native list semantics; merged at `5362cb8ac285812a85cc3c4a5fa61539fae34300` |
+| Active delivery | PR #290 — primary navigation native list semantics |
+| Delivery branch | `fix/layout-primary-nav-list-semantics` |
+| Implemented change | Primary navigation links are exposed as one native `ul` with native `li` entries inside the existing labelled `nav` landmark |
+| Deterministic coverage | Added `test/layout-primary-navigation-list-semantics.test.mjs` |
+| Implementation-head validation | PENDING — canonical Application validation required on current exact head |
+| Implementation-head review audit | PENDING |
+| Durable post-merge handoff | PENDING until implementation-head evidence is clean |
+| Final exact-head validation | NOT_RUN |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -82,25 +80,26 @@ Its implementation/status head `5a015967a0c7cb8d01c873f4671b0e659c1e873f` passed
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #289 has clean implementation-head evidence and is completing its durable handoff/final validation lifecycle. |
-| What is already happening? | Recommended task collection semantics use native list elements and run 727 passed on the implementation/status head. |
-| What has been validated? | Canonical Application validation run 727 passed on `5a015967a0c7cb8d01c873f4671b0e659c1e873f`; submitted reviews and inline review threads were clean on that exact head. |
-| What is next? | Revalidate/re-audit the final handoff head, signal implementation completion if clean, allow lifecycle automation/finalizer to merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; PR #290 is the sole active provider-independent accessibility delivery and is validating. |
+| What is already happening? | Primary navigation now has native list semantics with focused deterministic coverage. |
+| What has been validated? | PR #289 final exact-head run 728 passed before merge; PR #290 canonical validation is pending. |
+| What is next? | Validate/review-audit the exact PR #290 implementation/status head, repair if needed, commit a post-merge-safe handoff, revalidate final head, then complete the repository lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #289 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy or destructive behaviour.
+Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #290 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy or destructive behaviour.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the Application validation workflow for the exact final PR #289 handoff head;
-2. audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
-3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
-4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the Application validation workflow for the exact PR #290 implementation/status head;
+2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
+3. after clean implementation-head evidence, commit the post-merge-safe fresh-main handoff;
+4. revalidate/re-audit the final handoff head and add `lifecycle:implementation-complete` only when clean;
+5. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+6. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
