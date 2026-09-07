@@ -17,6 +17,7 @@ const CompletionStep = ({ onNext }) => {
         initial={{ scale: 0 }}
         animate={{ scale: [0, 1.2, 1] }}
         transition={{ duration: 0.6, ease: "easeOut" }}
+        aria-hidden="true"
       >
         <div className="w-32 h-32 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <SafeIcon icon={FiCheckCircle} className="w-16 h-16 text-green-600" />
@@ -30,7 +31,7 @@ const CompletionStep = ({ onNext }) => {
         transition={{ delay: 0.3 }}
       >
         <h1 className="text-4xl font-bold text-slate-900 mb-4">
-          You're All Set! 🚀
+          You're All Set! <span aria-hidden="true">🚀</span>
         </h1>
         <p className="text-xl text-slate-700 leading-relaxed max-w-lg mx-auto">
           Your Life-OS is personalized and ready. Remember, this system is here to 
@@ -45,7 +46,7 @@ const CompletionStep = ({ onNext }) => {
         transition={{ delay: 0.6 }}
         className="bg-blue-50 rounded-xl p-6 border border-blue-200 max-w-lg mx-auto"
       >
-        <p className="text-blue-800 font-medium mb-2">💡 One Last Thought</p>
+        <p className="text-blue-800 font-medium mb-2"><span aria-hidden="true">💡</span> One Last Thought</p>
         <p className="text-blue-700 text-sm">
           Don't try to use every feature at once. Start small, maybe with just one routine 
           or a few tasks. Consistency {'>'} Intensity.
@@ -60,11 +61,12 @@ const CompletionStep = ({ onNext }) => {
         className="pt-4"
       >
         <button
+          type="button"
           onClick={() => onNext({})}
           className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all text-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-3 mx-auto"
         >
           <span>Open My Dashboard</span>
-          <SafeIcon icon={FiArrowRight} className="w-6 h-6" />
+          <SafeIcon icon={FiArrowRight} className="w-6 h-6" aria-hidden="true" />
         </button>
       </motion.div>
     </div>
