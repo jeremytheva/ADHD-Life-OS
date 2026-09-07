@@ -99,14 +99,15 @@ const RewardNotification = ({ reward, onClose }) => {
 
       {/* New Achievements */}
       {reward.new_achievements && reward.new_achievements.length > 0 && (
-        <motion.div
+        <motion.ul
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3 }}
           className="mt-3 space-y-2"
+          aria-label="New achievements"
         >
           {reward.new_achievements.map((achievement, index) => (
-            <motion.div
+            <motion.li
               key={achievement.id}
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -143,9 +144,9 @@ const RewardNotification = ({ reward, onClose }) => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </motion.li>
           ))}
-        </motion.div>
+        </motion.ul>
       )}
     </motion.div>
   )
