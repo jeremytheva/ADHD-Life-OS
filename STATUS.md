@@ -4,7 +4,7 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: READY_FOR_NEXT_SLICE
+execution_state: READY
 current_work:
   objective: Re-enter from fresh main after PR #274 lifecycle completion and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
@@ -22,16 +22,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #274 implementation/status head 5861b768cd7928dc63070bda747fa9ff98c46c6e passed canonical Application validation run 673 and had no submitted reviews or inline review threads. The durable handoff commit changes the PR head, so final exact-head validation/review evidence must be re-established before lifecycle:implementation-complete.
+validation_basis: PR #274 implementation/status head 5861b768cd7928dc63070bda747fa9ff98c46c6e passed canonical Application validation run 673 with clean review/thread evidence. First handoff head e4e3172b6b190464d4e5a269a3a9bb897f53d025 failed run 674 because STATUS.md used non-canonical execution_state READY_FOR_NEXT_SLICE; this commit repairs that governance-only defect. Exact-head validation must be re-established before lifecycle:implementation-complete.
 last_verified_commit: 5861b768cd7928dc63070bda747fa9ff98c46c6e
-last_updated: 2026-09-07T16:15:57+10:00
+last_updated: 2026-09-07T16:19:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,6 +45,8 @@ last_updated: 2026-09-07T16:15:57+10:00
 
 PR #274 completed its implementation-head evidence gate: canonical Application validation run 673 passed on exact implementation/status head `5861b768cd7928dc63070bda747fa9ff98c46c6e`, and both submitted-review and inline-review-thread audits were clean.
 
+The first durable handoff head `e4e3172b6b190464d4e5a269a3a9bb897f53d025` then failed Application validation run 674 immediately in governance validation because `STATUS.md` used the non-canonical execution-state value `READY_FOR_NEXT_SLICE`. Repository governance permits only `READY`, `IMPLEMENTING`, `VALIDATING`, `BLOCKED`, `COMPLETE`, or `MAINTENANCE`. This checkpoint repairs that documentation/control defect by using canonical `READY`; no application behaviour changed.
+
 The PR tightens the existing Task Metadata accessibility contract by making the repeated visual emoji inside the Interest and Aversiveness scales presentation-only while preserving the explicit programmatic scale names and `aria-pressed` state. The implementation extends the existing `test/task-metadata-emoji-semantics.test.mjs` regression contract rather than creating duplicate coverage and does not change task metadata values, scoring, recommendation/execution policy, persistence, authorization, schemas, provider behaviour, or visual layout.
 
 This durable checkpoint is intentionally written for post-merge re-entry: after PR #274 completes its final exact-head validation and repository-managed lifecycle, resume from fresh `main` and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
@@ -55,9 +57,9 @@ PR #273 completed the previous task-metadata semantic slice and merged into `mai
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #274 durable handoff committed; final exact-head validation/review evidence required before implementation-complete signalling |
-| Gate state | Implementation-head run 673 PASS and review/thread audit clean; handoff commit invalidates exact-head evidence until revalidation |
-| Execution state | READY_FOR_NEXT_SLICE after lifecycle completion |
+| Current gate | INTEGRATION — PR #274 handoff governance repair committed; final exact-head validation/review evidence required before implementation-complete signalling |
+| Gate state | Implementation-head run 673 PASS and review/thread audit clean; run 674 exposed and this commit repairs a STATUS governance enum defect; new exact-head evidence pending |
+| Execution state | READY after lifecycle completion |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
 
@@ -72,8 +74,9 @@ PR #273 completed the previous task-metadata semantic slice and merged into `mai
 | Deterministic coverage | Extended `test/task-metadata-emoji-semantics.test.mjs` |
 | Implementation-head validation | PASS — Application validation run 673 on `5861b768cd7928dc63070bda747fa9ff98c46c6e` |
 | Implementation-head review audit | PASS — no submitted reviews or inline review threads |
-| Durable post-merge handoff | COMMITTED |
-| Final exact-head validation | NOT_RUN — required after this handoff commit |
+| First handoff validation | FAIL — run 674; governance rejected non-canonical `execution_state: READY_FOR_NEXT_SLICE` |
+| Handoff repair | COMMITTED — canonical `execution_state: READY` |
+| Final exact-head validation | PENDING |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -81,10 +84,10 @@ PR #273 completed the previous task-metadata semantic slice and merged into `mai
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #274 has clean implementation-head evidence and is completing its final repository lifecycle gate. |
-| What is already happening? | Task-metadata scale emoji semantics and deterministic regression coverage are implemented; durable post-merge handoff is committed. |
-| What has been validated? | PR #274 implementation/status head `5861b768cd7928dc63070bda747fa9ff98c46c6e` passed canonical run 673 and its review/thread audit is clean. The handoff head requires fresh exact-head evidence. |
-| What is next? | Revalidate/re-audit the final PR #274 head, signal implementation-complete only if clean, allow lifecycle merge, then re-enter from fresh `main` and continue the next provider-independent accessibility/interaction-integrity slice. |
+| Where am I? | Stage 3; PR #274 has clean implementation-head evidence and a repaired durable handoff awaiting fresh exact-head validation. |
+| What is already happening? | Task-metadata scale emoji semantics and deterministic regression coverage are implemented; the handoff governance defect exposed by run 674 is repaired. |
+| What has been validated? | PR #274 implementation/status head `5861b768cd7928dc63070bda747fa9ff98c46c6e` passed canonical run 673 and its review/thread audit is clean. Run 674 failed only the first handoff head's governance enum. The repaired head requires fresh exact-head evidence. |
+| What is next? | Revalidate/re-audit the repaired final PR #274 head, signal implementation-complete only if clean, allow lifecycle merge, then re-enter from fresh `main` and continue the next provider-independent accessibility/interaction-integrity slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -96,7 +99,7 @@ The logical data model continues to classify generic `execution-sessions` as pla
 
 ## Next dependency-correct work
 
-1. re-run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #274 handoff head;
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact repaired PR #274 handoff head;
 2. re-audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
 3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
 4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
