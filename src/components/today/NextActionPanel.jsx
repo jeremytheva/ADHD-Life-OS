@@ -103,7 +103,8 @@ const NextActionPanel = ({ currentMode }) => {
         </div>
 
         {showFitControls && (
-          <div id="next-action-fit-controls" className="mt-3 grid gap-3 border-t border-slate-200 pt-3 sm:grid-cols-2">
+          <fieldset id="next-action-fit-controls" className="mt-3 grid gap-3 border-t border-slate-200 pt-3 sm:grid-cols-2">
+            <legend className="sr-only">Recommendation fit</legend>
             <label className="text-sm font-medium text-slate-700">
               Energy now
               <select
@@ -126,7 +127,7 @@ const NextActionPanel = ({ currentMode }) => {
                 {TIME_OPTIONS.map((minutes) => <option key={minutes} value={minutes}>{minutes} minutes</option>)}
               </select>
             </label>
-          </div>
+          </fieldset>
         )}
       </div>
 
