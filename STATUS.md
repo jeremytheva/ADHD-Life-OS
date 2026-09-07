@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #269 final exact-head lifecycle evidence; after merge re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
+  objective: Validate and complete PR #270 onboarding completion semantics; after merge re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
   issue: null
-  pr: 269
-  branch: fix/onboarding-ui-style-semantics
+  pr: 270
+  branch: fix/onboarding-completion-semantics
 next_actions:
-  - Re-run canonical Application validation on the exact PR #269 final handoff head.
-  - Re-audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding.
-  - Signal lifecycle:implementation-complete only when final exact-head evidence is clean.
+  - Run canonical Application validation on the exact PR #270 implementation/status head.
+  - Audit submitted reviews and inline review threads and repair any in-scope finding.
+  - Commit a durable fresh-main handoff only after implementation-head evidence is clean.
+  - Revalidate the exact final handoff head before lifecycle:implementation-complete signalling.
   - Allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions.
-  - Re-enter from fresh main, reconcile repository/GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #269 implementation/status head ca2261d24a8547da94dc06042f52b0132a019b20 passed canonical Application validation run 658 with clean submitted-review and inline-thread audits. This durable handoff commit changes the PR head, so final exact-head validation/review evidence must be re-established before implementation-complete signalling.
-last_verified_commit: ca2261d24a8547da94dc06042f52b0132a019b20
-last_updated: 2026-09-07T14:23:00+10:00
+validation_basis: PR #269 merged into main at 50e4318dd918438195adf36f19cab93c4949dd4d after final exact-head Application validation run 659 passed with clean review/thread evidence. PR #270 implementation and deterministic coverage are present but its exact implementation/status head has not yet completed canonical validation.
+last_verified_commit: null
+last_updated: 2026-09-07T14:31:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +45,18 @@ last_updated: 2026-09-07T14:23:00+10:00
 
 ## Current objective
 
-PR #269 is the sole active Stage 3 delivery thread while final exact-head lifecycle evidence is established. It improves onboarding UI-style interaction semantics without changing selected values, preference persistence, onboarding flow, routing, recommendation/execution policy, authorization, schemas, provider behaviour, or visual layout.
+PR #270 is the sole active provider-independent Stage 3 delivery thread. It improves onboarding completion-screen accessibility semantics without changing onboarding completion behaviour, routing, persistence, preference state, recommendation/execution policy, authorization, schemas, provider behaviour, or visual layout.
 
-UI-style choices retain their accessible group and `aria-pressed` selection state. Decorative style artwork, the redundant selected checkmark, header artwork, and navigation arrows are presentation-only. Back/Continue navigation controls now use explicit `type="button"`. Deterministic regression coverage is in `test/onboarding-ui-style-semantics.test.mjs`.
+The success animation is presentation-only, redundant celebration/tip emoji are hidden from assistive technology while visible text remains, the dashboard launch control has explicit `type="button"`, and its arrow artwork is presentation-only. Deterministic regression coverage is in `test/onboarding-completion-semantics.test.mjs`.
 
-Implementation/status head `ca2261d24a8547da94dc06042f52b0132a019b20` passed canonical Application validation run 658 with no submitted reviews and no inline review threads. The durable post-merge handoff is now committed; because this commit changes the head, final exact-head validation and review evidence must be re-established before lifecycle completion.
-
-After PR #269 merges, the durable re-entry state is: no active delivery should be assumed from this PR; inspect fresh `main`, current PRs/branches/checks and repository evidence, then continue the next dependency-correct provider-independent Stage 3 accessibility/interaction-integrity slice. Do not reactivate provider-dependent durable execution without real target-instance evidence.
+PR #269 completed its repository-managed lifecycle and merged into `main` at `50e4318dd918438195adf36f19cab93c4949dd4d` after final exact-head Application validation run 659 passed with clean review/thread evidence. Fresh-main reconciliation found no competing Completion-step PR or branch before PR #270 was started.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #269 |
-| Gate state | Implementation-head run 658 PASS and review audit clean; durable fresh-main handoff committed; final-head evidence pending |
+| Current gate | INTEGRATION — exact-head canonical validation and review/thread evidence required for PR #270 |
+| Gate state | Implementation and deterministic regression coverage complete; exact-head CI evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -67,15 +65,15 @@ After PR #269 merges, the durable re-entry state is: no active delivery should b
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #268 — onboarding preference toggle semantics; merged into `main` at `a42da55a51b82a9bbbaf7fbf22283f8f8e769211` after final run 657 PASS |
-| Active delivery | PR #269 — improve onboarding UI-style semantics |
-| Delivery branch | `fix/onboarding-ui-style-semantics` |
-| Implemented change | Decorative UI-style artwork/checkmarks/header and navigation glyphs are presentation-only; navigation buttons have explicit type |
-| Deterministic coverage | `test/onboarding-ui-style-semantics.test.mjs` |
-| Implementation-head validation | PASS — Application validation run 658 on `ca2261d24a8547da94dc06042f52b0132a019b20` |
-| Implementation-head review audit | PASS — no submitted reviews and no inline review threads |
-| Durable post-merge handoff | COMMITTED — fresh `main` is the post-merge re-entry target |
-| Final exact-head validation | PENDING — required after this STATUS handoff commit |
+| Latest merged delivery | PR #269 — onboarding UI-style semantics; merged into `main` at `50e4318dd918438195adf36f19cab93c4949dd4d` after final run 659 PASS |
+| Active delivery | PR #270 — improve onboarding completion semantics |
+| Delivery branch | `fix/onboarding-completion-semantics` |
+| Implemented change | Decorative completion artwork/emoji/launch arrow are presentation-only; dashboard launch button has explicit type |
+| Deterministic coverage | `test/onboarding-completion-semantics.test.mjs` |
+| Implementation-head validation | NOT_RUN |
+| Implementation-head review audit | NOT_RUN |
+| Durable post-merge handoff | NOT_COMMITTED |
+| Final exact-head validation | NOT_RUN |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -83,27 +81,28 @@ After PR #269 merges, the durable re-entry state is: no active delivery should b
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #269 is the sole active provider-independent accessibility delivery thread until its lifecycle completes. |
-| What is already happening? | Onboarding UI-style semantic cleanup is implemented; implementation-head run 658 and review/thread audit are clean; durable fresh-main handoff is committed. |
-| What has been validated? | Exact implementation/status head `ca2261d24a8547da94dc06042f52b0132a019b20` passed canonical run 658 with clean review/thread evidence. |
-| What is next? | Revalidate/re-audit the final handoff head, signal implementation-complete only if clean, allow lifecycle automation to merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; PR #270 is the sole active provider-independent accessibility delivery thread. |
+| What is already happening? | Onboarding completion semantic cleanup and deterministic regression coverage are implemented. |
+| What has been validated? | Previous PR #269 passed final exact-head run 659; PR #270 exact-head canonical validation is pending. |
+| What is next? | Validate/review-audit the exact implementation/status head, repair findings, then perform the durable handoff and final lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #269 changes only onboarding interaction/presentation semantics, deterministic test coverage, and durable project state. It does not alter persisted data shapes, authentication, data services, provider mappings, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #270 changes only onboarding interaction/presentation semantics, deterministic test coverage, and durable project state. It does not alter persisted data shapes, authentication, data services, provider mappings, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
 
 The logical data model continues to classify generic `execution-sessions` as planned/provider-unverified. No physical provider operation may be inferred from application-level intent.
 
 ## Next dependency-correct work
 
-1. re-run canonical `npm run platform:validate` through the repository Application validation workflow for the exact PR #269 final handoff head;
-2. audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
-3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
-4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, inspect current repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact PR #270 implementation/status head;
+2. audit submitted reviews and inline review threads and repair any in-scope finding;
+3. after clean implementation-head evidence, commit a durable fresh-main handoff and revalidate/re-audit the exact final head;
+4. add `lifecycle:implementation-complete` only after final exact-head evidence is clean;
+5. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
+6. re-enter from fresh `main` and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
