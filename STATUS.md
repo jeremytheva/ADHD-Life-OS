@@ -4,17 +4,15 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: VALIDATING
+execution_state: READY
 current_work:
-  objective: Validate and complete PR #281, which makes Routine Card action controls explicitly non-submit while preserving existing behaviour and accessible names.
+  objective: Re-enter from fresh main after PR #281 lifecycle completion and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
-  pr: 281
-  branch: fix/routine-card-button-types
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the exact implementation/status head.
-  - Audit submitted reviews and inline review threads on that exact head.
-  - Repair any in-scope validation or review finding on the existing PR.
-  - After clean implementation-head evidence, commit a durable fresh-main handoff and revalidate the resulting exact final head.
+  - Revalidate the exact final PR #281 handoff head through canonical Application validation.
+  - Re-audit submitted reviews and inline review threads on that exact final head.
   - Signal lifecycle:implementation-complete only if final-head validation and review evidence remain clean.
   - Allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions.
   - Reconcile fresh main and continue the next dependency-correct provider-independent Stage 3 slice.
@@ -26,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #281 implementation and extended deterministic regression coverage are committed; canonical exact-head Application validation is required on the current status-bearing head before implementation-complete signalling.
-last_verified_commit: null
-last_updated: 2026-09-07T20:01:00+10:00
+validation_basis: PR #281 implementation/status head dea099bad51f92507221c01d52c6628aea949f8c passed canonical Application validation run 702 with no submitted reviews or inline review threads. This durable handoff commit changes the PR head, so final exact-head validation/review evidence must be re-established before lifecycle:implementation-complete.
+last_verified_commit: dea099bad51f92507221c01d52c6628aea949f8c
+last_updated: 2026-09-07T20:05:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -47,19 +45,21 @@ last_updated: 2026-09-07T20:01:00+10:00
 
 ## Current objective
 
-PR #280 completed its repository-managed lifecycle and merged into fresh `main` at `4cb27ed91b5c9a8ad08340bfd214244ab7eb1261` after final exact-head Application validation run 700 passed with clean review/thread evidence.
+PR #281 has completed its implementation-head evidence gate. Exact implementation/status head `dea099bad51f92507221c01d52c6628aea949f8c` passed canonical Application validation run 702, and submitted-review plus inline-review-thread audits were clean.
 
-Fresh-main reconciliation found no competing open PR or issue and no existing Routine Card non-submit-control delivery. PR #281 is therefore the sole active Stage 3 thread. It adds explicit `type="button"` semantics to the Routine Card Edit, Delete, Stats, and Start controls and extends the existing control-semantic regression contract rather than creating duplicate coverage.
+The PR makes Routine Card Edit, Delete, Stats, and Start controls explicitly `type="button"`, preventing implicit form submission if the card is reused in a form context. The existing routine-specific accessible names remain unchanged, and deterministic coverage extends the existing Routine Card control contract rather than duplicating it.
 
 Routine handlers, lifecycle, ordering, data, persistence, authentication, authorization, schemas, recommendation/execution policy, provider behaviour, and visual layout are unchanged.
+
+This checkpoint is intentionally post-merge safe: after final exact-head evidence and repository-managed lifecycle completion, resume from fresh `main` and select the next provider-independent Stage 3 accessibility or interaction-integrity slice.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #281 implementation/status head requires canonical exact-head validation and review audit |
-| Gate state | Implementation and deterministic regression coverage committed; validation evidence not yet established for the status-bearing head |
-| Execution state | VALIDATING |
+| Current gate | INTEGRATION — PR #281 durable handoff committed; final exact-head validation/review evidence required before implementation-complete signalling |
+| Gate state | Implementation-head run 702 PASS and review/thread audit clean; handoff commit invalidates exact-head evidence until revalidation |
+| Execution state | READY after lifecycle completion |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
 
@@ -68,13 +68,14 @@ Routine handlers, lifecycle, ordering, data, persistence, authentication, author
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #280 — expose Routine Card step preview semantics; merged at `4cb27ed91b5c9a8ad08340bfd214244ab7eb1261` |
-| Active delivery | PR #281 — make Routine Card controls non-submit |
+| Delivery completing lifecycle | PR #281 — make Routine Card controls non-submit |
 | Delivery branch | `fix/routine-card-button-types` |
-| Implemented change | Add explicit non-submit button types to Edit, Delete, Stats, and Start controls |
+| Implemented change | Add explicit `type="button"` semantics to Edit, Delete, Stats, and Start controls |
 | Deterministic coverage | Extended existing `test/routine-card-control-semantics.test.mjs` |
-| Canonical validation | NOT_RUN — required on exact implementation/status head |
-| Review audit | NOT_RUN — required on exact implementation/status head |
-| Durable post-merge handoff | NOT_RUN — commit only after implementation-head evidence is clean |
+| Implementation-head validation | PASS — Application validation run 702 on `dea099bad51f92507221c01d52c6628aea949f8c` |
+| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
+| Durable post-merge handoff | COMMITTED |
+| Final exact-head validation | NOT_RUN — required after this handoff commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -82,10 +83,10 @@ Routine handlers, lifecycle, ordering, data, persistence, authentication, author
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #281 is the sole active delivery thread and is validating. |
-| What is already happening? | Routine Card action controls are explicitly non-submit and existing accessible names/behaviour are preserved. |
-| What has been validated? | PR #280 final head passed run 700 before merge. PR #281 still requires exact-head canonical validation and review/thread audit. |
-| What is next? | Validate/audit PR #281, repair any finding in place, commit the durable handoff after clean implementation-head evidence, revalidate final head, then allow lifecycle completion. |
+| Where am I? | Stage 3; PR #281 has clean implementation-head evidence and is completing its final repository lifecycle gate. |
+| What is already happening? | Routine Card action controls are explicitly non-submit; durable fresh-main handoff is committed. |
+| What has been validated? | Implementation/status head `dea099bad51f92507221c01d52c6628aea949f8c` passed canonical run 702 and review/thread audits are clean. This handoff head requires fresh exact-head evidence. |
+| What is next? | Revalidate/re-audit the final PR #281 head, signal implementation-complete only if clean, allow lifecycle merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -95,14 +96,12 @@ Generic durable `execution-sessions` remains planned/provider-unverified and fai
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the Application validation workflow for the exact PR #281 implementation/status head;
-2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
-3. after clean implementation-head evidence, commit a durable post-merge fresh-`main` handoff;
-4. re-run canonical exact-head validation and review/thread audit after the handoff commit;
-5. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
-6. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-7. re-enter from fresh `main` and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
-8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the Application validation workflow for the exact final PR #281 handoff head;
+2. re-audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
+3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
+4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
