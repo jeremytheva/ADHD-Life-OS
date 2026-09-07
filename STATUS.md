@@ -6,15 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: After PR #283 completes its repository-managed lifecycle, reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Validate and complete PR #284, which exposes newly unlocked Reward Notification achievements as a named semantic list without changing reward behaviour.
   issue: null
-  pr: null
-  branch: null
+  pr: 284
+  branch: fix/reward-notification-achievement-list-semantics
 next_actions:
-  - Complete final exact-head validation and review evidence for PR #283, then signal lifecycle:implementation-complete.
+  - Run canonical Application validation for the exact PR #284 implementation/status head.
+  - Audit submitted reviews and inline review threads on that exact head and repair any in-scope finding.
+  - After clean implementation-head evidence, commit a post-merge-safe fresh-main handoff and revalidate the resulting final head.
+  - Signal lifecycle:implementation-complete only after final exact-head validation/review evidence is clean.
   - Allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions.
-  - Reconcile fresh main and inspect current repository/GitHub state before selecting new work.
-  - Continue the next dependency-correct provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -23,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #283 implementation/status head f9aba3771db8187d50b64c7eaf45e503ebf5a77d passed canonical Application validation run 708, including governance, lint, typecheck, tests, production build and critical Playwright coverage; submitted reviews and inline review threads were clean. This durable handoff commit requires final exact-head revalidation before lifecycle completion.
-last_verified_commit: f9aba3771db8187d50b64c7eaf45e503ebf5a77d
-last_updated: 2026-09-08T00:17:00+10:00
+validation_basis: PR #284 implementation and deterministic regression coverage are committed from fresh main; canonical exact-head validation and review/thread evidence are not yet established for the current implementation/status head.
+last_verified_commit: 9be54b901afc73eeec8c04ff2447021a428444bc
+last_updated: 2026-09-08T01:21:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,20 +46,18 @@ last_updated: 2026-09-08T00:17:00+10:00
 
 ## Current objective
 
-PR #282 completed its repository-managed lifecycle and merged into `main` at `279e07dc7e096c120056c5b79eea4d45166f37e3`.
+PR #283 completed its repository-managed lifecycle and merged into `main` at `9be54b901afc73eeec8c04ff2447021a428444bc` after final exact-head Application validation run 709 passed with clean submitted-review and inline-thread evidence.
 
-PR #283 implements the Task Load attention-list semantics slice. Its implementation/status head `f9aba3771db8187d50b64c7eaf45e503ebf5a77d` passed canonical Application validation run 708, and submitted reviews plus inline review threads were clean on that exact head.
+PR #284 is now the sole active delivery thread. It exposes the `reward.new_achievements` collection in `RewardNotification` as a named native `ul` with each unlocked achievement represented by an `li`. Existing reward content, points/XP/streak calculations, animation, timing and behaviour are unchanged.
 
-The durable handoff is now post-merge-safe: once PR #283 completes its final exact-head validation and repository-managed lifecycle, continuation returns to fresh `main` rather than treating the soon-to-close PR as the default re-entry target.
-
-Task calculation, priority policy, estimated-time logic, persistence, authentication, authorization, schemas, recommendation/execution policy, provider behaviour and visual design are unchanged.
+The existing `test/reward-notification-semantics.test.mjs` contract has been extended to protect the new collection/item semantics rather than introducing duplicate component coverage.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #283 durable handoff requires final exact-head validation/review evidence before lifecycle completion |
-| Gate state | Implementation-head run 708 PASS; implementation-head review/thread audit clean; durable fresh-main handoff committed |
+| Current gate | INTEGRATION — PR #284 implementation/status head requires canonical exact-head validation and review evidence |
+| Gate state | Implementation and deterministic semantic coverage committed; exact-head evidence not yet established |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -66,15 +66,15 @@ Task calculation, priority policy, estimated-time logic, persistence, authentica
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #282 — expose template preview step list semantics; merged at `279e07dc7e096c120056c5b79eea4d45166f37e3` |
-| Active delivery | PR #283 — expose task load attention list semantics; final lifecycle evidence pending |
-| Delivery branch | `fix/task-load-attention-list-semantics` |
-| Implemented change | Replace visually bulleted Task Load attention-message containers with native `ul` / `li` semantics |
-| Deterministic coverage | Added `test/task-load-attention-list-semantics.test.mjs` |
-| Implementation-head validation | PASS — Application validation run 708 on `f9aba3771db8187d50b64c7eaf45e503ebf5a77d` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
-| Durable post-merge handoff | COMMITTED — fresh-main re-entry is the durable next objective |
-| Final exact-head validation | NOT_RUN — required because the handoff commit changes the head |
+| Latest merged delivery | PR #283 — expose Task Load attention list semantics; merged at `9be54b901afc73eeec8c04ff2447021a428444bc` |
+| Active delivery | PR #284 — expose Reward Notification achievement list semantics |
+| Delivery branch | `fix/reward-notification-achievement-list-semantics` |
+| Implemented change | Replace generic new-achievement collection/item containers with named native `ul` / `li` semantics |
+| Deterministic coverage | Extended `test/reward-notification-semantics.test.mjs` |
+| Implementation-head validation | NOT_RUN — canonical Application validation required on exact current head |
+| Implementation-head review audit | NOT_RUN — audit after exact-head validation is available |
+| Durable post-merge handoff | NOT_RUN — commit only after clean implementation-head evidence |
+| Final exact-head validation | NOT_RUN — required after durable handoff changes the head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -82,25 +82,27 @@ Task calculation, priority policy, estimated-time logic, persistence, authentica
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #283 has clean implementation-head evidence and is completing its durable handoff/final validation lifecycle. |
-| What is already happening? | Task Load attention messages expose native list semantics with deterministic regression coverage; run 708 passed on the implementation/status head. |
-| What has been validated? | Canonical Application validation run 708 passed on `f9aba3771db8187d50b64c7eaf45e503ebf5a77d`; submitted reviews and inline review threads were clean on that exact head. |
-| What is next? | Revalidate/re-audit the final handoff head, signal implementation completion if clean, allow lifecycle automation/finalizer to merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; PR #284 is the sole active delivery and is in exact-head validation. |
+| What is already happening? | Newly unlocked reward achievements now expose named native list/list-item semantics, with the existing deterministic component test extended. |
+| What has been validated? | PR #283 is merged after clean final evidence. PR #284 has not yet established canonical exact-head validation evidence. |
+| What is next? | Validate and audit the exact PR #284 implementation/status head; repair any in-scope finding; then complete durable handoff, final revalidation and repository-managed lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #283 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy, or destructive behaviour.
+Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #284 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy, or destructive behaviour.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the Application validation workflow for the exact final PR #283 handoff head;
-2. audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
-3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
-4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the Application validation workflow for the exact PR #284 implementation/status head;
+2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
+3. after clean implementation-head evidence, commit a durable post-merge-safe fresh-main handoff in this file;
+4. revalidate and re-audit the resulting final exact head;
+5. add `lifecycle:implementation-complete` only when final-head evidence is clean;
+6. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+7. re-enter from fresh `main` and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
+8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
