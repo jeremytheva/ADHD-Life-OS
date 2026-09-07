@@ -30,13 +30,14 @@ const WelcomeStep = ({ onNext }) => {
       </motion.div>
 
       {/* Key Messages */}
-      <motion.div
+      <motion.ul
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="space-y-6"
+        className="space-y-6 list-none p-0 m-0"
+        aria-label="What ADHD Life-OS is designed to support"
       >
-        <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border-2 border-purple-200">
+        <li className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border-2 border-purple-200">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
               <SafeIcon icon={FiStar} className="w-6 h-6 text-white" />
@@ -52,9 +53,9 @@ const WelcomeStep = ({ onNext }) => {
               </p>
             </div>
           </div>
-        </div>
+        </li>
 
-        <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
+        <li className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
               <SafeIcon icon={FiZap} className="w-6 h-6 text-white" />
@@ -70,9 +71,9 @@ const WelcomeStep = ({ onNext }) => {
               </p>
             </div>
           </div>
-        </div>
+        </li>
 
-        <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border-2 border-amber-200">
+        <li className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border-2 border-amber-200">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
               <SafeIcon icon={FiSmile} className="w-6 h-6 text-white" />
@@ -88,8 +89,8 @@ const WelcomeStep = ({ onNext }) => {
               </p>
             </div>
           </div>
-        </div>
-      </motion.div>
+        </li>
+      </motion.ul>
 
       {/* Setup Promise */}
       <motion.div
