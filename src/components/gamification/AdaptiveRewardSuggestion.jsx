@@ -26,6 +26,7 @@ const AdaptiveRewardSuggestion = ({ reward, onClose, onClaim }) => {
               <span className="font-bold">Reward Time!</span>
             </div>
             <button
+              type="button"
               onClick={onClose}
               className="p-1 hover:bg-white hover:bg-opacity-20 rounded transition-colors"
               aria-label="Dismiss reward suggestion"
@@ -43,29 +44,33 @@ const AdaptiveRewardSuggestion = ({ reward, onClose, onClaim }) => {
           {reward.suggestions && reward.suggestions.length > 0 && (
             <div className="space-y-2">
               <p className="text-sm text-amber-700 mb-2">Suggested rewards:</p>
-              {reward.suggestions.map((suggestion, index) => (
-                suggestion && (
-                  <motion.button
-                    key={index}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    onClick={() => onClaim && onClaim(suggestion)}
-                    className="w-full p-3 bg-white rounded-lg border-2 border-yellow-300 hover:border-yellow-400 hover:shadow-md transition-all text-left"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="text-2xl" aria-hidden="true">{suggestion.icon}</div>
-                      <div className="flex-1">
-                        <div className="font-medium text-slate-900">{suggestion.name}</div>
-                        <div className="text-xs text-slate-600">{suggestion.description}</div>
-                      </div>
-                      <div className="text-yellow-600 font-bold text-sm">
-                        <span aria-hidden="true">💰</span> {suggestion.cost}
-                      </div>
-                    </div>
-                  </motion.button>
-                )
-              ))}
+              <ul aria-label="Suggested rewards" className="space-y-2 list-none p-0 m-0">
+                {reward.suggestions.map((suggestion, index) => (
+                  suggestion && (
+                    <li key={index}>
+                      <motion.button
+                        type="button"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        onClick={() => onClaim && onClaim(suggestion)}
+                        className="w-full p-3 bg-white rounded-lg border-2 border-yellow-300 hover:border-yellow-400 hover:shadow-md transition-all text-left"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="text-2xl" aria-hidden="true">{suggestion.icon}</div>
+                          <div className="flex-1">
+                            <div className="font-medium text-slate-900">{suggestion.name}</div>
+                            <div className="text-xs text-slate-600">{suggestion.description}</div>
+                          </div>
+                          <div className="text-yellow-600 font-bold text-sm">
+                            <span aria-hidden="true">💰</span> {suggestion.cost}
+                          </div>
+                        </div>
+                      </motion.button>
+                    </li>
+                  )
+                ))}
+              </ul>
             </div>
           )}
         </div>
