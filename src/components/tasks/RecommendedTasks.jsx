@@ -22,14 +22,12 @@ const RecommendedTasks = ({ tasks, onTaskClick }) => {
         </h3>
       </div>
 
-      <div
-        role="list"
+      <motion.ul
         aria-labelledby="recommended-tasks-heading"
         className="space-y-2"
       >
         {tasks.map((task, index) => (
-          <motion.div
-            role="listitem"
+          <motion.li
             key={task.id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -58,9 +56,9 @@ const RecommendedTasks = ({ tasks, onTaskClick }) => {
                 <span>{task.urgencyReason}</span>
               </div>
             </button>
-          </motion.div>
+          </motion.li>
         ))}
-      </div>
+      </motion.ul>
 
       <div className="mt-3 text-xs text-blue-700 bg-blue-100 rounded px-3 py-2">
         <span aria-hidden="true">💡</span> These tasks are optimal for your current time and energy level
