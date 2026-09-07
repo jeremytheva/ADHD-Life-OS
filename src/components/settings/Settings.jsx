@@ -113,14 +113,12 @@ const Settings = () => {
           className="bg-white rounded-lg border border-slate-200 p-6"
         >
           <h2 className="text-lg font-medium text-slate-900 mb-4">Account</h2>
-          <div className="space-y-3">
+          <dl className="space-y-3">
             <div>
-              <label className="block text-sm font-medium text-slate-700">
-                Email
-              </label>
-              <p className="text-slate-900">{user?.email}</p>
+              <dt className="text-sm font-medium text-slate-700">Email</dt>
+              <dd className="text-slate-900">{user?.email}</dd>
             </div>
-          </div>
+          </dl>
         </motion.div>
 
         {/* Mode Preferences */}
