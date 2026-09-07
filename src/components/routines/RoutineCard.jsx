@@ -94,26 +94,24 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
           <h4 className="text-sm font-medium text-slate-700">
             Steps ({routine.routine_steps.length}):
           </h4>
-          <div className="space-y-1">
-            {routine.routine_steps.slice(0, 3).map((step, index) => (
-              <div
+          <ol className="space-y-1">
+            {routine.routine_steps.slice(0, 3).map((step) => (
+              <li
                 key={step.id}
                 className="flex items-center justify-between text-sm"
               >
-                <span className="text-slate-600">
-                  {index + 1}. {step.name}
-                </span>
+                <span className="text-slate-600">{step.name}</span>
                 {step.duration_minutes && (
                   <span className="text-slate-500">{step.duration_minutes} min</span>
                 )}
-              </div>
+              </li>
             ))}
-            {routine.routine_steps.length > 3 && (
-              <p className="text-xs text-slate-500">
-                + {routine.routine_steps.length - 3} more steps
-              </p>
-            )}
-          </div>
+          </ol>
+          {routine.routine_steps.length > 3 && (
+            <p className="text-xs text-slate-500">
+              + {routine.routine_steps.length - 3} more steps
+            </p>
+          )}
         </div>
       )}
 
