@@ -121,13 +121,19 @@ const LifeRolesStep = ({ onNext, onBack, currentData }) => {
       </div>
 
       {/* Role Selection Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        role="group"
+        aria-label="Life roles"
+      >
         {LIFE_ROLES.map((role, index) => {
           const isSelected = selectedRoles.includes(role.id)
           
           return (
             <motion.button
               key={role.id}
+              type="button"
+              aria-pressed={isSelected}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -144,6 +150,7 @@ const LifeRolesStep = ({ onNext, onBack, currentData }) => {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   className="absolute -top-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg"
+                  aria-hidden="true"
                 >
                   <SafeIcon icon={FiCheck} className="w-5 h-5 text-white" />
                 </motion.div>
@@ -157,6 +164,7 @@ const LifeRolesStep = ({ onNext, onBack, currentData }) => {
                   <SafeIcon 
                     icon={role.icon} 
                     className={`w-6 h-6 ${isSelected ? 'text-white' : `text-${role.color}-600`}`}
+                    aria-hidden="true"
                   />
                 </div>
                 
@@ -182,10 +190,11 @@ const LifeRolesStep = ({ onNext, onBack, currentData }) => {
           </h3>
           {!showCustomInput && (
             <button
+              type="button"
               onClick={() => setShowCustomInput(true)}
               className="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors flex items-center gap-2"
             >
-              <SafeIcon icon={FiPlus} className="w-4 h-4" />
+              <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
               <span>Add Custom Role</span>
             </button>
           )}
@@ -198,7 +207,11 @@ const LifeRolesStep = ({ onNext, onBack, currentData }) => {
             animate={{ opacity: 1, height: 'auto' }}
             className="flex gap-2 mb-4"
           >
+            <label htmlFor="custom-role-input" className="sr-only">
+              Custom role
+            </label>
             <input
+              id="custom-role-input"
               type="text"
               value={customRoleInput}
               onChange={(e) => setCustomRoleInput(e.target.value)}
@@ -208,12 +221,14 @@ const LifeRolesStep = ({ onNext, onBack, currentData }) => {
               autoFocus
             />
             <button
+              type="button"
               onClick={addCustomRole}
               className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
             >
               Add
             </button>
             <button
+              type="button"
               onClick={() => {
                 setShowCustomInput(false)
                 setCustomRoleInput('')
@@ -237,10 +252,12 @@ const LifeRolesStep = ({ onNext, onBack, currentData }) => {
               >
                 <span>{role}</span>
                 <button
+                  type="button"
+                  aria-label={`Remove ${role}`}
                   onClick={() => removeCustomRole(index)}
                   className="hover:bg-purple-600 rounded-full p-1 transition-colors"
                 >
-                  <SafeIcon icon={FiX} className="w-4 h-4" />
+                  <SafeIcon icon={FiX} className="w-4 h-4" aria-hidden="true" />
                 </button>
               </motion.div>
             ))}
@@ -267,12 +284,14 @@ const LifeRolesStep = ({ onNext, onBack, currentData }) => {
       {/* Navigation */}
       <div className="flex gap-3 pt-6">
         <button
+          type="button"
           onClick={onBack}
           className="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors"
         >
           ← Back
         </button>
         <button
+          type="button"
           onClick={handleNext}
           disabled={selectedRoles.length === 0 && customRoles.length === 0}
           className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"

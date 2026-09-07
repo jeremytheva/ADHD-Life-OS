@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #265 Task Selector icon-semantics lifecycle from clean implementation-head evidence, then re-enter from fresh main.
+  objective: Complete PR #266 final exact-head lifecycle evidence; after merge re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
   issue: null
-  pr: 265
-  branch: fix/task-selector-icon-semantics
+  pr: 266
+  branch: fix/onboarding-life-role-semantics
 next_actions:
-  - Run canonical Application validation on the exact final PR #265 handoff head.
-  - Audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding.
+  - Re-run canonical Application validation on the exact PR #266 final handoff head.
+  - Re-audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding.
   - Signal lifecycle:implementation-complete only when final exact-head evidence is clean.
   - Allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions.
-  - Re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Re-enter from fresh main, reconcile repository/GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +31,9 @@ validation:
   build: PASS
   ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #265 implementation/status head bc8ff86431592b2c2a53b0f3f5219c5373e5f171 passed canonical Application validation run 647 and had clean submitted-review and inline-thread audits. This STATUS handoff commit changes the exact head, so final-head validation and review evidence must be re-established before lifecycle completion.
-last_verified_commit: bc8ff86431592b2c2a53b0f3f5219c5373e5f171
-last_updated: 2026-09-07T10:11:20+10:00
+validation_basis: PR #266 implementation/status head 17175e79c365456b3f73886a501b539a3e6bd74c passed canonical Application validation run 650 with clean submitted-review and inline-thread audits. This durable handoff commit changes the PR head, so final exact-head validation/review evidence must be re-established before implementation-complete signalling.
+last_verified_commit: 17175e79c365456b3f73886a501b539a3e6bd74c
+last_updated: 2026-09-07T12:11:39+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +45,20 @@ last_updated: 2026-09-07T10:11:20+10:00
 
 ## Current objective
 
-PR #265 is the sole active Stage 3 delivery thread. It keeps Task Selector controls and recommendation content semantically concise by marking visual glyphs presentation-only where explicit labels, visible text, or accessible control names already communicate the same meaning.
+PR #266 remains the sole active Stage 3 delivery thread while final exact-head lifecycle evidence is established. It improves production onboarding Life Roles interaction semantics without changing role choices, onboarding data, persistence, routing, recommendation policy, execution policy, authorization, or provider behaviour.
 
-The implementation adds `aria-hidden="true"` only to redundant filter-control, recommendation-path, filter-label, metadata, action-chevron, and empty-state glyphs. Task recommendation scoring, filtering, selection, loading, focus recovery, confidence semantics, persistence, schemas, authorization, execution policy, and provider integrations are unchanged. Deterministic source-contract coverage is in `test/task-selector-icon-semantics.test.mjs`.
+The implementation groups predefined role choices under an accessible `Life roles` group, exposes each choice with `aria-pressed`, gives the custom-role field a programmatic label, gives icon-only custom-role removal controls role-specific accessible names, and hides redundant glyphs inside already-labelled controls. Deterministic regression coverage is in `test/onboarding-life-role-semantics.test.mjs`.
 
-Implementation/status head `bc8ff86431592b2c2a53b0f3f5219c5373e5f171` passed canonical Application validation run 647. Submitted reviews and inline review threads were both empty/clean on that head. The durable fresh-main handoff is now committed; because that commit changes the PR head, final exact-head evidence must be current before implementation-complete signalling.
+Implementation/status head `17175e79c365456b3f73886a501b539a3e6bd74c` passed canonical Application validation run 650 with no submitted reviews and no inline review threads. The durable post-merge handoff is now committed; because that commit changes the head, final exact-head validation and review evidence must be re-established before lifecycle completion.
 
-PR #264 previously completed its lifecycle and merged into `main` at `7f2e3b4d25fff24f3de3f6ce7c616d318c62f518` after final run 645 passed.
+After PR #266 merges, the durable re-entry state is: no active delivery should be assumed from this PR; inspect fresh `main`, current PRs/branches/checks and repository evidence, then continue the next dependency-correct provider-independent Stage 3 accessibility/interaction-integrity slice. Do not reactivate provider-dependent durable execution without real target-instance evidence.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head validation and review/thread evidence required for PR #265 |
-| Gate state | Implementation-head run 647 PASS and review audit clean; durable fresh-main handoff committed; final-head evidence pending |
+| Current gate | INTEGRATION — final exact-head canonical validation and review/thread evidence required for PR #266 |
+| Gate state | Implementation-head run 650 PASS and review audit clean; durable fresh-main handoff committed; final-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -67,16 +67,15 @@ PR #264 previously completed its lifecycle and merged into `main` at `7f2e3b4d25
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #264 — shared reduced-motion preferences; merged into `main` at `7f2e3b4d25fff24f3de3f6ce7c616d318c62f518` after final run 645 PASS |
-| Active delivery | PR #265 — hide redundant decorative Task Selector icons |
-| Delivery branch | `fix/task-selector-icon-semantics` |
-| Implemented change | Named filter controls keep their accessible names while redundant glyphs are hidden; decorative path/filter/metadata/action/empty-state glyphs are presentation-only where adjacent text carries equivalent meaning |
-| Deterministic coverage | `test/task-selector-icon-semantics.test.mjs` plus existing Task Selector selection/loading/focus/confidence/list/mood coverage |
-| Implementation-head validation | PASS — Application validation run 647 on `bc8ff86431592b2c2a53b0f3f5219c5373e5f171` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
-| Durable post-merge handoff | COMMITTED in this STATUS update; fresh `main` is the required post-merge re-entry point |
-| Final exact-head validation | NOT_RUN / PENDING after this handoff commit |
-| Final exact-head review audit | NOT_RUN / PENDING |
+| Latest merged delivery | PR #265 — Task Selector decorative icon semantics; merged into `main` at `eda310d1a82ff005e3493be8566452fbf2ef9dbb` after final run 648 PASS |
+| Active delivery | PR #266 — improve onboarding Life Roles selection and custom-role semantics |
+| Delivery branch | `fix/onboarding-life-role-semantics` |
+| Implemented change | Role choices expose pressed state and group context; custom-role input/removal controls have explicit accessible names; redundant control glyphs are presentation-only |
+| Deterministic coverage | `test/onboarding-life-role-semantics.test.mjs` |
+| Implementation-head validation | PASS — Application validation run 650 on `17175e79c365456b3f73886a501b539a3e6bd74c` |
+| Implementation-head review audit | PASS — no submitted reviews and no inline review threads |
+| Durable post-merge handoff | COMMITTED — fresh `main` is the post-merge re-entry target |
+| Final exact-head validation | PENDING — required after this STATUS handoff commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -84,22 +83,22 @@ PR #264 previously completed its lifecycle and merged into `main` at `7f2e3b4d25
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #265 is the sole active provider-independent accessibility delivery thread. |
-| What is already happening? | Task Selector redundant glyphs are presentation-only, deterministic coverage is committed, and implementation-head run 647 is green. |
-| What has been validated? | PR #265 implementation/status head passed canonical run 647 with clean review/thread audits. This handoff commit requires fresh final-head evidence. |
-| What is next? | Validate/audit the exact final PR #265 handoff head, signal implementation-complete only when clean, allow guarded lifecycle merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; PR #266 is the sole active provider-independent accessibility delivery thread until its lifecycle completes. |
+| What is already happening? | Onboarding Life Roles semantics are implemented; implementation-head run 650 and review/thread audit are clean; durable fresh-main handoff is committed. |
+| What has been validated? | Exact implementation/status head `17175e79c365456b3f73886a501b539a3e6bd74c` passed canonical run 650 with clean review/thread evidence. |
+| What is next? | Revalidate/re-audit the final handoff head, signal implementation-complete only if clean, allow lifecycle automation to merge, then re-enter from fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #265 changes only Task Selector presentation semantics, deterministic test coverage, and durable project state. It does not alter persisted data shapes, authentication, data services, provider mappings, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
+Provider-dependent durable execution remains fail-closed and intentionally deferred. PR #266 changes only onboarding presentation/interaction semantics, deterministic test coverage, and durable project state. It does not alter persisted data shapes, authentication, data services, provider mappings, authorization, recommendation policy, execution policy, destructive behaviour, or external integrations.
 
 The logical data model continues to classify generic `execution-sessions` as planned/provider-unverified. No physical provider operation may be inferred from application-level intent.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the repository Application validation workflow for the exact final PR #265 handoff head;
+1. re-run canonical `npm run platform:validate` through the repository Application validation workflow for the exact PR #266 final handoff head;
 2. audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
 3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
 4. allow the repository lifecycle controller/finalizer to complete Ready/Mergeable/Merged transitions;
