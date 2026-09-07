@@ -49,3 +49,14 @@ test('Chore Checklist keeps icon-only actions named while hiding their glyphs', 
     /aria-label=\{`Open \$\{task\.title\}`\}>[\s\S]*?<SafeIcon icon=\{FiChevronRight\} className="w-5 h-5" aria-hidden="true" \/>/
   );
 });
+
+test('Chore Checklist keeps room pictograms presentation-only when task text carries the meaning', () => {
+  assert.match(
+    choreChecklistSource,
+    /todayTasks\.map[\s\S]*?<span className="text-xl" aria-hidden="true">\{getRoomIcon\(task\.room\)\}<\/span>[\s\S]*?\{task\.title\}/
+  );
+  assert.match(
+    choreChecklistSource,
+    /upcomingTasks\.map[\s\S]*?<span className="text-xl" aria-hidden="true">\{getRoomIcon\(task\.room\)\}<\/span>[\s\S]*?\{task\.title\}/
+  );
+});
