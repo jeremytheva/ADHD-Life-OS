@@ -192,7 +192,7 @@ const TodayView = () => {
           {showUnscheduledTasks && (
             <div id="today-unscheduled-task-details" className="mt-4 border-t border-amber-200 pt-4">
               <ul id="today-unscheduled-task-list" className="space-y-2">
-                {visibleUnscheduledTasks.map((task) => <li key={task.id} className="text-amber-800">• {task.title}</li>)}
+                {visibleUnscheduledTasks.map((task) => <li key={task.id} className="text-amber-800">{task.title}</li>)}
               </ul>
               {hasAdditionalUnscheduledTasks && (
                 <button

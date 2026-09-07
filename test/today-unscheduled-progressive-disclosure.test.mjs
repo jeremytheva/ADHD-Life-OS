@@ -26,3 +26,11 @@ test('Today exposes explicit progressive-disclosure semantics for the remaining 
   assert.match(source, /`Show \$\{hiddenUnscheduledCount\} more`/)
   assert.match(source, /visibleUnscheduledTasks\.map/)
 })
+
+test('Today relies on native list semantics without exposing a duplicate text bullet', async () => {
+  const source = await read('src/components/today/TodayView.jsx')
+
+  assert.match(source, /<ul id="today-unscheduled-task-list"/)
+  assert.match(source, /visibleUnscheduledTasks\.map\(\(task\) => <li key=\{task\.id\} className="text-amber-800">\{task\.title\}<\/li>\)/)
+  assert.doesNotMatch(source, /<li[^>]*>• \{task\.title\}<\/li>/)
+})
