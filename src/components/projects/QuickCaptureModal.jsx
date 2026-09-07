@@ -134,8 +134,13 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
                   Your Brain Dump ({items.filter(i => i).length} items)
                 </h3>
                 {items.filter(i => i).length >= 3 && (
-                  <div className="text-sm text-green-600 font-medium">
-                    ✨ Great! Keep going!
+                  <div
+                    className="text-sm text-green-600 font-medium"
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                  >
+                    <span aria-hidden="true">✨</span> Great! Keep going!
                   </div>
                 )}
               </div>
@@ -244,10 +249,13 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
               className="mt-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border-2 border-green-200"
             >
               <p className="text-green-800 text-center font-medium">
-                🎉 Awesome! You've captured {items.filter(i => i).length} tasks! That's huge progress in clearing your mental space!
+                <span aria-hidden="true">🎉</span> Awesome! You've captured {items.filter(i => i).length} tasks! That's huge progress in clearing your mental space!
               </p>
             </motion.div>
           )}
@@ -282,5 +290,3 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
     </div>
   )
 }
-
-export default QuickCaptureModal
