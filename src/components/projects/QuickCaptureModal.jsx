@@ -290,3 +290,5 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
     </div>
   )
 }
+
+export default QuickCaptureModal
