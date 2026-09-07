@@ -95,12 +95,14 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
             Steps ({routine.routine_steps.length}):
           </h4>
           <ol className="space-y-1">
-            {routine.routine_steps.slice(0, 3).map((step) => (
+            {routine.routine_steps.slice(0, 3).map((step, index) => (
               <li
                 key={step.id}
                 className="flex items-center justify-between text-sm"
               >
-                <span className="text-slate-600">{step.name}</span>
+                <span className="text-slate-600">
+                  {index + 1}. {step.name}
+                </span>
                 {step.duration_minutes && (
                   <span className="text-slate-500">{step.duration_minutes} min</span>
                 )}
