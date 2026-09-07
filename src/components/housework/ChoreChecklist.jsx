@@ -213,7 +213,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
             {upcomingTasks.map((task, index) => (
               <motion.div key={task.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }} className="bg-white rounded-lg border border-slate-200 p-4 opacity-75">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3"><span className="text-xl">{getRoomIcon(task.room)}</span><div><h4 className="font-medium text-slate-900">{task.title}</h4><div className="text-sm text-slate-600">Due {format(parseISO(task.next_due_date), 'MMM d')}</div></div></div>
+                  <div className="flex items-center gap-3"><span className="text-xl" aria-hidden="true">{getRoomIcon(task.room)}</span><span className="sr-only">{task.room.replace('_', ' ')}</span><div><h4 className="font-medium text-slate-900">{task.title}</h4><div className="text-sm text-slate-600">Due {format(parseISO(task.next_due_date), 'MMM d')}</div></div></div>
                   <button onClick={() => onSelectTask && onSelectTask(task)} className="p-2 text-slate-400 hover:text-purple-600 transition-colors" aria-label={`Open ${task.title}`}><SafeIcon icon={FiChevronRight} className="w-5 h-5" aria-hidden="true" /></button>
                 </div>
               </motion.div>
