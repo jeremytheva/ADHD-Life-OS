@@ -98,7 +98,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                <SafeIcon icon={FiHome} className="w-6 h-6" />
+                <SafeIcon icon={FiHome} className="w-6 h-6" aria-hidden="true" />
               </div>
               <div>
                 <h2 id="housework-setup-title" className="text-2xl font-bold">Set Up Your Housework Routine</h2>
@@ -112,7 +112,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
               aria-label="Close housework setup"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:opacity-50"
             >
-              <SafeIcon icon={FiX} className="w-6 h-6" />
+              <SafeIcon icon={FiX} className="w-6 h-6" aria-hidden="true" />
             </button>
           </div>
           <div className="flex items-center justify-between">
@@ -175,7 +175,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2 flex-1">
                       <div className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 ${isSelected ? 'bg-purple-600' : 'bg-slate-200'}`}>
-                        {isSelected && <SafeIcon icon={FiCheck} className="w-3 h-3 text-white" />}
+                        {isSelected && <SafeIcon icon={FiCheck} className="w-3 h-3 text-white" aria-hidden="true" />}
                       </div>
                       <h4 className="font-medium text-slate-900">{template.title}</h4>
                     </div>
@@ -183,7 +183,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
                   </div>
                   <p className="text-sm text-slate-600 mb-3">{template.description}</p>
                   <div className="flex items-center gap-3 text-xs text-slate-500">
-                    <span className="flex items-center gap-1"><SafeIcon icon={FiHome} className="w-3 h-3" />{template.room.replace('_', ' ')}</span>
+                    <span className="flex items-center gap-1"><SafeIcon icon={FiHome} className="w-3 h-3" aria-hidden="true" />{template.room.replace('_', ' ')}</span>
                     <span>•</span>
                     <span>{FREQUENCY_OPTIONS.find(f => f.value === template.frequency)?.label}</span>
                     <span>•</span>
@@ -215,7 +215,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
               {saving ? (
                 <><div aria-hidden="true" className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>Creating Tasks...</>
               ) : (
-                <><SafeIcon icon={FiPlus} className="w-5 h-5" />Add {selectedTasks.size} Task{selectedTasks.size !== 1 ? 's' : ''}</>
+                <><SafeIcon icon={FiPlus} className="w-5 h-5" aria-hidden="true" />Add {selectedTasks.size} Task{selectedTasks.size !== 1 ? 's' : ''}</>
               )}
             </button>
           </div>
