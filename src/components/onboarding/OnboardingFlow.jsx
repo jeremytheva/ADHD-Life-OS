@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -30,6 +30,8 @@ const OnboardingFlow = ({ onComplete, onSkip }) => {
   const [onboardingData, setOnboardingData] = useState(onboardingService.getDefaultOnboardingData())
   const totalSteps = ONBOARDING_FLOW.length
   const dialogRef = useModalDialog()
+  const stepTitleRef = useRef(null)
+  const previousStepRef = useRef(currentStep)
 
   useEffect(() => {
     let active = true
@@ -42,6 +44,13 @@ const OnboardingFlow = ({ onComplete, onSkip }) => {
     })
     return () => { active = false }
   }, [])
+
+  useEffect(() => {
+    if (previousStepRef.current !== currentStep) {
+      stepTitleRef.current?.focus()
+    }
+    previousStepRef.current = currentStep
+  }, [currentStep])
 
   const CurrentStepComponent = ONBOARDING_FLOW[currentStep].component
 
@@ -98,7 +107,12 @@ const OnboardingFlow = ({ onComplete, onSkip }) => {
         <div className="p-6 border-b border-slate-200">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 id="onboarding-step-title" className="text-2xl font-bold text-slate-900">
+              <h2
+                id="onboarding-step-title"
+                ref={stepTitleRef}
+                tabIndex={-1}
+                className="text-2xl font-bold text-slate-900"
+              >
                 {ONBOARDING_FLOW[currentStep].title}
               </h2>
               <p className="text-sm text-slate-600 mt-1">
@@ -107,6 +121,7 @@ const OnboardingFlow = ({ onComplete, onSkip }) => {
             </div>
             {currentStep === 0 && (
               <button
+                type="button"
                 onClick={handleSkipAll}
                 className="px-4 py-2 text-slate-600 hover:text-slate-900 text-sm transition-colors"
               >
