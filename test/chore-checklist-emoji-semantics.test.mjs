@@ -15,10 +15,10 @@ test('ready chore cards hide room emoji when the room label is already visible',
   );
 });
 
-test('upcoming chore cards preserve the room emoji where no equivalent room label is shown', () => {
+test('upcoming chore cards hide the pictogram while preserving equivalent room text for assistive technology', () => {
   assert.match(
     choreChecklistSource,
-    /<div className="flex items-center gap-3"><span className="text-xl">\{getRoomIcon\(task\.room\)\}<\/span><div><h4 className="font-medium text-slate-900">\{task\.title\}<\/h4><div className="text-sm text-slate-600">Due /
+    /<div className="flex items-center gap-3"><span className="text-xl" aria-hidden="true">\{getRoomIcon\(task\.room\)\}<\/span><span className="sr-only">\{task\.room\.replace\('_', ' '\)\}<\/span><div><h4 className="font-medium text-slate-900">\{task\.title\}<\/h4><div className="text-sm text-slate-600">Due /
   );
 });
 
