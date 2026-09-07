@@ -11,7 +11,7 @@ current_work:
   pr: 276
   branch: fix/adaptive-reward-list-semantics
 next_actions:
-  - Run canonical Application validation on the exact PR #276 implementation/status head.
+  - Re-run canonical Application validation on the exact repaired PR #276 implementation/status head.
   - Audit submitted reviews and inline review threads and repair any in-scope finding.
   - After clean implementation-head evidence, commit a durable fresh-main handoff and revalidate the exact final head.
   - Signal lifecycle:implementation-complete only after exact-head validation and review evidence are clean.
@@ -23,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
-  ci: PENDING
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #276 is a new provider-independent Stage 3 accessibility slice created from fresh main after PR #275 merged at c318efb836b3577ec956f76e4d60682e51785b2f. Exact-head canonical validation is required after this status commit.
+validation_basis: Application validation run 682 on PR #276 head 21317f3baa8112a49786ee9c9a3bbfaa13c9497a failed immediately at governance because STATUS.md used unsupported PENDING enum values for governance/lint/typecheck/tests/build. No application validation steps ran. This repair restores the repository-approved NOT_RUN values; exact-head canonical validation must now be re-established.
 last_verified_commit: c318efb836b3577ec956f76e4d60682e51785b2f
-last_updated: 2026-09-07T16:56:00+10:00
+last_updated: 2026-09-07T17:15:44+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -52,13 +52,15 @@ Adaptive reward suggestions were visually presented as a collection of choices b
 
 Reward selection behaviour, gamification policy, persistence, authentication, authorization, schemas, recommendation/execution policy, and NoCodeBackend contracts are unchanged.
 
+Application validation run 682 failed before lint/typecheck/tests/build because the PR's STATUS front matter used `PENDING`, while the governance validator accepts only `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE` for the governed validation fields. The durable state has been repaired to `NOT_RUN`; this is a status-contract correction rather than an application-code change.
+
 A pre-existing stale branch named `fix/profile-selector-state-semantics` was found and fast-forwarded to fresh `main` during reconciliation. It contained no implementation and no PR. A direct Profile Selector patch could not be submitted because the connector safety filter rejects replacement content containing the existing embedded test credential; no speculative or partial change was made there.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #276 implementation/status head requires canonical validation and review audit |
+| Current gate | INTEGRATION — PR #276 repaired implementation/status head requires canonical validation and review audit |
 | Gate state | VALIDATING |
 | Primary delivery | PR #276 — `fix/adaptive-reward-list-semantics` |
 | Backend/provider state | DEFERRED / UNVERIFIED |
@@ -73,8 +75,10 @@ A pre-existing stale branch named `fix/profile-selector-state-semantics` was fou
 | Delivery branch | `fix/adaptive-reward-list-semantics` |
 | Implemented change | Named semantic reward list/list-items plus explicit non-submit dismiss/claim buttons |
 | Deterministic coverage | Extended `test/adaptive-reward-suggestion-semantics.test.mjs` |
-| Exact-head validation | PENDING after this STATUS commit |
-| Review/thread audit | PENDING |
+| Validation attempt | Run 682 — FAIL at governance only because STATUS.md contained unsupported `PENDING` validation enums; no later validation stages ran |
+| Governance-state repair | COMMITTED — governed fields restored to `NOT_RUN` pending fresh exact-head evidence |
+| Exact-head validation | NOT_RUN after this repair commit |
+| Review/thread audit | NOT_RUN on repaired exact head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -82,10 +86,10 @@ A pre-existing stale branch named `fix/profile-selector-state-semantics` was fou
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #276 is the sole active delivery thread and is validating. |
-| What is already happening? | Adaptive reward collection/control semantics and focused regression coverage are implemented. |
-| What has been validated? | Fresh `main` after PR #275 is the last verified baseline; PR #276 exact-head validation is pending. |
-| What is next? | Run canonical validation and review/thread audit on the exact current PR #276 head, repair findings, then complete the durable handoff/final-head lifecycle sequence. |
+| Where am I? | Stage 3; PR #276 is the sole active delivery thread and is validating after a governance-state repair. |
+| What is already happening? | Adaptive reward collection/control semantics and focused regression coverage are implemented; invalid STATUS validation enums have been repaired. |
+| What has been validated? | Fresh `main` after PR #275 remains the last fully verified baseline. Run 682 did not validate application code because governance stopped immediately. |
+| What is next? | Re-run canonical validation and review/thread audit on the exact repaired PR #276 head, repair findings, then complete the durable handoff/final-head lifecycle sequence. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
