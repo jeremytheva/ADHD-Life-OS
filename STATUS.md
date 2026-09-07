@@ -4,16 +4,17 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: READY
+execution_state: VALIDATING
 current_work:
-  objective: Re-enter from fresh main after PR #275 lifecycle completion and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Complete provider-independent adaptive reward accessibility semantics through PR #276.
   issue: null
-  pr: null
-  branch: main
+  pr: 276
+  branch: fix/adaptive-reward-list-semantics
 next_actions:
-  - Reconcile fresh main with current GitHub PR/check state after PR #275 lifecycle completion.
-  - Inspect current frontend interaction/accessibility evidence and select the highest-priority dependency-correct provider-independent Stage 3 slice.
-  - Reuse or repair existing work rather than create overlapping implementation.
+  - Run canonical Application validation on the exact PR #276 implementation/status head.
+  - Audit submitted reviews and inline review threads and repair any in-scope finding.
+  - After clean implementation-head evidence, commit a durable fresh-main handoff and revalidate the exact final head.
+  - Signal lifecycle:implementation-complete only after exact-head validation and review evidence are clean.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -22,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: PENDING
+  lint: PENDING
+  typecheck: PENDING
+  tests: PENDING
+  build: PENDING
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #275 repaired implementation/status head 247e11aa671ad801249a70ddcaad3cbf4b0e843f passed canonical Application validation run 679 with no submitted reviews or inline review threads. This durable handoff commit changes the PR head, so final exact-head validation/review evidence must be re-established before lifecycle:implementation-complete.
-last_verified_commit: 247e11aa671ad801249a70ddcaad3cbf4b0e843f
-last_updated: 2026-09-07T16:35:30+10:00
+validation_basis: PR #276 is a new provider-independent Stage 3 accessibility slice created from fresh main after PR #275 merged at c318efb836b3577ec956f76e4d60682e51785b2f. Exact-head canonical validation is required after this status commit.
+last_verified_commit: c318efb836b3577ec956f76e4d60682e51785b2f
+last_updated: 2026-09-07T16:56:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,21 +44,23 @@ last_updated: 2026-09-07T16:35:30+10:00
 
 ## Current objective
 
-PR #275 has completed its implementation-head evidence gate. The repaired implementation/status head `247e11aa671ad801249a70ddcaad3cbf4b0e843f` passed canonical Application validation run 679, and submitted-review plus inline-review-thread audits were clean.
+PR #275 completed final exact-head Application validation run 680 with clean review/thread evidence and merged into `main` at `c318efb836b3577ec956f76e4d60682e51785b2f`.
 
-The PR closes the previously deferred Quick Capture live-feedback gap: the existing encouragement shown after three captured tasks and the count-based progress message shown from five tasks onward are polite atomic status announcements. Their decorative sparkle/celebration emoji are presentation-only. Existing `test/quick-capture-list-semantics.test.mjs` coverage was extended rather than duplicated.
+Fresh-main reconciliation found no competing open delivery PR. The next evidence-backed provider-independent accessibility slice is PR #276, `fix: expose adaptive reward list semantics`.
 
-Run 677 on earlier head `a382d1a137efa828131316f8c7535e8d205808af` had passed governance, lint, typecheck and all 318 Node tests before the production build exposed an accidentally omitted `export default QuickCaptureModal`. That packaging defect was repaired in place and run 679 subsequently passed the complete canonical gate.
+Adaptive reward suggestions were visually presented as a collection of choices but were not exposed as a semantic list. PR #276 now presents the choices as a named list with list items, makes both dismiss and reward-claim controls explicit `type="button"` controls, and extends the existing adaptive reward semantics regression test rather than creating duplicate coverage.
 
-This checkpoint is intentionally post-merge safe: after final exact-head evidence and repository-managed lifecycle completion, resume from fresh `main` and select the next provider-independent Stage 3 accessibility or interaction-integrity slice.
+Reward selection behaviour, gamification policy, persistence, authentication, authorization, schemas, recommendation/execution policy, and NoCodeBackend contracts are unchanged.
+
+A pre-existing stale branch named `fix/profile-selector-state-semantics` was found and fast-forwarded to fresh `main` during reconciliation. It contained no implementation and no PR. A direct Profile Selector patch could not be submitted because the connector safety filter rejects replacement content containing the existing embedded test credential; no speculative or partial change was made there.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #275 durable handoff committed; final exact-head validation/review evidence required before implementation-complete signalling |
-| Gate state | Implementation-head run 679 PASS and review/thread audit clean; handoff commit invalidates exact-head evidence until revalidation |
-| Execution state | READY after lifecycle completion |
+| Current gate | INTEGRATION — PR #276 implementation/status head requires canonical validation and review audit |
+| Gate state | VALIDATING |
+| Primary delivery | PR #276 — `fix/adaptive-reward-list-semantics` |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
 
@@ -65,17 +68,13 @@ This checkpoint is intentionally post-merge safe: after final exact-head evidenc
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #274 — hide task metadata scale emoji; merged at `ac6cc98c2006b848f9fb75d0f703ff51d763e1e0` |
-| Delivery completing lifecycle | PR #275 — announce Quick Capture progress |
-| Delivery branch | `fix/quick-capture-progress-status` |
-| Implemented change | Existing 3-task and 5+ Quick Capture encouragement exposes polite atomic status semantics; decorative announcement emoji are hidden |
-| Deterministic coverage | Extended `test/quick-capture-list-semantics.test.mjs` |
-| Initial validation | Run 677 — FAIL at production build only; governance/lint/typecheck/318 Node tests passed |
-| Repair | Restored required Quick Capture default export |
-| Implementation-head validation | PASS — Application validation run 679 on `247e11aa671ad801249a70ddcaad3cbf4b0e843f` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
-| Durable post-merge handoff | COMMITTED |
-| Final exact-head validation | NOT_RUN — required after this handoff commit |
+| Latest merged delivery | PR #275 — announce Quick Capture progress; merged at `c318efb836b3577ec956f76e4d60682e51785b2f` |
+| Active delivery | PR #276 — expose adaptive reward list semantics |
+| Delivery branch | `fix/adaptive-reward-list-semantics` |
+| Implemented change | Named semantic reward list/list-items plus explicit non-submit dismiss/claim buttons |
+| Deterministic coverage | Extended `test/adaptive-reward-suggestion-semantics.test.mjs` |
+| Exact-head validation | PENDING after this STATUS commit |
+| Review/thread audit | PENDING |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -83,25 +82,16 @@ This checkpoint is intentionally post-merge safe: after final exact-head evidenc
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #275 has clean implementation-head evidence and is completing its final repository lifecycle gate. |
-| What is already happening? | Quick Capture threshold feedback semantics and focused regression coverage are implemented; durable fresh-main handoff is committed. |
-| What has been validated? | Repaired implementation/status head `247e11aa671ad801249a70ddcaad3cbf4b0e843f` passed canonical run 679 and review/thread audits are clean. This handoff head requires fresh exact-head evidence. |
-| What is next? | Revalidate/re-audit the final PR #275 head, signal implementation-complete only if clean, allow lifecycle merge, then re-enter from fresh `main`. |
+| Where am I? | Stage 3; PR #276 is the sole active delivery thread and is validating. |
+| What is already happening? | Adaptive reward collection/control semantics and focused regression coverage are implemented. |
+| What has been validated? | Fresh `main` after PR #275 is the last verified baseline; PR #276 exact-head validation is pending. |
+| What is next? | Run canonical validation and review/thread audit on the exact current PR #276 head, repair findings, then complete the durable handoff/final-head lifecycle sequence. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #275 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy, or destructive behaviour.
-
-## Next dependency-correct work
-
-1. run canonical `npm run platform:validate` through the Application validation workflow for the exact final PR #275 handoff head;
-2. re-audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
-3. add `lifecycle:implementation-complete` only after all final-head evidence is clean;
-4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #276 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy, or destructive behaviour.
 
 ## Stage 3 exit conditions
 
