@@ -61,6 +61,7 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
             {routine.is_active ? 'Active routine' : 'Inactive routine'}
           </span>
           <button
+            type="button"
             onClick={onEdit}
             aria-label={`Edit routine: ${routine.name}`}
             className="p-1 text-slate-400 hover:text-blue-600 transition-colors"
@@ -68,6 +69,7 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
             <SafeIcon icon={FiEdit2} className="w-4 h-4" aria-hidden="true" />
           </button>
           <button
+            type="button"
             onClick={onDelete}
             aria-label={`Delete routine: ${routine.name}`}
             className="p-1 text-slate-400 hover:text-red-600 transition-colors"
@@ -120,6 +122,7 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
       {/* Action Buttons */}
       <div className="flex gap-2 pt-4 border-t border-slate-200">
         <button
+          type="button"
           onClick={onViewStats}
           className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
         >
@@ -127,6 +130,7 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
           <span>Stats</span>
         </button>
         <button
+          type="button"
           onClick={onStart}
           className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
         >
