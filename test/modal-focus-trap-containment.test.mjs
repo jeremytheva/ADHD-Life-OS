@@ -13,3 +13,13 @@ test('modal focus trapping recaptures forward and reverse Tab when focus is outs
   assert.match(source, /last\.focus\(\)/)
   assert.match(source, /first\.focus\(\)/)
 })
+
+test('top-most modal recaptures focus that moves outside without requiring a Tab keypress', async () => {
+  const source = await read('src/common/useModalDialog.js')
+
+  assert.match(source, /const handleFocusIn = \(event\) =>/)
+  assert.match(source, /!dialog \|\| !isTopModal\(dialogRef\) \|\| dialog\.contains\(event\.target\)/)
+  assert.match(source, /focusDialogEntryPoint\(\)/)
+  assert.match(source, /document\.addEventListener\('focusin', handleFocusIn\)/)
+  assert.match(source, /document\.removeEventListener\('focusin', handleFocusIn\)/)
+})
