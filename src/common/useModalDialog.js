@@ -74,16 +74,26 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
     lockDocumentScroll()
     modalStack.push(dialogRef)
 
-    const focusFrame = window.requestAnimationFrame(() => {
-      if (!isTopModal(dialogRef)) return
+    const focusDialogEntryPoint = () => {
+      const dialog = dialogRef.current
+      if (!dialog || !isTopModal(dialogRef)) return
 
       const initialTarget = initialFocusRef?.current
       if (initialTarget && isProgrammaticallyFocusable(initialTarget)) {
         initialTarget.focus()
         return
       }
-      dialogRef.current?.focus()
-    })
+      dialog.focus()
+    }
+
+    const focusFrame = window.requestAnimationFrame(focusDialogEntryPoint)
+
+    const handleFocusIn = (event) => {
+      const dialog = dialogRef.current
+      if (!dialog || !isTopModal(dialogRef) || dialog.contains(event.target)) return
+
+      focusDialogEntryPoint()
+    }
 
     const handleKeyDown = (event) => {
       const dialog = dialogRef.current
@@ -117,10 +127,12 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
       }
     }
 
+    document.addEventListener('focusin', handleFocusIn)
     document.addEventListener('keydown', handleKeyDown)
 
     return () => {
       window.cancelAnimationFrame(focusFrame)
+      document.removeEventListener('focusin', handleFocusIn)
       document.removeEventListener('keydown', handleKeyDown)
       removeModal(dialogRef)
 
