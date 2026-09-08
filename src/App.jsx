@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect } from 'react'
+import React, { lazy, Suspense, useState, useEffect, useRef } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom'
 import { AUTH_STATUS, AuthProvider, useAuth } from './contexts/AuthContext'
 import { ModeProvider } from './contexts/ModeContext'
@@ -63,17 +63,25 @@ const ProtectedAppShell = ({ enabledModules, showOnboarding, onOnboardingComplet
   )
 }
 
-const AuthErrorScreen = ({ error, onRetry }) => (
-  <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-    <div className="max-w-md rounded-lg bg-white p-6 text-center shadow">
-      <div role="alert" aria-atomic="true">
-        <h1 className="text-xl font-semibold text-slate-900">We couldn't verify your session</h1>
-        <p className="mt-2 text-slate-600">{error?.message || 'Please check your connection and try again.'}</p>
+const AuthErrorScreen = ({ error, onRetry }) => {
+  const alertRef = useRef(null)
+
+  useEffect(() => {
+    alertRef.current?.focus()
+  }, [])
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <div className="max-w-md rounded-lg bg-white p-6 text-center shadow">
+        <div ref={alertRef} role="alert" aria-atomic="true" tabIndex={-1}>
+          <h1 className="text-xl font-semibold text-slate-900">We couldn't verify your session</h1>
+          <p className="mt-2 text-slate-600">{error?.message || 'Please check your connection and try again.'}</p>
+        </div>
+        <button type="button" onClick={onRetry} className="mt-5 rounded bg-blue-600 px-4 py-2 text-white">Try again</button>
       </div>
-      <button type="button" onClick={onRetry} className="mt-5 rounded bg-blue-600 px-4 py-2 text-white">Try again</button>
     </div>
-  </div>
-)
+  )
+}
 
 const AppRoutes = () => {
   const { status, error, retrySessionVerification } = useAuth()
