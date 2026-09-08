@@ -6,36 +6,33 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Diagnose the repeated canonical validation failure on PR #296 exact head before making any application change, then resume the existing PR lifecycle.
+  objective: Repair the evidenced STATUS validation-state regression on PR #296, then resume exact-head canonical validation and lifecycle progression.
   issue: null
   pr: 296
   branch: fix/error-boundary-focus-recovery
 next_actions:
-  - Inspect fresh Application validation evidence on the current PR #296 head and isolate the first failing canonical sub-gate.
-  - Repair only an evidenced in-scope or repository-wide validation defect; do not alter AppErrorBoundary speculatively.
   - Re-run canonical Application validation on the exact repaired/status head.
   - Re-audit submitted reviews and inline review threads after a passing exact-head run.
   - Commit the durable post-merge-safe STATUS handoff after implementation-head evidence passes.
   - Signal lifecycle:implementation-complete only after final exact-head validation and review evidence are clean.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
-blockers:
-  - Application validation run 752 failed twice at the canonical platform-validation step after checkout, Node setup, locked dependency installation and Chromium installation succeeded; the available GitHub connector does not expose the command log needed to identify the first failing sub-gate.
+blockers: []
 requires_owner_decision: false
 owner_decision:
   question: null
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: FAIL
   runtime: UNVERIFIED
-validation_basis: PR #296 exact head 6e902608d5eb68abc2e5ac568c942c0d0439aa63 failed Application validation run 752 on both attempt 1 and attempt 2. Runner setup completed successfully both times; the canonical platform-validation step failed immediately, so no downstream PASS state is claimed. Submitted reviews and inline review threads were empty when audited.
+validation_basis: PR #296 Application validation runs 752 and 753 failed at validate:governance because STATUS.md used unsupported PENDING values for governance, lint, typecheck, tests and build. Run 753 logs identified the exact deterministic root cause. Those fields are now corrected to the repository-supported NOT_RUN state; no AppErrorBoundary implementation change was required. Fresh exact-head validation is required.
 last_verified_commit: 5c7af29b8351ee0396d1d798d5f97959030d8cff
-last_updated: 2026-09-09T02:20:00+10:00
+last_updated: 2026-09-09T03:13:44+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -53,19 +50,21 @@ Fresh-main reconciliation found no competing open delivery PR. PR #296 remains t
 
 The existing `test/app-error-boundary-semantics.test.mjs` coverage is extended in place to protect the focus-recovery contract rather than adding a duplicate test abstraction.
 
-Canonical Application validation run 752 failed on exact head `6e902608d5eb68abc2e5ac568c942c0d0439aa63`. A targeted rerun of the same job failed identically. On both attempts, checkout, Node setup, `npm ci`, and Chromium installation passed; the canonical `npm run platform:validate` step failed immediately. The currently available connector exposes the job/step state but not the command log, so the first failing sub-gate is not yet evidenced. No speculative dependency or application change has been made.
+Canonical Application validation run 752 failed twice at the canonical platform-validation step. Fresh run 753 on exact diagnostic-state head `2b3aad26162951e6f9d556ad0878340409188852` exposed the deterministic root cause in its command log: `validate:governance` rejected `PENDING` for the `governance`, `lint`, `typecheck`, `tests`, and `build` STATUS front-matter fields because the repository contract permits only `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE` for those fields. `npm audit` passed with zero vulnerabilities before the governance failure.
 
-Submitted reviews and inline review threads were empty on the failed exact head.
+The unsupported STATUS values are now corrected to `NOT_RUN`. No AppErrorBoundary, dependency, provider, persistence, recommendation, or execution-policy change was required for this validation repair.
+
+Submitted reviews and inline review threads were empty on the previously failed exact head.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #296 canonical validation is failing and requires evidence-backed diagnosis |
-| Gate state | Implementation scope complete; exact-head validation FAIL pending root-cause isolation |
+| Current gate | INTEGRATION — PR #296 validation-state regression repaired; fresh exact-head evidence required |
+| Gate state | Implementation scope complete; deterministic governance root cause repaired; exact-head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
-| Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. Do not modify the focus-recovery implementation merely to chase an unexplained CI failure. |
+| Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
 ## Delivery checkpoint
 
@@ -76,38 +75,36 @@ Submitted reviews and inline review threads were empty on the failed exact head.
 | Active branch | `fix/error-boundary-focus-recovery` |
 | Implemented change | `AppErrorBoundary` focuses its existing atomic alert when transitioning into an error state; the target uses `tabIndex={-1}` so it is not added to normal keyboard navigation |
 | Deterministic coverage | Existing `test/app-error-boundary-semantics.test.mjs` extended in place |
-| Canonical validation | FAIL — Application validation run 752, attempts 1 and 2, on `6e902608d5eb68abc2e5ac568c942c0d0439aa63` |
-| Review/thread audit | CLEAN — no submitted reviews or inline review threads observed |
+| Canonical validation | FAIL on runs 752/753; run 753 identified invalid STATUS validation-state values as the exact governance failure and this commit repairs them |
+| Review/thread audit | CLEAN on previously failed head — no submitted reviews or inline review threads observed |
 | Durable post-merge handoff | PENDING until implementation-head evidence passes |
-| Current blocker | First failing canonical sub-gate cannot yet be identified from available job metadata because command logs are not exposed by the current connector |
+| Current blocker | None; fresh exact-head validation is the next lifecycle gate |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #296 is the sole active provider-independent accessibility delivery and its canonical gate is failing. |
+| Where am I? | Stage 3; PR #296 is the sole active provider-independent accessibility delivery and its evidenced governance regression is repaired. |
 | What is already happening? | Shared catastrophic-render recovery provides a deterministic keyboard focus destination in the existing error alert. |
-| What has been validated? | Fresh `main` through merged PR #295. PR #296 run 752 failed twice at the canonical platform-validation step; review/thread state was clean. |
-| What is next? | Isolate the first failing canonical sub-gate from fresh evidence, repair only the evidenced defect on the existing PR, then rerun exact-head validation. |
-| Can I proceed autonomously? | Yes, when diagnostic evidence is available. No owner decision is currently required. |
+| What has been validated? | Fresh `main` through merged PR #295. PR #296 runs 752/753 failed because STATUS used governance-invalid PENDING values; run 753 exposed the exact root cause. |
+| What is next? | Run canonical validation on the repaired exact head, audit review/thread evidence, then complete the durable handoff and lifecycle if clean. |
+| Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #296 is a client-only shared interaction repair and does not alter provider contracts, physical schemas, remote operations, persisted domain shapes, authentication, authorization, recommendation policy or execution policy.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #296 is a client-only shared interaction repair plus an evidenced durable-state validation correction. It does not alter provider contracts, physical schemas, remote operations, persisted domain shapes, authentication, authorization, recommendation policy or execution policy.
 
 ## Next dependency-correct work
 
-1. inspect fresh Application validation evidence on PR #296 and identify the first failing `platform:validate` sub-gate;
-2. repair only an evidenced in-scope or repository-wide validation defect on the same active delivery thread;
-3. run canonical `npm run platform:validate` through Application validation on the exact repaired/status head;
-4. audit submitted reviews and inline review threads and repair any in-scope finding;
-5. after implementation-head evidence passes, commit the durable post-merge-safe STATUS handoff;
-6. run final exact-head evidence and add `lifecycle:implementation-complete` only when clean;
-7. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-8. re-enter from fresh `main` after merge and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-9. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through Application validation on the exact repaired/status head;
+2. audit submitted reviews and inline review threads and repair any in-scope finding;
+3. after implementation-head evidence passes, commit the durable post-merge-safe STATUS handoff;
+4. run final exact-head evidence and add `lifecycle:implementation-complete` only when clean;
+5. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+6. re-enter from fresh `main` after merge and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
