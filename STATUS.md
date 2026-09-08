@@ -11,7 +11,7 @@ current_work:
   pr: 293
   branch: fix/modal-focus-containment-recovery
 next_actions:
-  - Run canonical Application validation on the exact PR #293 implementation/status head.
+  - Run canonical Application validation on the exact repaired PR #293 implementation/status head.
   - Audit submitted reviews and inline review threads on that exact head and repair any in-scope finding.
   - Record successful implementation-head evidence in a durable post-merge-safe STATUS handoff commit.
   - Revalidate and re-audit the resulting final exact head before signalling lifecycle:implementation-complete.
@@ -32,9 +32,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #293 implementation, existing focus-containment test extension, and durable active-state synchronization are committed; canonical validation has not yet been verified on the resulting exact implementation/status head.
+validation_basis: Application validation run 741 failed on prior head 8082494d6f19d67937dffa76fded121f5f84cccc because the modal initial-focus source contract still required dialogRef.current?.focus(); that in-scope regression is repaired on the active branch and fresh exact-head validation is required after this durable state update.
 last_verified_commit: 61f38d0faba7555eee1ba1ad25c9f49957ac08d7
-last_updated: 2026-09-08T17:25:00+10:00
+last_updated: 2026-09-08T18:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -50,7 +50,9 @@ PR #292 completed its repository-managed lifecycle and merged into `main` at `36
 
 PR #293 is the sole active Stage 3 delivery thread. It strengthens the existing shared `useModalDialog` interaction boundary so the top-most modal recaptures focus when browser, assistive-technology, or programmatic focus moves outside the dialog without a Tab keypress. The recovery reuses the existing modal entry-point focus policy and acts only for the top-most dialog, so nested modal ownership remains authoritative.
 
-The existing `test/modal-focus-trap-containment.test.mjs` contract is extended in place to protect non-Tab focus escape recovery and listener cleanup. Existing Tab trapping, Escape handling, background-scroll ownership, nested modal handling and opener-focus restoration remain in the shared primitive.
+Application validation run 741 failed deterministically before build/e2e because the refactor changed the existing initial-focus fallback source contract from `dialogRef.current?.focus()` to `dialog.focus()`. The behaviour was equivalent but the repository contract test is authoritative. The active branch has been repaired in place to preserve that established fallback contract while retaining the new focus-containment recovery. Fresh exact-head validation is required after this STATUS synchronization.
+
+The existing `test/modal-focus-trap-containment.test.mjs` contract remains extended in place to protect non-Tab focus escape recovery and listener cleanup. Existing Tab trapping, Escape handling, background-scroll ownership, nested modal handling and opener-focus restoration remain in the shared primitive.
 
 No provider, persistence, recommendation/execution policy, authentication, authorization, schema or routing behaviour is changed.
 
@@ -58,8 +60,8 @@ No provider, persistence, recommendation/execution policy, authentication, autho
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #293 exact implementation/status head requires canonical validation and review evidence |
-| Gate state | Implementation and deterministic coverage are committed; validation/review evidence is pending |
+| Current gate | INTEGRATION — PR #293 repaired exact implementation/status head requires canonical validation and review evidence |
+| Gate state | Run 741 deterministic in-scope failure repaired; fresh exact-head evidence required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -72,10 +74,11 @@ No provider, persistence, recommendation/execution policy, authentication, autho
 | Active delivery | PR #293 — shared modal focus-containment recovery |
 | Delivery branch | `fix/modal-focus-containment-recovery` |
 | Implemented change | The top-most shared modal listens for focus entering outside its dialog and recaptures focus through the existing modal entry-point policy |
-| Deterministic coverage | Extended `test/modal-focus-trap-containment.test.mjs` in place for non-Tab focus escape recovery and listener registration/cleanup |
-| Implementation-head validation | NOT_RUN — required on the exact implementation/status head |
+| Corrective work | Run 741 exposed the existing initial-focus fallback source contract; active branch repaired to retain `dialogRef.current?.focus()` |
+| Deterministic coverage | Extended `test/modal-focus-trap-containment.test.mjs` in place; existing `test/modal-initial-focus-visibility.test.mjs` remains authoritative |
+| Implementation-head validation | NOT_RUN on the repaired STATUS-synchronized exact head; prior run 741 failed and is superseded by corrective commits |
 | Implementation-head review audit | NOT_RUN — required on the exact validated implementation/status head |
-| Durable active-state synchronization | COMPLETE — STATUS names PR #293 as the sole active delivery and preserves provider deferral |
+| Durable active-state synchronization | COMPLETE — STATUS records run 741 failure/repair and preserves provider deferral |
 | Durable post-merge handoff | NOT_RUN — create only after implementation-head evidence is clean |
 | Final exact-head validation | NOT_RUN — required after the durable handoff commit |
 | Current blocker | None |
@@ -85,9 +88,9 @@ No provider, persistence, recommendation/execution policy, authentication, autho
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #293 is the sole active provider-independent accessibility/interaction-integrity delivery at implementation-head validation. |
-| What is already happening? | Shared modal non-Tab focus-escape recovery is implemented and existing deterministic containment coverage is extended in place. |
-| What has been validated? | PR #292 final head passed canonical run 739 before merge; PR #293 exact implementation/status head has not yet been verified. |
+| Where am I? | Stage 3; PR #293 is the sole active provider-independent accessibility/interaction-integrity delivery at repaired implementation-head validation. |
+| What is already happening? | Shared modal non-Tab focus-escape recovery is implemented; run 741 exposed an in-scope deterministic test regression and the active branch has been repaired. |
+| What has been validated? | PR #292 final head passed canonical run 739 before merge; PR #293 prior head failed run 741 and the repaired exact head still requires fresh validation. |
 | What is next? | Run canonical validation and exact-head review/thread audit, repair any in-scope finding, then create the durable post-merge-safe handoff. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
@@ -102,7 +105,7 @@ After PR #293 merges, re-enter from fresh `main`, confirm the merge commit and z
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the Application validation workflow for the exact PR #293 implementation/status head;
+1. run canonical `npm run platform:validate` through the Application validation workflow for the exact repaired PR #293 implementation/status head;
 2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
 3. when implementation-head evidence is clean, record it in a durable post-merge-safe STATUS handoff commit;
 4. revalidate and re-audit the resulting final exact head;
