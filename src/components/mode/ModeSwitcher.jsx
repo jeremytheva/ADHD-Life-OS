@@ -13,6 +13,7 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
   const triggerRef = useRef(null)
   const popupRef = useRef(null)
   const modeItemRefs = useRef([])
+  const initialMenuFocusRef = useRef('active')
 
   const stats = getModeStats()
   const menuId = 'mode-switcher-menu'
@@ -33,7 +34,8 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
     if (restoreFocus) restoreTriggerFocus()
   }
 
-  const openMenu = () => {
+  const openMenu = (initialFocus = 'active') => {
+    initialMenuFocusRef.current = initialFocus
     setIsOpen(true)
   }
 
@@ -43,6 +45,21 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
       return
     }
     openMenu()
+  }
+
+  const handleTriggerKeyDown = (event) => {
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault()
+        openMenu('first')
+        break
+      case 'ArrowUp':
+        event.preventDefault()
+        openMenu('last')
+        break
+      default:
+        break
+    }
   }
 
   const handleModeSelect = (modeId) => {
@@ -91,8 +108,17 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
   useEffect(() => {
     if (!isOpen) return
 
+    const requestedFocus = initialMenuFocusRef.current
     const activeIndex = Math.max(0, allModes.findIndex((mode) => mode.id === currentMode.id))
-    const frame = window.requestAnimationFrame(() => focusModeItem(activeIndex))
+    const targetIndex = requestedFocus === 'first'
+      ? 0
+      : requestedFocus === 'last'
+        ? allModes.length - 1
+        : activeIndex
+    const frame = window.requestAnimationFrame(() => {
+      initialMenuFocusRef.current = 'active'
+      focusModeItem(targetIndex)
+    })
     return () => window.cancelAnimationFrame(frame)
   }, [isOpen, allModes, currentMode.id, focusModeItem])
 
@@ -109,6 +135,7 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
         ref={triggerRef}
         type="button"
         onClick={handleTriggerClick}
+        onKeyDown={handleTriggerKeyDown}
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
