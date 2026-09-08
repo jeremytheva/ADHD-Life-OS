@@ -11,6 +11,7 @@ const { FiX, FiType, FiEye, FiZap, FiSave } = FiIcons
 const AccessibilitySettings = ({ onClose }) => {
   const { preferences, savePreferences } = useAccessibilityPreferences()
   const [settings, setSettings] = useState(() => preferences)
+  const [saveError, setSaveError] = useState(null)
   const preEditSettings = useRef(preferences)
 
   useEffect(() => {
@@ -19,6 +20,7 @@ const AccessibilitySettings = ({ onClose }) => {
   }, [settings])
 
   const handleChange = (key, value) => {
+    setSaveError(null)
     setSettings(prev => ({
       ...prev,
       [key]: value
@@ -26,7 +28,13 @@ const AccessibilitySettings = ({ onClose }) => {
   }
 
   const handleSave = () => {
-    if (savePreferences(settings)) onClose()
+    if (savePreferences(settings)) {
+      setSaveError(null)
+      onClose()
+      return
+    }
+
+    setSaveError('Settings could not be saved. Your preview is still active; try again or cancel to restore your previous settings.')
   }
 
   const handleCancel = () => {
@@ -290,6 +298,15 @@ const AccessibilitySettings = ({ onClose }) => {
 
         {/* Footer */}
         <div className="p-6 border-t border-slate-200 bg-slate-50">
+          {saveError && (
+            <p
+              id="accessibility-settings-save-error"
+              role="alert"
+              className="mb-3 text-sm text-red-700"
+            >
+              {saveError}
+            </p>
+          )}
           <div className="flex gap-3">
             <button
               type="button"
@@ -301,6 +318,7 @@ const AccessibilitySettings = ({ onClose }) => {
             <button
               type="button"
               onClick={handleSave}
+              aria-describedby={saveError ? 'accessibility-settings-save-error' : undefined}
               className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
             >
               <SafeIcon icon={FiSave} className="w-4 h-4" />
