@@ -11,6 +11,14 @@ const appSource = readFileSync(
 test('session verification failures are announced atomically while retry remains a separate action', () => {
   assert.match(
     appSource,
-    /<div role="alert" aria-atomic="true">[\s\S]*?<h1[^>]*>We couldn't verify your session<\/h1>[\s\S]*?<p[^>]*>\{error\?\.message \|\| 'Please check your connection and try again\.'\}<\/p>[\s\S]*?<\/div>\s*<button type="button" onClick=\{onRetry\}[^>]*>Try again<\/button>/
+    /<div ref=\{alertRef\} role="alert" aria-atomic="true" tabIndex=\{-1\}>[\s\S]*?<h1[^>]*>We couldn't verify your session<\/h1>[\s\S]*?<p[^>]*>\{error\?\.message \|\| 'Please check your connection and try again\.'\}<\/p>[\s\S]*?<\/div>\s*<button type="button" onClick=\{onRetry\}[^>]*>Try again<\/button>/
+  );
+});
+
+test('session verification failure recovers keyboard focus into the replacement error state', () => {
+  assert.match(appSource, /const alertRef = useRef\(null\)/);
+  assert.match(
+    appSource,
+    /useEffect\(\(\) => \{\s*alertRef\.current\?\.focus\(\)\s*\}, \[\]\)/
   );
 });
