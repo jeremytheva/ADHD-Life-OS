@@ -6,12 +6,12 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #290 primary-navigation native-list semantics through final exact-head validation/review evidence and repository-managed lifecycle, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
+  objective: Complete PR #291 next-action Not now focus recovery through final exact-head validation/review evidence and repository-managed lifecycle, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   issue: null
-  pr: 290
-  branch: fix/layout-primary-nav-list-semantics
+  pr: 291
+  branch: fix/next-action-not-now-focus-recovery
 next_actions:
-  - Run canonical Application validation on the final post-merge-safe PR #290 handoff head.
+  - Run canonical Application validation on the final post-merge-safe PR #291 handoff head.
   - Audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding.
   - Signal lifecycle:implementation-complete only if the final exact-head validation and review evidence remain clean.
   - Allow repository lifecycle automation and the merge finalizer to complete Ready/Mergeable/Merged transitions.
@@ -31,9 +31,9 @@ validation:
   build: PASS
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 732 attempt 2 passed on implementation/status head b875c16647c198e590b967108218f33af73a2eeb after the prior browser-only instability; submitted reviews and inline review threads were empty on that validated head. This STATUS.md commit is the required post-merge-safe durable handoff and creates a new exact head, so final canonical CI validation and review audit are required before implementation-complete can be signalled.
-last_verified_commit: b875c16647c198e590b967108218f33af73a2eeb
-last_updated: 2026-09-08T12:13:00+10:00
+validation_basis: Application validation run 735 passed on exact implementation/status head 943c2f379056b1965670b62f72d4e434fee8b0fe; submitted reviews and inline review threads were empty on that validated head. This STATUS.md commit is the required post-merge-safe durable handoff and creates a new exact head, so final canonical CI validation and review audit are required before implementation-complete can be signalled.
+last_verified_commit: 943c2f379056b1965670b62f72d4e434fee8b0fe
+last_updated: 2026-09-08T14:12:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,11 +45,13 @@ last_updated: 2026-09-08T12:13:00+10:00
 
 ## Current objective
 
-PR #289 completed its repository-managed lifecycle and merged into `main` at `5362cb8ac285812a85cc3c4a5fa61539fae34300` after final exact-head Application validation run 728 passed with clean submitted-review and inline-thread evidence.
+PR #290 completed its repository-managed lifecycle and merged into `main` at `cd817709487c0c56cb057db254ed1a8787d8d640` after final exact-head Application validation run 733 attempt 2 passed with clean submitted-review and inline-thread evidence.
 
-PR #290 remains the sole active Stage 3 delivery thread. It exposes the existing primary application navigation links as a native list inside the already named `Primary navigation` landmark. The change wraps `visibleNavItems` with `ul`/`li` semantics while preserving route targets, active styling, ordering, keyboard behaviour, and shared desktop/mobile sidebar rendering. Focused deterministic coverage is present in `test/layout-primary-navigation-list-semantics.test.mjs`.
+PR #291 remains the sole active Stage 3 delivery thread. It repairs focus continuity for the existing `Not now` next-action interaction: that action transiently excludes the focused recommendation and causes the recommendation controls to unmount while asynchronous recommendations reload. The implementation records focus-recovery intent before that refresh and moves programmatic focus to the resulting recommendation heading, the empty-state heading when no option remains, or the panel heading after a retrieval failure. These headings use `tabIndex="-1"`, so normal sequential keyboard order is unchanged.
 
-Application validation run 732 attempt 2 passed on exact implementation/status head `b875c16647c198e590b967108218f33af73a2eeb`. The canonical gate therefore passed governance, dependency audit, lint, typecheck, Node tests, production build and critical Playwright coverage on that head. Submitted reviews and inline review threads were empty on the same validated head.
+The existing `test/next-action-experience.test.mjs` contract was extended in place rather than adding duplicate coverage. Recommendation policy, execution policy, source records, persistence, provider mappings and schemas remain unchanged.
+
+Application validation run 735 passed on exact implementation/status head `943c2f379056b1965670b62f72d4e434fee8b0fe`. The canonical gate therefore passed governance, dependency audit, lint, typecheck, Node tests, production build and critical Playwright coverage on that head. Submitted reviews and inline review threads were empty on the same validated head.
 
 The durable post-merge handoff is now committed so that, after merge, fresh `main` is the continuation entry rather than the soon-to-close PR branch. Because this documentation commit creates a new exact head, final canonical validation and review/thread evidence must be re-established before `lifecycle:implementation-complete` is applied.
 
@@ -57,8 +59,8 @@ The durable post-merge handoff is now committed so that, after merge, fresh `mai
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #290 final handoff head requires exact-head canonical validation/review evidence |
-| Gate state | Implementation, deterministic coverage, implementation-head validation/review evidence and durable post-merge handoff are complete; final exact-head evidence remains required |
+| Current gate | INTEGRATION — PR #291 final handoff head requires exact-head canonical validation/review evidence |
+| Gate state | Implementation, focused deterministic coverage, implementation-head validation/review evidence and durable post-merge handoff are complete; final exact-head evidence remains required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -67,13 +69,14 @@ The durable post-merge handoff is now committed so that, after merge, fresh `mai
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #289 — RecommendedTasks native list semantics; merged at `5362cb8ac285812a85cc3c4a5fa61539fae34300` |
-| Active delivery | PR #290 — primary navigation native list semantics |
-| Delivery branch | `fix/layout-primary-nav-list-semantics` |
-| Implemented change | Primary navigation links are exposed as one native `ul` with native `li` entries inside the existing labelled `nav` landmark |
-| Deterministic coverage | Added `test/layout-primary-navigation-list-semantics.test.mjs` |
-| Implementation-head validation | PASS — Application validation run 732 attempt 2 passed on exact head `b875c16647c198e590b967108218f33af73a2eeb` |
+| Latest merged delivery | PR #290 — primary navigation native-list semantics; merged at `cd817709487c0c56cb057db254ed1a8787d8d640` |
+| Active delivery | PR #291 — next-action Not now focus recovery |
+| Delivery branch | `fix/next-action-not-now-focus-recovery` |
+| Implemented change | `Not now` refreshes now preserve keyboard focus by moving programmatic focus to the resulting recommendation/empty state or panel fallback |
+| Deterministic coverage | Extended `test/next-action-experience.test.mjs` with focus-recovery assertions |
+| Implementation-head validation | PASS — Application validation run 735 passed on exact head `943c2f379056b1965670b62f72d4e434fee8b0fe` |
 | Implementation-head review audit | PASS — no submitted reviews or inline review threads on the validated implementation/status head |
+| Durable active-state synchronization | COMPLETE — STATUS names PR #291 as the sole active delivery and preserves provider deferral |
 | Durable post-merge handoff | COMPLETE — STATUS now returns continuation to fresh `main` after merge |
 | Final exact-head validation | NOT_RUN — new handoff commit requires canonical validation |
 | Current blocker | None |
@@ -83,24 +86,24 @@ The durable post-merge handoff is now committed so that, after merge, fresh `mai
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #290 is the sole active provider-independent accessibility delivery and is at its final exact-head evidence gate. |
-| What is already happening? | Primary navigation has native list semantics with focused deterministic coverage; implementation-head run 732 passed and the post-merge-safe durable handoff is committed. |
-| What has been validated? | PR #290 Application validation run 732 attempt 2 passed on exact implementation/status head `b875c16647c198e590b967108218f33af73a2eeb`; submitted reviews and review threads were empty on that head. |
+| Where am I? | Stage 3; PR #291 is the sole active provider-independent interaction-integrity delivery and is at its final exact-head evidence gate. |
+| What is already happening? | `Not now` focus recovery and deterministic coverage are implemented; run 735 passed and the post-merge-safe durable handoff is committed. |
+| What has been validated? | PR #291 Application validation run 735 passed on exact implementation/status head `943c2f379056b1965670b62f72d4e434fee8b0fe`; submitted reviews and review threads were empty on that head. |
 | What is next? | Validate and review-audit the new final handoff head, then signal implementation-complete only if that exact-head evidence is clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #290 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy or destructive behaviour.
+Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #291 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy or destructive behaviour.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the Application validation workflow for the final PR #290 handoff head;
+1. run canonical `npm run platform:validate` through the Application validation workflow for the final PR #291 handoff head;
 2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
 3. add `lifecycle:implementation-complete` only when final exact-head validation/review evidence is clean;
 4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent accessibility/interaction-integrity slice;
+5. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility/interaction-integrity slice;
 6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions

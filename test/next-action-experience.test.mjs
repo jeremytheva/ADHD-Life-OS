@@ -61,6 +61,17 @@ test('next-action panel treats not-now feedback as transient recommendation stat
   assert.doesNotMatch(source, /localStorage|sessionStorage|upsertActivity|updateTask/)
 })
 
+test('next-action not-now refresh restores focus to the resulting recommendation state', async () => {
+  const source = await read('src/components/today/NextActionPanel.jsx')
+  assert.match(source, /shouldRestoreFocusAfterSkipRef = useRef\(false\)/)
+  assert.match(source, /shouldRestoreFocusAfterSkipRef\.current = true/)
+  assert.match(source, /recommendationHeadingRef\.current/)
+  assert.match(source, /emptyStateHeadingRef\.current \|\| panelHeadingRef\.current/)
+  assert.match(source, /focusTarget\?\.focus\(\)/)
+  assert.match(source, /ref=\{recommendationHeadingRef\} tabIndex="-1"/)
+  assert.match(source, /ref=\{emptyStateHeadingRef\} tabIndex="-1"/)
+})
+
 test('next-action retrieval failures remain retryable and do not imply activity loss', async () => {
   const source = await read('src/components/today/NextActionPanel.jsx')
   assert.match(source, /title="We couldn’t choose a next action"/)

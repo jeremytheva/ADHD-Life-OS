@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { executionEngine } from '../../services/executionEngine'
 import LoadErrorState from '../../common/LoadErrorState'
 
@@ -22,6 +22,10 @@ const NextActionPanel = ({ currentMode }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [excludedActivityIds, setExcludedActivityIds] = useState([])
   const [feedbackMessage, setFeedbackMessage] = useState('')
+  const shouldRestoreFocusAfterSkipRef = useRef(false)
+  const panelHeadingRef = useRef(null)
+  const recommendationHeadingRef = useRef(null)
+  const emptyStateHeadingRef = useRef(null)
 
   const location = useMemo(() => {
     if (!currentMode || currentMode.id === 'all') return null
@@ -57,6 +61,19 @@ const NextActionPanel = ({ currentMode }) => {
   const recommendations = result?.recommendations || []
   const selected = recommendations[selectedIndex] || null
 
+  useEffect(() => {
+    if (loading || !shouldRestoreFocusAfterSkipRef.current) return
+
+    const focusTarget = loadError
+      ? panelHeadingRef.current
+      : selected
+        ? recommendationHeadingRef.current
+        : emptyStateHeadingRef.current || panelHeadingRef.current
+
+    focusTarget?.focus()
+    shouldRestoreFocusAfterSkipRef.current = false
+  }, [loadError, loading, selected])
+
   const chooseAnother = () => {
     if (recommendations.length < 2) return
     setSelectedIndex((index) => (index + 1) % recommendations.length)
@@ -64,6 +81,7 @@ const NextActionPanel = ({ currentMode }) => {
 
   const markNotNow = () => {
     if (!selected?.activity_id) return
+    shouldRestoreFocusAfterSkipRef.current = true
     setFeedbackMessage(`${selected.title || 'That activity'} is out of the suggestions for now. Nothing was changed.`)
     setExcludedActivityIds((current) => (
       current.includes(selected.activity_id)
@@ -81,7 +99,7 @@ const NextActionPanel = ({ currentMode }) => {
     <section className="rounded-xl border border-emerald-200 bg-emerald-50 p-5" aria-labelledby="next-action-title">
       <div className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Execution support</p>
-        <h2 id="next-action-title" className="text-xl font-semibold text-slate-900">What should I do now?</h2>
+        <h2 ref={panelHeadingRef} tabIndex="-1" id="next-action-title" className="text-xl font-semibold text-slate-900">What should I do now?</h2>
         <p className="mt-1 text-sm text-slate-600">Life OS starts with a realistic default and narrows the list before asking you to choose.</p>
       </div>
 
@@ -153,7 +171,7 @@ const NextActionPanel = ({ currentMode }) => {
 
       {!loading && !loadError && !selected && (
         <div className="rounded-lg border border-emerald-200 bg-white p-4">
-          <h3 className="font-medium text-slate-900">
+          <h3 ref={emptyStateHeadingRef} tabIndex="-1" className="font-medium text-slate-900">
             {excludedActivityIds.length > 0 ? 'Nothing else fits right now' : 'Nothing fits these constraints yet'}
           </h3>
           <p className="mt-1 text-sm text-slate-600">
@@ -171,7 +189,7 @@ const NextActionPanel = ({ currentMode }) => {
             <span aria-hidden="true">•</span>
             <span>{selected.fits_available_time ? `${selected.estimated_duration_minutes} min` : `${selected.start_minutes} min start`}</span>
           </div>
-          <h3 className="mt-2 text-lg font-semibold text-slate-900">{selected.title}</h3>
+          <h3 ref={recommendationHeadingRef} tabIndex="-1" className="mt-2 text-lg font-semibold text-slate-900">{selected.title}</h3>
           <p className="mt-1 text-sm text-slate-600">{selected.reason}</p>
           <div className="mt-3 rounded-lg bg-emerald-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Start with this</p>
