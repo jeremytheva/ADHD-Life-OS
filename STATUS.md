@@ -6,13 +6,14 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #294 Mode Switcher trigger keyboard-opening integrity through final exact-head validation and repository-managed lifecycle, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
+  objective: Complete PR #295 accessibility-settings save-failure feedback through exact-head validation and repository-managed lifecycle, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
   issue: null
-  pr: 294
-  branch: fix/mode-switcher-trigger-keyboard-open
+  pr: 295
+  branch: fix/accessibility-settings-save-feedback
 next_actions:
-  - Run canonical Application validation on the exact durable handoff head created by this STATUS synchronization.
-  - Audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding.
+  - Run canonical Application validation on the exact implementation/status head.
+  - Audit submitted reviews and inline review threads on that exact head and repair any in-scope finding.
+  - After clean implementation-head evidence, commit the durable post-merge-safe handoff and run fresh exact-head validation.
   - Signal lifecycle:implementation-complete only when final exact-head validation/review evidence is clean.
   - Allow repository lifecycle automation and merge finalizer to complete Ready/Mergeable/Merged transitions.
   - Reconcile fresh main and continue the next dependency-correct provider-independent Stage 3 accessibility or interaction-integrity slice.
@@ -24,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Application validation run 746 passed on exact implementation/status head 6fa1734cd50dccd74a481b28e421e7b281c642f2; submitted reviews and inline review threads were clean on that head. This STATUS handoff commit intentionally creates a new final head that requires fresh exact-head validation before lifecycle completion.
-last_verified_commit: 6fa1734cd50dccd74a481b28e421e7b281c642f2
-last_updated: 2026-09-08T21:15:00+10:00
+validation_basis: PR #295 implementation and focused deterministic coverage are committed; canonical exact-head Application validation is required before implementation-complete evidence can advance.
+last_verified_commit: null
+last_updated: 2026-09-08T22:22:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,22 +46,20 @@ last_updated: 2026-09-08T21:15:00+10:00
 
 ## Current objective
 
-PR #293 completed its repository-managed lifecycle and merged into fresh `main` at `8efa9dbc16e0e4bbe3e8a08809c07e831aee20b9` after final exact-head Application validation run 744 passed with clean submitted-review and inline-thread evidence.
+PR #294 completed its repository-managed lifecycle and merged into `main` at `9e1031d10ff560d6935835d3d71db050796bda2b` after final exact-head Application validation run 747 passed on handoff head `f27c4c6080f08b79dff5d7e83b1ff4e66e7633c2` with clean submitted-review and inline-thread evidence.
 
-PR #294 is the sole active Stage 3 delivery thread. It closes a keyboard interaction gap in the existing Mode Switcher menu button: ArrowDown on the trigger now opens the menu with focus targeted to the first mode item, while ArrowUp opens it with focus targeted to the last mode item. Click opening continues to target the active/current mode.
+PR #295 is the sole active Stage 3 delivery thread. It repairs an existing Accessibility Settings interaction-integrity gap: when local preference persistence fails, the dialog previously remained open without explaining what happened. The dialog now presents an assertive save-failure message, keeps the current preview active, associates the Apply Settings action with that failure message, and clears stale failure feedback when the user changes a setting before retrying.
 
-The implementation reuses the existing menu/focus boundary and extends `test/mode-switcher-integrity.test.mjs` in place. Existing in-menu ArrowDown/ArrowUp/Home/End navigation, Escape dismissal, Tab exit handling, selection semantics and trigger-focus restoration remain unchanged.
+The change preserves the existing preview-before-save model, successful-save close behaviour, cancel rollback, preference schema, storage mechanism, modal ownership and provider boundaries. Focused deterministic coverage is added in `test/accessibility-settings-save-feedback.test.mjs`.
 
-Canonical Application validation run 746 passed on exact implementation/status head `6fa1734cd50dccd74a481b28e421e7b281c642f2`. Submitted reviews and inline review threads were both clean on that exact validated head. This durable STATUS update is the required post-merge-safe handoff and therefore creates a new final head that must be validated and re-audited before implementation-complete signalling.
-
-No provider, persistence, recommendation/execution policy, authentication, authorization, schema, routing or data-model behaviour is changed.
+No provider, NoCodeBackend, data-model, authentication, authorization, routing, recommendation or execution-policy behaviour is changed.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #294 durable handoff head requires final canonical validation and review evidence |
-| Gate state | Implementation/status head passed run 746 with clean review/thread audit; handoff commit requires fresh exact-head evidence |
+| Current gate | INTEGRATION — PR #295 implementation/status head requires canonical validation and review evidence |
+| Gate state | Implementation and focused deterministic coverage committed; exact-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -69,16 +68,16 @@ No provider, persistence, recommendation/execution policy, authentication, autho
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #293 — shared modal focus-containment recovery; merged at `8efa9dbc16e0e4bbe3e8a08809c07e831aee20b9` |
-| Active delivery | PR #294 — Mode Switcher trigger keyboard opening |
-| Delivery branch | `fix/mode-switcher-trigger-keyboard-open` |
-| Implemented change | Trigger ArrowDown opens with first-item focus; ArrowUp opens with last-item focus; click retains active-item entry focus |
-| Deterministic coverage | Extended `test/mode-switcher-integrity.test.mjs` in place |
-| Implementation-head validation | PASS — Application validation run 746 on `6fa1734cd50dccd74a481b28e421e7b281c642f2` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads on the validated implementation/status head |
+| Latest merged delivery | PR #294 — Mode Switcher trigger directional keyboard opening; merged at `9e1031d10ff560d6935835d3d71db050796bda2b` |
+| Active delivery | PR #295 — Accessibility Settings save-failure feedback |
+| Delivery branch | `fix/accessibility-settings-save-feedback` |
+| Implemented change | Failed accessibility-preference saves remain in-dialog with explicit `role="alert"` feedback while preserving the preview and retry/cancel choices |
+| Deterministic coverage | Added `test/accessibility-settings-save-feedback.test.mjs` |
+| Implementation-head validation | NOT_RUN |
+| Implementation-head review audit | NOT_RUN |
 | Durable active-state synchronization | COMPLETE |
-| Durable post-merge handoff | COMPLETE — this STATUS commit records clean implementation-head evidence and fresh-main continuation instructions |
-| Final exact-head validation | NOT_RUN — required on the new handoff head created by this commit |
+| Durable post-merge handoff | PENDING until implementation-head evidence is clean |
+| Final exact-head validation | NOT_RUN |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -86,29 +85,27 @@ No provider, persistence, recommendation/execution policy, authentication, autho
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #294 is the sole active provider-independent accessibility/interaction-integrity delivery at final exact-head validation. |
-| What is already happening? | Mode Switcher trigger directional keyboard opening and focused deterministic coverage are implemented; run 746 passed on the implementation/status head; durable handoff is now committed. |
-| What has been validated? | PR #294 implementation/status head passed canonical run 746 and had clean submitted-review/thread evidence. The new handoff head requires fresh final validation because the STATUS commit moved the head. |
-| What is next? | Run canonical validation and exact-head review/thread audit on the handoff head, then signal implementation-complete if clean and allow repository lifecycle/finalizer automation to merge. |
+| Where am I? | Stage 3; PR #295 is the sole active provider-independent accessibility/interaction-integrity delivery. |
+| What is already happening? | Accessibility Settings now exposes save-persistence failure instead of silently leaving the dialog open; focused deterministic coverage is committed. |
+| What has been validated? | The previous PR #294 final handoff head passed canonical run 747 and merged. PR #295 exact-head validation is pending. |
+| What is next? | Run canonical validation and review/thread audit on PR #295, repair any in-scope finding, then create the durable post-merge handoff and final exact-head evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #294 is frontend-only and does not alter provider contracts, physical schemas, remote operations, persisted data, authentication, authorization, recommendation policy, execution policy or destructive behaviour.
-
-## Post-merge continuation handoff
-
-After PR #294 merges, re-enter from fresh `main`, confirm the merge commit and zero competing active delivery threads, re-read `PROJECT.md`, `STATUS.md`, `AGENTS.md` and relevant architecture/data/decision records, then choose the highest-priority evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice. Do not carry PR #294 branch assumptions forward after merge. Keep generic durable `execution-sessions` deferred until real target-instance NoCodeBackend evidence exists.
+Generic durable `execution-sessions` remains planned/provider-unverified and fail-closed. PR #295 is client-only interaction feedback and does not alter provider contracts, physical schemas, remote operations, persisted domain shapes, authentication, authorization, recommendation policy or execution policy.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the Application validation workflow for the exact PR #294 durable handoff head;
-2. audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
-3. add `lifecycle:implementation-complete` only when final exact-head validation/review evidence is clean;
-4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main`, inspect repository/GitHub state and continue the next evidence-backed provider-independent Stage 3 accessibility/interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the Application validation workflow for the exact PR #295 implementation/status head;
+2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
+3. when implementation-head evidence is clean, commit a durable post-merge-safe STATUS handoff;
+4. run final canonical validation/review audit on the resulting exact handoff head;
+5. add `lifecycle:implementation-complete` only when final exact-head evidence is clean;
+6. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+7. re-enter from fresh `main` and continue the next evidence-backed provider-independent Stage 3 accessibility/interaction-integrity slice;
+8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
