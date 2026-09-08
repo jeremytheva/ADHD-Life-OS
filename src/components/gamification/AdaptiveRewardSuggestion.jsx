@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -6,7 +6,35 @@ import SafeIcon from '../../common/SafeIcon'
 const { FiGift, FiX } = FiIcons
 
 const AdaptiveRewardSuggestion = ({ reward, onClose, onClaim }) => {
+  const previousFocusRef = useRef(null)
+
+  useEffect(() => {
+    const activeElement = document.activeElement
+    previousFocusRef.current = activeElement instanceof HTMLElement && activeElement !== document.body
+      ? activeElement
+      : null
+  }, [])
+
   if (!reward) return null
+
+  const restorePreviousFocus = () => {
+    const previousFocus = previousFocusRef.current
+    if (!previousFocus?.isConnected) return
+
+    window.requestAnimationFrame(() => {
+      if (previousFocus.isConnected) previousFocus.focus()
+    })
+  }
+
+  const handleClose = () => {
+    onClose()
+    restorePreviousFocus()
+  }
+
+  const handleClaim = (suggestion) => {
+    onClaim?.(suggestion)
+    restorePreviousFocus()
+  }
 
   return (
     <motion.div
@@ -16,6 +44,7 @@ const AdaptiveRewardSuggestion = ({ reward, onClose, onClaim }) => {
       className="fixed top-20 right-6 z-[70] max-w-sm"
       role="region"
       aria-label="Reward suggestion"
+      aria-live="polite"
     >
       <div className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-lg shadow-2xl border-2 border-yellow-300 overflow-hidden">
         {/* Header */}
@@ -27,7 +56,7 @@ const AdaptiveRewardSuggestion = ({ reward, onClose, onClaim }) => {
             </div>
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               className="p-1 hover:bg-white hover:bg-opacity-20 rounded transition-colors"
               aria-label="Dismiss reward suggestion"
             >
@@ -53,7 +82,7 @@ const AdaptiveRewardSuggestion = ({ reward, onClose, onClaim }) => {
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        onClick={() => onClaim && onClaim(suggestion)}
+                        onClick={() => handleClaim(suggestion)}
                         className="w-full p-3 bg-white rounded-lg border-2 border-yellow-300 hover:border-yellow-400 hover:shadow-md transition-all text-left"
                       >
                         <div className="flex items-center gap-3">
