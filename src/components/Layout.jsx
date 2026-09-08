@@ -137,24 +137,27 @@ const SidebarContent = ({
       </button>
     </div>
 
-    <nav aria-label="Primary navigation" className="flex-1 p-4 space-y-1 overflow-y-auto">
-      {visibleNavItems.map((item) => (
-        <NavLink
-          key={item.path}
-          to={item.path}
-          onClick={onNavigate}
-          className={({ isActive }) =>
-            `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-              isActive
-                ? 'bg-blue-50 text-blue-600'
-                : 'text-slate-600 hover:bg-slate-50'
-            }`
-          }
-        >
-          <SafeIcon icon={item.icon} className="text-xl" aria-hidden="true" />
-          <span className="font-medium">{item.label}</span>
-        </NavLink>
-      ))}
+    <nav aria-label="Primary navigation" className="flex-1 p-4 overflow-y-auto">
+      <ul className="space-y-1">
+        {visibleNavItems.map((item) => (
+          <li key={item.path}>
+            <NavLink
+              to={item.path}
+              onClick={onNavigate}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                  isActive
+                    ? 'bg-blue-50 text-blue-600'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`
+              }
+            >
+              <SafeIcon icon={item.icon} className="text-xl" aria-hidden="true" />
+              <span className="font-medium">{item.label}</span>
+            </NavLink>
+          </li>
+        ))}
+      </ul>
     </nav>
 
     <div className="p-4 border-t border-slate-200 space-y-2">
