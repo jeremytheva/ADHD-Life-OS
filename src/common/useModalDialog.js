@@ -10,6 +10,7 @@ const FOCUSABLE_SELECTOR = [
 ].join(',')
 
 const modalStack = []
+let bodyOverflowBeforeModal = null
 
 const isProgrammaticallyFocusable = (element) => {
   if (
@@ -35,9 +36,24 @@ export const getFocusableElements = (container) => Array.from(
 
 const isTopModal = (dialogRef) => modalStack[modalStack.length - 1] === dialogRef
 
+const lockDocumentScroll = () => {
+  if (modalStack.length > 0) return
+
+  bodyOverflowBeforeModal = document.body.style.overflow
+  document.body.style.overflow = 'hidden'
+}
+
+const unlockDocumentScroll = () => {
+  if (modalStack.length > 0 || bodyOverflowBeforeModal === null) return
+
+  document.body.style.overflow = bodyOverflowBeforeModal
+  bodyOverflowBeforeModal = null
+}
+
 const removeModal = (dialogRef) => {
   const index = modalStack.lastIndexOf(dialogRef)
   if (index >= 0) modalStack.splice(index, 1)
+  unlockDocumentScroll()
 }
 
 export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {}) => {
@@ -55,6 +71,7 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
     openerRef.current = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null
+    lockDocumentScroll()
     modalStack.push(dialogRef)
 
     const focusFrame = window.requestAnimationFrame(() => {
