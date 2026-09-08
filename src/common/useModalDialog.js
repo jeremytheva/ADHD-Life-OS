@@ -83,7 +83,7 @@ export const useModalDialog = ({ onEscape, initialFocusRef, enabled = true } = {
         initialTarget.focus()
         return
       }
-      dialog.focus()
+      dialogRef.current?.focus()
     }
 
     const focusFrame = window.requestAnimationFrame(focusDialogEntryPoint)
