@@ -6,15 +6,14 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #293 shared modal focus-containment recovery through exact-head validation and repository-managed lifecycle, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
+  objective: Complete PR #293 shared modal focus-containment recovery through final exact-head validation and repository-managed lifecycle, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
   issue: null
   pr: 293
   branch: fix/modal-focus-containment-recovery
 next_actions:
-  - Run canonical Application validation on the exact repaired PR #293 implementation/status head.
-  - Audit submitted reviews and inline review threads on that exact head and repair any in-scope finding.
-  - Record successful implementation-head evidence in a durable post-merge-safe STATUS handoff commit.
-  - Revalidate and re-audit the resulting final exact head before signalling lifecycle:implementation-complete.
+  - Run canonical Application validation on the exact durable handoff head created by this STATUS synchronization.
+  - Audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding.
+  - Signal lifecycle:implementation-complete only when final exact-head validation/review evidence is clean.
   - Allow repository lifecycle automation and merge finalizer to complete Ready/Mergeable/Merged transitions.
   - Reconcile fresh main and continue the next dependency-correct provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
@@ -25,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: Application validation run 741 failed on prior head 8082494d6f19d67937dffa76fded121f5f84cccc because the modal initial-focus source contract still required dialogRef.current?.focus(); that in-scope regression is repaired on the active branch and fresh exact-head validation is required after this durable state update.
-last_verified_commit: 61f38d0faba7555eee1ba1ad25c9f49957ac08d7
-last_updated: 2026-09-08T18:18:00+10:00
+validation_basis: Application validation run 743 passed on exact repaired implementation/status head cf73617f0a1ee8aab5766d34d6a29a3fac6c4f8b; submitted reviews and inline review threads were clean on that head. This STATUS handoff commit intentionally creates a new final head that requires fresh exact-head validation before lifecycle completion.
+last_verified_commit: cf73617f0a1ee8aab5766d34d6a29a3fac6c4f8b
+last_updated: 2026-09-08T19:12:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -50,7 +49,9 @@ PR #292 completed its repository-managed lifecycle and merged into `main` at `36
 
 PR #293 is the sole active Stage 3 delivery thread. It strengthens the existing shared `useModalDialog` interaction boundary so the top-most modal recaptures focus when browser, assistive-technology, or programmatic focus moves outside the dialog without a Tab keypress. The recovery reuses the existing modal entry-point focus policy and acts only for the top-most dialog, so nested modal ownership remains authoritative.
 
-Application validation run 741 failed deterministically before build/e2e because the refactor changed the existing initial-focus fallback source contract from `dialogRef.current?.focus()` to `dialog.focus()`. The behaviour was equivalent but the repository contract test is authoritative. The active branch has been repaired in place to preserve that established fallback contract while retaining the new focus-containment recovery. Fresh exact-head validation is required after this STATUS synchronization.
+Application validation run 741 failed deterministically because the refactor changed the existing initial-focus fallback source contract from `dialogRef.current?.focus()` to `dialog.focus()`. The active branch was repaired in place to preserve that established fallback contract while retaining the new focus-containment recovery.
+
+Fresh canonical Application validation run 743 then passed on exact repaired implementation/status head `cf73617f0a1ee8aab5766d34d6a29a3fac6c4f8b`. Submitted reviews and inline review threads were both clean on that exact validated head. This durable STATUS update is the required post-merge-safe handoff and therefore creates a new final head that must be validated and re-audited before implementation-complete signalling.
 
 The existing `test/modal-focus-trap-containment.test.mjs` contract remains extended in place to protect non-Tab focus escape recovery and listener cleanup. Existing Tab trapping, Escape handling, background-scroll ownership, nested modal handling and opener-focus restoration remain in the shared primitive.
 
@@ -60,8 +61,8 @@ No provider, persistence, recommendation/execution policy, authentication, autho
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #293 repaired exact implementation/status head requires canonical validation and review evidence |
-| Gate state | Run 741 deterministic in-scope failure repaired; fresh exact-head evidence required |
+| Current gate | INTEGRATION — PR #293 durable handoff head requires final canonical validation and review evidence |
+| Gate state | Repaired implementation/status head passed run 743 with clean review/thread audit; handoff commit requires fresh exact-head evidence |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, or durable execution behaviour without real target evidence. |
@@ -76,11 +77,11 @@ No provider, persistence, recommendation/execution policy, authentication, autho
 | Implemented change | The top-most shared modal listens for focus entering outside its dialog and recaptures focus through the existing modal entry-point policy |
 | Corrective work | Run 741 exposed the existing initial-focus fallback source contract; active branch repaired to retain `dialogRef.current?.focus()` |
 | Deterministic coverage | Extended `test/modal-focus-trap-containment.test.mjs` in place; existing `test/modal-initial-focus-visibility.test.mjs` remains authoritative |
-| Implementation-head validation | NOT_RUN on the repaired STATUS-synchronized exact head; prior run 741 failed and is superseded by corrective commits |
-| Implementation-head review audit | NOT_RUN — required on the exact validated implementation/status head |
-| Durable active-state synchronization | COMPLETE — STATUS records run 741 failure/repair and preserves provider deferral |
-| Durable post-merge handoff | NOT_RUN — create only after implementation-head evidence is clean |
-| Final exact-head validation | NOT_RUN — required after the durable handoff commit |
+| Implementation-head validation | PASS — Application validation run 743 on `cf73617f0a1ee8aab5766d34d6a29a3fac6c4f8b` |
+| Implementation-head review audit | PASS — no submitted reviews or inline review threads on the validated implementation/status head |
+| Durable active-state synchronization | COMPLETE |
+| Durable post-merge handoff | COMPLETE — this STATUS commit records clean implementation-head evidence and fresh-main continuation instructions |
+| Final exact-head validation | NOT_RUN — required on the new handoff head created by this commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -88,10 +89,10 @@ No provider, persistence, recommendation/execution policy, authentication, autho
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #293 is the sole active provider-independent accessibility/interaction-integrity delivery at repaired implementation-head validation. |
-| What is already happening? | Shared modal non-Tab focus-escape recovery is implemented; run 741 exposed an in-scope deterministic test regression and the active branch has been repaired. |
-| What has been validated? | PR #292 final head passed canonical run 739 before merge; PR #293 prior head failed run 741 and the repaired exact head still requires fresh validation. |
-| What is next? | Run canonical validation and exact-head review/thread audit, repair any in-scope finding, then create the durable post-merge-safe handoff. |
+| Where am I? | Stage 3; PR #293 is the sole active provider-independent accessibility/interaction-integrity delivery at final exact-head validation. |
+| What is already happening? | Shared modal non-Tab focus-escape recovery is implemented; the run 741 regression was repaired; run 743 passed on the repaired implementation/status head; durable handoff is now committed. |
+| What has been validated? | PR #293 repaired implementation/status head passed canonical run 743 and had clean submitted-review/thread evidence. The new handoff head requires fresh final validation because the STATUS commit moved the head. |
+| What is next? | Run canonical validation and exact-head review/thread audit on the handoff head, then signal implementation-complete if clean and allow repository lifecycle/finalizer automation to merge. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -105,14 +106,12 @@ After PR #293 merges, re-enter from fresh `main`, confirm the merge commit and z
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through the Application validation workflow for the exact repaired PR #293 implementation/status head;
-2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
-3. when implementation-head evidence is clean, record it in a durable post-merge-safe STATUS handoff commit;
-4. revalidate and re-audit the resulting final exact head;
-5. add `lifecycle:implementation-complete` only when final exact-head validation/review evidence is clean;
-6. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-7. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility/interaction-integrity slice;
-8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through the Application validation workflow for the exact PR #293 durable handoff head;
+2. audit submitted reviews and inline review threads on that exact final head and repair any in-scope finding;
+3. add `lifecycle:implementation-complete` only when final exact-head validation/review evidence is clean;
+4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main`, inspect repository/GitHub state, and continue the next evidence-backed provider-independent Stage 3 accessibility/interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
