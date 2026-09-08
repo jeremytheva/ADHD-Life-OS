@@ -20,6 +20,19 @@ test('Mode Switcher exposes a controlled menu trigger and selected mode semantic
   assert.match(source, /aria-pressed=\{showStats\}/)
 })
 
+test('Mode Switcher trigger supports directional keyboard opening with deterministic entry focus', async () => {
+  const source = await read('src/components/mode/ModeSwitcher.jsx')
+
+  assert.match(source, /const initialMenuFocusRef = useRef\('active'\)/)
+  assert.match(source, /const handleTriggerKeyDown = \(event\) =>/)
+  assert.match(source, /case 'ArrowDown':[\s\S]*openMenu\('first'\)/)
+  assert.match(source, /case 'ArrowUp':[\s\S]*openMenu\('last'\)/)
+  assert.match(source, /onKeyDown=\{handleTriggerKeyDown\}/)
+  assert.match(source, /requestedFocus === 'first'/)
+  assert.match(source, /requestedFocus === 'last'/)
+  assert.match(source, /allModes\.length - 1/)
+})
+
 test('Mode Switcher owns keyboard dismissal, roving navigation and trigger restoration', async () => {
   const source = await read('src/components/mode/ModeSwitcher.jsx')
 
