@@ -17,3 +17,16 @@ test('Gamification progress meters expose authoritative progress semantics', asy
   assert.match(source, /aria-valuemax=\{progress\.target\}/)
   assert.match(source, /aria-valuenow=\{progress\.current\}/)
 })
+
+test('Sidebar progress control includes the XP value represented by its visual meter', async () => {
+  const source = await read('src/components/Layout.jsx')
+
+  assert.match(
+    source,
+    /aria-label=\{`Open progress\. Level \$\{stats\.level\}, \$\{stats\.points\} points, \$\{stats\.xp\} of \$\{stats\.xp_to_next_level\} XP\$\{stats\.current_streak > 0 \? `, \$\{stats\.current_streak\}-day streak` : ''\}`\}/
+  )
+  assert.match(
+    source,
+    /className="w-full bg-purple-200 rounded-full h-1\.5 overflow-hidden" aria-hidden="true"/
+  )
+})
