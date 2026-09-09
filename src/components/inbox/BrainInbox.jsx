@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 import LoadErrorState from '../../common/LoadErrorState'
+import OperationErrorState from '../../common/OperationErrorState'
 import { inboxService } from '../../services/inboxService'
 
 const { FiInbox, FiPlus, FiArrowRight, FiTrash2, FiEdit3, FiTag, FiZap } = FiIcons
@@ -162,20 +163,7 @@ const BrainInbox = () => {
 
   return (
     <div className="space-y-6">
-      {operationError && (
-        <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
-          <div className="flex items-start justify-between gap-4">
-            <p className="text-sm">{operationError}</p>
-            <button
-              type="button"
-              onClick={() => setOperationError('')}
-              className="text-sm font-medium text-red-700 hover:text-red-900"
-            >
-              Dismiss
-            </button>
-          </div>
-        </div>
-      )}
+      <OperationErrorState message={operationError} onDismiss={() => setOperationError('')} />
 
       <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg border border-purple-200 p-6">
         <div className="flex items-center gap-3 mb-4">
