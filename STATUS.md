@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #317 sidebar gamification progress accessibility delivery on the existing active branch.
+  objective: Complete exact-head lifecycle evidence for the provider-independent Stage 3 accessibility delivery, then re-enter from fresh main.
   issue: null
-  pr: 317
-  branch: fix/sidebar-gamification-progress-semantics
+  pr: null
+  branch: null
 next_actions:
-  - Run canonical Application validation on the exact synchronized implementation/status head.
-  - Audit submitted reviews and inline review threads and repair any in-scope finding on PR #317.
-  - After implementation-head evidence is clean, commit a post-merge-safe durable handoff.
-  - Run final exact-head validation and review/thread audit before lifecycle completion signalling.
-  - Reconcile fresh main after merge and continue the next evidence-backed provider-independent Stage 3 slice.
+  - Run final canonical Application validation on this post-merge-safe handoff head.
+  - Re-audit submitted reviews and inline review threads on the exact validated head.
+  - Signal lifecycle:implementation-complete only when final exact-head evidence remains clean.
+  - Allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions.
+  - Reconcile fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #317 implementation and existing gamification-progress regression coverage are synchronized in this commit; canonical exact-head validation has not yet completed.
-last_verified_commit: 29e32d050e33c534c0891a7ad5f508f3054ecb97
-last_updated: 2026-09-10T07:31:00+10:00
+validation_basis: Application validation run 833 passed on PR #317 implementation/status head 294cc004715f51b97c7f5329eab148892f70770c and submitted reviews plus inline review threads were clean. This documentation-only post-merge-safe handoff commit invalidates exact-head validation evidence, so final canonical validation and review/thread audit are required before implementation-complete signalling.
+last_verified_commit: 294cc004715f51b97c7f5329eab148892f70770c
+last_updated: 2026-09-10T08:11:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,18 +45,20 @@ last_updated: 2026-09-10T07:31:00+10:00
 
 ## Current objective
 
-PR #316 — `fix: hide decorative mode icons from assistive technology` — completed its repository-managed lifecycle and merged into `main` at `d931636e8dd18f8eda954bf3db1b2b48289867b0` after final exact-head Application validation run 831 passed with a clean submitted-review and inline-thread audit.
+PR #316 — `fix: hide decorative mode icons from assistive technology` — completed its repository-managed lifecycle and merged into `main` at `d931636e8dd18f8eda954bf3db1b2b48289867b0` after final exact-head Application validation run 831 passed with clean submitted-review and inline-thread evidence.
 
-PR #317 — `fix: expose sidebar XP progress to assistive technology` — is the sole active Stage 3 delivery. Fresh-main inspection found the primary sidebar gamification button visually represented current XP progress but exposed only level, points and optional streak through its textual descendants. The repair gives the existing button an accessible name containing level, points, current/target XP and optional streak, while marking the purely visual meter hidden from the accessibility tree. This avoids misleading nested progress semantics inside a button while preserving the existing visual control and behaviour.
+PR #317 — `fix: expose sidebar XP progress to assistive technology` — has completed its implementation-head evidence gate. The primary sidebar gamification button now exposes its visually represented XP progress through one authoritative accessible name containing current level, points, current/target XP and optional streak, while the purely visual meter is hidden from the accessibility tree. Existing gamification behaviour and visual design remain unchanged.
 
-Existing `test/gamification-progress-semantics.test.mjs` coverage is extended in place rather than duplicated. No gamification calculations, rewards, persistence, provider, authentication, routing, execution-policy, scheduling-policy or visual-design behaviour changed.
+Canonical Application validation run 833 passed on exact synchronized implementation/status head `294cc004715f51b97c7f5329eab148892f70770c`. Submitted reviews and inline review threads were both clean on that head. This commit converts durable state to a post-merge-safe handoff so default-branch re-entry will not point at a soon-to-close PR or branch. Because this documentation commit changes the PR head, final exact-head canonical validation and review/thread evidence are required before lifecycle completion signalling.
+
+No gamification calculations, rewards, persistence, provider, authentication, routing, execution-policy, scheduling-policy or visual-design behaviour changed.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #317 requires exact-head canonical validation |
-| Gate state | Implementation and deterministic regression coverage synchronized; validation pending |
+| Current gate | INTEGRATION — final exact-head lifecycle evidence required after post-merge-safe handoff |
+| Gate state | Implementation-head validation passed and reviews/threads were clean; documentation-only handoff requires fresh exact-head evidence |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -66,12 +68,12 @@ Existing `test/gamification-progress-semantics.test.mjs` coverage is extended in
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #316 — decorative mode-banner icons hidden from assistive technology; merged at `d931636e8dd18f8eda954bf3db1b2b48289867b0` |
-| Active delivery | PR #317 / `fix/sidebar-gamification-progress-semantics` |
-| Implemented change | Sidebar progress button now exposes level, points, XP progress and optional streak through one authoritative accessible name; visual meter is accessibility-hidden |
+| Delivery completing lifecycle | PR #317 — sidebar XP progress accessibility |
+| Implemented change | Sidebar progress button exposes level, points, XP progress and optional streak through one authoritative accessible name; visual meter is accessibility-hidden |
 | Deterministic coverage | Existing `gamification-progress-semantics` regression test extended in place |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | NOT RUN on the synchronized head |
-| Review audit | Pending exact-head audit |
+| Implementation-head validation | PASS — Application validation run 833 on `294cc004715f51b97c7f5329eab148892f70770c` |
+| Review audit | CLEAN on implementation head; final exact-head re-audit required after this handoff commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -79,26 +81,25 @@ Existing `test/gamification-progress-semantics.test.mjs` coverage is extended in
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 with PR #317 as the sole active provider-independent accessibility delivery. |
-| What is already happening? | Sidebar XP progress represented visually is now included in the gamification control's accessible name; existing regression coverage is extended. |
-| What has been validated? | PR #316 final exact-head evidence passed and merged. PR #317 requires fresh exact-head evidence. |
-| What is next? | Run canonical validation and review/thread audits on PR #317, repair any in-scope finding, then complete the post-merge-safe handoff and lifecycle. |
+| Where am I? | Stage 3; the latest provider-independent accessibility delivery has passed implementation-head evidence and is completing final lifecycle evidence. |
+| What is already happening? | Sidebar XP progress is accessible without duplicate/nested progress semantics; durable state is prepared for safe re-entry after merge. |
+| What has been validated? | Application validation run 833 passed on the implementation/status head and review/thread audits were clean. This handoff head still requires final exact-head validation. |
+| What is next? | Validate and audit this handoff head, signal implementation complete only if clean, allow lifecycle automation to merge, then reconcile fresh main and continue the next provider-independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #317 is provider-independent client-side accessibility work and does not alter physical provider contracts or durable execution behaviour.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. The completing accessibility delivery is provider-independent and does not alter physical provider contracts or durable execution behaviour.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through Application validation on the exact synchronized PR #317 head;
-2. audit submitted reviews and inline review threads and repair any in-scope finding on the same PR;
-3. after implementation-head evidence is clean, commit a post-merge-safe `STATUS.md` handoff;
-4. validate and audit that final handoff head;
-5. signal `lifecycle:implementation-complete` only when exact-head evidence is clean and allow repository lifecycle automation/finalizer to complete the merge;
-6. re-enter from fresh `main` and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run final canonical `npm run platform:validate` through Application validation on this exact post-merge-safe handoff head;
+2. re-audit submitted reviews and inline review threads on that same exact head;
+3. signal `lifecycle:implementation-complete` only when exact-head evidence is clean;
+4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main` and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
