@@ -6,14 +6,14 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete the Tasks refresh-failure continuity delivery without starting competing provider-independent work.
+  objective: Revalidate the repaired Tasks refresh-failure continuity delivery without starting competing provider-independent work.
   issue: null
   pr: 314
   branch: fix/task-refresh-recovery-continuity
 next_actions:
-  - Run canonical Application validation on the exact PR #314 implementation/status head.
+  - Run canonical Application validation on the exact repaired PR #314 implementation/status head.
   - Audit submitted reviews and inline review threads on that exact head.
-  - Repair any in-scope validation or review finding on PR #314 rather than starting competing work.
+  - Repair any further in-scope validation or review finding on PR #314 rather than starting competing work.
   - After implementation-head evidence is clean, commit a post-merge-safe STATUS handoff and validate that exact final head.
   - Signal lifecycle:implementation-complete only when final exact-head evidence is clean.
   - Allow repository lifecycle automation and merge finalizer to complete Ready/Mergeable/Merged transitions.
@@ -33,9 +33,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #314 implementation and deterministic regression coverage are committed, but canonical validation has not yet completed on the exact implementation/status head created by this STATUS synchronization.
+validation_basis: Application validation run 820 on head 82944b94870067fa546a95c33d628aa8c7102668 passed audit, governance, lint, typecheck, all 354 deterministic tests and production build, but failed because the existing critical-path Playwright test still expected the superseded full Tasks load-error screen after a post-load refresh failure. That in-scope assertion has been repaired to verify the retained Tasks surface, refresh-specific recovery state and retry. Two unrelated Playwright failures were flaky and passed on retry. This STATUS synchronization creates a new head that requires fresh canonical validation.
 last_verified_commit: 7541763de45a69f4370c3a3021607867857ab69b
-last_updated: 2026-09-10T02:20:00+10:00
+last_updated: 2026-09-10T02:25:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -51,16 +51,18 @@ PR #313 — `fix: preserve routine context on refresh failure` — completed its
 
 Fresh reconciliation found no competing open delivery PRs. The next evidence-backed provider-independent Stage 3 interaction-integrity gap was the Tasks failure-side counterpart to PR #308: Tasks already preserved its established surface during post-load refresh, but any task-data refresh failure still replaced that surface with the initial-load error screen.
 
-PR #314 — `fix: preserve task context on refresh failure` — is now the sole active delivery. After the first successful task load, a subsequent task-data refresh failure keeps the established Tasks surface mounted and exposes an in-place shared focused retry state explaining that the visible task list may be stale. Existing initial task-load failure remains a full `LoadErrorState`; task-preferences failure also retains its existing conservative full error state. A specific mutation recovery suppresses the generic task refresh recovery when both would otherwise be present.
+PR #314 — `fix: preserve task context on refresh failure` — is the sole active delivery. After the first successful task load, a subsequent task-data refresh failure keeps the established Tasks surface mounted and exposes an in-place shared focused retry state explaining that the visible task list may be stale. Existing initial task-load failure remains a full `LoadErrorState`; task-preferences failure also retains its existing conservative full error state. A specific mutation recovery suppresses the generic task refresh recovery when both would otherwise be present.
 
-Existing `test/task-list-loading-status-semantics.test.mjs` coverage was extended in place. No provider, persistence, authentication, task mutation, preference-loading, scheduling, execution-policy or retry-policy contract changed.
+Existing `test/task-list-loading-status-semantics.test.mjs` coverage was extended in place. Application validation run 820 then found one stale in-scope browser assertion: `e2e/critical-path.spec.js` still expected `We couldn’t load your tasks` after deliberately failing a post-load filter refresh. The browser test now verifies `We couldn’t refresh your tasks`, confirms the previously established task remains visible while stale, retries successfully, and confirms the recovery state clears. Run 820's two other browser failures were flaky and passed on retry; they are not part of this delivery.
+
+No provider, persistence, authentication, task mutation, preference-loading, scheduling, execution-policy or retry-policy contract changed.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — implementation/status head requires canonical evidence |
-| Gate state | Implementation and deterministic regression coverage committed; exact-head validation pending |
+| Current gate | INTEGRATION — repaired implementation/status head requires fresh canonical evidence |
+| Gate state | Run 820 in-scope Playwright assertion repaired; exact repaired-head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -75,11 +77,13 @@ Existing `test/task-list-loading-status-semantics.test.mjs` coverage was extende
 | Recovery precedence | Specific `OperationErrorState` suppresses generic refresh recovery when both are present |
 | Conservative boundary | Task-preferences failure continues to use its existing full error state |
 | Deterministic coverage | Existing task loading-status semantics test extended in place |
+| Browser coverage | Existing critical-path task recovery journey updated to the new post-load recovery contract |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation/status validation | NOT RUN on the exact STATUS-synchronized head |
-| Review audit | NOT RUN on the exact STATUS-synchronized head |
+| Prior validation | FAIL — run 820; only persistent failure was the stale in-scope critical-path assertion now repaired |
+| Repaired-head validation | NOT RUN on the exact STATUS-synchronized head |
+| Review audit | Previous head had no submitted reviews or inline review threads; exact repaired-head audit pending |
 | Durable active-state synchronization | COMPLETE |
-| Durable post-merge handoff | NOT YET — only after implementation-head evidence passes |
+| Durable post-merge handoff | NOT YET — only after repaired implementation-head evidence passes |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -87,10 +91,10 @@ Existing `test/task-list-loading-status-semantics.test.mjs` coverage was extende
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; Draft PR #314 is the sole active provider-independent delivery and requires exact-head canonical validation. |
-| What is already happening? | Tasks refresh-failure continuity is implemented with deterministic regression coverage and durable active state synchronized. |
-| What has been validated? | The prior PR #313 final handoff head `7541763de45a69f4370c3a3021607867857ab69b` passed Application validation run 818. PR #314 exact-head validation is pending. |
-| What is next? | Validate PR #314 exact head, audit reviews/threads, repair any in-scope findings, then create and validate the post-merge-safe handoff. |
+| Where am I? | Stage 3; Draft PR #314 is the sole active provider-independent delivery and its run-820 browser assertion finding has been repaired. |
+| What is already happening? | Tasks refresh-failure continuity, deterministic regression coverage and the critical-path browser recovery journey are implemented on the active branch. |
+| What has been validated? | Run 820 passed audit, governance, lint, typecheck, 354 deterministic tests and build; its persistent Playwright failure was a stale in-scope expectation now repaired. The repaired exact head still needs canonical validation. |
+| What is next? | Validate the repaired PR #314 exact head, audit reviews/threads, repair any in-scope finding, then create and validate the post-merge-safe handoff. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -102,9 +106,9 @@ The system/data boundary remains unchanged: physical NoCodeBackend routes/method
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through Application validation on the exact current PR #314 implementation/status head;
+1. run canonical `npm run platform:validate` through Application validation on the exact repaired PR #314 implementation/status head;
 2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
-3. when implementation-head evidence is clean, commit a post-merge-safe STATUS handoff that removes PR #314/its branch as the future durable re-entry target;
+3. when repaired implementation-head evidence is clean, commit a post-merge-safe STATUS handoff that removes PR #314/its branch as the future durable re-entry target;
 4. validate and review-audit that exact handoff head;
 5. add `lifecycle:implementation-complete` only when final exact-head evidence is clean;
 6. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
