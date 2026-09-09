@@ -8,7 +8,8 @@ const choreListSource = readFileSync(
   'utf8'
 );
 
-test('Chore list loading state is announced without exposing its decorative spinner', () => {
+test('Chore list initial loading state is announced without exposing its decorative spinner', () => {
+  assert.match(choreListSource, /if \(loading && !hasLoaded\)/);
   assert.match(choreListSource, /Loading your chores\.\.\./);
   assert.match(choreListSource, /role="status"/);
   assert.match(choreListSource, /aria-live="polite"/);
@@ -18,4 +19,9 @@ test('Chore list loading state is announced without exposing its decorative spin
     choreListSource,
     /animate-spin[\s\S]*?aria-hidden="true"[\s\S]*?Loading your chores\.\.\./
   );
+});
+
+test('Chore list subsequent refresh state preserves the established checklist surface', () => {
+  assert.match(choreListSource, /className="space-y-6" aria-busy=\{loading\}/);
+  assert.match(choreListSource, /Refreshing chores\.\.\./);
 });

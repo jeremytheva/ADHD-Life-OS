@@ -20,6 +20,7 @@ const {
 const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
+  const [hasLoaded, setHasLoaded] = useState(false)
   const [loadError, setLoadError] = useState(false)
   const [operationError, setOperationError] = useState(null)
   const [filter, setFilter] = useState('today')
@@ -33,6 +34,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
       if (filter === 'today') filters.dueToday = true
       const data = await houseworkService.getHouseworkTasks(filters)
       setTasks(data)
+      setHasLoaded(true)
     } catch (error) {
       console.error('Error loading housework tasks:', error)
       setLoadError(true)
@@ -96,7 +98,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
     return icons[room] || '🏠'
   }
 
-  if (loading) {
+  if (loading && !hasLoaded) {
     return (
       <div
         className="bg-white rounded-lg border border-slate-200 p-8 text-center"
@@ -135,7 +137,13 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
   })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-busy={loading}>
+      {loading && (
+        <p className="sr-only" role="status" aria-live="polite">
+          Refreshing chores...
+        </p>
+      )}
+
       <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg border border-purple-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
