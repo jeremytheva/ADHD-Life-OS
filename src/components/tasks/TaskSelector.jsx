@@ -31,6 +31,7 @@ const TaskSelector = ({ onSelectTask }) => {
   const [showFilters, setShowFilters] = useState(false)
   const [selectedPath, setSelectedPath] = useState('all')
   const [loading, setLoading] = useState(true)
+  const [hasLoaded, setHasLoaded] = useState(false)
   const [loadError, setLoadError] = useState(false)
   const filterToggleRef = useRef(null)
 
@@ -55,6 +56,7 @@ const TaskSelector = ({ onSelectTask }) => {
       }
 
       setRecommendations(recs)
+      setHasLoaded(true)
     } catch (error) {
       console.error('Error loading recommendations:', error)
       setLoadError(true)
@@ -130,7 +132,7 @@ const TaskSelector = ({ onSelectTask }) => {
     }
   ]
 
-  if (loading) {
+  if (loading && !hasLoaded) {
     return (
       <div
         className="bg-white rounded-lg border border-slate-200 p-8 text-center"
@@ -159,7 +161,13 @@ const TaskSelector = ({ onSelectTask }) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" aria-busy={loading}>
+      {loading && (
+        <p className="sr-only" role="status" aria-live="polite">
+          Refreshing task recommendations
+        </p>
+      )}
+
       {/* Header with Path Selection */}
       <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg border border-purple-200 p-6">
         <div className="flex items-center justify-between mb-4">
