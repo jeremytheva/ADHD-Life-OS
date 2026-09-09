@@ -25,3 +25,11 @@ test('Task list subsequent refresh preserves the established interactive surface
   assert.match(taskListSource, /className="p-6 space-y-6" aria-busy=\{loading\}/);
   assert.match(taskListSource, /Refreshing tasks\.\.\./);
 });
+
+test('Task list refresh failures preserve established context and expose focused recovery', () => {
+  assert.match(taskListSource, /loadError && \(!hasLoaded \|\| loadError === 'preferences'\)/);
+  assert.match(taskListSource, /loadError === 'tasks' && hasLoaded && !operationError/);
+  assert.match(taskListSource, /title="We couldn’t refresh your tasks"/);
+  assert.match(taskListSource, /Your current task list is still shown and may be out of date/);
+  assert.match(taskListSource, /onRetry=\{loadTasks\}/);
+});
