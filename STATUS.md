@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #303 is the sole active delivery. Its Settings load-error focus-recovery implementation and deterministic coverage are committed; exact-head canonical validation is pending.
+validation_basis: PR #303 is the sole active delivery. Its Settings load-error focus-recovery implementation and deterministic coverage are committed; exact-head canonical validation is pending. Run 780 failed at governance because this handoff initially used a non-canonical PENDING value for validation subfields; application code was not implicated and the metadata is corrected here.
 last_verified_commit: fac9406a4914f81d28a703af0ceb8e7e2f695a98
-last_updated: 2026-09-09T15:18:00+10:00
+last_updated: 2026-09-09T15:20:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -53,12 +53,14 @@ Settings had a bespoke load-failure path that replaces the loading subtree but, 
 
 Existing `test/settings-error-alert-semantics.test.mjs` coverage is extended in place to protect the load-alert ref/effect, `role="alert"`, bounded programmatic focusability, Retry loading action and the deliberate absence of forced focus on save failures. No duplicate test infrastructure was introduced.
 
+Canonical Application validation run 780 on the first STATUS-synchronized head reached `npm run platform:validate` but failed its governance gate immediately because the new front matter used `PENDING` for validation fields where the repository contract permits `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE`. This metadata-only defect is corrected in the current head; no application-code repair was indicated by run 780.
+
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — exact-head implementation evidence required |
-| Gate state | Implementation and deterministic coverage committed; canonical validation pending |
+| Gate state | Implementation and deterministic coverage committed; corrected exact-head canonical validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -73,7 +75,7 @@ Existing `test/settings-error-alert-semantics.test.mjs` coverage is extended in 
 | Implemented change | Settings load failure receives programmatic focus when it replaces loading; save failure retains initiating-control focus |
 | Deterministic coverage | Existing `test/settings-error-alert-semantics.test.mjs` extended in place |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Canonical validation | PENDING on exact implementation/status head |
+| Canonical validation | Run 780 failed at governance due to invalid STATUS validation-state metadata; corrected exact-head rerun pending |
 | Review audit | PENDING after exact-head validation |
 | Durable active-state synchronization | COMPLETE in this commit |
 | Durable post-merge handoff | PENDING implementation-head evidence |
@@ -85,9 +87,9 @@ Existing `test/settings-error-alert-semantics.test.mjs` coverage is extended in 
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; PR #303 is the sole active provider-independent accessibility/interaction-integrity delivery. |
-| What is already happening? | Settings load-error focus recovery and deterministic coverage are implemented and STATUS is synchronized. |
-| What has been validated? | Fresh `main` through merged PR #302; PR #303 exact-head canonical validation is pending. |
-| What is next? | Validate PR #303 exact head, audit reviews/threads, repair findings, then create the post-merge-safe handoff and complete final exact-head lifecycle evidence. |
+| What is already happening? | Settings load-error focus recovery and deterministic coverage are implemented; STATUS governance metadata has been repaired after run 780. |
+| What has been validated? | Fresh `main` through merged PR #302. Run 780 exposed only a STATUS front-matter governance defect before application validation proceeded. |
+| What is next? | Validate the corrected PR #303 exact head, audit reviews/threads, repair findings, then create the post-merge-safe handoff and complete final exact-head lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -99,7 +101,7 @@ The system/data boundary remains unchanged: physical NoCodeBackend routes/method
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through Application validation on the exact PR #303 implementation/status head;
+1. run canonical `npm run platform:validate` through Application validation on the exact corrected PR #303 implementation/status head;
 2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
 3. when implementation-head evidence is clean, commit a post-merge-safe durable handoff that removes PR #303 as the future re-entry target;
 4. run final canonical validation and review/thread audit on that exact handoff head;
