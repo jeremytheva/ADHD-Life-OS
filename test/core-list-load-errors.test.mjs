@@ -45,7 +45,7 @@ test('brain inbox distinguishes load failures and keeps failed mutations visible
   assert.match(source, /still in the input box so you can try again/)
   assert.match(source, /Your edited text is still here so you can try again/)
   assert.match(source, /It remains in your inbox so you can try again/)
-  assert.match(source, /role="alert"/)
+  assert.match(source, /<OperationErrorState message=\{operationError\}/)
 })
 
 test('tasks distinguish preference or task retrieval failure from an empty task list', async () => {
