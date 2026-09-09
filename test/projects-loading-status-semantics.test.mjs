@@ -25,3 +25,11 @@ test('Projects subsequent refresh state preserves the established project surfac
   assert.match(projectsListSource, /className="p-6 space-y-6" aria-busy=\{loading\}/);
   assert.match(projectsListSource, /Refreshing projects\.\.\./);
 });
+
+test('Projects refresh failures keep established content and avoid duplicate mutation recovery', () => {
+  assert.match(projectsListSource, /if \(loadError && !hasLoaded\)/);
+  assert.match(projectsListSource, /loadError && !operationError/);
+  assert.match(projectsListSource, /We couldn’t refresh your projects/);
+  assert.match(projectsListSource, /Your existing project list is still available/);
+  assert.match(projectsListSource, /<OperationErrorState message=\{operationError\}/);
+});

@@ -314,7 +314,7 @@ const ProjectsList = () => {
     )
   }
 
-  if (loadError) {
+  if (loadError && !hasLoaded) {
     return (
       <div className="p-6">
         <LoadErrorState
@@ -368,6 +368,13 @@ const ProjectsList = () => {
         </div>
       </div>
 
+      {loadError && !operationError && (
+        <LoadErrorState
+          title="We couldn’t refresh your projects"
+          message="Your existing project list is still available. Try refreshing again before relying on new changes."
+          onRetry={loadProjects}
+        />
+      )}
       <OperationErrorState message={operationError} onDismiss={() => setOperationError(null)} />
 
       {projects.length === 0 && (
