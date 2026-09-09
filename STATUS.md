@@ -6,12 +6,12 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Repair PR #316 governance-state validation and complete the accessibility delivery on the same active branch.
+  objective: Repair PR #316 runtime-state governance validation and complete the accessibility delivery on the same active branch.
   issue: null
   pr: 316
   branch: fix/mode-banner-decorative-icons
 next_actions:
-  - Re-run canonical Application validation after correcting STATUS.md validation-state vocabulary exposed by run 828.
+  - Re-run canonical Application validation after correcting the runtime-state vocabulary exposed by run 829.
   - Audit submitted reviews and inline review threads on the repaired exact head.
   - Repair any further in-scope finding on PR #316 rather than starting competing work.
   - Prepare the post-merge-safe durable handoff only after implementation-head evidence is clean.
@@ -31,10 +31,10 @@ validation:
   tests: NOT_RUN
   build: NOT_RUN
   ci: FAIL
-  runtime: NOT_RUN
-validation_basis: Application validation run 828 on PR #316 head d6ff0402bfe9f777ecc4733758363a6b3e9725fc stopped at validate:governance because STATUS.md used unsupported PENDING validation values. The canonical state vocabulary permits PASS, FAIL, NOT_RUN, or NOT_APPLICABLE. No application lint, typecheck, deterministic tests, build, or Playwright evidence was produced by that run. This commit repairs durable validation state without changing the accessibility implementation.
+  runtime: UNVERIFIED
+validation_basis: Application validation run 829 on PR #316 head c4b7bc2ab94c14b789afd4bf0cdc918e03f7da40 stopped at validate:governance because STATUS.md recorded runtime as NOT_RUN. Repository governance defines runtime separately as VERIFIED, UNVERIFIED, or NOT_APPLICABLE. No application lint, typecheck, deterministic tests, build, or Playwright evidence was produced by run 829. This commit corrects durable runtime state to UNVERIFIED without changing the accessibility implementation.
 last_verified_commit: 8b179285b16bd075fede9a6eed48acb54cc143f5
-last_updated: 2026-09-10T06:12:00+10:00
+last_updated: 2026-09-10T07:12:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -52,7 +52,7 @@ PR #316 — `fix: hide decorative mode icons from assistive technology` — rema
 
 Focused deterministic coverage in `test/mode-context-banner-semantics.test.mjs` verifies both banners keep their textual context and hide only the decorative icon.
 
-Canonical Application validation run 828 failed before application checks because this STATUS front matter used unsupported `PENDING` values. Governance correctly rejected them; the allowed durable validation-state vocabulary is `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE`. This repair records run 828 as governance/CI failure and marks checks that never executed as `NOT_RUN`. The accessibility implementation itself is unchanged.
+Canonical Application validation run 828 first exposed invalid general validation-state vocabulary in this STATUS front matter. The first repair correctly moved governance/lint/typecheck/tests/build/CI fields into their allowed state vocabulary but incorrectly treated `runtime` the same way. Run 829 then stopped at governance because runtime has a distinct vocabulary: `VERIFIED`, `UNVERIFIED`, or `NOT_APPLICABLE`. This commit records runtime as `UNVERIFIED`, which matches the repository's actual provider/runtime evidence. The accessibility implementation itself is unchanged.
 
 No provider, persistence, authentication, routing, mode-selection, task/chore mutation, retry-policy, execution-policy or scheduling-policy contract changed.
 
@@ -61,7 +61,7 @@ No provider, persistence, authentication, routing, mode-selection, task/chore mu
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — PR #316 governance repair requires fresh exact-head validation |
-| Gate state | Accessibility implementation and focused regression coverage committed; run 828 exposed and this commit repairs invalid durable validation-state vocabulary |
+| Gate state | Accessibility implementation and focused regression coverage committed; runs 828 and 829 exposed durable STATUS vocabulary defects now repaired on the active branch |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -75,9 +75,9 @@ No provider, persistence, authentication, routing, mode-selection, task/chore mu
 | Implemented change | Hide decorative Inbox/Housework mode icons from the accessibility tree while preserving visible iconography and textual mode context |
 | Deterministic coverage | New focused `mode-context-banner-semantics` regression test |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Validation finding | Run 828 failed at governance because STATUS.md used unsupported `PENDING` validation values; corrected in this commit |
+| Validation finding | Run 829 failed at governance because STATUS.md used invalid `runtime: NOT_RUN`; corrected to the evidence-accurate `UNVERIFIED` state in this commit |
 | Implementation-head validation | FAIL on prior head; fresh validation required on repaired head |
-| Review audit | PENDING outside canonical STATUS validation vocabulary; GitHub review state to be audited on repaired head |
+| Review audit | Pending GitHub audit on repaired exact head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -86,8 +86,8 @@ No provider, persistence, authentication, routing, mode-selection, task/chore mu
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 with PR #316 as the sole active provider-independent accessibility delivery. |
-| What is already happening? | Decorative mode icons in Inbox and Housework have been hidden from assistive technology; run 828 exposed an invalid STATUS validation-state value that is now repaired. |
-| What has been validated? | PR #315 final exact-head evidence passed and merged. PR #316 run 828 stopped at governance before application checks; fresh exact-head evidence is required. |
+| What is already happening? | Decorative mode icons in Inbox and Housework have been hidden from assistive technology; run 829 exposed the remaining invalid STATUS runtime-state value, now repaired. |
+| What has been validated? | PR #315 final exact-head evidence passed and merged. PR #316 runs 828 and 829 stopped at governance before application checks; fresh exact-head evidence is required. |
 | What is next? | Re-run canonical validation on the repaired PR #316 head, audit review/thread state, then prepare the post-merge-safe handoff and complete lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
