@@ -24,6 +24,8 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
   const [project, setProject] = useState(initialProject)
   const [stats, setStats] = useState(null)
   const [detailLoadError, setDetailLoadError] = useState(false)
+  const [detailsLoading, setDetailsLoading] = useState(false)
+  const [hasLoadedDetails, setHasLoadedDetails] = useState(false)
   const [operationError, setOperationError] = useState('')
   const [showTaskForm, setShowTaskForm] = useState(false)
   const [editingTask, setEditingTask] = useState(null)
@@ -32,6 +34,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
   const detailDialogRef = useModalDialog({ onEscape: onClose })
 
   const loadProjectDetails = useCallback(async () => {
+    setDetailsLoading(true)
     try {
       setDetailLoadError(false)
       const [updatedProject, projectStats] = await Promise.all([
@@ -40,11 +43,14 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
       ])
       setProject(updatedProject)
       setStats(projectStats)
+      setHasLoadedDetails(true)
       return true
     } catch (error) {
       console.error('Error loading project details:', error)
       setDetailLoadError(true)
       return false
+    } finally {
+      setDetailsLoading(false)
     }
   }, [initialProject.id])
 
@@ -162,12 +168,19 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
         aria-modal="true"
         aria-labelledby="project-detail-title"
         aria-hidden={showTaskForm ? 'true' : undefined}
+        aria-busy={detailsLoading}
         tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
       >
+        {detailsLoading && (
+          <p role="status" aria-live="polite" className="sr-only">
+            {hasLoadedDetails ? 'Refreshing project details...' : 'Loading project details...'}
+          </p>
+        )}
+
         <div className={`bg-gradient-to-r ${colorClasses[project.color]} p-6 text-white`}>
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3 flex-1">

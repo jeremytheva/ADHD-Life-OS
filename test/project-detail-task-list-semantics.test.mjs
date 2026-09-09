@@ -18,3 +18,15 @@ test('ProjectDetailView exposes pending and completed task collections as labell
   assert.match(source, /completedTasks\.map\(\(task\) =>/)
   assert.match(source, /key=\{task\.id\}\s+role="listitem"/)
 })
+
+test('ProjectDetailView exposes non-destructive detail loading and refresh status', async () => {
+  const source = await read('src/components/projects/ProjectDetailView.jsx')
+
+  assert.match(source, /const \[detailsLoading, setDetailsLoading\] = useState\(false\)/)
+  assert.match(source, /const \[hasLoadedDetails, setHasLoadedDetails\] = useState\(false\)/)
+  assert.match(source, /setDetailsLoading\(true\)/)
+  assert.match(source, /finally \{\s*setDetailsLoading\(false\)\s*\}/)
+  assert.match(source, /aria-busy=\{detailsLoading\}/)
+  assert.match(source, /<p role="status" aria-live="polite" className="sr-only">/)
+  assert.match(source, /hasLoadedDetails \? 'Refreshing project details\.\.\.' : 'Loading project details\.\.\.'/)
+})
