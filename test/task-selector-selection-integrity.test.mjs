@@ -33,3 +33,13 @@ test('Task Selector exposes accessible stateful recommendation controls', async 
   assert.match(source, /id="task-selector-location"/)
   assert.equal((source.match(/role="group"/g) || []).length >= 4, true)
 })
+
+test('Task Selector keeps its controls mounted while refreshing recommendations', async () => {
+  const source = await read('src/components/tasks/TaskSelector.jsx')
+
+  assert.match(source, /const \[hasLoaded, setHasLoaded\] = useState\(false\)/)
+  assert.match(source, /setRecommendations\(recs\)\s+setHasLoaded\(true\)/)
+  assert.match(source, /if \(loading && !hasLoaded\)/)
+  assert.match(source, /<div className="space-y-6" aria-busy=\{loading\}>/)
+  assert.match(source, /Refreshing task recommendations/)
+})
