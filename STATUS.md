@@ -6,14 +6,14 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete exact-head lifecycle evidence for the provider-independent Stage 3 accessibility delivery, then re-enter from fresh main.
+  objective: Validate the post-merge-safe Stage 3 handoff, then reconcile fresh main and continue the next evidence-backed provider-independent accessibility or interaction-integrity slice.
   issue: null
   pr: null
   branch: null
 next_actions:
-  - Run final canonical Application validation on this post-merge-safe handoff head.
-  - Re-audit submitted reviews and inline review threads on the exact validated head.
-  - Signal lifecycle:implementation-complete only when final exact-head evidence remains clean.
+  - Run canonical Application validation on the exact post-merge-safe handoff head.
+  - Audit submitted reviews and inline review threads on that same exact head.
+  - Signal lifecycle:implementation-complete for PR #320 only when final exact-head evidence remains clean.
   - Allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions.
   - Reconcile fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 839 passed on PR #319 implementation/status head 8073d13856020287d28b5465aa80069b9d707c2b and submitted reviews plus inline review threads were clean. This documentation-only post-merge-safe handoff commit invalidates exact-head validation evidence, so final canonical validation and review/thread audit are required before implementation-complete signalling.
-last_verified_commit: 8073d13856020287d28b5465aa80069b9d707c2b
-last_updated: 2026-09-10T08:36:00+10:00
+validation_basis: PR #320 implementation head ee03ee7679e4e42d3e705c3dbe22357908a00555 passed canonical Application validation run 842 with clean submitted-review and inline-thread evidence; this post-merge-safe STATUS handoff commit requires fresh exact-head validation before lifecycle completion signalling.
+last_verified_commit: ee03ee7679e4e42d3e705c3dbe22357908a00555
+last_updated: 2026-09-10T09:15:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +45,20 @@ last_updated: 2026-09-10T08:36:00+10:00
 
 ## Current objective
 
-PR #318 — `fix: name Reward Shop coin balance` — completed its repository-managed lifecycle and merged into `main` at `6a5b4e536d143009d82f4897d52c7ff28e6ed245` after final exact-head Application validation run 837 passed with clean submitted-review and inline-thread evidence.
+PR #319 — `fix: expose Reward Shop currency units` — completed its repository-managed lifecycle and merged into `main` at `148edaa3d4d59f59a3312b1dbeefa378963314bf` after final exact-head Application validation run 840 passed with clean submitted-review and inline-thread evidence.
 
-PR #319 — `fix: expose Reward Shop currency units` — has completed its implementation-head evidence gate. Lifetime Earned and per-reward cost values now expose screen-reader-only `coins` units while preserving their existing visible presentation and decorative hidden coin icons.
+PR #320 — `fix: expose adaptive reward currency unit` — has completed its implementation-head evidence gate. Adaptive reward suggestion costs retain their existing visible numeric presentation while exposing a screen-reader-only `coins` unit; the decorative currency emoji remains hidden from the accessibility tree. Existing adaptive reward semantics coverage was extended in place. Canonical Application validation run 842 passed on exact implementation head `ee03ee7679e4e42d3e705c3dbe22357908a00555`, and submitted-review plus inline-thread audits were clean.
 
-Canonical Application validation run 839 passed on exact synchronized implementation/status head `8073d13856020287d28b5465aa80069b9d707c2b`. Submitted reviews and inline review threads were both clean on that head. This commit converts durable state to a post-merge-safe handoff so default-branch re-entry will not point at a soon-to-close PR or branch. Because this documentation commit changes the PR head, final exact-head canonical validation and review/thread evidence are required before lifecycle completion signalling.
+This durable handoff intentionally no longer records PR #320 or its source branch as the default re-entry target that should remain after merge. The resulting documentation-only handoff head must pass fresh exact-head validation before lifecycle completion is signalled.
 
-No currency calculations, reward prices, purchase behaviour, persistence, provider, authentication, routing, execution-policy, scheduling-policy or visual-design behaviour changed.
+No currency calculations, reward prices, claim behaviour, persistence, provider, authentication, routing, execution-policy, scheduling-policy or visual-design behaviour changed.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head lifecycle evidence required after post-merge-safe handoff |
-| Gate state | Implementation-head validation passed and reviews/threads were clean; documentation-only handoff requires fresh exact-head evidence |
+| Current gate | INTEGRATION — final exact-head handoff validation required |
+| Gate state | Implementation-head evidence passed; post-merge-safe STATUS handoff requires fresh canonical validation |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -67,13 +67,15 @@ No currency calculations, reward prices, purchase behaviour, persistence, provid
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #318 — Reward Shop sidebar balance accessible naming; merged at `6a5b4e536d143009d82f4897d52c7ff28e6ed245` |
-| Delivery completing lifecycle | PR #319 — Reward Shop currency-unit accessibility |
-| Implemented change | Lifetime Earned and per-reward costs expose their `coins` unit to assistive technology without visual changes |
-| Deterministic coverage | Existing `gamification-progress-semantics` regression test extended in place |
+| Latest merged delivery | PR #319 — Reward Shop currency-unit accessibility; merged at `148edaa3d4d59f59a3312b1dbeefa378963314bf` |
+| Delivery completing lifecycle | PR #320 — adaptive reward suggestion currency-unit accessibility |
+| Future default-branch re-entry target | Reconcile fresh `main`; no soon-to-be-closed PR or branch is persisted as active work |
+| Implemented change | Adaptive reward suggestion costs expose their `coins` unit to assistive technology while preserving existing visible content and behaviour |
+| Deterministic coverage | Existing `adaptive-reward-suggestion-semantics` regression test extended in place |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | PASS — Application validation run 839 on `8073d13856020287d28b5465aa80069b9d707c2b` |
-| Review audit | CLEAN on implementation head; final exact-head re-audit required after this handoff commit |
+| Implementation-head validation | PASS — Application validation run 842 on `ee03ee7679e4e42d3e705c3dbe22357908a00555` |
+| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
+| Final handoff validation | NOT_RUN on the documentation-only post-merge-safe head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -81,22 +83,22 @@ No currency calculations, reward prices, purchase behaviour, persistence, provid
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; the latest provider-independent accessibility delivery has passed implementation-head evidence and is completing final lifecycle evidence. |
-| What is already happening? | Remaining Reward Shop currency amounts expose explicit coin units to assistive technology; durable state is prepared for safe re-entry after merge. |
-| What has been validated? | Application validation run 839 passed on the implementation/status head and review/thread audits were clean. This handoff head still requires final exact-head validation. |
-| What is next? | Validate and audit this handoff head, signal implementation complete only if clean, allow lifecycle automation to merge, then reconcile fresh main and continue the next provider-independent Stage 3 slice. |
+| Where am I? | Stage 3; PR #320 has passed its implementation-head evidence gate and is completing final lifecycle validation. |
+| What is already happening? | Adaptive reward costs expose explicit coin units to assistive technology without changing visible reward behaviour; durable state has been converted to a post-merge-safe handoff. |
+| What has been validated? | PR #320 implementation head `ee03ee7679e4e42d3e705c3dbe22357908a00555` passed Application validation run 842 and clean review/thread audits. The handoff-only head still requires exact-head validation. |
+| What is next? | Validate and audit the post-merge-safe handoff head, signal implementation complete if clean, allow repository lifecycle automation to merge, then reconcile fresh `main` and continue the next evidence-backed Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. The completing accessibility delivery is provider-independent and does not alter physical provider contracts or durable execution behaviour.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #320 is provider-independent and does not alter physical provider contracts or durable execution behaviour.
 
 ## Next dependency-correct work
 
-1. run final canonical `npm run platform:validate` through Application validation on this exact post-merge-safe handoff head;
-2. re-audit submitted reviews and inline review threads on that same exact head;
-3. signal `lifecycle:implementation-complete` only when exact-head evidence is clean;
+1. run canonical `npm run platform:validate` through Application validation on the exact post-merge-safe handoff head;
+2. audit submitted reviews and inline review threads on that same exact head;
+3. signal `lifecycle:implementation-complete` for PR #320 only when final exact-head evidence is clean;
 4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
 5. re-enter from fresh `main` and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
 6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.

@@ -16,13 +16,18 @@ test('adaptive reward suggestion exposes a live named region and dismiss control
   assert.match(rewardSource, /icon=\{FiGift\}[\s\S]*?aria-hidden="true"/);
   assert.match(rewardSource, /icon=\{FiX\}[\s\S]*?aria-hidden="true"/);
   assert.match(rewardSource, /className="text-2xl" aria-hidden="true">\{suggestion\.icon\}/);
-  assert.match(rewardSource, /<span aria-hidden="true">💰<\/span> \{suggestion\.cost\}/);
+  assert.match(rewardSource, /<span aria-hidden="true">💰<\/span> \{suggestion\.cost\}<span className="sr-only"> coins<\/span>/);
 });
 
 test('adaptive reward suggestions are a named list of explicit button controls', () => {
   assert.match(rewardSource, /<ul aria-label="Suggested rewards"[\s\S]*?<li key=\{index\}>/);
   assert.match(rewardSource, /<motion\.button[\s\S]*?type="button"[\s\S]*?onClick=\{\(\) => handleClaim\(suggestion\)\}/);
   assert.match(rewardSource, /<\/motion\.button>[\s\S]*?<\/li>/);
+});
+
+test('adaptive reward costs expose their coins unit while the decorative currency icon stays hidden', () => {
+  assert.match(rewardSource, /<span aria-hidden="true">💰<\/span>/);
+  assert.match(rewardSource, /\{suggestion\.cost\}<span className="sr-only"> coins<\/span>/);
 });
 
 test('dismiss and claim restore focus to the control active before the suggestion appeared', () => {

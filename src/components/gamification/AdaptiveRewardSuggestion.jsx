@@ -92,7 +92,7 @@ const AdaptiveRewardSuggestion = ({ reward, onClose, onClaim }) => {
                             <div className="text-xs text-slate-600">{suggestion.description}</div>
                           </div>
                           <div className="text-yellow-600 font-bold text-sm">
-                            <span aria-hidden="true">💰</span> {suggestion.cost}
+                            <span aria-hidden="true">💰</span> {suggestion.cost}<span className="sr-only"> coins</span>
                           </div>
                         </div>
                       </motion.button>
