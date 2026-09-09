@@ -11,9 +11,9 @@ current_work:
   pr: 310
   branch: fix/today-refresh-focus-continuity
 next_actions:
-  - Run canonical Application validation on the exact implementation/status head for PR #310.
+  - Run canonical Application validation on the exact repaired implementation/status head for PR #310.
   - Audit submitted reviews and inline review threads on that exact head.
-  - Repair any in-scope validation or review finding on PR #310 rather than starting competing work.
+  - Repair any remaining in-scope validation or review finding on PR #310 rather than starting competing work.
   - Commit the required post-merge-safe STATUS handoff after implementation-head evidence is clean.
   - Run final exact-head validation and review audit before lifecycle:implementation-complete.
   - Allow repository lifecycle automation and merge finalizer to complete Ready/Mergeable/Merged transitions.
@@ -26,21 +26,21 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: FAIL
   runtime: UNVERIFIED
-validation_basis: PR #310 implementation and deterministic coverage are committed; canonical Application validation has not yet run on the synchronized implementation/status head.
+validation_basis: PR #310 Application validation run 806 passed audit, governance, lint, typecheck, all 350 deterministic tests and production build, but failed critical Playwright coverage because e2e/critical-path.spec.js still asserted the pre-change full replacement Today load-error heading after an explicit refresh failure. The in-scope stale assertion was repaired to verify that Today remains mounted, the new refresh-specific recovery heading is visible, retry clears the recovery state, and Today remains available. Two unrelated Playwright cases were flaky and passed on retry. Fresh exact-head canonical validation is required after the repair/status commits.
 last_verified_commit: 22ce266a928ee1f60981ae472de376835350d2b1
-last_updated: 2026-09-09T23:24:00+10:00
+last_updated: 2026-09-10T00:13:00+10:00
 ---
 
 # ADHD Life OS — Current Status
 
-**Snapshot date:** 9 September 2026  
+**Snapshot date:** 10 September 2026  
 **Default branch:** `main`  
 **Overall status:** Active development / backend provider work intentionally deferred  
 **Current phase/stage:** Stage 3 — execution and next-action experience
@@ -55,12 +55,14 @@ PR #310 distinguishes initial load from subsequent refreshes. After the first su
 
 Existing `test/today-loading-status-semantics.test.mjs` coverage was extended in place to protect the initial-load semantics, established-surface refresh continuity, busy/live status and mutation-specific refresh failure behavior.
 
+Canonical Application validation run 806 on implementation/status head `31f0b786b9d8e6a432036c22a39b3b8248d91176` passed dependency audit, governance, lint, typecheck, all 350 deterministic tests and production build. Critical Playwright coverage then exposed one in-scope stale journey assertion: `e2e/critical-path.spec.js` still expected the old full replacement `We couldn’t load your day` state after an explicit refresh failure. That assertion contradicted the PR's accepted in-place recovery behavior and has been repaired on the same PR to require the persistent Today heading, `We couldn’t refresh your day`, retry recovery, and removal of the refresh error after success. The unrelated Chore Detail and Mode Switcher Playwright cases were flaky in run 806 and passed on retry.
+
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — implementation/status head requires canonical evidence |
-| Gate state | Implementation and deterministic coverage committed; validation pending |
+| Current gate | INTEGRATION — repaired implementation/status head requires canonical evidence |
+| Gate state | In-scope Playwright regression repaired after run-806 failure; fresh validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -73,10 +75,11 @@ Existing `test/today-loading-status-semantics.test.mjs` coverage was extended in
 | Active delivery | Draft PR #310 — Today refresh focus/context continuity |
 | Active branch | `fix/today-refresh-focus-continuity` |
 | Implemented change | Keep established Today surface mounted during timeline refresh; announce refresh; retain stale content and retry recovery on explicit refresh failure |
-| Deterministic coverage | Existing Today loading-status semantics test extended in place |
+| Deterministic coverage | Existing Today loading-status semantics test extended in place; critical Playwright recovery journey aligned with the accepted in-place refresh behavior |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | NOT RUN on synchronized implementation/status head |
-| Implementation-head review audit | NOT RUN |
+| Validation finding | Run 806: stale critical-path expectation for pre-change full replacement Today error state; repaired in scope |
+| Implementation-head validation | FAIL on prior head due stale Playwright assertion; fresh exact-head validation pending after repair |
+| Implementation-head review audit | Pending fresh exact-head audit |
 | Durable active-state synchronization | COMPLETE in this commit |
 | Durable post-merge handoff | NOT YET — only after implementation-head evidence is clean |
 | Final exact-head validation | NOT RUN |
@@ -87,10 +90,10 @@ Existing `test/today-loading-status-semantics.test.mjs` coverage was extended in
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #310 is the sole active delivery and requires canonical implementation-head evidence. |
-| What is already happening? | Today refresh continuity and retry recovery are implemented with existing deterministic coverage extended. |
-| What has been validated? | The prior merged delivery passed final exact-head validation; PR #310 has not yet completed canonical validation. |
-| What is next? | Validate PR #310 exact head, repair any finding, then complete its durable handoff and lifecycle before fresh-main continuation. |
+| Where am I? | Stage 3; PR #310 is the sole active delivery and its run-806 in-scope Playwright finding has been repaired. |
+| What is already happening? | Today refresh continuity and retry recovery are implemented, with deterministic and critical-path coverage aligned to the intended behavior. |
+| What has been validated? | Run 806 passed audit/governance/lint/typecheck/350 deterministic tests/build; Playwright found one stale in-scope assertion that is now repaired. |
+| What is next? | Run canonical validation on the exact repaired head, audit review/thread state, then complete durable handoff and lifecycle if clean. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -102,12 +105,12 @@ The system/data boundary remains unchanged: physical NoCodeBackend routes/method
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through Application validation on PR #310's exact synchronized implementation/status head;
+1. run canonical `npm run platform:validate` through Application validation on PR #310's exact repaired implementation/status head;
 2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
 3. after clean implementation-head evidence, commit the post-merge-safe durable STATUS handoff;
 4. run final exact-head validation and review audit, then add `lifecycle:implementation-complete` only when clean;
 5. allow repository lifecycle automation/finalizer to complete merge;
-6. re-enter from fresh `main`, reconcile repository/GitHub state and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+6. re-enter from fresh `main`, reconcile repository/PR/branch/check state and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
 7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
