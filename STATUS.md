@@ -6,17 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #299 next-action refresh focus continuity, validate the exact current head, and advance its repository-managed lifecycle.
+  objective: Complete PR #299 final exact-head lifecycle evidence, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
   issue: null
-  pr: 299
-  branch: fix/next-action-refresh-focus-continuity
+  pr: null
+  branch: null
 next_actions:
-  - Run canonical Application validation on the exact PR #299 implementation/status head.
-  - Audit submitted reviews and inline review threads on that exact head and repair any in-scope finding.
-  - Commit a post-merge-safe STATUS.md handoff after implementation-head evidence passes.
-  - Signal lifecycle:implementation-complete only after final exact-head validation and review evidence are clean.
+  - Run final exact-head Application validation on this PR #299 post-merge-safe handoff commit.
+  - Audit submitted reviews and inline review threads on the exact handoff head.
+  - Signal lifecycle:implementation-complete only when final exact-head evidence is clean.
   - Allow repository lifecycle automation and merge finalizer to complete Ready/Mergeable/Merged transitions.
-  - Reconcile fresh main after merge before selecting the next provider-independent Stage 3 slice.
+  - Reconcile fresh main after merge and inspect repository/GitHub state before selecting the next provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -25,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: PENDING
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #298 final handoff head 4bc6a51c0819e0a5bbdde56cb9e13877cc514ec2 passed Application validation run 765 before merging to main at 77998e9a814b76029017aa85be20b78ef1c26edf. PR #299 changes are not yet canonically validated on this status commit.
-last_verified_commit: 4bc6a51c0819e0a5bbdde56cb9e13877cc514ec2
-last_updated: 2026-09-09T10:34:00+10:00
+validation_basis: PR #299 implementation/status head b6fa90c42de2a1e43020c6550dfa7c6fadf0ed00 passed canonical Application validation run 768 with clean submitted-review and inline-thread evidence. This STATUS handoff commit requires fresh final exact-head evidence before lifecycle completion.
+last_verified_commit: b6fa90c42de2a1e43020c6550dfa7c6fadf0ed00
+last_updated: 2026-09-09T10:38:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -48,20 +47,20 @@ last_updated: 2026-09-09T10:34:00+10:00
 
 PR #298 completed its repository-managed lifecycle and merged into `main` at `77998e9a814b76029017aa85be20b78ef1c26edf`. Its final exact-head Application validation run 765 passed on handoff head `4bc6a51c0819e0a5bbdde56cb9e13877cc514ec2` with clean submitted-review and inline-thread evidence.
 
-Fresh-main reconciliation found no competing open delivery PRs. Draft PR #299 on `fix/next-action-refresh-focus-continuity` is now the sole primary implementation thread.
-
-PR #299 repairs an interruption-recovery gap in the primary Stage 3 `NextActionPanel`. The existing **Not now** path already marked recommendation reloads for post-load focus recovery, but explicit **Recheck now** and retry actions invoked `loadRecommendations` directly. Those initiating controls disappear during the loading state, which can leave keyboard focus without a useful destination. The implementation now routes explicit recheck/retry through the existing bounded recovery mechanism so focus returns to the resulting recommendation heading, empty-state heading, or stable panel heading after loading settles. Recommendation inputs, execution policy, provider contracts, persistence and persisted domain shapes are unchanged.
+PR #299 on `fix/next-action-refresh-focus-continuity` implements the next evidence-backed provider-independent Stage 3 interruption/accessibility repair. The existing **Not now** path already marked recommendation reloads for post-load focus recovery, but explicit **Recheck now** and retry actions invoked `loadRecommendations` directly. Those initiating controls disappear during the loading state, which can leave keyboard focus without a useful destination. The implementation routes explicit recheck/retry through the existing bounded recovery mechanism so focus returns to the resulting recommendation heading, empty-state heading, or stable panel heading after loading settles. Recommendation inputs, execution policy, provider contracts, persistence and persisted domain shapes remain unchanged.
 
 Existing `test/next-action-experience.test.mjs` coverage is extended in place to protect the shared post-load recovery flag, manual refresh path, retry path, existing **Not now** behaviour and resulting focus targets.
 
-The implementation/test head immediately before this durable status synchronization is `1e1fda5bc3058a48d7a23bb2c18802a6334cc844`. This STATUS commit creates a newer exact head, so full canonical validation is required before implementation-head evidence can be considered complete.
+Canonical Application validation run 768 passed on exact implementation/status head `b6fa90c42de2a1e43020c6550dfa7c6fadf0ed00`. Submitted reviews and inline review threads were both empty on that validated head. This STATUS change is the required durable post-merge-safe handoff; because it creates a new commit, final exact-head validation and review evidence must pass before implementation-complete signalling.
+
+After PR #299 merges, re-enter from fresh `main`, inspect current repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity gap. Do not resume generic durable execution persistence without real target-instance NoCodeBackend certification evidence.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #299 exact implementation/status head requires canonical validation |
-| Gate state | Implementation and deterministic coverage complete; exact-head validation/review evidence pending |
+| Current gate | INTEGRATION — PR #299 durable handoff requires final exact-head evidence |
+| Gate state | Implementation-head canonical validation and review audit PASS; final handoff-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -71,14 +70,15 @@ The implementation/test head immediately before this durable status synchronizat
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #298 — auth session-verification error focus recovery plus audit-lockfile remediation; merged at `77998e9a814b76029017aa85be20b78ef1c26edf` |
-| Active delivery | PR #299 — `fix/next-action-refresh-focus-continuity` — Draft |
+| Active delivery after handoff | None recorded as durable re-entry target; PR #299 is expected to complete lifecycle before fresh-main continuation |
 | Implemented change | Explicit next-action recheck/retry actions reuse the existing post-load focus recovery mechanism instead of allowing their focused control to disappear without recovery |
 | Deterministic coverage | Existing `test/next-action-experience.test.mjs` extended in place |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation/status validation | PENDING on the exact current PR #299 head |
-| Current review audit | PENDING exact-head audit |
-| Durable active-state synchronization | COMPLETE in this commit |
-| Durable post-merge handoff | NOT YET — create only after implementation-head evidence passes |
+| Implementation-head validation | PASS — Application validation run 768 on `b6fa90c42de2a1e43020c6550dfa7c6fadf0ed00` |
+| Implementation-head review audit | PASS — no submitted reviews or inline review threads on validated head |
+| Durable active-state synchronization | COMPLETE |
+| Durable post-merge handoff | COMPLETE in this commit; final exact-head evidence required |
+| Final exact-head validation | PENDING |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -86,10 +86,10 @@ The implementation/test head immediately before this durable status synchronizat
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #299 is the sole active Draft delivery and is at the exact-head validation gate. |
-| What is already happening? | Manual next-action recheck/retry now preserve focus continuity across their transient loading replacement using the existing recovery mechanism. |
-| What has been validated? | The preceding PR #298 final head passed canonical run 765. PR #299 has not yet passed canonical validation on its current status head. |
-| What is next? | Inspect exact-head Application validation/reviews, repair any evidenced failure, then create the post-merge-safe handoff and complete lifecycle evidence. |
+| Where am I? | Stage 3; PR #299 implementation evidence passed and its post-merge-safe handoff is committed pending final exact-head evidence/lifecycle completion. |
+| What is already happening? | Manual next-action recheck/retry focus continuity is implemented and the implementation/status head has passed canonical validation. |
+| What has been validated? | PR #299 implementation/status head `b6fa90c42de2a1e43020c6550dfa7c6fadf0ed00` passed canonical run 768 with clean review/thread evidence. |
+| What is next? | Validate the exact handoff head, complete PR #299 lifecycle, then reconcile fresh `main` and select the next provider-independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -101,13 +101,12 @@ The system/data boundary remains unchanged: current logical collections and appl
 
 ## Next dependency-correct work
 
-1. inspect canonical Application validation on the exact PR #299 implementation/status head;
-2. inspect submitted reviews and inline review threads on that exact head;
-3. repair only evidenced in-scope failures/findings and re-run exact-head validation as required;
-4. once implementation-head evidence is clean, update the PR contract and commit the required post-merge-safe `STATUS.md` handoff;
-5. validate/audit that final handoff head, then apply `lifecycle:implementation-complete` and allow repository lifecycle/finalizer automation to complete the guarded merge;
-6. re-enter from fresh `main` after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run final canonical `npm run platform:validate` through Application validation on the exact PR #299 handoff head;
+2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
+3. add `lifecycle:implementation-complete` only when final exact-head evidence is clean;
+4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main` after merge, inspect repository/PR/branch/check state and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
