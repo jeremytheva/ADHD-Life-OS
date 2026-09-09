@@ -6,14 +6,14 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete PR #316, which removes decorative mode-banner icons from the accessibility tree while preserving explicit textual mode context.
+  objective: Repair PR #316 governance-state validation and complete the accessibility delivery on the same active branch.
   issue: null
   pr: 316
   branch: fix/mode-banner-decorative-icons
 next_actions:
-  - Run canonical Application validation on the exact synchronized PR #316 head.
-  - Audit submitted reviews and inline review threads on that exact head.
-  - Repair any in-scope finding on PR #316 rather than starting competing work.
+  - Re-run canonical Application validation after correcting STATUS.md validation-state vocabulary exposed by run 828.
+  - Audit submitted reviews and inline review threads on the repaired exact head.
+  - Repair any further in-scope finding on PR #316 rather than starting competing work.
   - Prepare the post-merge-safe durable handoff only after implementation-head evidence is clean.
   - Signal lifecycle:implementation-complete only after final exact-head validation/review evidence is clean.
   - Reconcile fresh main after merge and continue the next evidence-backed provider-independent Stage 3 slice.
@@ -25,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
-  ci: PENDING
-  runtime: UNVERIFIED
-validation_basis: PR #315 final exact-head Application validation run 826 passed on 8b179285b16bd075fede9a6eed48acb54cc143f5 with clean review/thread evidence and the repository lifecycle merged it into main at 315d55aaf4452ec10bd464fb21ac1bb64fa4c4c0. PR #316 is the new sole active delivery and requires fresh exact-head canonical validation.
+  governance: FAIL
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: FAIL
+  runtime: NOT_RUN
+validation_basis: Application validation run 828 on PR #316 head d6ff0402bfe9f777ecc4733758363a6b3e9725fc stopped at validate:governance because STATUS.md used unsupported PENDING validation values. The canonical state vocabulary permits PASS, FAIL, NOT_RUN, or NOT_APPLICABLE. No application lint, typecheck, deterministic tests, build, or Playwright evidence was produced by that run. This commit repairs durable validation state without changing the accessibility implementation.
 last_verified_commit: 8b179285b16bd075fede9a6eed48acb54cc143f5
-last_updated: 2026-09-10T05:20:00+10:00
+last_updated: 2026-09-10T06:12:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -48,9 +48,11 @@ last_updated: 2026-09-10T05:20:00+10:00
 
 PR #315 — `fix: announce project detail refresh state` — completed its repository-managed lifecycle after final exact-head Application validation run 826 passed on `8b179285b16bd075fede9a6eed48acb54cc143f5` with no submitted reviews or inline review threads. It merged into `main` at `315d55aaf4452ec10bd464fb21ac1bb64fa4c4c0`.
 
-PR #316 — `fix: hide decorative mode icons from assistive technology` — is the sole active Stage 3 delivery. Fresh-main inspection found that the Inbox and Housework mode-context banners already provide explicit textual mode context but still expose `currentMode.icon` separately to assistive technology. The implementation keeps the visible icons while adding `aria-hidden="true"` so screen readers receive the meaningful text without redundant decorative output.
+PR #316 — `fix: hide decorative mode icons from assistive technology` — remains the sole active Stage 3 delivery. Fresh-main inspection found that the Inbox and Housework mode-context banners already provide explicit textual mode context but still expose `currentMode.icon` separately to assistive technology. The implementation keeps the visible icons while adding `aria-hidden="true"` so screen readers receive the meaningful text without redundant decorative output.
 
 Focused deterministic coverage in `test/mode-context-banner-semantics.test.mjs` verifies both banners keep their textual context and hide only the decorative icon.
+
+Canonical Application validation run 828 failed before application checks because this STATUS front matter used unsupported `PENDING` values. Governance correctly rejected them; the allowed durable validation-state vocabulary is `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE`. This repair records run 828 as governance/CI failure and marks checks that never executed as `NOT_RUN`. The accessibility implementation itself is unchanged.
 
 No provider, persistence, authentication, routing, mode-selection, task/chore mutation, retry-policy, execution-policy or scheduling-policy contract changed.
 
@@ -58,8 +60,8 @@ No provider, persistence, authentication, routing, mode-selection, task/chore mu
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #316 exact-head validation pending |
-| Gate state | Implementation and deterministic regression coverage committed; canonical evidence pending |
+| Current gate | INTEGRATION — PR #316 governance repair requires fresh exact-head validation |
+| Gate state | Accessibility implementation and focused regression coverage committed; run 828 exposed and this commit repairs invalid durable validation-state vocabulary |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -73,8 +75,9 @@ No provider, persistence, authentication, routing, mode-selection, task/chore mu
 | Implemented change | Hide decorative Inbox/Housework mode icons from the accessibility tree while preserving visible iconography and textual mode context |
 | Deterministic coverage | New focused `mode-context-banner-semantics` regression test |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | PENDING |
-| Review audit | PENDING |
+| Validation finding | Run 828 failed at governance because STATUS.md used unsupported `PENDING` validation values; corrected in this commit |
+| Implementation-head validation | FAIL on prior head; fresh validation required on repaired head |
+| Review audit | PENDING outside canonical STATUS validation vocabulary; GitHub review state to be audited on repaired head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -83,9 +86,9 @@ No provider, persistence, authentication, routing, mode-selection, task/chore mu
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 with PR #316 as the sole active provider-independent accessibility delivery. |
-| What is already happening? | Decorative mode icons in Inbox and Housework have been hidden from assistive technology and focused regression coverage has been added. |
-| What has been validated? | PR #315 final exact-head evidence passed and merged; PR #316 canonical validation has not yet completed. |
-| What is next? | Validate the exact PR #316 head, repair any in-scope finding, then prepare the post-merge-safe handoff and complete lifecycle evidence. |
+| What is already happening? | Decorative mode icons in Inbox and Housework have been hidden from assistive technology; run 828 exposed an invalid STATUS validation-state value that is now repaired. |
+| What has been validated? | PR #315 final exact-head evidence passed and merged. PR #316 run 828 stopped at governance before application checks; fresh exact-head evidence is required. |
+| What is next? | Re-run canonical validation on the repaired PR #316 head, audit review/thread state, then prepare the post-merge-safe handoff and complete lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -97,7 +100,7 @@ The system/data boundary remains unchanged: physical NoCodeBackend routes/method
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through Application validation on the exact synchronized PR #316 head;
+1. run canonical `npm run platform:validate` through Application validation on the repaired exact PR #316 head;
 2. audit submitted reviews and inline review threads and repair any in-scope finding on the same PR;
 3. after implementation-head evidence is clean, commit a post-merge-safe `STATUS.md` handoff;
 4. validate and audit that final handoff head;
