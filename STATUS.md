@@ -6,17 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete final exact-head lifecycle evidence for the Project Detail refresh-status accessibility delivery, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
+  objective: Validate and complete PR #316, which removes decorative mode-banner icons from the accessibility tree while preserving explicit textual mode context.
   issue: null
-  pr: null
-  branch: null
+  pr: 316
+  branch: fix/mode-banner-decorative-icons
 next_actions:
-  - Run final exact-head Application validation on this post-merge-safe handoff commit.
-  - Audit submitted reviews and inline review threads on the exact handoff head.
-  - Repair any in-scope validation or review finding on PR #315 rather than starting competing work.
-  - Signal lifecycle:implementation-complete only when final exact-head evidence is clean.
-  - Allow repository lifecycle automation and merge finalizer to complete Ready/Mergeable/Merged transitions.
-  - Reconcile fresh main after merge and inspect repository/GitHub state before selecting the next provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Run canonical Application validation on the exact synchronized PR #316 head.
+  - Audit submitted reviews and inline review threads on that exact head.
+  - Repair any in-scope finding on PR #316 rather than starting competing work.
+  - Prepare the post-merge-safe durable handoff only after implementation-head evidence is clean.
+  - Signal lifecycle:implementation-complete only after final exact-head validation/review evidence is clean.
+  - Reconcile fresh main after merge and continue the next evidence-backed provider-independent Stage 3 slice.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -25,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: PENDING
+  lint: PENDING
+  typecheck: PENDING
+  tests: PENDING
+  build: PENDING
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #315 synchronized implementation/status head 7bbf6d8b4cd44f4d91a1fc849f191ed26cf4815d passed canonical Application validation run 825 with no submitted reviews or inline review threads. This post-merge-safe STATUS handoff creates a new head and therefore requires fresh final exact-head evidence before lifecycle completion.
-last_verified_commit: 7bbf6d8b4cd44f4d91a1fc849f191ed26cf4815d
-last_updated: 2026-09-10T04:10:00+10:00
+validation_basis: PR #315 final exact-head Application validation run 826 passed on 8b179285b16bd075fede9a6eed48acb54cc143f5 with clean review/thread evidence and the repository lifecycle merged it into main at 315d55aaf4452ec10bd464fb21ac1bb64fa4c4c0. PR #316 is the new sole active delivery and requires fresh exact-head canonical validation.
+last_verified_commit: 8b179285b16bd075fede9a6eed48acb54cc143f5
+last_updated: 2026-09-10T05:20:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,22 +46,20 @@ last_updated: 2026-09-10T04:10:00+10:00
 
 ## Current objective
 
-PR #314 — `fix: preserve task context on refresh failure` — completed its repository-managed lifecycle and merged into `main` at `83f6d4d993ae90cb004f14befb7da8e69a478879` after final exact-head Application validation run 823 passed with a clean review/thread audit.
+PR #315 — `fix: announce project detail refresh state` — completed its repository-managed lifecycle after final exact-head Application validation run 826 passed on `8b179285b16bd075fede9a6eed48acb54cc143f5` with no submitted reviews or inline review threads. It merged into `main` at `315d55aaf4452ec10bd464fb21ac1bb64fa4c4c0`.
 
-PR #315 — `fix: announce project detail refresh state` — is the current lifecycle delivery. `ProjectDetailView` already preserved the established project surface while fetching/reloading details, but those asynchronous loads were silent to assistive technology. The implementation marks the existing dialog `aria-busy` while detail data is in flight and provides a polite screen-reader status distinguishing the first detail load from later refreshes.
+PR #316 — `fix: hide decorative mode icons from assistive technology` — is the sole active Stage 3 delivery. Fresh-main inspection found that the Inbox and Housework mode-context banners already provide explicit textual mode context but still expose `currentMode.icon` separately to assistive technology. The implementation keeps the visible icons while adding `aria-hidden="true"` so screen readers receive the meaningful text without redundant decorative output.
 
-The existing content, focused load/mutation recovery, project/task mutation behavior, retry behavior and provider calls remain unchanged. Existing `project-detail-task-list-semantics` deterministic coverage was extended in place. Canonical Application validation run 825 passed on exact synchronized implementation/status head `7bbf6d8b4cd44f4d91a1fc849f191ed26cf4815d`, with no submitted reviews or inline review threads.
+Focused deterministic coverage in `test/mode-context-banner-semantics.test.mjs` verifies both banners keep their textual context and hide only the decorative icon.
 
-This commit is the required post-merge-safe durable handoff. It intentionally removes PR #315 and its branch as the future default-branch re-entry target. Because the STATUS change creates a new head, final exact-head Application validation and review/thread audit are required before implementation-complete signalling.
-
-No provider, persistence, authentication, routing, project/task mutation, retry-policy, execution-policy or scheduling-policy contract changed.
+No provider, persistence, authentication, routing, mode-selection, task/chore mutation, retry-policy, execution-policy or scheduling-policy contract changed.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — durable handoff requires final exact-head evidence |
-| Gate state | Implementation-head canonical validation and review audit PASS; final handoff-head evidence pending |
+| Current gate | INTEGRATION — PR #316 exact-head validation pending |
+| Gate state | Implementation and deterministic regression coverage committed; canonical evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -70,16 +68,13 @@ No provider, persistence, authentication, routing, project/task mutation, retry-
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #314 — Tasks refresh-failure continuity; merged at `83f6d4d993ae90cb004f14befb7da8e69a478879` |
-| Active delivery after handoff | None recorded as durable future re-entry target; PR #315 is expected to complete lifecycle before fresh-main continuation |
-| Implemented change | Project Detail dialog exposes busy state and polite first-load/refresh announcements while established content remains mounted |
-| Deterministic coverage | Existing `project-detail-task-list-semantics` suite extended in place |
+| Latest merged delivery | PR #315 — Project Detail refresh-state announcements; merged at `315d55aaf4452ec10bd464fb21ac1bb64fa4c4c0` |
+| Active delivery | PR #316 / `fix/mode-banner-decorative-icons` |
+| Implemented change | Hide decorative Inbox/Housework mode icons from the accessibility tree while preserving visible iconography and textual mode context |
+| Deterministic coverage | New focused `mode-context-banner-semantics` regression test |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | PASS — Application validation run 825 on `7bbf6d8b4cd44f4d91a1fc849f191ed26cf4815d` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads on validated head |
-| Durable active-state synchronization | COMPLETE |
-| Durable post-merge handoff | COMPLETE in this commit; final exact-head evidence required |
-| Final exact-head validation | NOT RUN on this handoff head |
+| Implementation-head validation | PENDING |
+| Review audit | PENDING |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -87,27 +82,28 @@ No provider, persistence, authentication, routing, project/task mutation, retry-
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #315 implementation evidence passed and its post-merge-safe handoff is committed pending final exact-head evidence/lifecycle completion. |
-| What is already happening? | Project Detail retains its established surface and now exposes accessible busy/loading/refresh semantics during detail fetches. |
-| What has been validated? | Synchronized implementation/status head `7bbf6d8b4cd44f4d91a1fc849f191ed26cf4815d` passed canonical run 825 with clean review/thread evidence. |
-| What is next? | Validate the exact handoff head, complete the current PR lifecycle, then reconcile fresh `main` and select the next provider-independent Stage 3 slice. |
+| Where am I? | Stage 3 with PR #316 as the sole active provider-independent accessibility delivery. |
+| What is already happening? | Decorative mode icons in Inbox and Housework have been hidden from assistive technology and focused regression coverage has been added. |
+| What has been validated? | PR #315 final exact-head evidence passed and merged; PR #316 canonical validation has not yet completed. |
+| What is next? | Validate the exact PR #316 head, repair any in-scope finding, then prepare the post-merge-safe handoff and complete lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #315 is a provider-independent client-side accessibility/transient-state repair. It does not alter provider contracts, physical schemas, remote operations, persisted domain shapes, authentication, authorization, project/task mutation semantics, generic execution policy, scheduling policy or retry policy.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #316 is a provider-independent client-side accessibility repair. It does not alter provider contracts, physical schemas, remote operations, persisted domain shapes, authentication, authorization, generic execution policy, scheduling policy or retry policy.
 
 The system/data boundary remains unchanged: physical NoCodeBackend routes/methods/filtering/envelopes and generic execution-session persistence must not be treated as verified until real target-instance certification evidence exists.
 
 ## Next dependency-correct work
 
-1. run final canonical `npm run platform:validate` through Application validation on the exact current handoff head;
-2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
-3. add `lifecycle:implementation-complete` only when final exact-head evidence is clean;
-4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main` after merge, inspect repository/PR/branch/check state and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical `npm run platform:validate` through Application validation on the exact synchronized PR #316 head;
+2. audit submitted reviews and inline review threads and repair any in-scope finding on the same PR;
+3. after implementation-head evidence is clean, commit a post-merge-safe `STATUS.md` handoff;
+4. validate and audit that final handoff head;
+5. add `lifecycle:implementation-complete` only when exact-head evidence is clean and allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+6. re-enter from fresh `main` and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
