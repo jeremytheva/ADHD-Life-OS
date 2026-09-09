@@ -205,10 +205,12 @@ test('task failures preserve create input and distinguish load failure from empt
 
   mock.failNextTaskLoad()
   await page.getByRole('button', { name: 'Due Today' }).click()
-  await expect(page.getByRole('heading', { name: 'We couldn’t load your tasks' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'We couldn’t refresh your tasks' })).toBeVisible()
+  await expect(taskCardHeading(page, taskTitle)).toBeVisible()
   await expect(page.getByText('No tasks found')).toHaveCount(0)
 
   await page.getByRole('button', { name: 'Try again' }).click()
+  await expect(page.getByRole('heading', { name: 'We couldn’t refresh your tasks' })).toHaveCount(0)
   await expect(page.getByText('No tasks found')).toBeVisible()
   await page.getByRole('button', { name: 'All Tasks' }).click()
   await expect(taskCardHeading(page, taskTitle)).toBeVisible()

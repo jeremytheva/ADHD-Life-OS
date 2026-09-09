@@ -255,7 +255,7 @@ const TaskList = () => {
     )
   }
 
-  if (loadError) {
+  if (loadError && (!hasLoaded || loadError === 'preferences')) {
     return (
       <div className="p-6">
         <LoadErrorState
@@ -273,6 +273,14 @@ const TaskList = () => {
         <p className="sr-only" role="status" aria-live="polite">
           Refreshing tasks...
         </p>
+      )}
+
+      {loadError === 'tasks' && hasLoaded && !operationError && (
+        <LoadErrorState
+          title="We couldn’t refresh your tasks"
+          message="Your current task list is still shown and may be out of date. Check your connection and try again."
+          onRetry={loadTasks}
+        />
       )}
 
       {currentMode.id !== 'all' && (
