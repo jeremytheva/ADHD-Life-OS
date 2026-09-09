@@ -153,7 +153,7 @@ const RoutineList = () => {
     )
   }
 
-  if (loadError) {
+  if (loadError && !hasLoaded) {
     return (
       <div className="p-6">
         <LoadErrorState
@@ -171,6 +171,14 @@ const RoutineList = () => {
         <p className="sr-only" role="status" aria-live="polite">
           Refreshing routines...
         </p>
+      )}
+
+      {loadError && hasLoaded && !operationError && (
+        <LoadErrorState
+          title="We couldn’t refresh your routines"
+          message="Your current routine list is still shown and may be out of date. Check your connection and try again."
+          onRetry={loadRoutines}
+        />
       )}
 
       <OperationErrorState
