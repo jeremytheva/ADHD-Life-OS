@@ -17,6 +17,15 @@ test('shared operation error state is accessible, focused, and dismissible', asy
   assert.match(source, />\s*Dismiss\s*</)
 })
 
+test('brain inbox mutations use shared focused recovery without discarding retry context', async () => {
+  const source = await read('src/components/inbox/BrainInbox.jsx')
+  assert.match(source, /import OperationErrorState from '\.\.\/\.\.\/common\/OperationErrorState'/)
+  assert.match(source, /We couldn’t save that thought\. It is still in the input box so you can try again/)
+  assert.match(source, /We couldn’t save that edit\. Your edited text is still here so you can try again/)
+  assert.match(source, /It remains in your inbox so you can try again/)
+  assert.match(source, /<OperationErrorState message=\{operationError\} onDismiss=\{\(\) => setOperationError\(''\)\} \/>/)
+})
+
 test('routine mutations surface failures without closing recovery context', async () => {
   const source = await read('src/components/routines/RoutineList.jsx')
   assert.match(source, /const \[operationError, setOperationError\] = useState\(''\)/)
