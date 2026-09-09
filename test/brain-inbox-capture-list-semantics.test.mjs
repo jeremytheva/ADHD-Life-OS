@@ -13,3 +13,12 @@ test('Brain Inbox exposes captured thoughts as one labelled semantic list', asyn
   assert.match(source, /<motion\.div\s+role="listitem"\s+key=\{item\.id\}/)
   assert.match(source, /aria-hidden="true"\s+className="flex items-center justify-center w-6 h-6 bg-purple-100/)
 })
+
+test('deleting a captured thought returns focus to the persistent capture input', async () => {
+  const source = await read('src/components/inbox/BrainInbox.jsx')
+
+  assert.match(source, /const inputRef = useRef\(null\)/)
+  assert.match(source, /ref=\{inputRef\}/)
+  assert.match(source, /const handleDeleteItem = async \(id\) => \{[\s\S]*?setItems\(prev => prev\.filter\(item => item\.id !== id\)\)\s*inputRef\.current\?\.focus\(\)/)
+  assert.match(source, /onClick=\{\(\) => handleDeleteItem\(item\.id\)\}/)
+})

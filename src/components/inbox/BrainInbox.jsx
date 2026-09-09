@@ -69,6 +69,7 @@ const BrainInbox = () => {
       setOperationError('')
       await inboxService.deleteInboxItem(id)
       setItems(prev => prev.filter(item => item.id !== id))
+      inputRef.current?.focus()
     } catch (error) {
       console.error('Error deleting item:', error)
       setOperationError('We couldn’t delete that inbox item. It has been left in your inbox.')
