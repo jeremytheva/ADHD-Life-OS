@@ -116,7 +116,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
     )
   }
 
-  if (loadError) {
+  if (loadError && !hasLoaded) {
     return (
       <LoadErrorState
         title="We couldn’t load your chores"
@@ -168,6 +168,14 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
           </div>
         )}
       </div>
+
+      {loadError && hasLoaded && !operationError && (
+        <LoadErrorState
+          title="We couldn’t refresh your chores"
+          message="Your current chore list is still shown and may be out of date. Check your connection and try again."
+          onRetry={retryLoad}
+        />
+      )}
 
       <OperationErrorState message={operationError} onDismiss={() => setOperationError(null)} />
 
