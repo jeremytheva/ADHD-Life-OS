@@ -8,7 +8,8 @@ const routineListSource = readFileSync(
   'utf8'
 );
 
-test('Routine list loading state is announced without exposing its decorative spinner', () => {
+test('Routine list initial loading state is announced without exposing its decorative spinner', () => {
+  assert.match(routineListSource, /if \(loading && !hasLoaded\)/);
   assert.match(routineListSource, /Loading routines\.\.\./);
   assert.match(routineListSource, /role="status"/);
   assert.match(routineListSource, /aria-live="polite"/);
@@ -18,4 +19,9 @@ test('Routine list loading state is announced without exposing its decorative sp
     routineListSource,
     /aria-hidden="true"[\s\S]*?animate-spin[\s\S]*?Loading routines\.\.\./
   );
+});
+
+test('Routine list subsequent refresh preserves the established interactive surface', () => {
+  assert.match(routineListSource, /className="p-6 space-y-6" aria-busy=\{loading\}/);
+  assert.match(routineListSource, /Refreshing routines\.\.\./);
 });

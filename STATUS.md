@@ -13,7 +13,7 @@ current_work:
 next_actions:
   - Run final exact-head Application validation on this post-merge-safe handoff commit.
   - Audit submitted reviews and inline review threads on the exact handoff head.
-  - Repair any in-scope validation or review finding on PR #306 rather than starting competing work.
+  - Repair any in-scope validation or review finding on PR #307 rather than starting competing work.
   - Signal lifecycle:implementation-complete only when final exact-head evidence is clean.
   - Allow repository lifecycle automation and merge finalizer to complete Ready/Mergeable/Merged transitions.
   - Reconcile fresh main after merge and inspect repository/GitHub state before selecting the next provider-independent Stage 3 accessibility or interaction-integrity slice.
@@ -32,9 +32,9 @@ validation:
   build: PASS
   ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #306 implementation/status head 598c82e11f4147f8b8a05ddbde4c5bcebbf7572a passed canonical Application validation run 792 with no submitted reviews or inline review threads. This post-merge-safe STATUS handoff creates a new head and therefore requires fresh final exact-head evidence before lifecycle completion.
-last_verified_commit: 598c82e11f4147f8b8a05ddbde4c5bcebbf7572a
-last_updated: 2026-09-09T19:51:00+10:00
+validation_basis: PR #307 implementation/status head 970720cc51c6541dc1eb5e325bd354ffe072c550 passed canonical Application validation run 795 with no submitted reviews or inline review threads. This post-merge-safe STATUS handoff creates a new head and therefore requires fresh final exact-head evidence before lifecycle completion.
+last_verified_commit: 970720cc51c6541dc1eb5e325bd354ffe072c550
+last_updated: 2026-09-09T20:12:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,15 +46,15 @@ last_updated: 2026-09-09T19:51:00+10:00
 
 ## Current objective
 
-PR #305 — `fix: preserve chore focus during refresh` — completed its repository-managed lifecycle before this delivery began. Fresh reconciliation found no competing open delivery PRs.
+PR #306 — `fix: preserve project focus during refresh` — completed its repository-managed lifecycle and merged into `main` at `5f45dc1938ccd1c2e48fdca2ac343fc3a3c0b863`. Fresh reconciliation found no competing open delivery PRs before the next Stage 3 slice began.
 
-The current delivery is PR #306 — `fix: preserve project focus during refresh`. `ProjectsList` previously used the same full loading replacement for its initial load and every later `loadProjects()` call. Mutation reconciliation and `ProjectDetailView` updates could therefore unmount the established Projects surface, including the initiating keyboard context, while a refresh was in flight.
+The current delivery is PR #307 — `fix: preserve routine focus during refresh`. `RoutineList` previously used the same full loading replacement for its initial load and every later `loadRoutines()` call. Create, template apply, update, delete and completion reconciliation could therefore unmount the established Routines surface, including the initiating keyboard context, while refresh work was in flight.
 
-PR #306 now distinguishes the initial load from subsequent refreshes. A successful first project load records `hasLoaded`; after that point the established Projects surface remains mounted while refresh work is in progress. The surface exposes `aria-busy={loading}` and a polite screen-reader `Refreshing projects...` status. The existing full initial loading card and shared load-error recovery remain unchanged.
+PR #307 distinguishes the initial load from subsequent refreshes. A successful first routine load records `hasLoaded`; after that point the established Routines surface remains mounted during later refresh work. The surface exposes `aria-busy={loading}` and a polite screen-reader `Refreshing routines...` status. The existing initial loading card and shared `LoadErrorState` recovery remain unchanged.
 
-Existing `test/projects-loading-status-semantics.test.mjs` coverage is extended in place to protect the initial-load guard, mounted-refresh contract, busy state and refresh announcement. No duplicate test infrastructure was introduced.
+Existing `test/routine-list-loading-status-semantics.test.mjs` coverage is extended in place to protect the initial-load guard, mounted-refresh contract, busy state and refresh announcement. No duplicate test infrastructure was introduced.
 
-Canonical Application validation run 792 passed on exact implementation/status head `598c82e11f4147f8b8a05ddbde4c5bcebbf7572a`. Submitted reviews and inline review threads were both empty on that validated head. This STATUS change is the required durable post-merge-safe handoff; because it creates a new commit, final exact-head validation and review evidence must pass before implementation-complete signalling.
+Canonical Application validation run 795 passed on exact implementation/status head `970720cc51c6541dc1eb5e325bd354ffe072c550`. Submitted reviews and inline review threads were both empty on that validated head. This STATUS change is the required durable post-merge-safe handoff; because it creates a new commit, final exact-head validation and review evidence must pass before implementation-complete signalling.
 
 After the current delivery merges, re-enter from fresh `main`, inspect repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity gap. Do not resume generic durable execution persistence without real target-instance NoCodeBackend certification evidence.
 
@@ -72,12 +72,12 @@ After the current delivery merges, re-enter from fresh `main`, inspect repositor
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #305 — Chore refresh focus continuity |
-| Active delivery after handoff | None recorded as durable future re-entry target; PR #306 is expected to complete lifecycle before fresh-main continuation |
-| Implemented change | Keep the Projects surface mounted during post-initial refreshes; expose refresh busy/status semantics without deliberately moving focus |
-| Deterministic coverage | Existing Projects loading-status semantics test extended in place |
+| Latest merged delivery | PR #306 — Projects refresh focus continuity; merged at `5f45dc1938ccd1c2e48fdca2ac343fc3a3c0b863` |
+| Active delivery after handoff | None recorded as durable future re-entry target; PR #307 is expected to complete lifecycle before fresh-main continuation |
+| Implemented change | Keep the Routines surface mounted during post-initial refreshes; expose refresh busy/status semantics without deliberately moving focus |
+| Deterministic coverage | Existing Routine list loading-status semantics test extended in place |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | PASS — Application validation run 792 on `598c82e11f4147f8b8a05ddbde4c5bcebbf7572a` |
+| Implementation-head validation | PASS — Application validation run 795 on `970720cc51c6541dc1eb5e325bd354ffe072c550` |
 | Implementation-head review audit | PASS — no submitted reviews or inline review threads on validated head |
 | Durable active-state synchronization | COMPLETE |
 | Durable post-merge handoff | COMPLETE in this commit; final exact-head evidence required |
@@ -90,15 +90,15 @@ After the current delivery merges, re-enter from fresh `main`, inspect repositor
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; the current delivery implementation evidence passed and its post-merge-safe handoff is committed pending final exact-head evidence/lifecycle completion. |
-| What is already happening? | Projects post-initial refresh continuity is implemented and the implementation/status head has passed canonical validation. |
-| What has been validated? | Implementation/status head `598c82e11f4147f8b8a05ddbde4c5bcebbf7572a` passed canonical run 792 with clean review/thread evidence. |
+| What is already happening? | Routines post-initial refresh continuity is implemented and the implementation/status head has passed canonical validation. |
+| What has been validated? | Implementation/status head `970720cc51c6541dc1eb5e325bd354ffe072c550` passed canonical run 795 with clean review/thread evidence. |
 | What is next? | Validate the exact handoff head, complete the current PR lifecycle, then reconcile fresh `main` and select the next provider-independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #306 is a provider-independent client-side interaction-continuity repair. It does not alter provider contracts, physical schemas, remote operations, persisted domain shapes, authentication, authorization, project mutation policy, project-detail recovery policy, generic execution policy or retry policy.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #307 is a provider-independent client-side interaction-continuity repair. It does not alter provider contracts, physical schemas, remote operations, persisted domain shapes, authentication, authorization, routine mutation policy, routine session policy, generic execution policy or retry policy.
 
 The system/data boundary remains unchanged: physical NoCodeBackend routes/methods/filtering/envelopes and generic execution-session persistence must not be treated as verified until real target-instance certification evidence exists.
 
