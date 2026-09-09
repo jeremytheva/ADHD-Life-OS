@@ -121,6 +121,7 @@ const SidebarContent = ({
       <button
         type="button"
         onClick={onOpenRewardShop}
+        aria-label={`Open Reward Shop. ${currency.coins} coins`}
         className="w-full bg-gradient-to-br from-yellow-50 to-amber-50 rounded-lg p-3 border border-yellow-200 hover:shadow-md transition-all"
       >
         <div className="flex items-center justify-between">
