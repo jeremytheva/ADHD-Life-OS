@@ -6,17 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Repair PR #316 runtime-state governance validation and complete the accessibility delivery on the same active branch.
+  objective: Complete final exact-head lifecycle evidence for the mode-banner decorative-icon accessibility delivery, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
   issue: null
-  pr: 316
-  branch: fix/mode-banner-decorative-icons
+  pr: null
+  branch: null
 next_actions:
-  - Re-run canonical Application validation after correcting the runtime-state vocabulary exposed by run 829.
-  - Audit submitted reviews and inline review threads on the repaired exact head.
-  - Repair any further in-scope finding on PR #316 rather than starting competing work.
-  - Prepare the post-merge-safe durable handoff only after implementation-head evidence is clean.
-  - Signal lifecycle:implementation-complete only after final exact-head validation/review evidence is clean.
-  - Reconcile fresh main after merge and continue the next evidence-backed provider-independent Stage 3 slice.
+  - Run final exact-head Application validation on this post-merge-safe handoff commit.
+  - Audit submitted reviews and inline review threads on the exact handoff head.
+  - Repair any in-scope validation or review finding on PR #316 rather than starting competing work.
+  - Signal lifecycle:implementation-complete only when final exact-head evidence is clean.
+  - Allow repository lifecycle automation and merge finalizer to complete Ready/Mergeable/Merged transitions.
+  - Reconcile fresh main after merge and inspect repository/GitHub state before selecting the next provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -25,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: FAIL
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: FAIL
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: Application validation run 829 on PR #316 head c4b7bc2ab94c14b789afd4bf0cdc918e03f7da40 stopped at validate:governance because STATUS.md recorded runtime as NOT_RUN. Repository governance defines runtime separately as VERIFIED, UNVERIFIED, or NOT_APPLICABLE. No application lint, typecheck, deterministic tests, build, or Playwright evidence was produced by run 829. This commit corrects durable runtime state to UNVERIFIED without changing the accessibility implementation.
-last_verified_commit: 8b179285b16bd075fede9a6eed48acb54cc143f5
-last_updated: 2026-09-10T07:12:00+10:00
+validation_basis: PR #316 synchronized implementation/status head 3b0452b8e1d8efca450ea2f7800f9fccde34e5ff passed canonical Application validation run 830 with no submitted reviews or inline review threads. This post-merge-safe STATUS handoff creates a new head and therefore requires fresh final exact-head evidence before lifecycle completion.
+last_verified_commit: 3b0452b8e1d8efca450ea2f7800f9fccde34e5ff
+last_updated: 2026-09-10T07:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,13 +46,15 @@ last_updated: 2026-09-10T07:12:00+10:00
 
 ## Current objective
 
-PR #315 — `fix: announce project detail refresh state` — completed its repository-managed lifecycle after final exact-head Application validation run 826 passed on `8b179285b16bd075fede9a6eed48acb54cc143f5` with no submitted reviews or inline review threads. It merged into `main` at `315d55aaf4452ec10bd464fb21ac1bb64fa4c4c0`.
+PR #315 — `fix: announce project detail refresh state` — completed its repository-managed lifecycle and merged into `main` at `315d55aaf4452ec10bd464fb21ac1bb64fa4c4c0` after final exact-head Application validation run 826 passed with a clean review/thread audit.
 
-PR #316 — `fix: hide decorative mode icons from assistive technology` — remains the sole active Stage 3 delivery. Fresh-main inspection found that the Inbox and Housework mode-context banners already provide explicit textual mode context but still expose `currentMode.icon` separately to assistive technology. The implementation keeps the visible icons while adding `aria-hidden="true"` so screen readers receive the meaningful text without redundant decorative output.
+PR #316 — `fix: hide decorative mode icons from assistive technology` — is the current lifecycle delivery. Inbox and Housework mode-context banners already provide explicit textual mode context; the implementation keeps their visible `currentMode.icon` values while marking those decorative icons `aria-hidden="true"` so assistive technology receives the meaningful textual context without redundant icon output.
 
-Focused deterministic coverage in `test/mode-context-banner-semantics.test.mjs` verifies both banners keep their textual context and hide only the decorative icon.
+Focused deterministic coverage in `test/mode-context-banner-semantics.test.mjs` verifies both banners preserve their visible/textual mode context while hiding only the decorative icon from the accessibility tree.
 
-Canonical Application validation run 828 first exposed invalid general validation-state vocabulary in this STATUS front matter. The first repair correctly moved governance/lint/typecheck/tests/build/CI fields into their allowed state vocabulary but incorrectly treated `runtime` the same way. Run 829 then stopped at governance because runtime has a distinct vocabulary: `VERIFIED`, `UNVERIFIED`, or `NOT_APPLICABLE`. This commit records runtime as `UNVERIFIED`, which matches the repository's actual provider/runtime evidence. The accessibility implementation itself is unchanged.
+Application validation runs 828 and 829 exposed two durable STATUS vocabulary defects before application validation could begin. Both were repaired in scope on the same PR. Canonical Application validation run 830 then passed on exact synchronized implementation/status head `3b0452b8e1d8efca450ea2f7800f9fccde34e5ff`, and the submitted-review/inline-thread audit was clean.
+
+This commit is the required post-merge-safe durable handoff. It intentionally removes PR #316 and its branch as the future default-branch re-entry target. Because the STATUS change creates a new head, final exact-head Application validation and review/thread audit are required before implementation-complete signalling.
 
 No provider, persistence, authentication, routing, mode-selection, task/chore mutation, retry-policy, execution-policy or scheduling-policy contract changed.
 
@@ -60,8 +62,8 @@ No provider, persistence, authentication, routing, mode-selection, task/chore mu
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #316 governance repair requires fresh exact-head validation |
-| Gate state | Accessibility implementation and focused regression coverage committed; runs 828 and 829 exposed durable STATUS vocabulary defects now repaired on the active branch |
+| Current gate | INTEGRATION — durable handoff requires final exact-head evidence |
+| Gate state | Implementation-head canonical validation and review audit PASS; final handoff-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -71,13 +73,15 @@ No provider, persistence, authentication, routing, mode-selection, task/chore mu
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #315 — Project Detail refresh-state announcements; merged at `315d55aaf4452ec10bd464fb21ac1bb64fa4c4c0` |
-| Active delivery | PR #316 / `fix/mode-banner-decorative-icons` |
+| Active delivery after handoff | None recorded as durable future re-entry target; PR #316 is expected to complete lifecycle before fresh-main continuation |
 | Implemented change | Hide decorative Inbox/Housework mode icons from the accessibility tree while preserving visible iconography and textual mode context |
-| Deterministic coverage | New focused `mode-context-banner-semantics` regression test |
+| Deterministic coverage | Focused `mode-context-banner-semantics` regression test |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Validation finding | Run 829 failed at governance because STATUS.md used invalid `runtime: NOT_RUN`; corrected to the evidence-accurate `UNVERIFIED` state in this commit |
-| Implementation-head validation | FAIL on prior head; fresh validation required on repaired head |
-| Review audit | Pending GitHub audit on repaired exact head |
+| Implementation-head validation | PASS — Application validation run 830 on `3b0452b8e1d8efca450ea2f7800f9fccde34e5ff` |
+| Implementation-head review audit | PASS — no submitted reviews or inline review threads on validated head |
+| Durable active-state synchronization | COMPLETE |
+| Durable post-merge handoff | COMPLETE in this commit; final exact-head evidence required |
+| Final exact-head validation | NOT RUN on this handoff head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -85,10 +89,10 @@ No provider, persistence, authentication, routing, mode-selection, task/chore mu
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 with PR #316 as the sole active provider-independent accessibility delivery. |
-| What is already happening? | Decorative mode icons in Inbox and Housework have been hidden from assistive technology; run 829 exposed the remaining invalid STATUS runtime-state value, now repaired. |
-| What has been validated? | PR #315 final exact-head evidence passed and merged. PR #316 runs 828 and 829 stopped at governance before application checks; fresh exact-head evidence is required. |
-| What is next? | Re-run canonical validation on the repaired PR #316 head, audit review/thread state, then prepare the post-merge-safe handoff and complete lifecycle evidence. |
+| Where am I? | Stage 3; PR #316 implementation evidence passed and its post-merge-safe handoff is committed pending final exact-head evidence/lifecycle completion. |
+| What is already happening? | Inbox and Housework mode-context banners retain their visual icons while decorative icon output is removed from the accessibility tree. |
+| What has been validated? | Synchronized implementation/status head `3b0452b8e1d8efca450ea2f7800f9fccde34e5ff` passed canonical run 830 with clean review/thread evidence. |
+| What is next? | Validate the exact handoff head, complete the current PR lifecycle, then reconcile fresh `main` and select the next provider-independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -100,13 +104,12 @@ The system/data boundary remains unchanged: physical NoCodeBackend routes/method
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through Application validation on the repaired exact PR #316 head;
-2. audit submitted reviews and inline review threads and repair any in-scope finding on the same PR;
-3. after implementation-head evidence is clean, commit a post-merge-safe `STATUS.md` handoff;
-4. validate and audit that final handoff head;
-5. add `lifecycle:implementation-complete` only when exact-head evidence is clean and allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-6. re-enter from fresh `main` and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run final canonical `npm run platform:validate` through Application validation on the exact current handoff head;
+2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
+3. add `lifecycle:implementation-complete` only when final exact-head evidence is clean;
+4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main` after merge, inspect repository/PR/branch/check state and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
