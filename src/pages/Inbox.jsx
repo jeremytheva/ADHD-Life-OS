@@ -16,7 +16,7 @@ const Inbox = () => {
           className={`bg-gradient-to-r ${currentMode.gradient} text-white rounded-lg p-4 mb-6`}
         >
           <div className="flex items-center gap-3">
-            <span className="text-2xl">{currentMode.icon}</span>
+            <span className="text-2xl" aria-hidden="true">{currentMode.icon}</span>
             <div>
               <div className="font-medium">
                 {currentMode.label} Mode Active
