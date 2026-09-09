@@ -18,7 +18,7 @@ const TemplatePreview = ({ template, onClose, onDirectApply, onEditBeforeApply, 
       <motion.div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={dialogTitleId} aria-busy={isApplying} tabIndex={-1} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
         <div className="flex items-start justify-between p-6 border-b border-slate-200">
           <div className="flex items-start gap-4 flex-1">
-            <div className={`p-3 rounded-lg ${isRoutine ? 'bg-purple-100' : 'bg-green-100'}`}><SafeIcon icon={isRoutine ? FiRefreshCw : FiCheckSquare} className={`w-6 h-6 ${isRoutine ? 'text-purple-600' : 'text-green-600'}`} /></div>
+            <div className={`p-3 rounded-lg ${isRoutine ? 'bg-purple-100' : 'bg-green-100'}`}><SafeIcon icon={isRoutine ? FiRefreshCw : FiCheckSquare} className={`w-6 h-6 ${isRoutine ? 'text-purple-600' : 'text-green-600'}`} aria-hidden="true" /></div>
             <div className="flex-1"><h3 id={dialogTitleId} className="text-xl font-bold text-slate-900 mb-1">{isRoutine ? template.name : template.title}</h3><p className="text-slate-600">{template.description}</p></div>
           </div>
           <button type="button" onClick={safeClose} disabled={isApplying} aria-label="Close template preview" className="p-2 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-50"><SafeIcon icon={FiX} className="w-5 h-5" aria-hidden="true" /></button>
