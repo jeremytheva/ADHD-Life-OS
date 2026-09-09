@@ -18,6 +18,7 @@ const RoutineList = () => {
   const { currentMode, filterByMode } = useMode()
   const [routines, setRoutines] = useState([])
   const [loading, setLoading] = useState(true)
+  const [hasLoaded, setHasLoaded] = useState(false)
   const [loadError, setLoadError] = useState(false)
   const [operationError, setOperationError] = useState('')
   const [showForm, setShowForm] = useState(false)
@@ -33,6 +34,7 @@ const RoutineList = () => {
       const data = await routineService.getRoutines()
       const filteredData = filterByMode(data, 'routine')
       setRoutines(filteredData)
+      setHasLoaded(true)
     } catch (error) {
       console.error('Error loading routines:', error)
       setLoadError(true)
@@ -131,7 +133,7 @@ const RoutineList = () => {
     setEditingRoutine(null)
   }
 
-  if (loading) {
+  if (loading && !hasLoaded) {
     return (
       <div className="p-6">
         <div
@@ -164,7 +166,13 @@ const RoutineList = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6" aria-busy={loading}>
+      {loading && (
+        <p className="sr-only" role="status" aria-live="polite">
+          Refreshing routines...
+        </p>
+      )}
+
       <OperationErrorState
         message={operationError}
         onDismiss={() => setOperationError('')}
