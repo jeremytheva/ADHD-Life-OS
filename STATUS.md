@@ -3,21 +3,19 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Integration
-execution_state: VALIDATING
+gate: Change
+execution_state: IMPLEMENTING
 current_work:
-  objective: Complete final exact-head lifecycle evidence for the Tasks refresh-failure continuity delivery, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
+  objective: Expose Project Detail asynchronous detail loading and refresh state without replacing established content or changing mutation/provider semantics.
   issue: null
   pr: null
-  branch: null
+  branch: fix/project-detail-refresh-status
 next_actions:
-  - Run final exact-head Application validation on this post-merge-safe handoff commit.
-  - Audit submitted reviews and inline review threads on the exact handoff head.
-  - Repair any in-scope validation or review finding on PR #314 rather than starting competing work.
-  - Signal lifecycle:implementation-complete only when final exact-head evidence is clean.
-  - Allow repository lifecycle automation and merge finalizer to complete Ready/Mergeable/Merged transitions.
-  - Reconcile fresh main after merge and inspect repository/GitHub state before selecting the next provider-independent Stage 3 accessibility or interaction-integrity slice.
-  - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
+  - Open one Draft PR as the implementation contract for the Project Detail refresh-status repair.
+  - Run canonical Application validation on the exact implementation/status head.
+  - Audit submitted reviews and inline review threads and repair any in-scope finding on the same PR.
+  - After implementation-head evidence passes, commit a post-merge-safe STATUS handoff and run final exact-head validation before lifecycle completion.
+  - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -25,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #314 repaired implementation/status head ec0e7b2235542edf7caa8340c2f313d6298f6a8c passed canonical Application validation run 822 with no submitted reviews or inline review threads. This post-merge-safe STATUS handoff creates a new head and therefore requires fresh final exact-head evidence before lifecycle completion.
-last_verified_commit: ec0e7b2235542edf7caa8340c2f313d6298f6a8c
-last_updated: 2026-09-10T03:10:00+10:00
+validation_basis: Project Detail transient-state implementation and deterministic regression coverage are committed on the active branch; canonical exact-head validation has not yet run.
+last_verified_commit: 83f6d4d993ae90cb004f14befb7da8e69a478879
+last_updated: 2026-09-10T03:30:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,23 +44,19 @@ last_updated: 2026-09-10T03:10:00+10:00
 
 ## Current objective
 
-PR #313 — `fix: preserve routine context on refresh failure` — completed its repository-managed lifecycle and merged into `main` at `b612324a57c414a6bd0a342ae86c90d7cd2e3884`.
+PR #314 — `fix: preserve task context on refresh failure` — completed its repository-managed lifecycle and merged into `main` at `83f6d4d993ae90cb004f14befb7da8e69a478879` after final exact-head Application validation run 823 passed with a clean review/thread audit.
 
-PR #314 — `fix: preserve task context on refresh failure` — is the current lifecycle delivery. After the first successful task load, a subsequent task-data refresh failure keeps the established Tasks surface mounted and exposes an in-place shared focused retry state explaining that the visible task list may be stale. Existing initial task-load failure remains a full `LoadErrorState`; task-preferences failure retains its conservative full error state. A specific mutation recovery suppresses the generic task refresh recovery when both would otherwise be present.
+Fresh-main reconciliation found no competing open delivery PR. The next evidence-backed provider-independent Stage 3 seam is Project Detail transient-state semantics: `ProjectDetailView` preserves the established project surface while fetching/reloading project details, but those asynchronous loads were silent to assistive technology.
 
-Existing `test/task-list-loading-status-semantics.test.mjs` coverage and the existing critical-path browser journey were extended in place. Application validation run 820 exposed a stale browser expectation for the superseded full task load-error screen; that in-scope assertion was repaired. Canonical Application validation run 822 then passed on exact repaired implementation/status head `ec0e7b2235542edf7caa8340c2f313d6298f6a8c`, with no submitted reviews or inline review threads.
-
-This commit is the required post-merge-safe durable handoff. It intentionally removes PR #314 and its branch as the future default-branch re-entry target. Because the STATUS change creates a new head, final exact-head Application validation and review/thread audit are required before implementation-complete signalling.
-
-No provider, persistence, authentication, task mutation, preference-loading, scheduling, execution-policy or retry-policy contract changed.
+The active branch `fix/project-detail-refresh-status` now marks the existing Project Detail dialog `aria-busy` while detail data is being fetched and provides a polite screen-reader status that distinguishes the first detail load from subsequent refreshes. The existing content, focused error recovery, mutation behavior, retry behavior and provider calls remain unchanged. Existing Project Detail deterministic coverage is extended in place rather than creating duplicate infrastructure.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — durable handoff requires final exact-head evidence |
-| Gate state | Repaired implementation-head canonical validation and review audit PASS; final handoff-head evidence pending |
-| Execution state | VALIDATING |
+| Current gate | CHANGE — implementation committed; canonical validation pending |
+| Gate state | Project Detail transient-state repair implemented with deterministic coverage |
+| Execution state | IMPLEMENTING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -70,19 +64,13 @@ No provider, persistence, authentication, task mutation, preference-loading, sch
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #313 — Routines refresh-failure continuity; merged at `b612324a57c414a6bd0a342ae86c90d7cd2e3884` |
-| Active delivery after handoff | None recorded as durable future re-entry target; PR #314 is expected to complete lifecycle before fresh-main continuation |
-| Implemented change | Preserve established Tasks content/context after post-load task-data refresh failure; expose in-place stale-list retry recovery |
-| Recovery precedence | Specific `OperationErrorState` suppresses generic refresh recovery when both are present |
-| Conservative boundary | Task-preferences failure continues to use its existing full error state |
-| Deterministic coverage | Existing task loading-status semantics test extended in place |
-| Browser coverage | Existing critical-path task recovery journey aligned to the retained-surface refresh-failure contract |
+| Latest merged delivery | PR #314 — Tasks refresh-failure continuity; merged at `83f6d4d993ae90cb004f14befb7da8e69a478879` |
+| Active delivery | Project Detail refresh-status semantics on `fix/project-detail-refresh-status` |
+| Implemented change | `aria-busy` plus polite first-load/refresh status while preserving the established Project Detail dialog |
+| Deterministic coverage | Existing `project-detail-task-list-semantics` suite extended in place |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | PASS — Application validation run 822 on `ec0e7b2235542edf7caa8340c2f313d6298f6a8c` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads on validated head |
-| Durable active-state synchronization | COMPLETE |
-| Durable post-merge handoff | COMPLETE in this commit; final exact-head evidence required |
-| Final exact-head validation | NOT RUN on this handoff head |
+| Canonical validation | NOT RUN on current implementation/status head |
+| Review audit | NOT RUN |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -90,27 +78,26 @@ No provider, persistence, authentication, task mutation, preference-loading, sch
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #314 implementation evidence passed and its post-merge-safe handoff is committed pending final exact-head evidence/lifecycle completion. |
-| What is already happening? | Tasks refresh-failure continuity and recovery are implemented and the repaired implementation/status head passed canonical validation. |
-| What has been validated? | Repaired implementation/status head `ec0e7b2235542edf7caa8340c2f313d6298f6a8c` passed canonical run 822 with clean review/thread evidence. |
-| What is next? | Validate the exact handoff head, complete the current PR lifecycle, then reconcile fresh `main` and select the next provider-independent Stage 3 slice. |
+| Where am I? | Stage 3; Project Detail transient-state accessibility repair is implemented on the sole active delivery branch. |
+| What is already happening? | Existing project content stays mounted; the dialog now exposes busy state and polite loading/refresh announcements during detail fetches. |
+| What has been validated? | PR #314 predecessor delivery passed final run 823. Current delivery canonical validation is pending. |
+| What is next? | Open the Draft PR, validate its exact head, repair findings, then complete post-merge-safe handoff and lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #314 is a provider-independent client-side interaction-integrity repair. It does not alter provider contracts, physical schemas, remote operations, persisted domain shapes, authentication, authorization, task mutation semantics, generic execution policy, scheduling policy or retry policy.
-
-The system/data boundary remains unchanged: physical NoCodeBackend routes/methods/filtering/envelopes and generic execution-session persistence must not be treated as verified until real target-instance certification evidence exists.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. This Project Detail change is a provider-independent client-side accessibility/transient-state repair. It does not alter provider contracts, physical schemas, remote operations, persisted domain shapes, authentication, authorization, project/task mutation semantics, generic execution policy, scheduling policy or retry policy.
 
 ## Next dependency-correct work
 
-1. run final canonical `npm run platform:validate` through Application validation on the exact current handoff head;
-2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
-3. add `lifecycle:implementation-complete` only when final exact-head evidence is clean;
-4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main` after merge, inspect repository/PR/branch/check state and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. open a Draft PR for this sole active delivery;
+2. run canonical `npm run platform:validate` through Application validation on the exact implementation/status head;
+3. audit submitted reviews and inline review threads and repair any in-scope finding on this PR;
+4. after implementation-head evidence passes, write a post-merge-safe STATUS handoff, validate that exact head and signal `lifecycle:implementation-complete` only when clean;
+5. allow repository lifecycle automation/finalizer to complete merge;
+6. reconcile fresh `main` and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
