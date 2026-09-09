@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -22,6 +22,7 @@ const Settings = () => {
   const [showModePrefs, setShowModePrefs] = useState(false)
   const [showAccessibility, setShowAccessibility] = useState(false)
   const [selectedModeForPrefs, setSelectedModeForPrefs] = useState(null)
+  const loadErrorRef = useRef(null)
 
   const loadPreferences = useCallback(async () => {
     setLoading(true)
@@ -44,6 +45,10 @@ const Settings = () => {
       setLoading(false)
     }
   }, [loadPreferences, user])
+
+  useEffect(() => {
+    if (loadError) loadErrorRef.current?.focus()
+  }, [loadError])
 
   const handleUpdatePreferences = async (updates) => {
     setSaveError(null)
@@ -89,7 +94,7 @@ const Settings = () => {
 
       {loadError && (
         <div className="flex items-center justify-between gap-4 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
-          <p role="alert" aria-atomic="true">Could not load preferences: {loadError.message}</p>
+          <p ref={loadErrorRef} role="alert" aria-atomic="true" tabIndex={-1}>Could not load preferences: {loadError.message}</p>
           <button onClick={loadPreferences} className="shrink-0 rounded-md bg-red-700 px-3 py-2 text-sm font-medium text-white hover:bg-red-800">
             Retry loading
           </button>
