@@ -30,3 +30,13 @@ test('Sidebar progress control includes the XP value represented by its visual m
     /className="w-full bg-purple-200 rounded-full h-1\.5 overflow-hidden" aria-hidden="true"/
   )
 })
+
+test('Sidebar Reward Shop control names its visible coin balance', async () => {
+  const source = await read('src/components/Layout.jsx')
+
+  assert.match(
+    source,
+    /aria-label=\{`Open Reward Shop\. \$\{currency\.coins\} coins`\}/
+  )
+  assert.match(source, /<span className="text-xs" aria-hidden="true">💰<\/span>/)
+})
