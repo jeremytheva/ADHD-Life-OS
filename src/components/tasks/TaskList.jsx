@@ -41,6 +41,7 @@ const TaskList = () => {
   const { currentMode, filterByMode, getModePreferences } = useMode()
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
+  const [hasLoaded, setHasLoaded] = useState(false)
   const [loadError, setLoadError] = useState(null)
   const [operationError, setOperationError] = useState(null)
   const [pendingAction, setPendingAction] = useState(null)
@@ -96,6 +97,7 @@ const TaskList = () => {
       setTasks(sorted)
       setAnalysis(adhdPriorityService.analyzeTaskLoad(filteredData, preferences))
       setRecommendedTasks(adhdPriorityService.getRecommendedTasks(filteredData, preferences, 3))
+      setHasLoaded(true)
       return true
     } catch (error) {
       console.error('Error loading tasks:', error)
@@ -233,7 +235,7 @@ const TaskList = () => {
     { key: 'alphabetical', label: 'A-Z' }
   ]
 
-  if (loading) {
+  if (loading && !hasLoaded) {
     return (
       <div className="p-6">
         <div
@@ -266,7 +268,13 @@ const TaskList = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6" aria-busy={loading}>
+      {loading && (
+        <p className="sr-only" role="status" aria-live="polite">
+          Refreshing tasks...
+        </p>
+      )}
+
       {currentMode.id !== 'all' && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}

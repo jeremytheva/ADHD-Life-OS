@@ -8,7 +8,8 @@ const taskListSource = readFileSync(
   'utf8'
 );
 
-test('Task list loading state is announced without exposing its decorative spinner', () => {
+test('Task list initial loading state is announced without exposing its decorative spinner', () => {
+  assert.match(taskListSource, /if \(loading && !hasLoaded\)/);
   assert.match(taskListSource, /Loading tasks\.\.\./);
   assert.match(taskListSource, /role="status"/);
   assert.match(taskListSource, /aria-live="polite"/);
@@ -18,4 +19,9 @@ test('Task list loading state is announced without exposing its decorative spinn
     taskListSource,
     /animate-spin[\s\S]*?aria-hidden="true"[\s\S]*?Loading tasks\.\.\./
   );
+});
+
+test('Task list subsequent refresh preserves the established interactive surface', () => {
+  assert.match(taskListSource, /className="p-6 space-y-6" aria-busy=\{loading\}/);
+  assert.match(taskListSource, /Refreshing tasks\.\.\./);
 });
