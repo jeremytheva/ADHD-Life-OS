@@ -225,8 +225,10 @@ test('Today surfaces timeline retrieval failure and recovers on retry', async ({
   mock.failNextTaskLoad()
   await page.getByRole('button', { name: 'Refresh Today' }).click()
 
-  await expect(page.getByRole('heading', { name: 'We couldn’t load your day' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'We couldn’t refresh your day' })).toBeVisible()
   await page.getByRole('button', { name: 'Try again' }).click()
+  await expect(page.getByRole('heading', { name: 'We couldn’t refresh your day' })).toHaveCount(0)
   await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible()
 })
 
