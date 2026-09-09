@@ -92,7 +92,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
         <div className="flex-1 overflow-y-auto p-6">
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 mb-6">
             <p className="text-blue-800 text-center font-medium">
-              💭 Don't worry about perfect wording or order - just get it all out of your head!
+              <span aria-hidden="true">💭</span> Don't worry about perfect wording or order - just get it all out of your head!
             </p>
           </div>
 
@@ -123,7 +123,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
               </button>
             </div>
             <p className="text-xs text-slate-500 mt-2">
-              💡 Tip: Press Enter after each task to add it quickly
+              <span aria-hidden="true">💡</span> Tip: Press Enter after each task to add it quickly
             </p>
           </div>
 
@@ -192,7 +192,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
                 Start typing in the box above and press Enter after each task
               </p>
               <div className="max-w-md mx-auto text-left space-y-2 text-sm text-slate-600">
-                <p>✨ Examples to get started:</p>
+                <p><span aria-hidden="true">✨</span> Examples to get started:</p>
                 <ul className="list-disc list-inside space-y-1 ml-4">
                   <li>Things you keep forgetting to do</li>
                   <li>Ideas that keep popping up</li>
@@ -232,12 +232,12 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
                     exit={{ opacity: 0, height: 0 }}
                     className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200"
                   >
-                    <p className="text-sm text-slate-600 mb-3">💡 After saving, you can:</p>
+                    <p className="text-sm text-slate-600 mb-3"><span aria-hidden="true">💡</span> After saving, you can:</p>
                     <ul className="space-y-2 text-sm text-slate-700">
-                      <li className="flex items-start gap-2"><span className="text-green-600">✓</span><span>Mark some tasks as "Essential"</span></li>
-                      <li className="flex items-start gap-2"><span className="text-green-600">✓</span><span>Add time estimates</span></li>
-                      <li className="flex items-start gap-2"><span className="text-green-600">✓</span><span>Break tasks into smaller subtasks</span></li>
-                      <li className="flex items-start gap-2"><span className="text-green-600">✓</span><span>Reorder by priority</span></li>
+                      <li className="flex items-start gap-2"><span className="text-green-600" aria-hidden="true">✓</span><span>Mark some tasks as "Essential"</span></li>
+                      <li className="flex items-start gap-2"><span className="text-green-600" aria-hidden="true">✓</span><span>Add time estimates</span></li>
+                      <li className="flex items-start gap-2"><span className="text-green-600" aria-hidden="true">✓</span><span>Break tasks into smaller subtasks</span></li>
+                      <li className="flex items-start gap-2"><span className="text-green-600" aria-hidden="true">✓</span><span>Reorder by priority</span></li>
                     </ul>
                   </motion.div>
                 )}
