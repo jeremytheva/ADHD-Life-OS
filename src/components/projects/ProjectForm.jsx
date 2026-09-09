@@ -64,7 +64,7 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
             aria-label="Close project form"
             className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
           >
-            <SafeIcon icon={FiX} className="w-5 h-5" />
+            <SafeIcon icon={FiX} className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -188,7 +188,7 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
               type="submit"
               className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
             >
-              <SafeIcon icon={FiSave} className="w-4 h-4" />
+              <SafeIcon icon={FiSave} className="w-4 h-4" aria-hidden="true" />
               {project ? 'Update' : 'Create'} Project
             </button>
           </div>
