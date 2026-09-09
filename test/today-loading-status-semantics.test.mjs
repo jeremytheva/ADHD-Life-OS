@@ -19,3 +19,21 @@ test('Today loading state is announced without exposing its decorative spinner',
     /icon=\{FiRefreshCw\}[\s\S]*?animate-spin[\s\S]*?aria-hidden="true"/
   );
 });
+
+test('Today preserves the established surface while timeline refreshes', () => {
+  assert.match(todaySource, /const \[hasLoaded, setHasLoaded\] = useState\(false\)/);
+  assert.match(todaySource, /setHasLoaded\(true\)/);
+  assert.match(todaySource, /if \(loading && !hasLoaded\) return/);
+  assert.match(todaySource, /if \(loadError && !hasLoaded\) return/);
+  assert.match(todaySource, /aria-busy=\{loading\}/);
+  assert.match(todaySource, /Refreshing Today\.\.\./);
+  assert.match(todaySource, /We couldn’t refresh your day/);
+  assert.match(todaySource, /Your existing Today view is still available/);
+});
+
+test('Today keeps mutation refresh failure recovery specific to the completed task', () => {
+  assert.match(
+    todaySource,
+    /if \(!refreshed\) \{[\s\S]*?setLoadError\(false\)[\s\S]*?The task was completed, but Today could not refresh/
+  );
+});
