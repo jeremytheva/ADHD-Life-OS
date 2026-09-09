@@ -6,18 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete PR #309, which standardizes Brain Inbox mutation recovery on the shared focused operation-error pattern.
+  objective: Complete final exact-head lifecycle evidence for the Brain Inbox shared mutation-recovery delivery, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 slice.
   issue: null
-  pr: 309
-  branch: fix/brain-inbox-shared-operation-errors
+  pr: null
+  branch: null
 next_actions:
-  - Run canonical Application validation on the exact current PR #309 head after repairing the stale regression assertion exposed by run 801.
-  - Audit submitted reviews and inline review threads on the exact validated head.
-  - Repair any further in-scope validation or review finding on PR #309 rather than starting competing work.
-  - Commit a post-merge-safe durable STATUS handoff after implementation-head evidence passes.
-  - Revalidate the exact handoff head before signalling lifecycle:implementation-complete.
+  - Run final exact-head Application validation on this post-merge-safe handoff commit.
+  - Audit submitted reviews and inline review threads on the exact handoff head.
+  - Repair any in-scope validation or review finding on PR #309 rather than starting competing work.
+  - Signal lifecycle:implementation-complete only when final exact-head evidence is clean.
   - Allow repository lifecycle automation and merge finalizer to complete Ready/Mergeable/Merged transitions.
-  - Reconcile fresh main after merge and continue the next evidence-backed provider-independent Stage 3 slice.
+  - Reconcile fresh main after merge and inspect repository/GitHub state before selecting the next provider-independent Stage 3 accessibility or interaction-integrity slice.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -29,13 +28,13 @@ validation:
   governance: PASS
   lint: PASS
   typecheck: PASS
-  tests: FAIL
-  build: NOT_RUN
-  ci: FAIL
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: Application validation run 801 on 34ca609e5e296db2f055ae3ee084757649783836 reached canonical validation with governance, lint and typecheck passing, then failed one stale core-list-load-errors assertion that expected role="alert" inside BrainInbox after mutation-error semantics moved to shared OperationErrorState. The stale assertion has been repaired in place; fresh exact-head validation is required.
-last_verified_commit: df05f4b359f79100966a0f8674034d8121577923
-last_updated: 2026-09-09T22:24:00+10:00
+validation_basis: PR #309 implementation/status head 1be2e63757587369209d46b7f0dd52d324a033ae passed canonical Application validation run 803 with no submitted reviews or inline review threads. This post-merge-safe STATUS handoff creates a new head and therefore requires fresh final exact-head evidence before lifecycle completion.
+last_verified_commit: 1be2e63757587369209d46b7f0dd52d324a033ae
+last_updated: 2026-09-09T23:10:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -47,22 +46,22 @@ last_updated: 2026-09-09T22:24:00+10:00
 
 ## Current objective
 
-PR #308 — `fix: preserve task focus during refresh` — completed its repository-managed lifecycle and merged into `main` at `68e3a531f74ebe97c24ad3003098ecd80b3548ce`. Final Application validation run 799 passed on its exact handoff head before lifecycle completion, and fresh reconciliation found no competing open delivery PRs.
+PR #308 — `fix: preserve task focus during refresh` — completed its repository-managed lifecycle and merged into `main` at `68e3a531f74ebe97c24ad3003098ecd80b3548ce`. Fresh reconciliation found no competing open delivery PRs before the next Stage 3 slice began.
 
-The current delivery is Draft PR #309 — `fix: standardize brain inbox mutation recovery`. Brain Inbox retained a bespoke mutation-error alert even after Stage 3 established `OperationErrorState` as the shared focused, dismissible recovery surface. That meant save, edit, delete, category and task-conversion failures were announced but did not receive the same programmatic error focus as other core mutation surfaces.
+The current delivery is PR #309 — `fix: standardize brain inbox mutation recovery`. Brain Inbox retained a bespoke mutation-error alert after Stage 3 established `OperationErrorState` as the shared focused, dismissible mutation-recovery surface. PR #309 replaces only that bespoke markup with the existing shared component, preserving mutation-specific recovery text, retained retry context, successful capture-mode delete focus restoration, provider boundaries, and mutation semantics.
 
-PR #309 replaces only that bespoke markup with the existing shared `OperationErrorState`. Existing mutation-specific recovery text and retry context remain unchanged, including preservation of the capture input after a failed save/edit and the existing successful capture-mode delete focus restoration. Existing `test/core-mutation-feedback.test.mjs` coverage is extended in place to assert that Brain Inbox participates in the shared recovery contract.
+Existing `test/core-mutation-feedback.test.mjs` coverage was extended in place. Canonical run 801 exposed one stale assertion in existing `test/core-list-load-errors.test.mjs` that still expected literal `role="alert"` markup inside `BrainInbox.jsx`; that assertion was repaired to test the shared component ownership instead of restoring duplicate markup.
 
-Application validation run 801 reached canonical validation with governance, lint and typecheck passing. The Node test phase then found one stale assertion in existing `test/core-list-load-errors.test.mjs`: it expected literal `role="alert"` markup inside `BrainInbox.jsx`. That expectation belonged to the removed bespoke alert and contradicted the shared-component migration. The test has been repaired in place to require the shared `OperationErrorState` instead. The newly added shared-recovery test passed in run 801. A fresh exact-head validation run is now required because the repair and this durable status update created new commits.
+Canonical Application validation run 803 passed on exact implementation/status head `1be2e63757587369209d46b7f0dd52d324a033ae`. Submitted reviews and inline review threads were both empty on that validated head. This STATUS change is the required durable post-merge-safe handoff; because it creates a new commit, final exact-head validation and review evidence must pass before implementation-complete signalling.
 
-No provider, persistence, authentication, routing, inbox mutation, conversion or execution-policy behavior changes in this delivery.
+After the current delivery merges, re-enter from fresh `main`, inspect repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity gap. Do not resume generic durable execution persistence without real target-instance NoCodeBackend certification evidence.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — repaired exact-head canonical evidence required |
-| Gate state | Run 801 exposed and the branch repaired one stale regression assertion; fresh validation pending |
+| Current gate | INTEGRATION — durable handoff requires final exact-head evidence |
+| Gate state | Implementation-head canonical validation and review audit PASS; final handoff-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -72,15 +71,15 @@ No provider, persistence, authentication, routing, inbox mutation, conversion or
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #308 — Tasks refresh focus continuity; merged at `68e3a531f74ebe97c24ad3003098ecd80b3548ce` |
-| Active delivery | Draft PR #309 — Brain Inbox shared mutation recovery |
-| Active branch | `fix/brain-inbox-shared-operation-errors` |
-| Implemented change | Replace Brain Inbox bespoke mutation alert with shared focused `OperationErrorState` |
-| Deterministic coverage | Existing core mutation-feedback test extended; stale core-list-load-errors assertion repaired in place |
+| Active delivery after handoff | None recorded as durable future re-entry target; PR #309 is expected to complete lifecycle before fresh-main continuation |
+| Implemented change | Brain Inbox reuses shared focused `OperationErrorState` for save/edit/delete/category/task-conversion mutation failures |
+| Deterministic coverage | Existing core mutation-feedback coverage extended; stale core-list-load-errors assertion repaired in place |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Previous canonical validation | FAIL — run 801 on `34ca609e5e296db2f055ae3ee084757649783836`; one stale test expectation after governance/lint/typecheck PASS |
-| Current canonical validation | NOT RUN on the repaired synchronized head |
-| Review audit | Preliminary audit clean; exact validated-head audit still required |
+| Implementation-head validation | PASS — Application validation run 803 on `1be2e63757587369209d46b7f0dd52d324a033ae` |
+| Implementation-head review audit | PASS — no submitted reviews or inline review threads on validated head |
 | Durable active-state synchronization | COMPLETE |
+| Durable post-merge handoff | COMPLETE in this commit; final exact-head evidence required |
+| Final exact-head validation | NOT RUN on this handoff head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -88,10 +87,10 @@ No provider, persistence, authentication, routing, inbox mutation, conversion or
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #309 is the sole active delivery and its run-801 regression finding has been repaired. |
-| What is already happening? | Brain Inbox reuses the shared focused mutation-error recovery component; existing deterministic coverage now reflects that ownership correctly. |
-| What has been validated? | Run 801 proved governance, lint and typecheck clean and the new shared-recovery test passed, but one stale existing assertion failed; the branch has since changed and needs fresh exact-head evidence. |
-| What is next? | Validate the repaired PR #309 exact head, repair any finding, audit reviews/threads, commit a post-merge-safe handoff, revalidate, then advance repository lifecycle. |
+| Where am I? | Stage 3; PR #309 implementation evidence passed and its post-merge-safe handoff is committed pending final exact-head evidence/lifecycle completion. |
+| What is already happening? | Brain Inbox shared mutation-focus recovery is implemented and the implementation/status head has passed canonical validation. |
+| What has been validated? | Implementation/status head `1be2e63757587369209d46b7f0dd52d324a033ae` passed canonical run 803 with clean review/thread evidence. |
+| What is next? | Validate the exact handoff head, complete the current PR lifecycle, then reconcile fresh `main` and select the next provider-independent Stage 3 slice. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -103,14 +102,12 @@ The system/data boundary remains unchanged: physical NoCodeBackend routes/method
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through Application validation on the exact repaired PR #309 head;
+1. run final canonical `npm run platform:validate` through Application validation on the exact current handoff head;
 2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
-3. commit the required post-merge-safe durable STATUS handoff after implementation-head evidence is clean;
-4. rerun exact-head validation and review/thread audit after the handoff commit;
-5. add `lifecycle:implementation-complete` only when final exact-head evidence is clean;
-6. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-7. re-enter from fresh `main` after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+3. add `lifecycle:implementation-complete` only when final exact-head evidence is clean;
+4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+5. re-enter from fresh `main` after merge, inspect repository/PR/branch/check state and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
