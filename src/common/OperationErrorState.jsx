@@ -1,10 +1,21 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 
 const OperationErrorState = ({ message, onDismiss }) => {
+  const alertRef = useRef(null)
+
+  useEffect(() => {
+    if (message) alertRef.current?.focus()
+  }, [message])
+
   if (!message) return null
 
   return (
-    <div role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
+    <div
+      ref={alertRef}
+      role="alert"
+      tabIndex={-1}
+      className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800"
+    >
       <div className="flex items-start justify-between gap-4">
         <p className="text-sm">{message}</p>
         {onDismiss && (
