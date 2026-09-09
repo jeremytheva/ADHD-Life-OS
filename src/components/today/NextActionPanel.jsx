@@ -22,7 +22,7 @@ const NextActionPanel = ({ currentMode }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [excludedActivityIds, setExcludedActivityIds] = useState([])
   const [feedbackMessage, setFeedbackMessage] = useState('')
-  const shouldRestoreFocusAfterSkipRef = useRef(false)
+  const shouldRestoreFocusAfterLoadRef = useRef(false)
   const panelHeadingRef = useRef(null)
   const recommendationHeadingRef = useRef(null)
   const emptyStateHeadingRef = useRef(null)
@@ -62,7 +62,7 @@ const NextActionPanel = ({ currentMode }) => {
   const selected = recommendations[selectedIndex] || null
 
   useEffect(() => {
-    if (loading || !shouldRestoreFocusAfterSkipRef.current) return
+    if (loading || !shouldRestoreFocusAfterLoadRef.current) return
 
     const focusTarget = loadError
       ? panelHeadingRef.current
@@ -71,8 +71,13 @@ const NextActionPanel = ({ currentMode }) => {
         : emptyStateHeadingRef.current || panelHeadingRef.current
 
     focusTarget?.focus()
-    shouldRestoreFocusAfterSkipRef.current = false
+    shouldRestoreFocusAfterLoadRef.current = false
   }, [loadError, loading, selected])
+
+  const refreshRecommendationsWithFocusRecovery = () => {
+    shouldRestoreFocusAfterLoadRef.current = true
+    loadRecommendations()
+  }
 
   const chooseAnother = () => {
     if (recommendations.length < 2) return
@@ -81,7 +86,7 @@ const NextActionPanel = ({ currentMode }) => {
 
   const markNotNow = () => {
     if (!selected?.activity_id) return
-    shouldRestoreFocusAfterSkipRef.current = true
+    shouldRestoreFocusAfterLoadRef.current = true
     setFeedbackMessage(`${selected.title || 'That activity'} is out of the suggestions for now. Nothing was changed.`)
     setExcludedActivityIds((current) => (
       current.includes(selected.activity_id)
@@ -165,7 +170,7 @@ const NextActionPanel = ({ currentMode }) => {
         <LoadErrorState
           title="We couldn’t choose a next action"
           message="Your activities have not changed. Try the recommendation again."
-          onRetry={loadRecommendations}
+          onRetry={refreshRecommendationsWithFocusRecovery}
         />
       )}
 
@@ -207,7 +212,7 @@ const NextActionPanel = ({ currentMode }) => {
           </div>
           <details className="mt-3 text-sm text-slate-600">
             <summary className="w-fit cursor-pointer font-medium text-emerald-700 hover:underline">More options</summary>
-            <button type="button" onClick={loadRecommendations} className="mt-2 rounded-lg px-3 py-2 font-medium text-emerald-700 hover:bg-emerald-50">
+            <button type="button" onClick={refreshRecommendationsWithFocusRecovery} className="mt-2 rounded-lg px-3 py-2 font-medium text-emerald-700 hover:bg-emerald-50">
               Recheck now
             </button>
           </details>

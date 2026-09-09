@@ -48,7 +48,7 @@ test('next-action panel progressively discloses the manual refresh control', asy
   assert.match(source, /<details className="mt-3 text-sm text-slate-600">/)
   assert.match(source, /<summary[^>]*>More options<\/summary>/)
   assert.match(source, />\s*Recheck now\s*</)
-  assert.match(source, /onClick=\{loadRecommendations\}/)
+  assert.match(source, /onClick=\{refreshRecommendationsWithFocusRecovery\}/)
 })
 
 test('next-action panel treats not-now feedback as transient recommendation state', async () => {
@@ -61,10 +61,11 @@ test('next-action panel treats not-now feedback as transient recommendation stat
   assert.doesNotMatch(source, /localStorage|sessionStorage|upsertActivity|updateTask/)
 })
 
-test('next-action not-now refresh restores focus to the resulting recommendation state', async () => {
+test('next-action refresh paths restore focus to the resulting recommendation state', async () => {
   const source = await read('src/components/today/NextActionPanel.jsx')
-  assert.match(source, /shouldRestoreFocusAfterSkipRef = useRef\(false\)/)
-  assert.match(source, /shouldRestoreFocusAfterSkipRef\.current = true/)
+  assert.match(source, /shouldRestoreFocusAfterLoadRef = useRef\(false\)/)
+  assert.match(source, /const refreshRecommendationsWithFocusRecovery = \(\) => \{[\s\S]*?shouldRestoreFocusAfterLoadRef\.current = true[\s\S]*?loadRecommendations\(\)[\s\S]*?\}/)
+  assert.match(source, /const markNotNow = \(\) => \{[\s\S]*?shouldRestoreFocusAfterLoadRef\.current = true/)
   assert.match(source, /recommendationHeadingRef\.current/)
   assert.match(source, /emptyStateHeadingRef\.current \|\| panelHeadingRef\.current/)
   assert.match(source, /focusTarget\?\.focus\(\)/)
@@ -72,11 +73,11 @@ test('next-action not-now refresh restores focus to the resulting recommendation
   assert.match(source, /ref=\{emptyStateHeadingRef\} tabIndex="-1"/)
 })
 
-test('next-action retrieval failures remain retryable and do not imply activity loss', async () => {
+test('next-action retrieval failures remain retryable with focus recovery and do not imply activity loss', async () => {
   const source = await read('src/components/today/NextActionPanel.jsx')
   assert.match(source, /title="We couldn’t choose a next action"/)
   assert.match(source, /Your activities have not changed/)
-  assert.match(source, /onRetry=\{loadRecommendations\}/)
+  assert.match(source, /onRetry=\{refreshRecommendationsWithFocusRecovery\}/)
 })
 
 test('Today keeps unscheduled task details secondary to the primary execution surface', async () => {
