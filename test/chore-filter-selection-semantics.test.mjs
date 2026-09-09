@@ -13,3 +13,13 @@ test('ChoreChecklist exposes its timeframe filter as a labelled stateful button 
   assert.match(source, /setFilter\(value\)/)
   assert.match(source, /value === 'today' \? 'Ready Now' : 'All Chores'/)
 })
+
+test('ChoreChecklist keeps established controls mounted while filter-driven data refreshes', async () => {
+  const source = await read('src/components/housework/ChoreChecklist.jsx')
+
+  assert.match(source, /const \[hasLoaded, setHasLoaded\] = useState\(false\)/)
+  assert.match(source, /setTasks\(data\)[\s\S]*?setHasLoaded\(true\)/)
+  assert.match(source, /if \(loading && !hasLoaded\)/)
+  assert.match(source, /className="space-y-6" aria-busy=\{loading\}/)
+  assert.match(source, /loading && \([\s\S]*?role="status"[\s\S]*?aria-live="polite"[\s\S]*?Refreshing chores\.\.\./)
+})
