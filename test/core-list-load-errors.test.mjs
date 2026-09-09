@@ -71,9 +71,13 @@ test('Today propagates timeline generation failure into a retryable load state',
   assert.match(todaySource, /Your tasks, routines, projects and chores have not been cleared/)
 })
 
-test('shared load error state is accessible and retryable', async () => {
+test('shared load error state is accessible, focused, and retryable', async () => {
   const source = await read('src/common/LoadErrorState.jsx')
 
+  assert.match(source, /const alertRef = useRef\(null\)/)
+  assert.match(source, /useEffect\(\(\) => \{\s*alertRef\.current\?\.focus\(\)\s*\}, \[\]\)/)
+  assert.match(source, /ref=\{alertRef\}/)
+  assert.match(source, /tabIndex=\{-1\}/)
   assert.match(source, /role="alert"/)
   assert.match(source, />\s*Try again\s*</)
   assert.match(source, /onClick=\{onRetry\}/)
