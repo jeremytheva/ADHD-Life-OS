@@ -5,9 +5,14 @@ import { URL } from 'node:url'
 
 const read = (path) => fs.readFile(new URL(`../${path}`, import.meta.url), 'utf8')
 
-test('shared operation error state is accessible and dismissible', async () => {
+test('shared operation error state is accessible, focused, and dismissible', async () => {
   const source = await read('src/common/OperationErrorState.jsx')
+  assert.match(source, /const alertRef = useRef\(null\)/)
+  assert.match(source, /if \(message\) alertRef\.current\?\.focus\(\)/)
+  assert.match(source, /\[message\]/)
+  assert.match(source, /ref=\{alertRef\}/)
   assert.match(source, /role="alert"/)
+  assert.match(source, /tabIndex=\{-1\}/)
   assert.match(source, /onClick=\{onDismiss\}/)
   assert.match(source, />\s*Dismiss\s*</)
 })
