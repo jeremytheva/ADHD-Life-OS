@@ -25,3 +25,11 @@ test('Routine list subsequent refresh preserves the established interactive surf
   assert.match(routineListSource, /className="p-6 space-y-6" aria-busy=\{loading\}/);
   assert.match(routineListSource, /Refreshing routines\.\.\./);
 });
+
+test('Routine list refresh failures preserve established context and expose focused recovery', () => {
+  assert.match(routineListSource, /if \(loadError && !hasLoaded\)/);
+  assert.match(routineListSource, /loadError && hasLoaded && !operationError/);
+  assert.match(routineListSource, /title="We couldn’t refresh your routines"/);
+  assert.match(routineListSource, /Your current routine list is still shown and may be out of date/);
+  assert.match(routineListSource, /onRetry=\{loadRoutines\}/);
+});
