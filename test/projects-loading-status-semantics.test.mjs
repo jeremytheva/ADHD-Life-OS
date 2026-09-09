@@ -8,7 +8,8 @@ const projectsListSource = readFileSync(
   'utf8'
 );
 
-test('Projects loading state is announced without exposing its decorative spinner', () => {
+test('Projects initial loading state is announced without exposing its decorative spinner', () => {
+  assert.match(projectsListSource, /if \(loading && !hasLoaded\)/);
   assert.match(projectsListSource, /Loading your projects\.\.\./);
   assert.match(projectsListSource, /role="status"/);
   assert.match(projectsListSource, /aria-live="polite"/);
@@ -18,4 +19,9 @@ test('Projects loading state is announced without exposing its decorative spinne
     projectsListSource,
     /animate-spin[\s\S]*?aria-hidden="true"[\s\S]*?Loading your projects\.\.\./
   );
+});
+
+test('Projects subsequent refresh state preserves the established project surface', () => {
+  assert.match(projectsListSource, /className="p-6 space-y-6" aria-busy=\{loading\}/);
+  assert.match(projectsListSource, /Refreshing projects\.\.\./);
 });

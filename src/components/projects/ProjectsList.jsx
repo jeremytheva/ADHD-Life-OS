@@ -26,6 +26,7 @@ const ProjectsList = () => {
   const [projects, setProjects] = useState([])
   const [projectStats, setProjectStats] = useState({})
   const [loading, setLoading] = useState(true)
+  const [hasLoaded, setHasLoaded] = useState(false)
   const [loadError, setLoadError] = useState(null)
   const [operationError, setOperationError] = useState(null)
   const [quickCaptureProjectId, setQuickCaptureProjectId] = useState(null)
@@ -54,6 +55,7 @@ const ProjectsList = () => {
         stats[project.id] = await projectService.getProjectStats(project.id)
       }
       setProjectStats(stats)
+      setHasLoaded(true)
       return true
     } catch (error) {
       console.error('Error loading projects:', error)
@@ -292,7 +294,7 @@ const ProjectsList = () => {
 
   const totalStats = getTotalStats()
 
-  if (loading) {
+  if (loading && !hasLoaded) {
     return (
       <div className="p-6">
         <div
@@ -325,7 +327,13 @@ const ProjectsList = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6" aria-busy={loading}>
+      {loading && (
+        <p className="sr-only" role="status" aria-live="polite">
+          Refreshing projects...
+        </p>
+      )}
+
       {currentMode.id !== 'all' && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
