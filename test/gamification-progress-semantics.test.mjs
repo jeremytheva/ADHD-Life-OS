@@ -40,3 +40,16 @@ test('Sidebar Reward Shop control names its visible coin balance', async () => {
   )
   assert.match(source, /<span className="text-xs" aria-hidden="true">💰<\/span>/)
 })
+
+test('Reward Shop currency amounts expose their coin unit without changing visible text', async () => {
+  const source = await read('src/components/gamification/RewardShop.jsx')
+
+  assert.match(
+    source,
+    /\{currency\.lifetime_coins_earned\}<span className="sr-only"> coins<\/span>/
+  )
+  assert.match(
+    source,
+    /\{reward\.cost\}<span className="sr-only"> coins<\/span>/
+  )
+})
