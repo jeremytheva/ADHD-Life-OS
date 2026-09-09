@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete final exact-head lifecycle evidence for the current Stage 3 delivery, then reconcile fresh main and continue the next evidence-backed provider-independent slice.
+  objective: Validate and complete the provider-independent Settings load-error focus-recovery delivery.
   issue: null
-  pr: null
-  branch: null
+  pr: 303
+  branch: fix/settings-load-error-focus-recovery
 next_actions:
-  - Run final exact-head Application validation on this post-merge-safe handoff commit.
-  - Audit submitted reviews and inline review threads on the exact handoff head.
-  - Signal lifecycle:implementation-complete only when final exact-head evidence is clean.
-  - Allow repository lifecycle automation and merge finalizer to complete Ready/Mergeable/Merged transitions.
-  - Reconcile fresh main after merge and inspect repository/GitHub state before selecting the next provider-independent Stage 3 accessibility or interaction-integrity slice.
+  - Run canonical Application validation on the exact implementation/status head.
+  - Audit submitted reviews and inline review threads on that exact head.
+  - Repair any in-scope finding before lifecycle completion.
+  - Commit a post-merge-safe durable handoff after implementation-head evidence passes.
+  - Run final exact-head validation before signaling lifecycle:implementation-complete.
   - Keep NoCodeBackend-dependent execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: PENDING
+  lint: PENDING
+  typecheck: PENDING
+  tests: PENDING
+  build: PENDING
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #302 implementation/status head 99dfafcb594804d35adc3b06ac4cb1936235e3df passed canonical Application validation run 777 with no submitted reviews or inline review threads. This post-merge-safe STATUS handoff creates a new head and therefore requires fresh final exact-head evidence before lifecycle completion.
-last_verified_commit: 99dfafcb594804d35adc3b06ac4cb1936235e3df
-last_updated: 2026-09-09T14:18:00+10:00
+validation_basis: PR #303 is the sole active delivery. Its Settings load-error focus-recovery implementation and deterministic coverage are committed; exact-head canonical validation is pending.
+last_verified_commit: fac9406a4914f81d28a703af0ceb8e7e2f695a98
+last_updated: 2026-09-09T15:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,22 +45,20 @@ last_updated: 2026-09-09T14:18:00+10:00
 
 ## Current objective
 
-PR #301 completed its repository-managed lifecycle and merged into `main` at `9d42045e1d946e72639f88160b7a15cdbaf5d3d7`.
+PR #302 completed its repository-managed lifecycle and merged into `main` at `fac9406a4914f81d28a703af0ceb8e7e2f695a98`. Fresh-main reconciliation found no competing open delivery PR.
 
-The current Stage 3 delivery repairs shared mutation-error focus recovery. The existing `OperationErrorState` already exposes failures with `role="alert"` and preserves dismiss/recovery context; it now receives programmatic focus whenever a non-empty operation-error message is surfaced or replaced, using `tabIndex={-1}` so it does not add a normal Tab stop. Existing mutation success/failure semantics remain unchanged.
+The sole active delivery is Draft PR #303 — `fix: recover focus on settings load failure` on branch `fix/settings-load-error-focus-recovery`.
 
-Existing `test/core-mutation-feedback.test.mjs` coverage is extended in place to protect the alert ref/effect, alert semantics, programmatic focusability and dismiss action. No duplicate test infrastructure was introduced.
+Settings had a bespoke load-failure path that replaces the loading subtree but, unlike the shared load-error path, did not provide a programmatic focus destination. PR #303 makes only the load-error alert focusable with `tabIndex={-1}` and focuses it when a load failure surfaces. The existing Retry loading action remains immediately adjacent in DOM order. Save failures deliberately remain announcement-only so the preference control that initiated the save retains keyboard focus.
 
-Canonical Application validation run 777 passed on exact implementation/status head `99dfafcb594804d35adc3b06ac4cb1936235e3df`. Submitted reviews and inline review threads were both empty on that validated head. This STATUS change is the required durable post-merge-safe handoff; because it creates a new commit, final exact-head validation and review evidence must pass before implementation-complete signalling.
-
-After the current delivery merges, re-enter from fresh `main`, inspect repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity gap. Do not resume generic durable execution persistence without real target-instance NoCodeBackend certification evidence.
+Existing `test/settings-error-alert-semantics.test.mjs` coverage is extended in place to protect the load-alert ref/effect, `role="alert"`, bounded programmatic focusability, Retry loading action and the deliberate absence of forced focus on save failures. No duplicate test infrastructure was introduced.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — durable handoff requires final exact-head evidence |
-| Gate state | Implementation-head canonical validation and review audit PASS; final handoff-head evidence pending |
+| Current gate | INTEGRATION — exact-head implementation evidence required |
+| Gate state | Implementation and deterministic coverage committed; canonical validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -69,16 +67,16 @@ After the current delivery merges, re-enter from fresh `main`, inspect repositor
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #301 — Brain Inbox capture-delete focus recovery; merged at `9d42045e1d946e72639f88160b7a15cdbaf5d3d7` |
-| Active delivery after handoff | None recorded as durable future re-entry target; current delivery is expected to complete lifecycle before fresh-main continuation |
-| Implemented change | Shared operation-error alert receives programmatic focus when a non-empty error is surfaced/replaced, without entering normal Tab order |
-| Deterministic coverage | Existing `test/core-mutation-feedback.test.mjs` extended in place |
+| Latest merged delivery | PR #302 — shared operation-error focus recovery; merged at `fac9406a4914f81d28a703af0ceb8e7e2f695a98` |
+| Active delivery | PR #303 — Settings load-error focus recovery |
+| Active branch | `fix/settings-load-error-focus-recovery` |
+| Implemented change | Settings load failure receives programmatic focus when it replaces loading; save failure retains initiating-control focus |
+| Deterministic coverage | Existing `test/settings-error-alert-semantics.test.mjs` extended in place |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | PASS — Application validation run 777 on `99dfafcb594804d35adc3b06ac4cb1936235e3df` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads on validated head |
-| Durable active-state synchronization | COMPLETE |
-| Durable post-merge handoff | COMPLETE in this commit; final exact-head evidence required |
-| Final exact-head validation | NOT RUN on this handoff head |
+| Canonical validation | PENDING on exact implementation/status head |
+| Review audit | PENDING after exact-head validation |
+| Durable active-state synchronization | COMPLETE in this commit |
+| Durable post-merge handoff | PENDING implementation-head evidence |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -86,27 +84,28 @@ After the current delivery merges, re-enter from fresh `main`, inspect repositor
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; the current delivery implementation evidence passed and its post-merge-safe handoff is committed pending final exact-head evidence/lifecycle completion. |
-| What is already happening? | Shared operation-error focus recovery is implemented and the implementation/status head has passed canonical validation. |
-| What has been validated? | Implementation/status head `99dfafcb594804d35adc3b06ac4cb1936235e3df` passed canonical run 777 with clean review/thread evidence. |
-| What is next? | Validate the exact handoff head, complete the current PR lifecycle, then reconcile fresh `main` and select the next provider-independent Stage 3 slice. |
+| Where am I? | Stage 3; PR #303 is the sole active provider-independent accessibility/interaction-integrity delivery. |
+| What is already happening? | Settings load-error focus recovery and deterministic coverage are implemented and STATUS is synchronized. |
+| What has been validated? | Fresh `main` through merged PR #302; PR #303 exact-head canonical validation is pending. |
+| What is next? | Validate PR #303 exact head, audit reviews/threads, repair findings, then create the post-merge-safe handoff and complete final exact-head lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. The current delivery is a shared client-side mutation-recovery/accessibility repair. It does not alter provider contracts, physical schemas, remote operations, persisted domain shapes, authentication, authorization, recommendation policy, execution policy, or mutation success/failure semantics.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #303 is a provider-independent client-side focus-recovery repair. It does not alter provider contracts, physical schemas, remote operations, persisted domain shapes, authentication, authorization, recommendation policy, execution policy, preference persistence semantics or retry policy.
 
 The system/data boundary remains unchanged: physical NoCodeBackend routes/methods/filtering/envelopes and generic execution-session persistence must not be treated as verified until real target-instance certification evidence exists.
 
 ## Next dependency-correct work
 
-1. run final canonical `npm run platform:validate` through Application validation on the exact current handoff head;
+1. run canonical `npm run platform:validate` through Application validation on the exact PR #303 implementation/status head;
 2. audit submitted reviews and inline review threads on that exact head and repair any in-scope finding;
-3. add `lifecycle:implementation-complete` only when final exact-head evidence is clean;
-4. allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
-5. re-enter from fresh `main` after merge, inspect repository/PR/branch/check state and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+3. when implementation-head evidence is clean, commit a post-merge-safe durable handoff that removes PR #303 as the future re-entry target;
+4. run final canonical validation and review/thread audit on that exact handoff head;
+5. signal `lifecycle:implementation-complete` only after all final evidence is clean and allow repository lifecycle automation/finalizer to complete Ready/Mergeable/Merged transitions;
+6. re-enter from fresh `main` after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
