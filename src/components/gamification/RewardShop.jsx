@@ -98,7 +98,9 @@ const RewardShop = ({ onClose }) => {
               </div>
               <div className="text-right">
                 <div className="text-sm text-yellow-100">Lifetime Earned</div>
-                <div className="text-lg font-medium">{currency.lifetime_coins_earned}</div>
+                <div className="text-lg font-medium">
+                  {currency.lifetime_coins_earned}<span className="sr-only"> coins</span>
+                </div>
               </div>
             </div>
           </div>
@@ -160,7 +162,7 @@ const RewardShop = ({ onClose }) => {
                 {/* Cost & Purchase */}
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1 text-yellow-600 font-bold">
-                    <span aria-hidden="true">💰</span> {reward.cost}
+                    <span aria-hidden="true">💰</span> {reward.cost}<span className="sr-only"> coins</span>
                   </div>
                   
                   {reward.purchased ? (
