@@ -23,6 +23,7 @@ const NextActionPanel = ({ currentMode }) => {
   const [excludedActivityIds, setExcludedActivityIds] = useState([])
   const [feedbackMessage, setFeedbackMessage] = useState('')
   const shouldRestoreFocusAfterLoadRef = useRef(false)
+  const latestRequestRef = useRef(0)
   const panelHeadingRef = useRef(null)
   const recommendationHeadingRef = useRef(null)
   const emptyStateHeadingRef = useRef(null)
@@ -33,6 +34,9 @@ const NextActionPanel = ({ currentMode }) => {
   }, [currentMode])
 
   const loadRecommendations = useCallback(async () => {
+    const requestId = latestRequestRef.current + 1
+    latestRequestRef.current = requestId
+
     try {
       setLoading(true)
       setLoadError(false)
@@ -44,13 +48,20 @@ const NextActionPanel = ({ currentMode }) => {
         limit: 3,
         excludeActivityIds: excludedActivityIds
       })
+
+      if (requestId !== latestRequestRef.current) return
+
       setResult(next)
       setSelectedIndex(0)
     } catch (error) {
+      if (requestId !== latestRequestRef.current) return
+
       console.error('Error loading next actions:', error)
       setLoadError(true)
     } finally {
-      setLoading(false)
+      if (requestId === latestRequestRef.current) {
+        setLoading(false)
+      }
     }
   }, [availableTime, energy, excludedActivityIds, location])
 

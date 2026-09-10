@@ -80,6 +80,19 @@ test('next-action retrieval failures remain retryable with focus recovery and do
   assert.match(source, /onRetry=\{refreshRecommendationsWithFocusRecovery\}/)
 })
 
+test('next-action panel ignores stale async loads after fit or mode state changes', async () => {
+  const source = await read('src/components/today/NextActionPanel.jsx')
+
+  assert.match(source, /const latestRequestRef = useRef\(0\)/)
+  assert.match(source, /const requestId = latestRequestRef\.current \+ 1\s+latestRequestRef\.current = requestId/)
+  assert.equal((source.match(/requestId !== latestRequestRef\.current/g) || []).length >= 2, true)
+  assert.match(source, /if \(requestId === latestRequestRef\.current\) \{\s+setLoading\(false\)\s+\}/)
+  assert.match(
+    source,
+    /const next = await executionEngine\.getNextActions\([\s\S]*?\)\s+\s*if \(requestId !== latestRequestRef\.current\) return\s+\s*setResult\(next\)/
+  )
+})
+
 test('Today keeps unscheduled task details secondary to the primary execution surface', async () => {
   const source = await read('src/components/today/TodayView.jsx')
   assert.match(source, /const \[showUnscheduledTasks, setShowUnscheduledTasks\] = useState\(false\)/)
