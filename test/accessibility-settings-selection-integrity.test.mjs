@@ -22,3 +22,14 @@ test('Accessibility Settings exposes labelled stateful selection groups', async 
 
   assert.equal((source.match(/role="group"/g) || []).length >= 3, true)
 })
+
+test('Accessibility Settings hides decorative icons from assistive technology', async () => {
+  const source = await read('src/components/accessibility/AccessibilitySettings.jsx')
+  const iconCount = (source.match(/<SafeIcon\b/g) || []).length
+  const hiddenIconCount = (source.match(/<SafeIcon\s+aria-hidden="true"/g) || []).length
+
+  assert.equal(iconCount, 7)
+  assert.equal(hiddenIconCount, iconCount)
+  assert.match(source, /aria-label="Close accessibility settings without saving"/)
+  assert.match(source, />\s*Apply Settings\s*<\/button>/)
+})
