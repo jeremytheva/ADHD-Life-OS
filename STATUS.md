@@ -3,19 +3,19 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Change
+gate: Completion
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #328 lifecycle, then reconcile fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
+  objective: Complete PR #329 lifecycle, then re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
   issue: null
-  pr: null
-  branch: main
+  pr: 329
+  branch: fix/onboarding-progress-recovery
 next_actions:
-  - Run canonical Application validation on the exact post-merge-safe PR #328 handoff head.
+  - Run canonical Application validation on the exact PR #329 handoff head created by this STATUS commit.
   - Audit submitted reviews and inline review threads on that same exact head.
-  - Signal lifecycle:implementation-complete only when final exact-head evidence is clean and allow repository lifecycle automation/finalizer to merge PR #328.
-  - Reconcile fresh main after merge before selecting the next dependency-correct outcome.
-  - Continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity item rather than provider-dependent durable execution work.
+  - If exact-head evidence remains clean, signal lifecycle:implementation-complete and allow repository lifecycle/finalizer automation to advance and merge PR #329.
+  - After merge, re-enter from fresh main rather than the closed PR or source branch.
+  - Continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +31,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #327 completed repository integration at main commit 2c01424c06157abd17055480d216da9fe34a9747. PR #328 implementation head 13515e458ca758d00b2925efc343c9e46ed06e2c passed canonical Application validation run 868 and had clean submitted-review and inline-thread audits. This post-merge-safe STATUS handoff commit creates a new exact head requiring fresh canonical validation and review/thread audit before lifecycle signalling.
-last_verified_commit: 13515e458ca758d00b2925efc343c9e46ed06e2c
-last_updated: 2026-09-10T21:11:56+10:00
+validation_basis: PR #329 implementation head 30b24e6a6b269e6d5ea5c9ec9563a3e92ad446fb passed canonical Application validation run 871 with clean submitted-review and inline-thread audits. This STATUS commit creates the final post-merge-safe handoff head, so exact-head canonical validation and review/thread audit must run again before lifecycle signalling.
+last_verified_commit: 30b24e6a6b269e6d5ea5c9ec9563a3e92ad446fb
+last_updated: 2026-09-10T23:14:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,22 +45,20 @@ last_updated: 2026-09-10T21:11:56+10:00
 
 ## Current objective
 
-PR #327 — `fix: hide accessibility settings decorative icons` — completed its repository-managed lifecycle and merged into `main` at `2c01424c06157abd17055480d216da9fe34a9747`.
+PR #329 — `fix: recover onboarding progress persistence failures` — is the sole active provider-independent delivery. Its implementation head `30b24e6a6b269e6d5ea5c9ec9563a3e92ad446fb` passed canonical Application validation run 871 and had clean submitted-review and inline-thread audits.
 
-PR #328 — `fix: improve development profile feedback semantics` — is the sole delivery being completed. Fresh-main reconciliation found the development-only `/dev-profiles` surface still used global switching feedback that visually covered every profile, exposed decorative glyphs to assistive technology, did not programmatically identify the current profile, and displayed obsolete copy claiming that no backend was required even though profile switching calls the configured NoCodeBackend-backed `signIn` boundary.
+The repair fails closed while authoritative onboarding progress is unavailable, reuses `LoadErrorState` for focused retry recovery, awaits each non-final progress write before advancing, and reuses `OperationErrorState` for failed step-save, completion and skip operations. The current step remains open after uncertain writes, loading/saving state is exposed programmatically, and concurrent in-flight onboarding operations are guarded. Focused deterministic coverage is in `test/onboarding-progress-write-recovery.test.mjs`.
 
-The repair reuses `OperationErrorState`, tracks the exact profile being switched, exposes `aria-busy` and a live switching status only for that profile, identifies the active profile with `aria-current` plus screen-reader text, hides redundant glyphs, and aligns development copy with the application-owned authentication/data boundary. Focused deterministic coverage is in `test/profile-selector-feedback-semantics.test.mjs`.
+This work is intentionally provider-independent. It does not change NoCodeBackend provider routes, methods, schemas, credentials, ownership rules, production authentication, execution policy or scheduling policy. It changes only how the existing application-level onboarding persistence boundary is represented and sequenced in the UI.
 
-The implementation head `13515e458ca758d00b2925efc343c9e46ed06e2c` passed canonical Application validation run 868 and submitted-review/inline-thread audits were clean. This durable handoff is intentionally post-merge-safe: after PR #328 merges, autonomous re-entry starts from fresh `main` rather than treating the closed PR or source branch as active work. Because this handoff itself is a new commit, fresh exact-head validation and review/thread audit remain required before lifecycle signalling.
-
-This work does not assert that the example development accounts exist in the target provider instance and does not change provider routes, methods, schemas, credentials, production authentication behaviour, persistence, execution policy or scheduling policy.
+This STATUS handoff is intentionally post-merge safe: after PR #329 merges, autonomous continuation must re-enter from fresh `main`, reconcile live GitHub/repository evidence, and select the next dependency-correct provider-independent Stage 3 accessibility or interaction-integrity outcome. The soon-to-close PR and source branch are not the future default re-entry target.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — final exact-head validation required |
-| Gate state | Implementation-head validation passed; post-merge-safe handoff committed and awaiting fresh exact-head canonical validation/review audit |
+| Current gate | COMPLETION — final exact-head evidence required |
+| Gate state | Implementation-head validation/review evidence passed; post-merge-safe durable handoff committed; final exact-head validation/review audit pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -69,16 +67,17 @@ This work does not assert that the example development accounts exist in the tar
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #327 — Accessibility Settings decorative icon semantics; merged at `2c01424c06157abd17055480d216da9fe34a9747` |
-| Delivery completing | PR #328 — Development profile feedback semantics |
-| Source branch | `fix/dev-profile-selector-feedback` |
-| Post-merge re-entry target | fresh `main` |
-| Implemented change | Development profile errors, busy/current-profile semantics and architecture copy are explicit and consistent |
-| Deterministic coverage | `test/profile-selector-feedback-semantics.test.mjs` |
-| Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | PASS — Application validation run 868 on `13515e458ca758d00b2925efc343c9e46ed06e2c` |
+| Latest merged delivery | PR #328 — Development profile feedback semantics; merged at `8738bf208c672002b32c1772a0c350ab1afef6e9` |
+| Delivery completing | PR #329 — Onboarding progress persistence recovery |
+| Source branch | `fix/onboarding-progress-recovery` |
+| Post-merge re-entry target | fresh `main` after repository-managed merge |
+| Implemented change | Onboarding no longer advances on an unconfirmed progress write and exposes recoverable load/save/complete/skip failures |
+| Deterministic coverage | `test/onboarding-progress-write-recovery.test.mjs` |
+| Provider/data impact | No contract change; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
+| Implementation-head validation | PASS — Application validation run 871 on `30b24e6a6b269e6d5ea5c9ec9563a3e92ad446fb` |
 | Implementation-head review audit | PASS — no submitted reviews or inline review threads requiring action |
 | Final handoff-head validation | PENDING after this STATUS commit |
+| Final handoff-head review audit | PENDING after this STATUS commit |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -86,24 +85,24 @@ This work does not assert that the example development accounts exist in the tar
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #328 is the sole provider-independent delivery being completed and awaits final exact-head lifecycle evidence. |
-| What is already happening? | The development profile selector has explicit recoverable error, local busy/current-profile semantics and copy consistent with the real auth boundary. |
-| What has been validated? | PR #327 is merged. PR #328 implementation head passed canonical run 868 and review/thread audits; the final STATUS handoff head requires fresh validation. |
-| What is next? | Validate and audit the exact PR #328 handoff head, signal implementation complete only if clean, allow the lifecycle finalizer to merge, then re-enter from fresh `main` and continue the next dependency-correct Stage 3 interaction-integrity slice. |
+| Where am I? | Stage 3; PR #329 is the sole provider-independent delivery and is at its final exact-head completion gate. |
+| What is already happening? | Onboarding progress recovery is implemented and implementation-head validation passed; the durable post-merge handoff is now committed. |
+| What has been validated? | PR #329 implementation head `30b24e6a6b269e6d5ea5c9ec9563a3e92ad446fb` passed canonical Application validation run 871 with clean review/thread audits. |
+| What is next? | Validate and audit the final handoff head; if clean, signal implementation complete and allow repository lifecycle/finalizer automation to merge; then re-enter from fresh main. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #328 does not alter provider contracts, persistence, authentication routing, execution policy, scheduling policy or durable execution behaviour.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #329 does not alter provider contracts, physical provider operations, persistence schemas, authentication routing, execution policy, scheduling policy or durable execution behaviour.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact post-merge-safe PR #328 handoff head;
+1. run canonical Application validation on the exact PR #329 handoff head created by this STATUS commit;
 2. audit submitted reviews and inline review threads on that same exact head;
-3. if clean, signal `lifecycle:implementation-complete` and allow the repository lifecycle/finalizer to complete merge;
-4. re-enter from fresh `main`, reconcile repository/GitHub state and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-5. continue successive safe work while no valid stop condition exists;
+3. if clean, signal `lifecycle:implementation-complete` and allow the repository lifecycle/finalizer to advance and merge PR #329;
+4. re-enter from fresh `main` after merge and reconcile repository/GitHub evidence;
+5. continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
 6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
