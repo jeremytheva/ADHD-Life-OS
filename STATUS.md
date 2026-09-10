@@ -4,16 +4,16 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Change
-execution_state: VALIDATING
+execution_state: READY
 current_work:
-  objective: Prevent stale asynchronous Today timeline loads from overwriting newer mode or refresh state.
+  objective: Re-enter from fresh main after PR #334 and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
   issue: null
-  pr: 334
-  branch: fix/today-latest-refresh-integrity
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical validation on the exact repaired PR #334 head.
-  - Audit submitted reviews and inline review threads; repair any in-scope finding on PR #334.
-  - When implementation and evidence are complete, make the durable post-merge handoff safe for fresh-main continuation and signal lifecycle completion.
+  - Run final exact-head canonical validation on this PR #334 post-merge-safe STATUS handoff.
+  - Re-audit submitted reviews and inline review threads on that exact head.
+  - If the final head remains clean, signal lifecycle implementation completion and allow repository-managed readiness/merge finalization to proceed.
   - After merge, inspect fresh main for the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
@@ -24,15 +24,15 @@ owner_decision:
   recommendation: null
 validation:
   governance: PASS
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Application validation run 886 reached canonical validation on PR #334 and passed dependency audit plus governance, then failed lint only in the new deterministic test because URL was not imported and a regex used literal spaces. Both lint findings are repaired on the active branch; exact-head canonical validation is pending.
-last_verified_commit: cf35ccf0d355c6c475c2de7930e29083eaec1d95
-last_updated: 2026-09-11T09:12:56+10:00
+validation_basis: PR #334 implementation head d7368a37b36ef68becfcc3f62ab6690806e37959 passed canonical Application validation run 888 after the run 886 test-lint findings were repaired. Submitted reviews and inline review threads were clean. This STATUS-only post-merge-safe handoff commit requires final exact-head canonical validation before lifecycle completion.
+last_verified_commit: d7368a37b36ef68becfcc3f62ab6690806e37959
+last_updated: 2026-09-11T09:18:30+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,21 +44,21 @@ last_updated: 2026-09-11T09:12:56+10:00
 
 ## Current objective
 
-PR #334 — `fix: keep Today timeline aligned to latest refresh` — is the sole active delivery.
+PR #334 — `fix: keep Today timeline aligned to latest refresh` — has completed its implementation outcome. It prevents stale asynchronous `TodayView` timeline loads from overwriting timeline, error or loading state belonging to a newer mode change or refresh.
 
-Fresh-main inspection after PR #333 found that `TodayView.loadTimeline()` allowed overlapping asynchronous requests. A slower request started for an older mode or refresh could resolve after a newer request and overwrite the newer timeline, load-error state, or loading state. PR #334 applies the same latest-request integrity pattern already established in Task Selector and Next Action while preserving current timeline filtering and task-completion refresh semantics.
+Application validation run 886 exposed two mechanical lint findings in the new deterministic test: `URL` was not imported and a regex used literal spaces. Both were repaired in place. Canonical Application validation run 888 then passed on exact implementation head `d7368a37b36ef68becfcc3f62ab6690806e37959`, and submitted reviews plus inline review threads were clean.
 
-Application validation run 886 passed dependency audit and governance, then failed at lint in the new deterministic test on two mechanical findings: `URL` was not imported and a regex contained four literal spaces. Both findings were repaired in place on PR #334. No implementation defect or provider dependency was identified by that run.
+This STATUS update is the required post-merge-safe durable handoff. It intentionally removes PR #334 and its soon-to-close source branch as the future re-entry target. The resulting exact handoff head must pass canonical validation and remain review-clean before `lifecycle:implementation-complete` is signalled.
 
-This work is provider-independent. It does not modify provider routes, methods, schemas, credentials, persistence contracts, execution policy, recommendation scoring, or scheduling policy.
+This work remains provider-independent. It does not modify provider routes, methods, schemas, credentials, persistence contracts, execution policy, recommendation scoring, or scheduling policy.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — repaired implementation awaiting exact-head validation |
-| Gate state | PR #334 active; run 886 lint findings repaired; canonical validation and review/thread audit pending on current head |
-| Execution state | VALIDATING |
+| Current gate | CHANGE — final exact-head lifecycle evidence required |
+| Gate state | PR #334 implementation head validated and review-clean; post-merge-safe STATUS handoff committed and final exact-head validation pending |
+| Execution state | READY after merge; current PR remains at lifecycle validation until its final head passes |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -67,11 +67,12 @@ This work is provider-independent. It does not modify provider routes, methods, 
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #333 — Today Next Action latest-request integrity; merged at `cf35ccf0d355c6c475c2de7930e29083eaec1d95` |
-| Active delivery | PR #334 — Today timeline latest-refresh integrity |
+| Active delivery before merge | PR #334 — Today timeline latest-refresh integrity |
 | Implemented change | Only the latest asynchronous Today timeline request may publish timeline/error state or clear loading |
-| Deterministic coverage | `test/today-latest-refresh-integrity.test.mjs`; run 886 lint findings repaired |
-| Canonical validation | PENDING on repaired exact PR #334 head; run 886 failed at lint after audit/governance passed |
-| Review/thread audit | PENDING on repaired exact head |
+| Deterministic coverage | `test/today-latest-refresh-integrity.test.mjs` |
+| Implementation-head validation | PASS — Application validation run 888 on `d7368a37b36ef68becfcc3f62ab6690806e37959` |
+| Implementation-head review audit | PASS — no submitted reviews or inline review threads requiring action |
+| Final exact-head validation | PENDING on this STATUS-only handoff head |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED / not implied by repository validation or merge |
 | Current blocker | None |
@@ -81,10 +82,10 @@ This work is provider-independent. It does not modify provider routes, methods, 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 with PR #334 as the sole active delivery. |
-| What is already happening? | Today timeline latest-refresh integrity is implemented; run 886 lint findings were repaired and the exact current head requires validation/review evidence. |
-| What has been validated? | PR #333 is merged. On PR #334, run 886 passed dependency audit and governance before two test-file lint findings stopped the run; those findings are now repaired. |
-| What is next? | Validate the repaired exact PR #334 head, audit reviews/threads, repair any in-scope finding, then complete the post-merge-safe handoff and lifecycle. |
+| Where am I? | Stage 3; after PR #334 merges, re-enter from fresh `main` with no active delivery inherited from this branch. |
+| What is already happening? | Today timeline latest-refresh integrity is complete; this handoff is awaiting final exact-head lifecycle evidence. |
+| What has been validated? | PR #334 implementation head `d7368a37b36ef68becfcc3f62ab6690806e37959` passed canonical run 888 and was review/thread clean. |
+| What is next? | Validate this final handoff head, complete repository lifecycle, then inspect fresh `main` for the next evidence-backed provider-independent Stage 3 interaction-integrity outcome. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -94,11 +95,11 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact repaired PR #334 head;
-2. audit submitted reviews and inline review threads on that exact head;
+1. run final exact-head canonical Application validation on this PR #334 handoff head;
+2. re-audit submitted reviews and inline review threads on that exact head;
 3. repair any in-scope finding on PR #334 rather than starting competing work;
-4. when acceptance and evidence are complete, update this file to a post-merge-safe fresh-main handoff and signal `lifecycle:implementation-complete`;
-5. after repository-managed merge, re-enter from fresh `main` and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+4. if the final head is clean, signal `lifecycle:implementation-complete` and allow repository-managed readiness/merge finalization to proceed;
+5. after merge, re-enter from fresh `main` and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
 6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
