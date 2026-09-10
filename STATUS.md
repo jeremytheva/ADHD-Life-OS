@@ -3,19 +3,19 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Integration
+gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Complete the repository-managed lifecycle for the validated onboarding-state load recovery delivery, then re-enter from fresh main for the next provider-independent Stage 3 slice.
+  objective: Validate and complete the repository-managed lifecycle for Mode Preferences control semantics without changing provider or preference behavior.
   issue: null
-  pr: null
-  branch: null
+  pr: 326
+  branch: fix/mode-preferences-control-semantics
 next_actions:
-  - Run canonical Application validation on this post-merge-safe STATUS handoff head.
+  - Run canonical Application validation on the exact current PR #326 head.
   - Audit submitted reviews and inline review threads on that same exact head.
-  - If clean, signal lifecycle:implementation-complete on PR #325 and allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions.
-  - Reconcile fresh main after merge before selecting the next implementation slice.
-  - Continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity item from fresh repository evidence.
+  - If implementation evidence is clean, create the post-merge-safe STATUS handoff and revalidate that exact head before lifecycle signalling.
+  - Allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions only after exact-head evidence is clean.
+  - Reconcile fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity item.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation passed on exact implementation/status head fc0b9c3a69c5df9f491a40bc8197eb36812b7798 after repairing the run 858 deterministic-test lint defect; submitted reviews and inline review threads were clean on that head. This post-merge-safe STATUS handoff commit requires fresh exact-head validation before lifecycle signalling.
-last_verified_commit: fc0b9c3a69c5df9f491a40bc8197eb36812b7798
-last_updated: 2026-09-10T16:16:00+10:00
+validation_basis: PR #326 implementation and extension of the existing Mode Preferences semantics regression coverage are committed; canonical exact-head Application validation is required on the synchronized status head.
+last_verified_commit: 48460c6004cf03dd0e118054f4daed60a1bb630d
+last_updated: 2026-09-10T16:25:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,22 +45,18 @@ last_updated: 2026-09-10T16:16:00+10:00
 
 ## Current objective
 
-PR #324 — `fix: surface subtask mutation recovery` — completed its repository-managed lifecycle and merged into `main` at `e7dbda3948dd40cd33e0ab60bb902c200b9918be`.
+PR #325 — `fix: recover onboarding state load failures` — completed its repository-managed lifecycle and merged into `main` at `48460c6004cf03dd0e118054f4daed60a1bb630d` after exact-head canonical validation and clean review/thread evidence.
 
-PR #325 — `fix: recover onboarding state load failures` — implemented the current provider-independent Stage 3 interaction-integrity slice. A failed authoritative onboarding-state read no longer silently forces an authenticated user into onboarding. The application preserves uncertainty, presents the established focused `LoadErrorState`, explains that saved onboarding state has not been replaced, and provides an explicit retry that re-runs the same authoritative read.
+Fresh-main reconciliation found no competing open delivery. PR #326 — `fix: expose mode preference control state` — is now the sole active Stage 3 delivery. Fresh inspection found Mode Preferences stateful controls communicated key state visually but incompletely to assistive technology: Visual Theme and View Density choices lacked programmatic selected state, three toggle controls lacked accessible names/on-off state, and Default Sort Order was not programmatically associated with its select.
 
-Successful onboarding-state resolution, onboarding completion, provider contracts, persistence schemas, authentication, routing, execution policy and scheduling policy remain unchanged. Deterministic source-level regression coverage is in `test/onboarding-load-recovery.test.mjs`.
-
-Application validation run 858 on head `f252cbeaa54ed67aced0fe349d385a9a48f948be` identified a focused lint defect in the new test (`URL` was referenced without an explicit Node import). The existing PR was repaired in place by importing `URL` from `node:url`. Canonical Application validation then passed on exact implementation/status head `fc0b9c3a69c5df9f491a40bc8197eb36812b7798`; submitted reviews and inline review threads were clean on that same head.
-
-This document is deliberately post-merge-safe. After PR #325 merges, fresh `main` should not re-enter by treating the closed PR or deleted source branch as active work.
+PR #326 preserves existing values, visual presentation, save behaviour and provider boundaries while exposing equivalent control semantics. Visual Theme and View Density now use semantic grouping and `aria-pressed`; Show Animations, Mode Notifications and Hide Completed Tasks expose named switch semantics with `aria-checked`; Default Sort Order is associated using `htmlFor`/`id`; decorative iconography is hidden from assistive technology. Existing `test/mode-preferences-dialog-semantics.test.mjs` coverage was extended rather than creating a parallel regression surface.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head lifecycle evidence required |
-| Gate state | Implementation-head validation passed; post-merge-safe handoff commit now requires fresh exact-head validation and review/thread audit |
+| Current gate | CHANGE — exact-head implementation validation required |
+| Gate state | Implementation and deterministic regression coverage complete; canonical validation pending on synchronized PR head |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -69,15 +65,14 @@ This document is deliberately post-merge-safe. After PR #325 merges, fresh `main
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #324 — subtask mutation recovery; merged at `e7dbda3948dd40cd33e0ab60bb902c200b9918be` |
-| Delivery completing lifecycle | PR #325 — onboarding-state load recovery |
-| Future default-branch active delivery | None; select the next slice only after PR #325 merges and fresh-main reconciliation completes |
-| Implemented change | Failed onboarding-state reads expose recoverable retry UI instead of silently forcing onboarding |
-| Deterministic coverage | `test/onboarding-load-recovery.test.mjs`; lint environment repaired with explicit `node:url` import |
+| Latest merged delivery | PR #325 — onboarding-state load recovery; merged at `48460c6004cf03dd0e118054f4daed60a1bb630d` |
+| Active delivery | PR #326 — Mode Preferences control semantics |
+| Active branch | `fix/mode-preferences-control-semantics` |
+| Implemented change | Stateful Mode Preferences choices, switches and sort control now expose their visual state/labels programmatically |
+| Deterministic coverage | Existing `test/mode-preferences-dialog-semantics.test.mjs` extended |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | PASS — canonical Application validation on `fc0b9c3a69c5df9f491a40bc8197eb36812b7798` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
-| Final handoff-head validation | NOT_RUN; required before implementation-complete signalling |
+| Exact-head validation | NOT_RUN on the synchronized status head |
+| Review audit | NOT_RUN on the synchronized status head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -85,25 +80,26 @@ This document is deliberately post-merge-safe. After PR #325 merges, fresh `main
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #325 implementation evidence is clean and its post-merge-safe handoff is awaiting final exact-head lifecycle validation. |
-| What is already happening? | Onboarding-state read failures preserve authoritative-state uncertainty and expose retry recovery through the shared load-error surface. |
-| What has been validated? | Canonical Application validation passed on `fc0b9c3a69c5df9f491a40bc8197eb36812b7798`; submitted reviews and inline threads were clean on that head. |
-| What is next? | Validate and audit this handoff head, signal implementation complete only if exact-head evidence remains clean, allow the lifecycle finalizer to merge, then reconcile fresh main and continue the next independent Stage 3 item. |
+| Where am I? | Stage 3; PR #326 is the sole active delivery and is awaiting exact-head canonical validation. |
+| What is already happening? | Mode Preferences stateful controls expose selected/toggle state and programmatic labels without changing preference behaviour. |
+| What has been validated? | PR #325 is merged. PR #326 has deterministic coverage committed but still requires canonical exact-head Application validation. |
+| What is next? | Validate and audit the exact current head; if clean, commit the post-merge-safe handoff, revalidate, signal implementation complete and allow lifecycle automation to merge. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #325 does not alter provider contracts, persistence, authentication, routing, execution policy, scheduling policy or durable execution behaviour.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #326 does not alter provider contracts, persistence, authentication, routing, execution policy, scheduling policy or durable execution behaviour.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through Application validation on this post-merge-safe handoff head;
+1. run canonical `npm run platform:validate` through Application validation on the exact PR #326 head;
 2. audit submitted reviews and inline review threads on that same exact head;
-3. if clean, signal `lifecycle:implementation-complete` on PR #325 and allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions;
-4. re-enter from fresh `main` after merge and reconcile open PRs, branches, checks and durable state before selecting new work;
-5. continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+3. if clean, commit the required post-merge-safe `STATUS.md` handoff and run fresh exact-head validation;
+4. signal `lifecycle:implementation-complete` only when final exact-head validation and review evidence are clean;
+5. allow repository lifecycle automation/finalizer to complete merge, then re-enter from fresh `main`;
+6. continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
