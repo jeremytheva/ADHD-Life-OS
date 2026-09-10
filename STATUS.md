@@ -3,19 +3,19 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Change
+gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete the repository-managed lifecycle for onboarding-state load recovery without changing provider contracts.
+  objective: Complete the repository-managed lifecycle for the validated onboarding-state load recovery delivery, then re-enter from fresh main for the next provider-independent Stage 3 slice.
   issue: null
-  pr: 325
-  branch: fix/onboarding-load-recovery
+  pr: null
+  branch: null
 next_actions:
-  - Run canonical Application validation on the exact current PR #325 head after repairing the deterministic test lint defect found by run 858.
+  - Run canonical Application validation on this post-merge-safe STATUS handoff head.
   - Audit submitted reviews and inline review threads on that same exact head.
-  - If implementation evidence is clean, create the post-merge-safe STATUS handoff and revalidate that exact head before lifecycle signalling.
-  - Allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions only after exact-head evidence is clean.
-  - Reconcile fresh main after merge and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity item.
+  - If clean, signal lifecycle:implementation-complete on PR #325 and allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions.
+  - Reconcile fresh main after merge before selecting the next implementation slice.
+  - Continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity item from fresh repository evidence.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 858 failed on prior head f252cbeaa54ed67aced0fe349d385a9a48f948be because test/onboarding-load-recovery.test.mjs referenced URL without importing node:url. The test lint environment was repaired on the existing PR branch; fresh exact-head validation is required.
-last_verified_commit: e7dbda3948dd40cd33e0ab60bb902c200b9918be
-last_updated: 2026-09-10T16:11:00+10:00
+validation_basis: Application validation passed on exact implementation/status head fc0b9c3a69c5df9f491a40bc8197eb36812b7798 after repairing the run 858 deterministic-test lint defect; submitted reviews and inline review threads were clean on that head. This post-merge-safe STATUS handoff commit requires fresh exact-head validation before lifecycle signalling.
+last_verified_commit: fc0b9c3a69c5df9f491a40bc8197eb36812b7798
+last_updated: 2026-09-10T16:16:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -47,18 +47,20 @@ last_updated: 2026-09-10T16:11:00+10:00
 
 PR #324 — `fix: surface subtask mutation recovery` — completed its repository-managed lifecycle and merged into `main` at `e7dbda3948dd40cd33e0ab60bb902c200b9918be`.
 
-Fresh-main reconciliation found no competing open delivery. PR #325 — `fix: recover onboarding state load failures` — remains the sole active Stage 3 delivery. Before this change, an authenticated user's failed onboarding-state read was caught and converted into `showOnboarding=true`, silently substituting an onboarding workflow for unresolved authoritative state. PR #325 instead preserves uncertainty, presents the existing focused `LoadErrorState`, and provides an explicit retry that re-runs the same onboarding-state read.
+PR #325 — `fix: recover onboarding state load failures` — implemented the current provider-independent Stage 3 interaction-integrity slice. A failed authoritative onboarding-state read no longer silently forces an authenticated user into onboarding. The application preserves uncertainty, presents the established focused `LoadErrorState`, explains that saved onboarding state has not been replaced, and provides an explicit retry that re-runs the same authoritative read.
 
 Successful onboarding-state resolution, onboarding completion, provider contracts, persistence schemas, authentication, routing, execution policy and scheduling policy remain unchanged. Deterministic source-level regression coverage is in `test/onboarding-load-recovery.test.mjs`.
 
-Application validation run 858 on head `f252cbeaa54ed67aced0fe349d385a9a48f948be` passed dependency audit and governance, then failed at lint because the new deterministic test referenced the global `URL` constructor under the repository's Node lint environment without importing it. The existing PR was repaired in place by importing `URL` from `node:url`; no application behavior or scope changed.
+Application validation run 858 on head `f252cbeaa54ed67aced0fe349d385a9a48f948be` identified a focused lint defect in the new test (`URL` was referenced without an explicit Node import). The existing PR was repaired in place by importing `URL` from `node:url`. Canonical Application validation then passed on exact implementation/status head `fc0b9c3a69c5df9f491a40bc8197eb36812b7798`; submitted reviews and inline review threads were clean on that same head.
+
+This document is deliberately post-merge-safe. After PR #325 merges, fresh `main` should not re-enter by treating the closed PR or deleted source branch as active work.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — exact-head implementation validation required |
-| Gate state | Implementation complete; run 858 lint defect repaired; fresh canonical validation required on the current synchronized PR head |
+| Current gate | INTEGRATION — final exact-head lifecycle evidence required |
+| Gate state | Implementation-head validation passed; post-merge-safe handoff commit now requires fresh exact-head validation and review/thread audit |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -68,14 +70,14 @@ Application validation run 858 on head `f252cbeaa54ed67aced0fe349d385a9a48f948be
 | State | Current value |
 | --- | --- |
 | Latest merged delivery | PR #324 — subtask mutation recovery; merged at `e7dbda3948dd40cd33e0ab60bb902c200b9918be` |
-| Active delivery | PR #325 — onboarding-state load recovery |
-| Active branch | `fix/onboarding-load-recovery` |
-| Implemented change | Failed onboarding-state reads expose recoverable UI instead of silently forcing onboarding |
-| Deterministic coverage | `test/onboarding-load-recovery.test.mjs`; Node URL lint environment repaired after run 858 |
+| Delivery completing lifecycle | PR #325 — onboarding-state load recovery |
+| Future default-branch active delivery | None; select the next slice only after PR #325 merges and fresh-main reconciliation completes |
+| Implemented change | Failed onboarding-state reads expose recoverable retry UI instead of silently forcing onboarding |
+| Deterministic coverage | `test/onboarding-load-recovery.test.mjs`; lint environment repaired with explicit `node:url` import |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Prior validation | FAIL — Application validation run 858 on `f252cbeaa54ed67aced0fe349d385a9a48f948be`, isolated to `URL is not defined` lint error in the new deterministic test |
-| Exact-head validation | NOT_RUN after the repair/status synchronization commits |
-| Review audit | NOT_RUN on the current exact head |
+| Implementation-head validation | PASS — canonical Application validation on `fc0b9c3a69c5df9f491a40bc8197eb36812b7798` |
+| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
+| Final handoff-head validation | NOT_RUN; required before implementation-complete signalling |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -83,10 +85,10 @@ Application validation run 858 on head `f252cbeaa54ed67aced0fe349d385a9a48f948be
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #325 is the sole active delivery and is awaiting fresh exact-head canonical validation after a focused test-lint repair. |
+| Where am I? | Stage 3; PR #325 implementation evidence is clean and its post-merge-safe handoff is awaiting final exact-head lifecycle validation. |
 | What is already happening? | Onboarding-state read failures preserve authoritative-state uncertainty and expose retry recovery through the shared load-error surface. |
-| What has been validated? | PR #324 is merged. PR #325 run 858 passed dependency audit/governance but failed lint on the new test's missing `node:url` import; that defect is repaired in place and needs revalidation. |
-| What is next? | Validate and audit the exact current head; if clean, commit the post-merge-safe handoff, revalidate, signal implementation complete and allow lifecycle automation to merge. |
+| What has been validated? | Canonical Application validation passed on `fc0b9c3a69c5df9f491a40bc8197eb36812b7798`; submitted reviews and inline threads were clean on that head. |
+| What is next? | Validate and audit this handoff head, signal implementation complete only if exact-head evidence remains clean, allow the lifecycle finalizer to merge, then reconcile fresh main and continue the next independent Stage 3 item. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -96,13 +98,12 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through Application validation on the exact current PR #325 head;
+1. run canonical `npm run platform:validate` through Application validation on this post-merge-safe handoff head;
 2. audit submitted reviews and inline review threads on that same exact head;
-3. if clean, commit the required post-merge-safe `STATUS.md` handoff and run fresh exact-head validation;
-4. signal `lifecycle:implementation-complete` only when final exact-head validation and review evidence are clean;
-5. allow repository lifecycle automation/finalizer to complete merge, then re-enter from fresh `main`;
-6. continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+3. if clean, signal `lifecycle:implementation-complete` on PR #325 and allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions;
+4. re-enter from fresh `main` after merge and reconcile open PRs, branches, checks and durable state before selecting new work;
+5. continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
