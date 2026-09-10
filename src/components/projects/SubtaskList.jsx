@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import OperationErrorState from '../../common/OperationErrorState'
 import { projectService } from '../../services/projectService'
 
 const { FiCheck, FiPlus, FiTrash2, FiClock } = FiIcons
@@ -16,10 +17,12 @@ const SubtaskList = ({
 }) => {
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('')
   const [adding, setAdding] = useState(false)
+  const [operationError, setOperationError] = useState('')
 
   const handleAddSubtask = async () => {
     if (!newSubtaskTitle.trim()) return
 
+    setOperationError('')
     try {
       setAdding(true)
       await projectService.createSubtask(taskId, {
@@ -30,21 +33,25 @@ const SubtaskList = ({
       // Parent will reload
     } catch (error) {
       console.error('Error adding subtask:', error)
+      setOperationError('We couldn’t confirm that subtask was added. Your subtask title is still here so you can review the list and try again.')
     } finally {
       setAdding(false)
     }
   }
 
   const handleDeleteSubtask = async (subtaskId) => {
+    setOperationError('')
     try {
       await projectService.deleteSubtask(subtaskId)
       // Parent will reload
     } catch (error) {
       console.error('Error deleting subtask:', error)
+      setOperationError('We couldn’t confirm that subtask was deleted. It is still shown in the list so you can review the current state before trying again.')
     }
   }
 
   const handleToggleSubtask = async (subtask) => {
+    setOperationError('')
     try {
       if (subtask.is_completed) {
         await projectService.uncompleteSubtask(subtask.id)
@@ -57,6 +64,7 @@ const SubtaskList = ({
       // Parent will reload
     } catch (error) {
       console.error('Error toggling subtask:', error)
+      setOperationError('We couldn’t confirm that subtask’s completion change. Its previous state is still shown here so you can review it and try again.')
     }
   }
 
@@ -67,6 +75,12 @@ const SubtaskList = ({
       exit={{ opacity: 0, height: 0 }}
       className="border-t border-slate-200 bg-slate-50 p-4"
     >
+      {operationError && (
+        <div className="mb-3">
+          <OperationErrorState message={operationError} onDismiss={() => setOperationError('')} />
+        </div>
+      )}
+
       {/* Subtask List */}
       {subtasks.length > 0 && (
         <ul className="space-y-2 mb-3" aria-label="Subtasks">
