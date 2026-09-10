@@ -46,7 +46,7 @@ const ModePreferences = ({ modeId, onClose }) => {
         <div className={`bg-gradient-to-r ${mode.gradient} p-6 text-white`}>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="text-4xl">{mode.icon}</div>
+              <div className="text-4xl" aria-hidden="true">{mode.icon}</div>
               <div>
                 <h2 id="mode-preferences-title" className="text-2xl font-bold">{mode.label} Mode Preferences</h2>
                 <p className="text-white text-opacity-90 text-sm mt-1">
@@ -67,13 +67,13 @@ const ModePreferences = ({ modeId, onClose }) => {
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Theme */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
-              <div className="flex items-center gap-2">
-                <SafeIcon icon={FiMonitor} className="w-4 h-4" />
+          <fieldset>
+            <legend className="block text-sm font-medium text-slate-700 mb-3">
+              <span className="flex items-center gap-2">
+                <SafeIcon icon={FiMonitor} className="w-4 h-4" aria-hidden="true" />
                 <span>Visual Theme</span>
-              </div>
-            </label>
+              </span>
+            </legend>
             <div className="grid grid-cols-3 gap-3">
               {[
                 { value: 'default', label: 'Default', icon: FiSun },
@@ -82,6 +82,8 @@ const ModePreferences = ({ modeId, onClose }) => {
               ].map(theme => (
                 <button
                   key={theme.value}
+                  type="button"
+                  aria-pressed={preferences.theme === theme.value}
                   onClick={() => handleChange('theme', theme.value)}
                   className={`
                     p-4 rounded-lg border-2 transition-all
@@ -91,23 +93,23 @@ const ModePreferences = ({ modeId, onClose }) => {
                     }
                   `}
                 >
-                  <SafeIcon icon={theme.icon} className="w-6 h-6 mx-auto mb-2 text-slate-600" />
+                  <SafeIcon icon={theme.icon} className="w-6 h-6 mx-auto mb-2 text-slate-600" aria-hidden="true" />
                   <div className="text-sm font-medium text-slate-900">
                     {theme.label}
                   </div>
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
 
           {/* View Mode */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
-              <div className="flex items-center gap-2">
-                <SafeIcon icon={FiEye} className="w-4 h-4" />
+          <fieldset>
+            <legend className="block text-sm font-medium text-slate-700 mb-3">
+              <span className="flex items-center gap-2">
+                <SafeIcon icon={FiEye} className="w-4 h-4" aria-hidden="true" />
                 <span>View Density</span>
-              </div>
-            </label>
+              </span>
+            </legend>
             <div className="grid grid-cols-2 gap-3">
               {[
                 { value: 'detailed', label: 'Detailed', desc: 'Show all information' },
@@ -115,6 +117,8 @@ const ModePreferences = ({ modeId, onClose }) => {
               ].map(view => (
                 <button
                   key={view.value}
+                  type="button"
+                  aria-pressed={preferences.viewMode === view.value}
                   onClick={() => handleChange('viewMode', view.value)}
                   className={`
                     p-4 rounded-lg border-2 transition-all text-left
@@ -133,14 +137,15 @@ const ModePreferences = ({ modeId, onClose }) => {
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
 
           {/* Sort By */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
+            <label htmlFor="mode-preferences-sort" className="block text-sm font-medium text-slate-700 mb-3">
               Default Sort Order
             </label>
             <select
+              id="mode-preferences-sort"
               value={preferences.sortBy}
               onChange={(e) => handleChange('sortBy', e.target.value)}
               className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -157,7 +162,7 @@ const ModePreferences = ({ modeId, onClose }) => {
             {/* Animations */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <SafeIcon icon={FiZap} className="w-4 h-4 text-slate-600" />
+                <SafeIcon icon={FiZap} className="w-4 h-4 text-slate-600" aria-hidden="true" />
                 <div>
                   <div className="text-sm font-medium text-slate-900">
                     Show Animations
@@ -168,14 +173,18 @@ const ModePreferences = ({ modeId, onClose }) => {
                 </div>
               </div>
               <button
+                type="button"
+                role="switch"
+                aria-checked={preferences.showAnimations}
+                aria-label="Show animations"
                 onClick={() => handleChange('showAnimations', !preferences.showAnimations)}
                 className={`
                   w-12 h-6 rounded-full transition-colors
                   ${preferences.showAnimations ? 'bg-green-500' : 'bg-slate-300'}
                 `}
               >
-                <div className={`
-                  w-5 h-5 bg-white rounded-full shadow-md transition-transform
+                <span aria-hidden="true" className={`
+                  block w-5 h-5 bg-white rounded-full shadow-md transition-transform
                   ${preferences.showAnimations ? 'translate-x-6' : 'translate-x-0.5'}
                 `} />
               </button>
@@ -184,7 +193,7 @@ const ModePreferences = ({ modeId, onClose }) => {
             {/* Notifications */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <SafeIcon icon={FiBell} className="w-4 h-4 text-slate-600" />
+                <SafeIcon icon={FiBell} className="w-4 h-4 text-slate-600" aria-hidden="true" />
                 <div>
                   <div className="text-sm font-medium text-slate-900">
                     Mode Notifications
@@ -195,14 +204,18 @@ const ModePreferences = ({ modeId, onClose }) => {
                 </div>
               </div>
               <button
+                type="button"
+                role="switch"
+                aria-checked={preferences.showNotifications}
+                aria-label="Mode notifications"
                 onClick={() => handleChange('showNotifications', !preferences.showNotifications)}
                 className={`
                   w-12 h-6 rounded-full transition-colors
                   ${preferences.showNotifications ? 'bg-green-500' : 'bg-slate-300'}
                 `}
               >
-                <div className={`
-                  w-5 h-5 bg-white rounded-full shadow-md transition-transform
+                <span aria-hidden="true" className={`
+                  block w-5 h-5 bg-white rounded-full shadow-md transition-transform
                   ${preferences.showNotifications ? 'translate-x-6' : 'translate-x-0.5'}
                 `} />
               </button>
@@ -211,7 +224,7 @@ const ModePreferences = ({ modeId, onClose }) => {
             {/* Hide Completed */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <SafeIcon icon={FiEyeOff} className="w-4 h-4 text-slate-600" />
+                <SafeIcon icon={FiEyeOff} className="w-4 h-4 text-slate-600" aria-hidden="true" />
                 <div>
                   <div className="text-sm font-medium text-slate-900">
                     Hide Completed Tasks
@@ -222,14 +235,18 @@ const ModePreferences = ({ modeId, onClose }) => {
                 </div>
               </div>
               <button
+                type="button"
+                role="switch"
+                aria-checked={preferences.hideCompleted}
+                aria-label="Hide completed tasks"
                 onClick={() => handleChange('hideCompleted', !preferences.hideCompleted)}
                 className={`
                   w-12 h-6 rounded-full transition-colors
                   ${preferences.hideCompleted ? 'bg-green-500' : 'bg-slate-300'}
                 `}
               >
-                <div className={`
-                  w-5 h-5 bg-white rounded-full shadow-md transition-transform
+                <span aria-hidden="true" className={`
+                  block w-5 h-5 bg-white rounded-full shadow-md transition-transform
                   ${preferences.hideCompleted ? 'translate-x-6' : 'translate-x-0.5'}
                 `} />
               </button>
@@ -241,16 +258,18 @@ const ModePreferences = ({ modeId, onClose }) => {
         <div className="p-6 border-t border-slate-200 bg-slate-50">
           <div className="flex gap-3">
             <button
+              type="button"
               onClick={onClose}
               className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition-colors"
             >
               Cancel
             </button>
             <button
+              type="button"
               onClick={handleSave}
               className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
             >
-              <SafeIcon icon={FiSave} className="w-4 h-4" />
+              <SafeIcon icon={FiSave} className="w-4 h-4" aria-hidden="true" />
               Save Preferences
             </button>
           </div>
