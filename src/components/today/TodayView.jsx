@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useCallback, useState, useEffect } from 'react'
+import React, { lazy, Suspense, useCallback, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format, parseISO } from 'date-fns'
 import * as FiIcons from 'react-icons/fi'
@@ -35,12 +35,19 @@ const TodayView = () => {
   const [showGamification, setShowGamification] = useState(false)
   const [showUnscheduledTasks, setShowUnscheduledTasks] = useState(false)
   const [showAllUnscheduled, setShowAllUnscheduled] = useState(false)
+  const latestTimelineRequestRef = useRef(0)
 
   const loadTimeline = useCallback(async () => {
+    const requestId = latestTimelineRequestRef.current + 1
+    latestTimelineRequestRef.current = requestId
+
     try {
       setLoading(true)
       setLoadError(false)
       const schedule = await timelineService.getTimeline(new Date(), user)
+
+      if (requestId !== latestTimelineRequestRef.current) return true
+
       const filteredBlocks = currentMode.id === 'all'
         ? schedule.blocks
         : schedule.blocks.filter(block => {
@@ -60,11 +67,14 @@ const TodayView = () => {
       setHasLoaded(true)
       return true
     } catch (error) {
+      if (requestId !== latestTimelineRequestRef.current) return true
       console.error('Error loading timeline:', error)
       setLoadError(true)
       return false
     } finally {
-      setLoading(false)
+      if (requestId === latestTimelineRequestRef.current) {
+        setLoading(false)
+      }
     }
   }, [currentMode, filterByMode, user])
 
