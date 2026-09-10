@@ -72,7 +72,7 @@ const AccessibilitySettings = ({ onClose }) => {
               aria-label="Close accessibility settings without saving"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
             >
-              <SafeIcon icon={FiX} className="w-6 h-6" />
+              <SafeIcon aria-hidden="true" icon={FiX} className="w-6 h-6" />
             </button>
           </div>
         </div>
@@ -82,7 +82,7 @@ const AccessibilitySettings = ({ onClose }) => {
           {/* Font Size */}
           <div>
             <div id="accessibility-text-size-label" className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-3">
-              <SafeIcon icon={FiType} className="w-4 h-4" />
+              <SafeIcon aria-hidden="true" icon={FiType} className="w-4 h-4" />
               <span>Text Size</span>
             </div>
             <div
@@ -126,7 +126,7 @@ const AccessibilitySettings = ({ onClose }) => {
           {/* Contrast */}
           <div>
             <div id="accessibility-contrast-label" className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-3">
-              <SafeIcon icon={FiEye} className="w-4 h-4" />
+              <SafeIcon aria-hidden="true" icon={FiEye} className="w-4 h-4" />
               <span>Contrast</span>
             </div>
             <div
@@ -201,7 +201,7 @@ const AccessibilitySettings = ({ onClose }) => {
             {/* Reduce Motion */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <SafeIcon icon={FiZap} className="w-4 h-4 text-slate-600" />
+                <SafeIcon aria-hidden="true" icon={FiZap} className="w-4 h-4 text-slate-600" />
                 <div>
                   <div className="text-sm font-medium text-slate-900">
                     Reduce Motion
@@ -233,7 +233,7 @@ const AccessibilitySettings = ({ onClose }) => {
             {/* Focus Mode */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <SafeIcon icon={FiEye} className="w-4 h-4 text-slate-600" />
+                <SafeIcon aria-hidden="true" icon={FiEye} className="w-4 h-4 text-slate-600" />
                 <div>
                   <div className="text-sm font-medium text-slate-900">
                     Focus Mode
@@ -265,7 +265,7 @@ const AccessibilitySettings = ({ onClose }) => {
             {/* Dyslexic Font */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <SafeIcon icon={FiType} className="w-4 h-4 text-slate-600" />
+                <SafeIcon aria-hidden="true" icon={FiType} className="w-4 h-4 text-slate-600" />
                 <div>
                   <div className="text-sm font-medium text-slate-900">
                     Dyslexia-Friendly Font
@@ -321,7 +321,7 @@ const AccessibilitySettings = ({ onClose }) => {
               aria-describedby={saveError ? 'accessibility-settings-save-error' : undefined}
               className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
             >
-              <SafeIcon icon={FiSave} className="w-4 h-4" />
+              <SafeIcon aria-hidden="true" icon={FiSave} className="w-4 h-4" />
               Apply Settings
             </button>
           </div>
