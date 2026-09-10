@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import OperationErrorState from '../../common/OperationErrorState'
 import useModalDialog from '../../common/useModalDialog'
 
 const { FiX, FiPlus, FiZap, FiChevronDown, FiChevronUp } = FiIcons
@@ -11,6 +12,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
   const [currentInput, setCurrentInput] = useState('')
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [saveError, setSaveError] = useState(null)
   const inputRef = useRef(null)
   const dialogRef = useModalDialog({ onEscape: isSaving ? null : onCancel, initialFocusRef: inputRef })
 
@@ -40,11 +42,20 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
     const validItems = items.filter(i => i.trim())
     if (validItems.length === 0 || isSaving) return
 
+    setSaveError(null)
     setIsSaving(true)
     try {
       const result = await onSave(validItems)
       if (result?.remainingItems) {
         setItems(result.remainingItems.length > 0 ? result.remainingItems : [''])
+
+        if (result.remainingItems.length > 0) {
+          setSaveError(
+            result.savedCount > 0
+              ? `${result.savedCount} of ${validItems.length} quick-capture tasks were saved before the interruption. Only the unsaved tasks remain here, so retrying will not duplicate the saved tasks.`
+              : 'We couldn’t save these quick-capture tasks. None were saved, and your list is still available to retry.'
+          )
+        }
       }
     } finally {
       setIsSaving(false)
@@ -90,7 +101,9 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
         </div>
 
         <div className="flex-1 overflow-y-auto p-6">
-          <div className="bg-blue-50 rounded-lg p-4 border border-blue-200 mb-6">
+          <OperationErrorState message={saveError} onDismiss={() => setSaveError(null)} />
+
+          <div className={`bg-blue-50 rounded-lg p-4 border border-blue-200 mb-6 ${saveError ? 'mt-4' : ''}`}>
             <p className="text-blue-800 text-center font-medium">
               💭 Don't worry about perfect wording or order - just get it all out of your head!
             </p>
