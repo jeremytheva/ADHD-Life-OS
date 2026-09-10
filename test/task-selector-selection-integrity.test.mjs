@@ -43,3 +43,16 @@ test('Task Selector keeps its controls mounted while refreshing recommendations'
   assert.match(source, /<div className="space-y-6" aria-busy=\{loading\}>/)
   assert.match(source, /Refreshing task recommendations/)
 })
+
+test('Task Selector ignores stale async loads after recommendation inputs change', async () => {
+  const source = await read('src/components/tasks/TaskSelector.jsx')
+
+  assert.match(source, /const latestRequestRef = useRef\(0\)/)
+  assert.match(source, /const requestId = latestRequestRef\.current \+ 1\s+latestRequestRef\.current = requestId/)
+  assert.equal((source.match(/requestId !== latestRequestRef\.current/g) || []).length >= 2, true)
+  assert.match(source, /if \(requestId === latestRequestRef\.current\) \{\s+setLoading\(false\)\s+\}/)
+  assert.match(
+    source,
+    /const allTasks = await taskService\.getTasks\(\)\s+\s*if \(requestId !== latestRequestRef\.current\) return[\s\S]*setTasks\(allTasks\)\s+setRecommendations\(recs\)/
+  )
+})
