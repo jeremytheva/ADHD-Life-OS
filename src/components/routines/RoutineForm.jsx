@@ -88,7 +88,7 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
             aria-label={`Close ${title}`}
             className="p-1 text-slate-400 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <SafeIcon icon={FiX} className="w-5 h-5" />
+            <SafeIcon icon={FiX} className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -162,7 +162,7 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
                 disabled={saving}
                 className="text-blue-600 hover:text-blue-700 flex items-center space-x-1 text-sm disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <SafeIcon icon={FiPlus} className="w-4 h-4" />
+                <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
                 <span>Add Step</span>
               </button>
             </div>
@@ -199,7 +199,7 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
                       aria-label={`Remove step ${index + 1}`}
                       className="p-1 text-slate-400 hover:text-red-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      <SafeIcon icon={FiTrash2} className="w-4 h-4" />
+                      <SafeIcon icon={FiTrash2} className="w-4 h-4" aria-hidden="true" />
                     </button>
                   )}
                 </div>
