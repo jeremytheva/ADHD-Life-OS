@@ -75,11 +75,15 @@ const SubtaskList = ({
       exit={{ opacity: 0, height: 0 }}
       className="border-t border-slate-200 bg-slate-50 p-4"
     >
-      <OperationErrorState message={operationError} onDismiss={() => setOperationError('')} />
+      {operationError && (
+        <div className="mb-3">
+          <OperationErrorState message={operationError} onDismiss={() => setOperationError('')} />
+        </div>
+      )}
 
       {/* Subtask List */}
       {subtasks.length > 0 && (
-        <ul className="space-y-2 mb-3 mt-3" aria-label="Subtasks">
+        <ul className="space-y-2 mb-3" aria-label="Subtasks">
           {subtasks.map((subtask, index) => (
             <motion.li
               key={subtask.id}
@@ -141,7 +145,7 @@ const SubtaskList = ({
 
       {/* Add Subtask Input */}
       {showInput && (
-        <div className="flex gap-2 mt-3">
+        <div className="flex gap-2">
           <input
             type="text"
             value={newSubtaskTitle}
