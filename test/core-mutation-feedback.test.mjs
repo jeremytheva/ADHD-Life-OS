@@ -151,3 +151,15 @@ test('task mutations preserve retry context and distinguish reconciliation failu
   assert.match(formSource, /disabled=\{saving\}/)
   assert.match(formSource, /saving \? 'Saving\.\.\.'/)
 })
+
+test('subtask mutations use shared focused recovery and preserve retry context', async () => {
+  const source = await read('src/components/projects/SubtaskList.jsx')
+
+  assert.match(source, /import OperationErrorState from '\.\.\/\.\.\/common\/OperationErrorState'/)
+  assert.match(source, /const \[operationError, setOperationError\] = useState\(''\)/)
+  assert.match(source, /We couldn’t confirm that subtask was added\. Your subtask title is still here/)
+  assert.match(source, /We couldn’t confirm that subtask was deleted\. It is still shown in the list/)
+  assert.match(source, /We couldn’t confirm that subtask’s completion change\. Its previous state is still shown here/)
+  assert.match(source, /setNewSubtaskTitle\(''\)/)
+  assert.match(source, /<OperationErrorState message=\{operationError\} onDismiss=\{\(\) => setOperationError\(''\)\} \/>/)
+})
