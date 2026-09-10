@@ -3,11 +3,12 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import * as FiIcons from 'react-icons/fi';
 import SafeIcon from '../../common/SafeIcon';
+import OperationErrorState from '../../common/OperationErrorState';
 
 const { FiUser, FiBriefcase, FiHeart, FiSmile, FiAlertCircle, FiCheck } = FiIcons;
 
 const ProfileSelector = () => {
-  const [loading, setLoading] = useState(false);
+  const [loadingEmail, setLoadingEmail] = useState(null);
   const [error, setError] = useState('');
   const { signIn, user } = useAuth();
 
@@ -48,18 +49,19 @@ const ProfileSelector = () => {
 
   const handleProfileSelect = async (email) => {
     setError('');
-    setLoading(true);
+    setLoadingEmail(email);
 
     try {
       await signIn(email, 'password123');
     } catch (err) {
       setError(`Failed to switch to ${email}: ${err.message}`);
     } finally {
-      setLoading(false);
+      setLoadingEmail(null);
     }
   };
 
   const currentUserEmail = user?.email;
+  const isSwitching = loadingEmail !== null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
@@ -69,44 +71,43 @@ const ProfileSelector = () => {
         className="w-full max-w-4xl"
       >
         <div className="text-center mb-8">
-          <motion.h1 
+          <motion.h1
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
             className="text-5xl font-bold text-gray-900 mb-3"
           >
             ADHD Life-OS
           </motion.h1>
-          <p className="text-xl text-gray-600 mb-2">Testing Mode - No Backend Required</p>
-          <p className="text-sm text-gray-500">Select a profile to explore different user scenarios</p>
+          <p className="text-xl text-gray-600 mb-2">Development Profile Mode</p>
+          <p className="text-sm text-gray-500">Select a configured development profile to test authenticated scenarios</p>
         </div>
 
         {error && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-700 max-w-2xl mx-auto"
-          >
-            <SafeIcon icon={FiAlertCircle} className="flex-shrink-0 text-xl" />
-            <span className="text-sm">{error}</span>
-          </motion.div>
+          <div className="mb-6 max-w-2xl mx-auto">
+            <OperationErrorState message={error} onDismiss={() => setError('')} />
+          </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" aria-label="Development profiles">
           {profiles.map((profile, index) => {
             const isActive = currentUserEmail === profile.email;
-            
+            const isLoading = loadingEmail === profile.email;
+
             return (
               <motion.button
                 key={profile.email}
+                type="button"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => handleProfileSelect(profile.email)}
-                disabled={loading || isActive}
+                disabled={isSwitching || isActive}
+                aria-busy={isLoading}
+                aria-current={isActive ? 'true' : undefined}
                 className={`
                   relative p-6 rounded-2xl text-left transition-all duration-300
-                  ${isActive 
-                    ? 'bg-white shadow-xl ring-2 ring-offset-2 ring-' + profile.color + '-500' 
+                  ${isActive
+                    ? 'bg-white shadow-xl ring-2 ring-offset-2 ring-' + profile.color + '-500'
                     : 'bg-white hover:shadow-lg hover:scale-105 shadow-md'
                   }
                   disabled:opacity-50 disabled:cursor-not-allowed
@@ -118,20 +119,21 @@ const ProfileSelector = () => {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     className={`absolute -top-2 -right-2 bg-gradient-to-br ${profile.gradient} text-white rounded-full p-2 shadow-lg`}
+                    aria-hidden="true"
                   >
-                    <SafeIcon icon={FiCheck} className="text-lg" />
+                    <SafeIcon icon={FiCheck} className="text-lg" aria-hidden="true" />
                   </motion.div>
                 )}
 
                 <div className="flex items-start gap-4">
                   <div className={`
-                    p-4 rounded-xl bg-gradient-to-br ${profile.gradient} 
+                    p-4 rounded-xl bg-gradient-to-br ${profile.gradient}
                     group-hover:scale-110 transition-transform duration-300
                     shadow-lg
-                  `}>
-                    <SafeIcon icon={profile.icon} className="text-2xl text-white" />
+                  `} aria-hidden="true">
+                    <SafeIcon icon={profile.icon} className="text-2xl text-white" aria-hidden="true" />
                   </div>
-                  
+
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-gray-900 mb-1">
                       {profile.name}
@@ -142,12 +144,14 @@ const ProfileSelector = () => {
                     <p className="text-xs text-gray-400 font-mono">
                       {profile.email}
                     </p>
+                    {isActive && <span className="sr-only">Current profile</span>}
                   </div>
                 </div>
 
-                {loading && (
-                  <div className="absolute inset-0 bg-white/80 rounded-2xl flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                {isLoading && (
+                  <div className="absolute inset-0 bg-white/80 rounded-2xl flex items-center justify-center" role="status" aria-live="polite">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" aria-hidden="true"></div>
+                    <span className="sr-only">Switching to {profile.name}</span>
                   </div>
                 )}
               </motion.button>
@@ -162,20 +166,19 @@ const ProfileSelector = () => {
           className="bg-white rounded-xl p-6 shadow-md max-w-2xl mx-auto"
         >
           <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-            <SafeIcon icon={FiAlertCircle} className="text-blue-500" />
-            Testing Mode Information
+            <SafeIcon icon={FiAlertCircle} className="text-blue-500" aria-hidden="true" />
+            Development Profile Information
           </h3>
           <div className="space-y-2 text-sm text-gray-600">
-            <p>✅ <strong>No backend required</strong> - Works entirely in your browser</p>
-            <p>• Each profile has a unique user ID for testing</p>
-            <p>• Switch between profiles instantly</p>
-            <p>• Authentication is backed by the secure NoCodeBackend session</p>
-            <p>• Domain data is stored through NoCodeBackend endpoints</p>
+            <p>• Available only in the Vite development build</p>
+            <p>• Each profile represents a configured test user scenario</p>
+            <p>• Profile switching uses the configured NoCodeBackend authentication boundary</p>
+            <p>• Domain data continues to use the application-owned NoCodeBackend data boundary</p>
           </div>
         </motion.div>
 
         <p className="text-center text-xs text-gray-400 mt-6">
-          Mock Authentication - Testing Mode Only
+          Development Profile Sign-In
         </p>
       </motion.div>
     </div>
