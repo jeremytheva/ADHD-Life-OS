@@ -58,7 +58,7 @@ const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
             aria-label="Close task form"
             className="p-1 text-slate-400 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <SafeIcon icon={FiX} className="w-5 h-5" />
+            <SafeIcon icon={FiX} className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
