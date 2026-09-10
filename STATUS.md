@@ -3,19 +3,19 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Integration
+gate: Implementation
 execution_state: VALIDATING
 current_work:
-  objective: Complete the repository-managed lifecycle for the validated template-dialog accessibility delivery, then re-enter from fresh main for the next provider-independent Stage 3 slice.
+  objective: Complete provider-independent core Routine and Task form control icon semantics without altering form behavior or provider contracts.
   issue: null
-  pr: null
-  branch: null
+  pr: 323
+  branch: fix/core-form-control-icon-semantics
 next_actions:
-  - Run canonical Application validation on this post-merge-safe STATUS handoff head.
+  - Run canonical Application validation on the exact synchronized implementation/status head.
   - Audit submitted reviews and inline review threads on that same exact head.
-  - If clean, signal lifecycle:implementation-complete on PR #322 and allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions.
-  - Reconcile fresh main after merge before selecting the next implementation slice.
-  - Continue the next evidence-backed provider-independent accessibility or interaction-integrity item from fresh repository evidence.
+  - Repair any in-scope findings on PR #323 in place rather than starting competing work.
+  - If clean, write a post-merge-safe STATUS handoff, revalidate that exact head, then signal lifecycle:implementation-complete.
+  - After merge, re-enter from fresh main before selecting the next provider-independent Stage 3 slice.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 848 passed on implementation head 9715db9d12f91c7defda401fa8c3fd0e6cfd2b9c with clean submitted-review and inline-thread audits; this post-merge-safe STATUS handoff commit requires fresh exact-head validation before lifecycle signalling.
-last_verified_commit: 9715db9d12f91c7defda401fa8c3fd0e6cfd2b9c
-last_updated: 2026-09-10T10:11:00+10:00
+validation_basis: PR #323 implementation and durable status are synchronized; canonical exact-head evidence is not yet available.
+last_verified_commit: 102d9ebabecc96bd6902a0914dabd92f6e557e40
+last_updated: 2026-09-10T10:21:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +45,18 @@ last_updated: 2026-09-10T10:11:00+10:00
 
 ## Current objective
 
-PR #321 — `fix: hide project form action glyphs from assistive technology` — completed its repository-managed lifecycle and merged into `main` at `d3e1ea93dc936cb49b595fdf5465006e48529af5`.
+PR #322 — `fix: hide template dialog type icons from assistive technology` — completed its repository-managed lifecycle and merged into `main` at `102d9ebabecc96bd6902a0914dabd92f6e557e40` after final exact-head Application validation run 849 passed with clean submitted-review and inline-thread evidence.
 
-PR #322 — `fix: hide template dialog type icons from assistive technology` — implemented the current provider-independent Stage 3 slice. Fresh-main inspection found that `TemplatePreview` and `TemplateEditModal` each rendered a routine/task type glyph beside authoritative textual dialog context without hiding that purely decorative glyph from assistive technology. Both existing components now retain their visible iconography while marking the type glyph `aria-hidden="true"`.
+PR #323 — `fix: hide core form control glyphs from assistive technology` — is now the sole active Stage 3 delivery. Fresh-main inspection found a concrete peer-pattern inconsistency: `EnhancedTaskForm` already hides its labelled close glyph from assistive technology, while the older `TaskForm` and `RoutineForm` still exposed decorative glyphs despite authoritative visible or ARIA action names.
 
-Focused deterministic coverage in `test/template-dialog-icon-semantics.test.mjs` follows the repository's established source-semantics pattern. No template data, editing, application, persistence, provider, authentication, routing, execution policy, scheduling policy or visual-design behaviour changed.
-
-Application validation run 848 passed on exact implementation/status head `9715db9d12f91c7defda401fa8c3fd0e6cfd2b9c`, and submitted reviews plus inline review threads were clean on that head. This document is now deliberately post-merge-safe: after PR #322 merges, fresh `main` should not re-enter by treating the closed PR or deleted source branch as active work.
+PR #323 now hides the Task Form close glyph and the Routine Form close, Add Step and remove-step glyphs using `aria-hidden="true"`. Existing labels, visible text, focus recovery, saving guards, form mutations and visual presentation remain unchanged. Focused deterministic coverage in `test/core-form-control-icon-semantics.test.mjs` follows the established source-semantics pattern.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head lifecycle evidence required |
-| Gate state | Implementation-head validation passed; post-merge-safe handoff commit now requires fresh exact-head validation and review/thread audit |
+| Current gate | IMPLEMENTATION — exact-head validation required |
+| Gate state | Implementation/status synchronized; canonical validation not yet complete |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
@@ -67,15 +65,13 @@ Application validation run 848 passed on exact implementation/status head `9715d
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #321 — Project Form decorative action-glyph accessibility; merged at `d3e1ea93dc936cb49b595fdf5465006e48529af5` |
-| Delivery completing lifecycle | PR #322 — template preview/editor decorative type-icon accessibility |
-| Future default-branch active delivery | None; select the next slice only after PR #322 merges and fresh-main reconciliation completes |
-| Implemented change | Hide redundant routine/task type glyphs in both template dialogs from assistive technology while preserving visible icons and textual context |
-| Deterministic coverage | `template-dialog-icon-semantics` source-semantics regression coverage |
+| Latest merged delivery | PR #322 — template dialog decorative type-icon accessibility; merged at `102d9ebabecc96bd6902a0914dabd92f6e557e40` |
+| Sole active delivery | PR #323 — core Routine/Task form decorative control-glyph accessibility |
+| Active branch | `fix/core-form-control-icon-semantics` |
+| Implemented change | Hide redundant form-control glyphs from assistive technology while retaining authoritative visible/ARIA action names |
+| Deterministic coverage | `core-form-control-icon-semantics` source-semantics regression coverage |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | PASS — Application validation run 848 on `9715db9d12f91c7defda401fa8c3fd0e6cfd2b9c` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads |
-| Final handoff-head validation | NOT_RUN; required before implementation-complete signalling |
+| Current validation | NOT_RUN on synchronized implementation/status head |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -83,24 +79,24 @@ Application validation run 848 passed on exact implementation/status head `9715d
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #322 implementation evidence is clean and its post-merge-safe handoff is awaiting final exact-head lifecycle validation. |
-| What is already happening? | Template preview/editor decorative type glyphs are hidden from assistive technology, with deterministic regression coverage and a clean implementation-head CI/review audit. |
-| What has been validated? | Application validation run 848 passed on `9715db9d12f91c7defda401fa8c3fd0e6cfd2b9c`; submitted reviews and inline threads were clean on that head. |
-| What is next? | Validate and audit this handoff head, signal implementation complete only if exact-head evidence remains clean, allow the lifecycle finalizer to merge, then reconcile fresh main and continue the next independent Stage 3 item. |
+| Where am I? | Stage 3; PR #323 is the sole active provider-independent accessibility delivery. |
+| What is already happening? | Core Routine/Task form decorative control glyphs are hidden from assistive technology with focused deterministic coverage. |
+| What has been validated? | PR #322 merged after run 849 passed. PR #323 exact-head validation has not yet completed. |
+| What is next? | Run canonical validation and review/thread audits on the exact synchronized PR #323 head; repair in place if needed. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #322 is provider-independent and does not alter physical provider contracts, persistence, authentication, routing, execution policy or durable execution behaviour.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #323 does not alter provider contracts, persistence, authentication, routing, execution policy, scheduling policy or durable execution behaviour.
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` through Application validation on this post-merge-safe handoff head;
+1. run canonical `npm run platform:validate` through Application validation on the exact synchronized PR #323 head;
 2. audit submitted reviews and inline review threads on that same exact head;
-3. if clean, signal `lifecycle:implementation-complete` on PR #322 and allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions;
-4. re-enter from fresh `main` after merge and reconcile open PRs, branches, checks and durable state before selecting new work;
-5. continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
+3. repair any in-scope finding on PR #323 in place;
+4. if clean, create the post-merge-safe durable handoff, revalidate that exact head, and signal `lifecycle:implementation-complete`;
+5. after merge, re-enter from fresh `main` and reconcile before selecting the next independent Stage 3 item;
 6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
