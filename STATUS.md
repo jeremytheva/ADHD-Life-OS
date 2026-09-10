@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
 validation_basis: PR #331 implements in-modal recovery feedback for interrupted Quick Capture saves and adds focused deterministic coverage. Canonical validation has not yet passed on the exact current head created by this STATUS commit.
 last_verified_commit: 6e6fae6bfc49405924f1d1aa6f91817e48acd2f9
-last_updated: 2026-09-11T02:16:00+10:00
+last_updated: 2026-09-11T02:18:00+10:00
 ---
 
 # ADHD Life OS — Current Status
