@@ -4,17 +4,18 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Change
-execution_state: READY
+execution_state: VALIDATING
 current_work:
-  objective: Reconcile fresh main after PR #329 and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
+  objective: Complete PR #331 quick-capture partial-save feedback integrity, then re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 outcome.
   issue: null
-  pr: null
-  branch: main
+  pr: 331
+  branch: fix/quick-capture-partial-save-feedback
 next_actions:
-  - Inspect fresh main for the next material accessibility or interaction-integrity defect, prioritising active user-facing paths and shared patterns.
-  - Reuse or repair existing implementation/tests rather than creating duplicate abstractions or speculative fixes.
-  - Open one focused Draft PR only after the next outcome is evidence-backed.
-  - Run canonical npm run platform:validate on every implementation head and exact final handoff head before lifecycle completion.
+  - Run canonical Application validation on the exact current PR #331 head.
+  - Audit submitted reviews and inline review threads on that same exact head.
+  - Repair any in-scope validation or review findings on PR #331 rather than starting competing work.
+  - Before implementation-complete signalling, make the durable handoff post-merge safe and revalidate the resulting exact head.
+  - After merge, re-enter from fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -23,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: PENDING
+  lint: PENDING
+  typecheck: PENDING
+  tests: PENDING
+  build: PENDING
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #329 final handoff head 1fb8da98e04d60e2050498911cc6636f89558807 passed canonical Application validation run 872 with clean submitted-review and inline-thread audits, then completed repository-managed lifecycle and merged into main at e31219adc4cc9ad549d629fcb8df2f1cf714073d.
-last_verified_commit: e31219adc4cc9ad549d629fcb8df2f1cf714073d
-last_updated: 2026-09-11T01:10:29+10:00
+validation_basis: PR #331 implements in-modal recovery feedback for interrupted Quick Capture saves and adds focused deterministic coverage. Canonical validation has not yet passed on the exact current head created by this STATUS commit.
+last_verified_commit: 6e6fae6bfc49405924f1d1aa6f91817e48acd2f9
+last_updated: 2026-09-11T02:16:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,21 +45,21 @@ last_updated: 2026-09-11T01:10:29+10:00
 
 ## Current objective
 
-PR #329 — `fix: recover onboarding progress persistence failures` — completed repository-managed lifecycle and merged into `main` at `e31219adc4cc9ad549d629fcb8df2f1cf714073d`.
+PR #330 — `docs: reconcile status after PR 329 merge` — completed repository-managed lifecycle and merged into `main` at `6e6fae6bfc49405924f1d1aa6f91817e48acd2f9` after canonical Application validation run 874 passed on exact head `e45ec94399612d890c32eadb45cb4df248e6314e` with clean submitted-review and inline-thread evidence.
 
-The merged repair fails closed while authoritative onboarding progress is unavailable, awaits each non-final progress write before advancing, preserves the current step after uncertain writes, surfaces recoverable load/save/complete/skip failures, exposes loading/saving state programmatically, and guards concurrent in-flight onboarding operations. Focused deterministic coverage is in `test/onboarding-progress-write-recovery.test.mjs`.
+Fresh-main inspection then verified a material Quick Capture interaction-integrity defect. When a batch save is interrupted, `ProjectsList` preserves only the unsaved items in the still-open Quick Capture modal, but its explanatory `OperationErrorState` is rendered in the Projects surface behind the modal overlay. The user can therefore see the capture list change without equivalent in-context recovery information explaining what was already persisted and what is safe to retry.
 
-Fresh-main reconciliation found no open delivery PR. The next dependency-correct work is therefore to continue the roadmap's provider-independent Stage 3 priority: inspect active user-facing paths and shared interaction patterns for the next evidence-backed accessibility or interaction-integrity outcome. A candidate must be verified against the current implementation before mutation; speculative changes are not permitted.
+PR #331 — `fix: surface quick capture partial-save feedback` — is the sole active provider-independent delivery. `QuickCaptureModal` now reuses `OperationErrorState` inside the active dialog after an interrupted save. Partial saves state the saved count and explain that only unsaved items remain; zero-save failures state that none were saved and the full list remains retryable. Existing remaining-item semantics are preserved, and focused deterministic coverage is in `test/quick-capture-partial-save-feedback.test.mjs`.
 
-A fresh audit specifically checked the application Reduce Motion path after merge. The preference already applies CSS duration controls and the `AccessibilityPreferencesProvider` already wraps the application in Framer Motion `MotionConfig` with `reducedMotion={preferences.reduceMotion ? 'always' : 'user'}`. No duplicate motion-control change is required.
+This work is intentionally provider-independent. It does not change NoCodeBackend provider routes, methods, schemas, credentials, ownership rules, production authentication, execution policy, scheduling policy, or the existing quick-capture persistence contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — select next evidence-backed independent outcome |
-| Gate state | Previous delivery merged and fresh-main reconciliation complete; no implementation PR active |
-| Execution state | READY |
+| Current gate | CHANGE — exact-head implementation validation required |
+| Gate state | PR #331 implementation and focused regression coverage committed; canonical validation/review evidence pending |
+| Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -66,16 +67,15 @@ A fresh audit specifically checked the application Reduce Motion path after merg
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #329 — Onboarding progress persistence recovery; merged at `e31219adc4cc9ad549d629fcb8df2f1cf714073d` |
-| Active delivery | None |
-| Active implementation branch | None; re-enter from fresh `main` |
-| Implemented change | Onboarding no longer advances on an unconfirmed progress write and exposes recoverable load/save/complete/skip failures |
-| Deterministic coverage | `test/onboarding-progress-write-recovery.test.mjs` |
+| Latest merged delivery | PR #330 — durable post-merge status reconciliation; merged at `6e6fae6bfc49405924f1d1aa6f91817e48acd2f9` |
+| Active delivery | PR #331 — Quick Capture partial-save feedback integrity |
+| Active implementation branch | `fix/quick-capture-partial-save-feedback` |
+| Implemented change | Interrupted Quick Capture saves expose recovery feedback inside the active modal while preserving only unsaved items for safe retry |
+| Deterministic coverage | `test/quick-capture-partial-save-feedback.test.mjs` |
 | Provider/data impact | No contract change; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Final exact-head validation | PASS — Application validation run 872 on `1fb8da98e04d60e2050498911cc6636f89558807` |
-| Final review audit | PASS — no submitted reviews or inline review threads requiring action |
-| Repository integration | PASS — merged to `main` at `e31219adc4cc9ad549d629fcb8df2f1cf714073d` |
-| Runtime/deployment verification | UNVERIFIED / not implied by repository merge |
+| Exact-head validation | PENDING on current PR #331 head |
+| Review audit | PENDING on current PR #331 head |
+| Runtime/deployment verification | UNVERIFIED / not implied by repository validation or merge |
 | Current blocker | None |
 | Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
@@ -83,10 +83,10 @@ A fresh audit specifically checked the application Reduce Motion path after merg
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3 on fresh `main`; PR #329 is merged and there is no active implementation delivery. |
-| What is already happening? | Fresh-main reconciliation is complete; the next provider-independent accessibility/interaction-integrity outcome is being selected from current code evidence. |
-| What has been validated? | PR #329 final head passed canonical run 872 with clean review/thread audits and merged at `e31219adc4cc9ad549d629fcb8df2f1cf714073d`. |
-| What is next? | Inspect active user-facing/shared interaction paths, verify a material defect, then reuse/repair existing work in one focused Draft PR and run canonical validation. |
+| Where am I? | Stage 3; PR #331 is the sole provider-independent delivery and is at exact-head validation. |
+| What is already happening? | In-modal Quick Capture partial-save recovery feedback and focused regression coverage are implemented. |
+| What has been validated? | The previous merged baseline is repository-integrated at `6e6fae6bfc49405924f1d1aa6f91817e48acd2f9`; PR #331 exact-head validation is pending. |
+| What is next? | Run canonical validation and review/thread audits on PR #331, repair any in-scope findings, then complete a post-merge-safe handoff and lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -96,11 +96,11 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. inspect active user-facing and shared interaction surfaces on fresh `main` for the next material accessibility or interaction-integrity defect;
-2. verify the defect against current architecture, callers and existing tests before changing code;
-3. reuse or repair existing patterns rather than introducing duplicate abstractions;
-4. open one focused Draft PR, synchronize this file with the active delivery, and run canonical `npm run platform:validate`;
-5. continue successive safe work while no valid stop condition exists;
+1. run canonical Application validation on the exact current PR #331 head;
+2. audit submitted reviews and inline review threads on that same exact head;
+3. repair any in-scope findings on the existing PR rather than starting competing work;
+4. once implementation-head evidence is clean, make this handoff post-merge safe, revalidate the resulting exact head, and signal `lifecycle:implementation-complete` only when all evidence remains current;
+5. after repository-managed merge, re-enter from fresh `main` and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
 6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
