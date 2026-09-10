@@ -65,7 +65,7 @@ const TemplateEditModal = ({ template, onClose, onSave, isApplying = false }) =>
       <motion.div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={dialogTitleId} aria-busy={isApplying} tabIndex={-1} initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={(event) => event.stopPropagation()} className="bg-white rounded-lg w-full max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
         <div className="flex items-start justify-between p-6 border-b border-slate-200 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="flex items-start gap-4 flex-1">
-            <div className={`p-3 rounded-lg ${isRoutine ? 'bg-purple-100' : 'bg-green-100'}`}><SafeIcon icon={isRoutine ? FiRefreshCw : FiCheckSquare} className={`w-6 h-6 ${isRoutine ? 'text-purple-600' : 'text-green-600'}`} /></div>
+            <div className={`p-3 rounded-lg ${isRoutine ? 'bg-purple-100' : 'bg-green-100'}`}><SafeIcon icon={isRoutine ? FiRefreshCw : FiCheckSquare} className={`w-6 h-6 ${isRoutine ? 'text-purple-600' : 'text-green-600'}`} aria-hidden="true" /></div>
             <div className="flex-1"><h3 id={dialogTitleId} className="text-xl font-bold text-slate-900 mb-1">Edit Template Before Applying</h3><p className="text-sm text-slate-600">Customize this template to fit your needs. Changes won't affect the master template.</p></div>
           </div>
           <button type="button" onClick={safeClose} disabled={isApplying} aria-label="Close template editor" className="p-2 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-50"><SafeIcon icon={FiX} aria-hidden="true" className="w-5 h-5" /></button>
