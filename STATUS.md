@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete the repository-managed lifecycle for the validated subtask mutation recovery delivery, then re-enter from fresh main for the next provider-independent Stage 3 slice.
+  objective: Complete the repository-managed lifecycle for the validated onboarding-state load recovery delivery, then re-enter from fresh main for the next provider-independent Stage 3 slice.
   issue: null
   pr: null
   branch: null
 next_actions:
   - Run canonical Application validation on this post-merge-safe STATUS handoff head.
   - Audit submitted reviews and inline review threads on that same exact head.
-  - If clean, signal lifecycle:implementation-complete on PR #324 and allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions.
+  - If clean, signal lifecycle:implementation-complete on PR #325 and allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions.
   - Reconcile fresh main after merge before selecting the next implementation slice.
-  - Continue the next evidence-backed provider-independent accessibility or interaction-integrity item from fresh repository evidence.
+  - Continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity item from fresh repository evidence.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 855 passed on exact implementation/status head 7b32a001989b9d54cabf9de8777081f316069d18 with clean submitted-review and inline-thread audits; this post-merge-safe STATUS handoff commit requires fresh exact-head validation before lifecycle signalling.
-last_verified_commit: 7b32a001989b9d54cabf9de8777081f316069d18
-last_updated: 2026-09-10T14:17:00+10:00
+validation_basis: Application validation passed on exact implementation/status head fc0b9c3a69c5df9f491a40bc8197eb36812b7798 after repairing the run 858 deterministic-test lint defect; submitted reviews and inline review threads were clean on that head. This post-merge-safe STATUS handoff commit requires fresh exact-head validation before lifecycle signalling.
+last_verified_commit: fc0b9c3a69c5df9f491a40bc8197eb36812b7798
+last_updated: 2026-09-10T16:16:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,13 +45,15 @@ last_updated: 2026-09-10T14:17:00+10:00
 
 ## Current objective
 
-PR #323 — `fix: hide core form control glyphs from assistive technology` — completed its repository-managed lifecycle and merged into `main` at `bd8d05d8ea9c4dc4ed7efb67e225b86fd780f96b`.
+PR #324 — `fix: surface subtask mutation recovery` — completed its repository-managed lifecycle and merged into `main` at `e7dbda3948dd40cd33e0ab60bb902c200b9918be`.
 
-PR #324 — `fix: surface subtask mutation recovery` — implemented the current provider-independent Stage 3 interaction-integrity slice. `SubtaskList` now reuses the shared `OperationErrorState` so add, delete and completion-toggle failures are surfaced as focused, dismissible recovery states instead of console-only failures. Failed add attempts retain the entered title; failed delete/toggle attempts preserve the currently rendered retry context; uncertainty-safe wording avoids falsely asserting provider outcomes.
+PR #325 — `fix: recover onboarding state load failures` — implemented the current provider-independent Stage 3 interaction-integrity slice. A failed authoritative onboarding-state read no longer silently forces an authenticated user into onboarding. The application preserves uncertainty, presents the established focused `LoadErrorState`, explains that saved onboarding state has not been replaced, and provides an explicit retry that re-runs the same authoritative read.
 
-The existing `test/core-mutation-feedback.test.mjs` suite was extended in place rather than creating parallel mutation-feedback infrastructure. Successful mutation behavior, provider contracts, persistence schemas, authentication, routing, execution policy and scheduling policy remain unchanged.
+Successful onboarding-state resolution, onboarding completion, provider contracts, persistence schemas, authentication, routing, execution policy and scheduling policy remain unchanged. Deterministic source-level regression coverage is in `test/onboarding-load-recovery.test.mjs`.
 
-Application validation run 855 initially encountered unrelated flaky Playwright failures, then the exact same head `7b32a001989b9d54cabf9de8777081f316069d18` passed the canonical Application validation rerun. Submitted reviews and inline review threads are clean on that implementation head. This document is now deliberately post-merge-safe: after PR #324 merges, fresh `main` should not re-enter by treating the closed PR or deleted source branch as active work.
+Application validation run 858 on head `f252cbeaa54ed67aced0fe349d385a9a48f948be` identified a focused lint defect in the new test (`URL` was referenced without an explicit Node import). The existing PR was repaired in place by importing `URL` from `node:url`. Canonical Application validation then passed on exact implementation/status head `fc0b9c3a69c5df9f491a40bc8197eb36812b7798`; submitted reviews and inline review threads were clean on that same head.
+
+This document is deliberately post-merge-safe. After PR #325 merges, fresh `main` should not re-enter by treating the closed PR or deleted source branch as active work.
 
 ## AI execution gate
 
@@ -67,13 +69,13 @@ Application validation run 855 initially encountered unrelated flaky Playwright 
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #323 — core Routine/Task form decorative control-glyph accessibility; merged at `bd8d05d8ea9c4dc4ed7efb67e225b86fd780f96b` |
-| Delivery completing lifecycle | PR #324 — subtask mutation recovery |
-| Future default-branch active delivery | None; select the next slice only after PR #324 merges and fresh-main reconciliation completes |
-| Implemented change | Surface subtask add/delete/toggle failures through shared focused recovery while preserving retry context |
-| Deterministic coverage | Existing `core-mutation-feedback` suite extended for subtask recovery |
+| Latest merged delivery | PR #324 — subtask mutation recovery; merged at `e7dbda3948dd40cd33e0ab60bb902c200b9918be` |
+| Delivery completing lifecycle | PR #325 — onboarding-state load recovery |
+| Future default-branch active delivery | None; select the next slice only after PR #325 merges and fresh-main reconciliation completes |
+| Implemented change | Failed onboarding-state reads expose recoverable retry UI instead of silently forcing onboarding |
+| Deterministic coverage | `test/onboarding-load-recovery.test.mjs`; lint environment repaired with explicit `node:url` import |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
-| Implementation-head validation | PASS — Application validation run 855 on `7b32a001989b9d54cabf9de8777081f316069d18` after exact-head rerun |
+| Implementation-head validation | PASS — canonical Application validation on `fc0b9c3a69c5df9f491a40bc8197eb36812b7798` |
 | Implementation-head review audit | PASS — no submitted reviews or inline review threads |
 | Final handoff-head validation | NOT_RUN; required before implementation-complete signalling |
 | Current blocker | None |
@@ -83,22 +85,22 @@ Application validation run 855 initially encountered unrelated flaky Playwright 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #324 implementation evidence is clean and its post-merge-safe handoff is awaiting final exact-head lifecycle validation. |
-| What is already happening? | Subtask mutation failures use shared focused recovery and preserve the user's visible retry context. |
-| What has been validated? | Application validation run 855 passed on `7b32a001989b9d54cabf9de8777081f316069d18`; submitted reviews and inline threads were clean on that head. |
+| Where am I? | Stage 3; PR #325 implementation evidence is clean and its post-merge-safe handoff is awaiting final exact-head lifecycle validation. |
+| What is already happening? | Onboarding-state read failures preserve authoritative-state uncertainty and expose retry recovery through the shared load-error surface. |
+| What has been validated? | Canonical Application validation passed on `fc0b9c3a69c5df9f491a40bc8197eb36812b7798`; submitted reviews and inline threads were clean on that head. |
 | What is next? | Validate and audit this handoff head, signal implementation complete only if exact-head evidence remains clean, allow the lifecycle finalizer to merge, then reconcile fresh main and continue the next independent Stage 3 item. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #324 does not alter provider contracts, persistence, authentication, routing, execution policy, scheduling policy or durable execution behaviour.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. PR #325 does not alter provider contracts, persistence, authentication, routing, execution policy, scheduling policy or durable execution behaviour.
 
 ## Next dependency-correct work
 
 1. run canonical `npm run platform:validate` through Application validation on this post-merge-safe handoff head;
 2. audit submitted reviews and inline review threads on that same exact head;
-3. if clean, signal `lifecycle:implementation-complete` on PR #324 and allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions;
+3. if clean, signal `lifecycle:implementation-complete` on PR #325 and allow repository lifecycle automation/finalizer to complete Ready, Mergeable and Merged transitions;
 4. re-enter from fresh `main` after merge and reconcile open PRs, branches, checks and durable state before selecting new work;
 5. continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
 6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.

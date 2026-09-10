@@ -5,6 +5,7 @@ import { ModeProvider } from './contexts/ModeContext'
 import Layout from './components/Layout'
 import ProfileSelector from './components/auth/ProfileSelector'
 import AppErrorBoundary from './components/common/AppErrorBoundary'
+import LoadErrorState from './common/LoadErrorState'
 import { onboardingService } from './services/onboardingService'
 import { loadOnboardingState } from './services/onboardingState'
 import TodayView from './components/today/TodayView'
@@ -83,10 +84,24 @@ const AuthErrorScreen = ({ error, onRetry }) => {
   )
 }
 
+const OnboardingLoadErrorScreen = ({ onRetry }) => (
+  <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <div className="w-full max-w-md">
+      <LoadErrorState
+        title="We couldn’t load your setup"
+        message="Your saved onboarding state has not been replaced. Check your connection and try again before continuing."
+        onRetry={onRetry}
+      />
+    </div>
+  </div>
+)
+
 const AppRoutes = () => {
   const { status, error, retrySessionVerification } = useAuth()
   const location = useLocation()
   const [checkingOnboarding, setCheckingOnboarding] = useState(true)
+  const [onboardingLoadError, setOnboardingLoadError] = useState(false)
+  const [onboardingCheckAttempt, setOnboardingCheckAttempt] = useState(0)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [enabledModules, setEnabledModules] = useState([])
 
@@ -95,11 +110,14 @@ const AppRoutes = () => {
     if (status !== AUTH_STATUS.AUTHENTICATED) {
       setShowOnboarding(false)
       setEnabledModules([])
+      setOnboardingLoadError(false)
       setCheckingOnboarding(false)
       return
     }
 
     let active = true
+    setCheckingOnboarding(true)
+    setOnboardingLoadError(false)
     loadOnboardingState(onboardingService.getOnboardingData)
       .then(({ enabledModules: savedModules, showOnboarding: shouldShowOnboarding }) => {
         if (!active) return
@@ -108,15 +126,19 @@ const AppRoutes = () => {
       })
       .catch((error) => {
         console.error('Error checking onboarding status:', error)
-        if (active) setShowOnboarding(true)
+        if (active) setOnboardingLoadError(true)
       })
       .finally(() => active && setCheckingOnboarding(false))
     return () => { active = false }
-  }, [status])
+  }, [onboardingCheckAttempt, status])
 
   const handleOnboardingComplete = (onboardingData) => {
     setEnabledModules(onboardingData?.enabledModules ?? [])
     setShowOnboarding(false)
+  }
+
+  const retryOnboardingLoad = () => {
+    setOnboardingCheckAttempt((attempt) => attempt + 1)
   }
 
   if (status === AUTH_STATUS.INITIALIZING || checkingOnboarding) {
@@ -125,6 +147,10 @@ const AppRoutes = () => {
 
   if (status === AUTH_STATUS.ERROR) {
     return <AuthErrorScreen error={error} onRetry={retrySessionVerification} />
+  }
+
+  if (status === AUTH_STATUS.AUTHENTICATED && onboardingLoadError) {
+    return <OnboardingLoadErrorScreen onRetry={retryOnboardingLoad} />
   }
 
   const isAuthenticated = status === AUTH_STATUS.AUTHENTICATED
