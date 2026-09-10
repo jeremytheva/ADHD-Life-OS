@@ -34,15 +34,20 @@ const TaskSelector = ({ onSelectTask }) => {
   const [hasLoaded, setHasLoaded] = useState(false)
   const [loadError, setLoadError] = useState(false)
   const filterToggleRef = useRef(null)
+  const latestRequestRef = useRef(0)
 
   const loadTasksAndRecommendations = useCallback(async () => {
+    const requestId = latestRequestRef.current + 1
+    latestRequestRef.current = requestId
+
     try {
       setLoading(true)
       setLoadError(false)
       const allTasks = await taskService.getTasks()
-      setTasks(allTasks)
 
-      // Get recommendations based on selected path
+      if (requestId !== latestRequestRef.current) return
+
+      // Get recommendations based on the latest selected path and user state.
       let recs = []
       if (selectedPath === 'all') {
         recs = taskRecommender.getRecommendations(allTasks, userState)
@@ -55,13 +60,18 @@ const TaskSelector = ({ onSelectTask }) => {
         )
       }
 
+      setTasks(allTasks)
       setRecommendations(recs)
       setHasLoaded(true)
     } catch (error) {
+      if (requestId !== latestRequestRef.current) return
+
       console.error('Error loading recommendations:', error)
       setLoadError(true)
     } finally {
-      setLoading(false)
+      if (requestId === latestRequestRef.current) {
+        setLoading(false)
+      }
     }
   }, [selectedPath, userState])
 
