@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import test from 'node:test'
+import { URL } from 'node:url'
 
 const appSource = await readFile(new URL('../src/App.jsx', import.meta.url), 'utf8')
 
