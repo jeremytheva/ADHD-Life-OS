@@ -3,19 +3,19 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Project Entry
-execution_state: READY
+gate: Integration
+execution_state: VALIDATING
 current_work:
-  objective: Inspect fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
+  objective: Complete repository lifecycle for the validated Task List latest-refresh integrity delivery, then re-enter fresh main for the next dependency-correct Stage 3 frontend outcome.
   issue: null
   pr: null
-  branch: main
+  branch: null
 next_actions:
-  - Reconcile fresh main and current GitHub state after PR #341 merges.
-  - Inspect current frontend execution and workflow surfaces for the next material accessibility or interaction-integrity defect.
-  - Verify any candidate against architecture, callers and existing tests before changing code.
-  - Reuse or repair existing patterns rather than creating duplicate abstractions.
-  - Keep provider-dependent durable execution persistence deferred until real target-instance evidence exists.
+  - Run canonical Application validation on this exact post-merge-safe handoff head.
+  - Audit submitted reviews and inline review threads on PR #342 after exact-head validation.
+  - Complete the repository PR lifecycle only if the final exact head remains clean and mergeable.
+  - After merge, re-enter fresh main and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome.
+  - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -23,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: PR #341 implementation head f83e1d6af7bd2d6b244ee9e79da886e9d5f3a5f2 passed canonical Application validation run 910 and was submitted-review/thread clean before this post-merge-safe STATUS-only handoff. The new exact handoff head must pass canonical validation and remain review/thread clean before lifecycle completion.
-last_verified_commit: f83e1d6af7bd2d6b244ee9e79da886e9d5f3a5f2
-last_updated: 2026-09-11T17:11:43+10:00
+validation_basis: Application validation run 914 passed on implementation head 1761240d0f06d646568eca7dc60ee4eef5cb3c02 with clean submitted-review and inline-thread state. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires canonical revalidation before lifecycle completion.
+last_verified_commit: 1761240d0f06d646568eca7dc60ee4eef5cb3c02
+last_updated: 2026-09-11T20:15:42+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,35 +44,35 @@ last_updated: 2026-09-11T17:11:43+10:00
 
 ## Current objective
 
-The Housework checklist latest-refresh interaction-integrity delivery is implementation-complete at implementation head `f83e1d6af7bd2d6b244ee9e79da886e9d5f3a5f2`. Canonical Application validation run 910 passed on that head, and submitted reviews and inline review threads were clean.
+PR #341 — Housework checklist latest-refresh integrity — is merged into `main` at `a59ca577dab740d05a71613979eb9b445d754e25`.
 
-The delivery sequences `ChoreChecklist.loadTasks()` so overlapping filter changes, retries, completion refreshes, or snooze refreshes cannot let an older asynchronous request overwrite newer chore data, load-error state, or loading completion. Superseded requests remain safe for existing refresh-after-write callers because a newer authoritative refresh owns publication.
+PR #342 delivers Task List latest-refresh interaction integrity. `TaskList.loadTasks()` now sequences overlapping filter, mode, sort, preference, retry and refresh-after-write requests so older asynchronous requests cannot publish stale tasks, task-load analysis, recommendations, error state, or loading completion. Superseded requests remain safe for existing refresh-after-write callers because the newest authoritative request owns publication.
 
-This is frontend interaction-integrity work only. It does not change provider routes, methods, schemas, persistence, housework mutation/statistics/scheduling semantics, authentication, or generic durable execution sessions.
+Canonical Application validation run 914 passed on implementation head `1761240d0f06d646568eca7dc60ee4eef5cb3c02`, and the submitted-review and inline-review-thread audits were clean. This checkpoint intentionally makes the durable handoff safe for the state that should exist after PR #342 merges; because this documentation commit changes the PR head, canonical validation must pass again on the new exact head before merge.
 
-This durable checkpoint is intentionally post-merge safe. After PR #341 completes its repository lifecycle, autonomous continuation should re-enter from fresh `main`, reconcile current repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
+This work remains frontend interaction integrity only. It does not change task persistence schemas, provider routes or methods, ownership, task mutation semantics, authentication, recommendation policy, or generic durable execution sessions.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | PROJECT ENTRY — after merge, inspect fresh main for the next evidence-backed Stage 3 frontend outcome |
-| Gate state | Housework latest-refresh implementation evidence is clean; final exact handoff-head validation is required before merge |
-| Execution state | READY |
+| Current gate | INTEGRATION — final exact-head validation for Task List latest-refresh integrity |
+| Gate state | Implementation-head evidence clean; post-merge-safe handoff committed; final exact-head evidence required |
+| Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
 ## Delivery checkpoint
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #340 — Routine List latest-refresh integrity; merged at `6b453adc3ab3f809fa2274b46591662e50cb32ec` |
-| Delivery prepared for merge | PR #341 — Housework checklist latest-refresh integrity |
-| Implemented change | Only the latest Housework task refresh can publish tasks, load errors, or loading completion |
-| Deterministic coverage | `test/housework-latest-refresh-integrity.test.mjs` |
-| Implementation-head validation | PASS — Application validation run 910 on `f83e1d6af7bd2d6b244ee9e79da886e9d5f3a5f2` |
-| Implementation-head review/thread audit | PASS — no submitted reviews or inline review threads requiring action |
-| Final handoff-head validation | REQUIRED after this STATUS-only commit before lifecycle completion |
-| Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
+| Latest repository delivery on main | PR #341 — Housework checklist latest-refresh integrity; merged at `a59ca577dab740d05a71613979eb9b445d754e25` |
+| Delivery awaiting lifecycle completion | PR #342 — Task List latest-refresh interaction integrity |
+| Implemented change | Only the latest Task List refresh may publish tasks, analysis, recommendations, task-load errors, or loading completion |
+| Deterministic coverage | `test/tasks-latest-refresh-integrity.test.mjs` |
+| Implementation-head canonical validation | PASS — Application validation run 914 on `1761240d0f06d646568eca7dc60ee4eef5cb3c02` |
+| Implementation-head review/thread audit | CLEAN |
+| Current exact-head validation | PENDING after post-merge-safe STATUS commit |
+| Provider/data impact | None; `tasks` logical model unchanged; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
 
@@ -80,25 +80,24 @@ This durable checkpoint is intentionally post-merge safe. After PR #341 complete
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; after PR #341 merges, re-enter from fresh `main`. |
-| What is already happening? | Housework latest-refresh interaction integrity is complete and implementation-head evidence is clean. |
-| What has been validated? | Canonical Application validation run 910 passed on implementation head `f83e1d6af7bd2d6b244ee9e79da886e9d5f3a5f2`; submitted reviews and inline threads were clean. |
-| What is next? | Complete final exact-head validation/review evidence for this post-merge-safe handoff, let repository lifecycle merge it, then inspect fresh main for the next evidence-backed frontend integrity outcome. |
+| Where am I? | Stage 3; the Task List latest-refresh delivery has clean implementation-head evidence and is completing its final exact-head lifecycle gate. |
+| What is already happening? | Task List overlapping refreshes are sequenced; stale requests cannot publish newer-surface state. |
+| What has been validated? | Application validation run 914 passed on the implementation head, with clean submitted-review and inline-thread state. The STATUS-only post-merge-safe head requires revalidation. |
+| What is next? | Validate the exact handoff head, audit review/thread state, complete the repository PR lifecycle if clean, then re-enter fresh `main` for the next dependency-correct Stage 3 frontend outcome. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
-| Why should I stop? | Only for a defined stop/escalation condition, an external dependency blocking all safe work, or no actionable work. |
+| Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. The Task List latest-refresh delivery changes no persisted entity, ownership rule, provider mapping, or migration state.
 
 ## Next dependency-correct work
 
-1. before merge, require canonical Application validation and clean submitted-review/thread evidence on the exact post-merge-safe handoff head;
-2. complete the repository-owned PR lifecycle only after that exact-head evidence is clean;
-3. after merge, re-enter fresh `main` and reconcile repository/GitHub state;
-4. inspect current user-facing execution/workflow surfaces and verify the highest-priority material accessibility or interaction-integrity defect;
-5. reuse existing implementation patterns and tests where possible;
-6. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on the exact post-merge-safe handoff head;
+2. audit submitted reviews and inline review threads;
+3. complete the repository PR lifecycle only if exact-head evidence remains clean and the PR is conflict-free/current with `main`;
+4. after merge, re-enter fresh `main` and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome;
+5. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -52,6 +52,7 @@ const TaskList = () => {
   const [preferences, setPreferences] = useState(null)
   const [analysis, setAnalysis] = useState(null)
   const [recommendedTasks, setRecommendedTasks] = useState([])
+  const latestTaskRequestRef = useRef(0)
 
   const modePrefs = getModePreferences(currentMode.id)
 
@@ -75,6 +76,9 @@ const TaskList = () => {
   }, [user])
 
   const loadTasks = useCallback(async () => {
+    const requestId = latestTaskRequestRef.current + 1
+    latestTaskRequestRef.current = requestId
+
     try {
       setLoading(true)
       setLoadError(null)
@@ -94,17 +98,24 @@ const TaskList = () => {
       }
 
       const sorted = sortTasks(displayTasks, sortBy)
+
+      if (requestId !== latestTaskRequestRef.current) return true
+
       setTasks(sorted)
       setAnalysis(adhdPriorityService.analyzeTaskLoad(filteredData, preferences))
       setRecommendedTasks(adhdPriorityService.getRecommendedTasks(filteredData, preferences, 3))
       setHasLoaded(true)
       return true
     } catch (error) {
+      if (requestId !== latestTaskRequestRef.current) return true
+
       console.error('Error loading tasks:', error)
       setLoadError('tasks')
       return false
     } finally {
-      setLoading(false)
+      if (requestId === latestTaskRequestRef.current) {
+        setLoading(false)
+      }
     }
   }, [currentMode.id, filter, filterByMode, modePrefs.hideCompleted, preferences, sortBy])
 
@@ -417,7 +428,6 @@ const TaskList = () => {
             saving={pendingAction === 'create'}
           />
         )}
-
         {showTemplates && (
           <TemplateLibrary
             onApplyTemplate={handleApplyTemplate}
