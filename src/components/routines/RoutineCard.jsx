@@ -3,18 +3,18 @@ import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 
-const { 
-  FiRefreshCw, 
-  FiEdit2, 
-  FiTrash2, 
-  FiClock, 
-  FiToggleLeft, 
+const {
+  FiRefreshCw,
+  FiEdit2,
+  FiTrash2,
+  FiClock,
+  FiToggleLeft,
   FiToggleRight,
   FiPlay,
   FiBarChart2
 } = FiIcons
 
-const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
+const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats, pending = false }) => {
   const getRepeatPatternLabel = (pattern) => {
     switch (pattern) {
       case 'daily':
@@ -63,23 +63,24 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
           <button
             type="button"
             onClick={onEdit}
+            disabled={pending}
             aria-label={`Edit routine: ${routine.name}`}
-            className="p-1 text-slate-400 hover:text-blue-600 transition-colors"
+            className="p-1 text-slate-400 hover:text-blue-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiEdit2} className="w-4 h-4" aria-hidden="true" />
           </button>
           <button
             type="button"
             onClick={onDelete}
+            disabled={pending}
             aria-label={`Delete routine: ${routine.name}`}
-            className="p-1 text-slate-400 hover:text-red-600 transition-colors"
+            className="p-1 text-slate-400 hover:text-red-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiTrash2} className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
       </div>
 
-      {/* Routine Info */}
       <div className="flex items-center space-x-4 text-sm text-slate-500 mb-4">
         <span>{getRepeatPatternLabel(routine.repeat_pattern)}</span>
         {totalDuration > 0 && (
@@ -90,7 +91,6 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
         )}
       </div>
 
-      {/* Steps */}
       {routine.routine_steps && routine.routine_steps.length > 0 && (
         <div className="space-y-2 mb-4">
           <h4 className="text-sm font-medium text-slate-700">
@@ -119,7 +119,6 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
         </div>
       )}
 
-      {/* Action Buttons */}
       <div className="flex gap-2 pt-4 border-t border-slate-200">
         <button
           type="button"
@@ -132,7 +131,8 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats }) => {
         <button
           type="button"
           onClick={onStart}
-          className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+          disabled={pending}
+          className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <SafeIcon icon={FiPlay} className="w-4 h-4" aria-hidden="true" />
           <span>Start</span>
