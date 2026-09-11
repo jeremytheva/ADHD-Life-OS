@@ -29,9 +29,9 @@ validation:
   build: PASS
   ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #334 final head d726916b957dcdef33f2a31750c9b22064dda42b passed canonical Application validation run 889, remained review/thread clean, and merged through the repository lifecycle at 30ef3d2c63f30b23d89064ee0ff3941424ced809. This STATUS reconciliation itself requires exact-head validation before merge.
-last_verified_commit: d726916b957dcdef33f2a31750c9b22064dda42b
-last_updated: 2026-09-11T09:24:00+10:00
+validation_basis: PR #334 final head d726916b957dcdef33f2a31750c9b22064dda42b passed canonical Application validation run 889, remained review/thread clean, and merged through the repository lifecycle at 30ef3d2c63f30b23d89064ee0ff3941424ced809. PR #335 reconciliation head d3d55489d8f6298e0943cc0a92a9b56c2a1b2ccf passed canonical Application validation run 890 and was review/thread clean before this post-merge-safe evidence update.
+last_verified_commit: d3d55489d8f6298e0943cc0a92a9b56c2a1b2ccf
+last_updated: 2026-09-11T10:10:23+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,7 +45,7 @@ last_updated: 2026-09-11T09:24:00+10:00
 
 PR #334 — `fix: keep Today timeline aligned to latest refresh` — is merged at `30ef3d2c63f30b23d89064ee0ff3941424ced809`. Its final exact head `d726916b957dcdef33f2a31750c9b22064dda42b` passed canonical Application validation run 889 and was review/thread clean.
 
-Fresh-main continuation is now active. The next delivery should be the highest-priority evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome found in current implementation. Generic durable `execution-sessions` remains provider-unverified and fail-closed.
+Fresh-main continuation is active. The next delivery should be the highest-priority evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome found in current implementation. Generic durable `execution-sessions` remains provider-unverified and fail-closed.
 
 ## AI execution gate
 
@@ -66,6 +66,7 @@ Fresh-main continuation is now active. The next delivery should be the highest-p
 | Deterministic coverage | `test/today-latest-refresh-integrity.test.mjs` |
 | Final exact-head validation | PASS — Application validation run 889 on `d726916b957dcdef33f2a31750c9b22064dda42b` |
 | Final review/thread audit | PASS — no submitted reviews or inline review threads requiring action |
+| Durable-state reconciliation | PR #335 initial head `d3d55489d8f6298e0943cc0a92a9b56c2a1b2ccf` passed canonical run 890 and was review/thread clean; reconciliation is prepared as a post-merge-safe handoff |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED / not implied by repository validation or merge |
 | Current blocker | None |
@@ -75,8 +76,8 @@ Fresh-main continuation is now active. The next delivery should be the highest-p
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3 on fresh `main`, ready for the next provider-independent frontend integrity outcome. |
-| What is already happening? | PR #334 is merged; no active implementation PR remains from that delivery. |
-| What has been validated? | PR #334 final exact head passed canonical run 889 and merged through repository lifecycle. |
+| What is already happening? | PR #334 is merged; no active implementation delivery remains from that delivery. |
+| What has been validated? | PR #334 final exact head passed canonical run 889 and merged through repository lifecycle; PR #335 reconciliation evidence has also passed canonical validation before its final handoff update. |
 | What is next? | Inspect current user-facing execution/workflow surfaces, verify the highest-value material defect, then implement it through one focused PR. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
@@ -87,11 +88,10 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. validate this durable-state reconciliation on its exact head and merge it through the repository lifecycle;
-2. re-enter fresh `main` and inspect provider-independent frontend execution/workflow surfaces;
-3. verify the highest-priority material accessibility or interaction-integrity defect against architecture, callers and existing tests;
-4. reuse existing implementation patterns and tests where possible;
-5. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. re-enter fresh `main` and inspect provider-independent frontend execution/workflow surfaces;
+2. verify the highest-priority material accessibility or interaction-integrity defect against architecture, callers and existing tests;
+3. reuse existing implementation patterns and tests where possible;
+4. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
