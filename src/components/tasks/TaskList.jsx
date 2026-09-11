@@ -55,6 +55,7 @@ const TaskList = () => {
   const latestTaskRequestRef = useRef(0)
 
   const modePrefs = getModePreferences(currentMode.id)
+  const mutationPending = Boolean(pendingAction)
 
   useEffect(() => {
     setSortBy(modePrefs.sortBy || 'priority')
@@ -279,10 +280,15 @@ const TaskList = () => {
   }
 
   return (
-    <div className="p-6 space-y-6" aria-busy={loading}>
+    <div className="p-6 space-y-6" aria-busy={loading || mutationPending}>
       {loading && (
         <p className="sr-only" role="status" aria-live="polite">
           Refreshing tasks...
+        </p>
+      )}
+      {mutationPending && (
+        <p className="sr-only" role="status" aria-live="polite">
+          Updating tasks...
         </p>
       )}
 
@@ -316,7 +322,8 @@ const TaskList = () => {
           <button
             type="button"
             onClick={() => { setOperationError(null); setShowTemplates(true) }}
-            className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 flex items-center space-x-2"
+            disabled={mutationPending}
+            className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 flex items-center space-x-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiBookOpen} className="w-4 h-4" aria-hidden="true" />
             <span>Templates</span>
@@ -324,7 +331,8 @@ const TaskList = () => {
           <button
             type="button"
             onClick={() => { setOperationError(null); setShowForm(true) }}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
+            disabled={mutationPending}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
             <span>Add Task</span>
@@ -385,9 +393,23 @@ const TaskList = () => {
             {currentMode.id !== 'all' ? `No ${currentMode.label.toLowerCase()} tasks found` : 'No tasks found'}
           </p>
           <div className="flex gap-3 justify-center">
-            <button type="button" onClick={() => setShowForm(true)} className="text-blue-600 hover:text-blue-700">Create your first task</button>
+            <button
+              type="button"
+              onClick={() => setShowForm(true)}
+              disabled={mutationPending}
+              className="text-blue-600 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Create your first task
+            </button>
             <span className="text-slate-400">or</span>
-            <button type="button" onClick={() => setShowTemplates(true)} className="text-purple-600 hover:text-purple-700">Browse templates</button>
+            <button
+              type="button"
+              onClick={() => setShowTemplates(true)}
+              disabled={mutationPending}
+              className="text-purple-600 hover:text-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Browse templates
+            </button>
           </div>
         </div>
       ) : (
@@ -412,7 +434,7 @@ const TaskList = () => {
                   onComplete={() => handleCompleteTask(task.id)}
                   onDelete={() => handleDeleteTask(task.id)}
                   showPriority={sortBy === 'priority'}
-                  pending={pendingAction?.endsWith(`:${task.id}`)}
+                  pending={mutationPending}
                 />
               </div>
             </motion.div>
