@@ -30,7 +30,7 @@ test('Brain Inbox hides decorative control icons while retaining control text an
   )
   assert.match(
     source,
-    /<SafeIcon icon=\{FiZap\} aria-hidden="true" className="w-3 h-3" \/>\s*<span>Task<\/span>/
+    /<SafeIcon icon=\{FiZap\} aria-hidden="true" className="w-3 h-3" \/>\s*<span>\{convertingIds\.has\(item\.id\) \? 'Converting…' : 'Task'\}<\/span>/
   )
   assert.match(
     source,
