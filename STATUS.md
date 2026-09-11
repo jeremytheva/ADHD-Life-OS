@@ -30,9 +30,9 @@ validation:
   build: PASS
   ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #336 implementation/status head 9a0601ab2cb7f4672d073dd51c6812cadae8fe41 passed canonical Application validation run 893 and was submitted-review/thread clean before this post-merge-safe STATUS-only handoff. The new exact handoff head must pass canonical validation and remain review/thread clean before lifecycle completion.
-last_verified_commit: 9a0601ab2cb7f4672d073dd51c6812cadae8fe41
-last_updated: 2026-09-11T11:26:00+10:00
+validation_basis: PR #337 implementation head f09f177df0f752af5ab726e1b0113fd2837de5b2 passed canonical Application validation run 896 and was submitted-review/thread clean before this post-merge-safe STATUS-only handoff. The new exact handoff head must pass canonical validation and remain review/thread clean before lifecycle completion.
+last_verified_commit: f09f177df0f752af5ab726e1b0113fd2837de5b2
+last_updated: 2026-09-11T11:36:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,9 +44,11 @@ last_updated: 2026-09-11T11:26:00+10:00
 
 ## Current objective
 
-The Brain Inbox latest-category intent delivery is implementation-complete and its implementation/status head `9a0601ab2cb7f4672d073dd51c6812cadae8fe41` passed canonical Application validation run 893 with clean submitted-review and inline-thread evidence.
+The Brain Inbox task-conversion deduplication delivery is implementation-complete and its implementation head `f09f177df0f752af5ab726e1b0113fd2837de5b2` passed canonical Application validation run 896 with clean submitted-review and inline-thread evidence.
 
-The delivery sequences category writes independently per inbox item. If a user changes the same item's category again before an older write resolves, only the latest category request may publish returned state or expose a category-update failure. This prevents stale asynchronous completions from replacing newer categorization intent while preserving independent updates for unrelated items.
+The delivery reuses one in-flight conversion promise per Brain Inbox source item. Concurrent same-item callers share one task-create/delete-source operation; different source items remain independent. In-flight ownership clears after success or failure so failed conversions remain retryable. Existing create-task then delete-source ordering is preserved.
+
+This is an application-level integrity guard only. It does not claim provider-side idempotency, transactionality, uniqueness, or connected-provider verification.
 
 This durable checkpoint is intentionally post-merge safe. After the active PR completes its repository lifecycle, autonomous continuation should re-enter from fresh `main`, reconcile current repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome. Generic durable `execution-sessions` remains provider-unverified and fail-closed.
 
@@ -55,23 +57,23 @@ This durable checkpoint is intentionally post-merge safe. After the active PR co
 | Gate field | Current value |
 | --- | --- |
 | Current gate | PROJECT ENTRY — after merge, inspect fresh main for the next evidence-backed Stage 3 frontend outcome |
-| Gate state | Brain Inbox category-integrity implementation evidence is clean; final exact handoff-head validation is required before merge |
+| Gate state | Brain Inbox conversion-integrity implementation evidence is clean; final exact handoff-head validation is required before merge |
 | Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
-| Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
+| Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, transactions, uniqueness, or durable execution behaviour without real target evidence. |
 
 ## Delivery checkpoint
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #335 — durable STATUS reconciliation after PR #334; merged at `aa3e6ef43f9743aee16b2cde51cdf9c7cc415a11` |
-| Delivery prepared for merge | Brain Inbox latest-category intent integrity |
-| Implemented change | Category updates are sequenced per inbox item and stale success/error completions are ignored |
-| Deterministic coverage | Existing `test/brain-inbox-organize-list-semantics.test.mjs` extended with latest-category integrity assertions |
-| Implementation-head validation | PASS — Application validation run 893 on `9a0601ab2cb7f4672d073dd51c6812cadae8fe41` |
+| Latest repository delivery on main | PR #336 — Brain Inbox latest-category intent integrity; merged at `aa005e7f4af4d7fe048790894473a04310c7a490` |
+| Delivery prepared for merge | PR #337 — Brain Inbox task-conversion deduplication |
+| Implemented change | Same-item concurrent conversions share one in-flight promise; ownership clears after settlement |
+| Deterministic coverage | `test/inbox-conversion-integrity.test.mjs` |
+| Implementation-head validation | PASS — Application validation run 896 on `f09f177df0f752af5ab726e1b0113fd2837de5b2` |
 | Implementation-head review/thread audit | PASS — no submitted reviews or inline review threads requiring action |
 | Final handoff-head validation | REQUIRED after this STATUS-only commit before lifecycle completion |
-| Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
+| Provider/data impact | No provider contract change; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED / not implied by repository validation or merge |
 | Current blocker | None |
 
@@ -80,15 +82,15 @@ This durable checkpoint is intentionally post-merge safe. After the active PR co
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; after the current delivery merges, re-enter from fresh `main`. |
-| What is already happening? | Brain Inbox category mutation sequencing is complete and implementation-head evidence is clean. |
-| What has been validated? | Canonical Application validation run 893 passed on implementation/status head `9a0601ab2cb7f4672d073dd51c6812cadae8fe41`; submitted reviews and inline threads were clean. |
+| What is already happening? | Brain Inbox task-conversion deduplication is complete and implementation-head evidence is clean. |
+| What has been validated? | Canonical Application validation run 896 passed on implementation head `f09f177df0f752af5ab726e1b0113fd2837de5b2`; submitted reviews and inline threads were clean. |
 | What is next? | Complete final exact-head validation/review evidence for this post-merge-safe handoff, let repository lifecycle merge it, then inspect fresh main for the next evidence-backed frontend integrity outcome. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. No physical NoCodeBackend operation, persistence schema, authentication route, execution policy or scheduling policy should be inferred or activated without real target-instance evidence.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. No physical NoCodeBackend operation, persistence schema, authentication route, provider transaction/idempotency guarantee, execution policy, or scheduling policy should be inferred or activated without real target-instance evidence.
 
 ## Next dependency-correct work
 
@@ -101,4 +103,4 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Stage 3 exit conditions
 
-Stage 3 remains open until the platform demonstrates authoritative execution policy, a clear next-action experience, reversible feedback, durable start/continue, interruption/recovery, source reconciliation, deterministic/browser tests and aligned documentation. Backend deferral does not remove or weaken those exit conditions.
+Stage 3 remains open until the platform demonstrates authoritative execution policy, a clear next-action experience, reversible feedback, durable start/continue, interruption/recovery, source reconciliation, deterministic/browser tests, and aligned documentation. Backend deferral does not remove or weaken those exit conditions.
