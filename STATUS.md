@@ -6,15 +6,14 @@ stage: execution and next-action experience
 gate: Project Entry
 execution_state: READY
 current_work:
-  objective: Inspect fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
+  objective: Keep overlapping Projects refreshes aligned to the latest authoritative request so stale project, stats, Quick Capture identity, error, or loading state cannot overwrite newer state.
   issue: null
-  pr: null
-  branch: main
+  pr: 338
+  branch: fix/projects-latest-refresh-integrity
 next_actions:
-  - Reconcile fresh main and current GitHub state after the active delivery merges.
-  - Inspect current frontend execution and workflow surfaces for the next material accessibility or interaction-integrity defect.
-  - Verify any candidate against architecture, callers and existing tests before changing code.
-  - Reuse or repair existing patterns rather than creating duplicate abstractions.
+  - Run canonical validation on the exact PR #338 head and repair any implementation or governance failure on the same PR.
+  - Audit submitted reviews and inline review threads for PR #338.
+  - After implementation-head evidence is clean, commit a post-merge-safe STATUS handoff and revalidate that exact head before lifecycle completion.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -23,16 +22,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #337 implementation head f09f177df0f752af5ab726e1b0113fd2837de5b2 passed canonical Application validation run 896 and was submitted-review/thread clean before this post-merge-safe STATUS-only handoff. The new exact handoff head must pass canonical validation and remain review/thread clean before lifecycle completion.
-last_verified_commit: f09f177df0f752af5ab726e1b0113fd2837de5b2
-last_updated: 2026-09-11T11:36:00+10:00
+validation_basis: PR #338 implementation and deterministic regression coverage are committed. Canonical exact-head validation and review/thread evidence are required before lifecycle completion.
+last_verified_commit: 45b844887ac34aa7ad020c06133592da5991401a
+last_updated: 2026-09-11T12:22:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,20 +43,20 @@ last_updated: 2026-09-11T11:36:00+10:00
 
 ## Current objective
 
-The Brain Inbox task-conversion deduplication delivery is implementation-complete and its implementation head `f09f177df0f752af5ab726e1b0113fd2837de5b2` passed canonical Application validation run 896 with clean submitted-review and inline-thread evidence.
+PR #338 is the sole active delivery. It protects the Projects surface from stale asynchronous refresh publication.
 
-The delivery reuses one in-flight conversion promise per Brain Inbox source item. Concurrent same-item callers share one task-create/delete-source operation; different source items remain independent. In-flight ownership clears after success or failure so failed conversions remain retryable. Existing create-task then delete-source ordering is preserved.
+`ProjectsList.loadProjects()` can be invoked by initial/mode-driven loading and by project create, update, delete, archive, Quick Capture, template, and detail-view refresh paths. Before this delivery, overlapping requests could resolve out of order, allowing an older request to replace newer project data, project statistics, Quick Capture project identity, refresh errors, or loading state.
 
-This is an application-level integrity guard only. It does not claim provider-side idempotency, transactionality, uniqueness, or connected-provider verification.
+The implementation sequences refresh requests with a latest-request token. Projects, stats, and Quick Capture identity publish only after the request is confirmed current. Stale failures and stale finalizers are ignored, while a superseded refresh returns success to mutation callers because a newer authoritative refresh owns publication. Quick Capture identity is also explicitly cleared when the latest result no longer contains that project.
 
-This durable checkpoint is intentionally post-merge safe. After the active PR completes its repository lifecycle, autonomous continuation should re-enter from fresh `main`, reconcile current repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome. Generic durable `execution-sessions` remains provider-unverified and fail-closed.
+This is frontend interaction-integrity work only. It does not change provider routes, methods, schemas, persistence, project mode semantics, authentication, scheduling, or generic durable execution sessions.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | PROJECT ENTRY — after merge, inspect fresh main for the next evidence-backed Stage 3 frontend outcome |
-| Gate state | Brain Inbox conversion-integrity implementation evidence is clean; final exact handoff-head validation is required before merge |
+| Current gate | PROJECT ENTRY — validate and complete PR #338 before starting competing work |
+| Gate state | Implementation and regression coverage committed; exact-head canonical validation pending |
 | Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, transactions, uniqueness, or durable execution behaviour without real target evidence. |
@@ -66,14 +65,14 @@ This durable checkpoint is intentionally post-merge safe. After the active PR co
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #336 — Brain Inbox latest-category intent integrity; merged at `aa005e7f4af4d7fe048790894473a04310c7a490` |
-| Delivery prepared for merge | PR #337 — Brain Inbox task-conversion deduplication |
-| Implemented change | Same-item concurrent conversions share one in-flight promise; ownership clears after settlement |
-| Deterministic coverage | `test/inbox-conversion-integrity.test.mjs` |
-| Implementation-head validation | PASS — Application validation run 896 on `f09f177df0f752af5ab726e1b0113fd2837de5b2` |
-| Implementation-head review/thread audit | PASS — no submitted reviews or inline review threads requiring action |
-| Final handoff-head validation | REQUIRED after this STATUS-only commit before lifecycle completion |
-| Provider/data impact | No provider contract change; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
+| Latest repository delivery on main | PR #337 — Brain Inbox task-conversion deduplication; merged at `45b844887ac34aa7ad020c06133592da5991401a` |
+| Active delivery | PR #338 — Projects latest-refresh interaction integrity |
+| Active branch | `fix/projects-latest-refresh-integrity` |
+| Implemented change | Sequence Projects refreshes and allow only the latest request to publish data/error/loading state |
+| Deterministic coverage | `test/projects-latest-refresh-integrity.test.mjs` |
+| Implementation-head validation | NOT RUN on the current exact head |
+| Review/thread audit | PENDING until exact-head evidence is inspected |
+| Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED / not implied by repository validation or merge |
 | Current blocker | None |
 
@@ -81,10 +80,10 @@ This durable checkpoint is intentionally post-merge safe. After the active PR co
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; after the current delivery merges, re-enter from fresh `main`. |
-| What is already happening? | Brain Inbox task-conversion deduplication is complete and implementation-head evidence is clean. |
-| What has been validated? | Canonical Application validation run 896 passed on implementation head `f09f177df0f752af5ab726e1b0113fd2837de5b2`; submitted reviews and inline threads were clean. |
-| What is next? | Complete final exact-head validation/review evidence for this post-merge-safe handoff, let repository lifecycle merge it, then inspect fresh main for the next evidence-backed frontend integrity outcome. |
+| Where am I? | Stage 3; PR #338 is the sole active delivery. |
+| What is already happening? | Projects latest-refresh interaction integrity is implemented with deterministic regression coverage. |
+| What has been validated? | The preceding PR #337 lifecycle completed and merged into fresh `main`; PR #338 exact-head validation has not yet completed. |
+| What is next? | Validate PR #338 exact head, repair any failures on the same PR, inspect review/thread evidence, then create the required post-merge-safe durable handoff before lifecycle completion. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -94,12 +93,13 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. before merge, require canonical Application validation and clean submitted-review/thread evidence on the exact post-merge-safe handoff head;
-2. complete the repository-owned PR lifecycle only after that exact-head evidence is clean;
-3. after merge, re-enter fresh `main` and reconcile repository/GitHub state;
-4. inspect current user-facing execution/workflow surfaces and verify the highest-priority material accessibility or interaction-integrity defect;
-5. reuse existing implementation patterns and tests where possible;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. run canonical Application validation on the exact PR #338 head;
+2. repair any implementation, regression, lint, typecheck, build, or governance failure on the same PR rather than creating competing work;
+3. inspect submitted reviews and inline review threads and resolve material feedback;
+4. once implementation-head evidence is clean, convert this STATUS checkpoint into a post-merge-safe fresh-`main` handoff;
+5. re-run exact-head canonical validation after that STATUS-only handoff and complete the repository-owned lifecycle only if all gates remain clean;
+6. after merge, re-enter fresh `main` and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome;
+7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
