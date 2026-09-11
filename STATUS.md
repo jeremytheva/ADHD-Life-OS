@@ -6,14 +6,15 @@ stage: execution and next-action experience
 gate: Project Entry
 execution_state: READY
 current_work:
-  objective: Keep overlapping Project Detail refreshes aligned to the latest authoritative request after task/subtask writes and retries.
+  objective: Inspect fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
   issue: null
-  pr: 339
-  branch: fix/project-detail-latest-refresh-integrity
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical validation on the exact PR #339 head and repair any failure on the same PR.
-  - Audit submitted reviews and inline review threads for PR #339.
-  - After implementation-head evidence is clean, commit a post-merge-safe STATUS handoff and revalidate that exact head before lifecycle completion.
+  - Reconcile fresh main and current GitHub state after the active delivery merges.
+  - Inspect current frontend execution and workflow surfaces for the next material accessibility or interaction-integrity defect.
+  - Verify any candidate against architecture, callers and existing tests before changing code.
+  - Reuse or repair existing patterns rather than creating duplicate abstractions.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -22,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #339 implementation and deterministic regression coverage are committed. Canonical exact-head validation and review/thread evidence are required before lifecycle completion.
-last_verified_commit: f93ebdcbe35c3197abe83f1c629a4b1842eef267
-last_updated: 2026-09-11T12:31:00+10:00
+validation_basis: PR #339 implementation head 2176d45fedeacfc8695c2dfb550c80f309b29367 passed canonical Application validation run 903 and was submitted-review/thread clean before this post-merge-safe STATUS-only handoff. The new exact handoff head must pass canonical validation and remain review/thread clean before lifecycle completion.
+last_verified_commit: 2176d45fedeacfc8695c2dfb550c80f309b29367
+last_updated: 2026-09-11T14:10:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,20 +44,20 @@ last_updated: 2026-09-11T12:31:00+10:00
 
 ## Current objective
 
-PR #339 is the sole active delivery. It protects Project Detail from stale asynchronous refresh publication after task/subtask writes, initial loading, and retry flows.
+The Project Detail latest-refresh integrity delivery is implementation-complete and its repaired implementation head `2176d45fedeacfc8695c2dfb550c80f309b29367` passed canonical Application validation run 903 with clean submitted-review and inline-thread evidence.
 
-`ProjectDetailView.loadProjectDetails()` retrieves the project/task snapshot and project statistics together and is reused by post-write recovery. Before this delivery, overlapping requests could resolve out of order, allowing an older request to replace newer project/task data, statistics, detail-load errors, or loading state.
-
-The implementation sequences detail refreshes with a latest-request token. Project and stats state publish only after the request is confirmed current. Stale failures and stale finalizers are ignored; superseded refreshes return success because a newer authoritative request owns publication, preserving existing `refreshAfterWrite` semantics.
+The delivery sequences `ProjectDetailView.loadProjectDetails()` requests so only the newest request can publish project/task data, project statistics, detail-load errors, or loading completion. Superseded requests return success to refresh-after-write callers because a newer authoritative refresh owns publication. The existing loading-state contract was updated so stale finalizers cannot clear loading owned by a newer request.
 
 This is frontend interaction-integrity work only. It does not change provider routes, methods, schemas, persistence, project/task/subtask mutation semantics, authentication, scheduling, or generic durable execution sessions.
+
+This durable checkpoint is intentionally post-merge safe. After the active PR completes its repository lifecycle, autonomous continuation should re-enter from fresh `main`, reconcile current repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome. Generic durable `execution-sessions` remains provider-unverified and fail-closed.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | PROJECT ENTRY — validate and complete PR #339 before starting competing work |
-| Gate state | Implementation and regression coverage committed; exact-head canonical validation pending |
+| Current gate | PROJECT ENTRY — after merge, inspect fresh main for the next evidence-backed Stage 3 frontend outcome |
+| Gate state | Project Detail latest-refresh implementation evidence is clean; final exact handoff-head validation is required before merge |
 | Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, transactions, uniqueness, or durable execution behaviour without real target evidence. |
@@ -66,13 +67,13 @@ This is frontend interaction-integrity work only. It does not change provider ro
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #338 — Projects latest-refresh interaction integrity; merged at `f93ebdcbe35c3197abe83f1c629a4b1842eef267` |
-| Active delivery | PR #339 — Project Detail latest-refresh interaction integrity |
-| Active branch | `fix/project-detail-latest-refresh-integrity` |
+| Delivery prepared for merge | PR #339 — Project Detail latest-refresh interaction integrity |
 | Implemented change | Only the latest Project Detail refresh can publish project/task data, stats, load errors, or loading completion |
-| Deterministic coverage | `test/project-detail-latest-refresh-integrity.test.mjs` |
-| Implementation-head validation | NOT RUN on the current exact head |
-| Review/thread audit | PENDING until exact-head evidence is inspected |
-| Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
+| Deterministic coverage | `test/project-detail-latest-refresh-integrity.test.mjs` plus repaired existing loading-state contract coverage |
+| Implementation-head validation | PASS — Application validation run 903 on `2176d45fedeacfc8695c2dfb550c80f309b29367` |
+| Implementation-head review/thread audit | PASS — no submitted reviews or inline review threads requiring action |
+| Final handoff-head validation | REQUIRED after this STATUS-only commit before lifecycle completion |
+| Provider/data impact | No provider contract change; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED / not implied by repository validation or merge |
 | Current blocker | None |
 
@@ -80,10 +81,10 @@ This is frontend interaction-integrity work only. It does not change provider ro
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #339 is the sole active delivery. |
-| What is already happening? | Project Detail latest-refresh interaction integrity is implemented with deterministic regression coverage. |
-| What has been validated? | PR #338 completed its lifecycle and merged into fresh `main`; PR #339 exact-head validation has not yet completed. |
-| What is next? | Validate PR #339 exact head, repair any failures on the same PR, inspect review/thread evidence, then create the required post-merge-safe durable handoff before lifecycle completion. |
+| Where am I? | Stage 3; after the current delivery merges, re-enter from fresh `main`. |
+| What is already happening? | Project Detail latest-refresh interaction integrity is complete and implementation-head evidence is clean. |
+| What has been validated? | Canonical Application validation run 903 passed on repaired implementation head `2176d45fedeacfc8695c2dfb550c80f309b29367`; submitted reviews and inline threads were clean. |
+| What is next? | Complete final exact-head validation/review evidence for this post-merge-safe handoff, let repository lifecycle merge it, then inspect fresh main for the next evidence-backed frontend integrity outcome. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -93,13 +94,12 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact PR #339 head;
-2. repair any implementation, regression, lint, typecheck, build, or governance failure on the same PR rather than creating competing work;
-3. inspect submitted reviews and inline review threads and resolve material feedback;
-4. once implementation-head evidence is clean, convert this STATUS checkpoint into a post-merge-safe fresh-`main` handoff;
-5. re-run exact-head canonical validation after that STATUS-only handoff and complete the repository-owned lifecycle only if all gates remain clean;
-6. after merge, re-enter fresh `main` and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome;
-7. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. before merge, require canonical Application validation and clean submitted-review/thread evidence on the exact post-merge-safe handoff head;
+2. complete the repository-owned PR lifecycle only after that exact-head evidence is clean;
+3. after merge, re-enter fresh `main` and reconcile repository/GitHub state;
+4. inspect current user-facing execution/workflow surfaces and verify the highest-priority material accessibility or interaction-integrity defect;
+5. reuse existing implementation patterns and tests where possible;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
