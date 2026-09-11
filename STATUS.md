@@ -6,16 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete the Brain Inbox pending-edit integrity delivery without changing provider or persistence contracts.
+  objective: Complete final exact-head validation for the Brain Inbox pending-edit delivery, then re-enter fresh main for the next dependency-correct Stage 3 outcome.
   issue: null
-  pr: 345
-  branch: fix/inbox-edit-pending-integrity
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the exact PR #345 implementation head.
-  - Inspect submitted reviews and inline review threads after validation.
-  - Repair only evidenced implementation or test failures on the same PR.
-  - Once implementation-head evidence is clean, prepare a post-merge-safe STATUS handoff and revalidate that exact head.
-  - Complete the repository PR lifecycle only when the exact head is clean and mergeable.
+  - Run canonical Application validation on the exact post-handoff PR #345 head.
+  - Re-audit submitted reviews and inline review threads on that exact head.
+  - Complete the repository PR lifecycle only if the exact head remains clean, current with main, and mergeable.
+  - After merge, re-enter fresh main and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #344 passed implementation-head Application validation run 922 and final exact-head run 923, then merged through the repository lifecycle at 7a1dd049cb39fafe0cac66487bbf7ef4eed1dc34. PR #345 is a new provider-independent frontend data-entry integrity delivery and requires fresh exact-head canonical validation.
-last_verified_commit: 7a1dd049cb39fafe0cac66487bbf7ef4eed1dc34
-last_updated: 2026-09-11T21:52:30+10:00
+validation_basis: PR #345 implementation head 1463efffd1e22b22f5a3801105a5f317a648af1b passed canonical Application validation run 925 and had no submitted reviews or inline review threads requiring action. This post-merge-safe STATUS commit creates a new exact head that requires final canonical validation before lifecycle completion.
+last_verified_commit: 1463efffd1e22b22f5a3801105a5f317a648af1b
+last_updated: 2026-09-11T22:11:24+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +44,22 @@ last_updated: 2026-09-11T21:52:30+10:00
 
 ## Current objective
 
-PR #344 — Brain Inbox pending-capture integrity — completed its repository-managed lifecycle and merged into `main` at `7a1dd049cb39fafe0cac66487bbf7ef4eed1dc34` after final exact-head Application validation run 923 passed.
+PR #345 — Brain Inbox pending-edit integrity — has completed implementation-head validation. Exact implementation head `1463efffd1e22b22f5a3801105a5f317a648af1b` passed canonical Application validation run 925, and the submitted-review plus inline-thread audit was clean.
 
-PR #345 addresses the next evidence-backed Stage 3 Brain Inbox integrity defect. Inline edit persistence previously had no pending-write ownership: repeated Save/Enter actions could issue overlapping updates, and the edit field plus Cancel remained active while an earlier update could later close the editor and clear newer local text.
+The delivery fixes an evidence-backed Stage 3 Brain Inbox integrity defect. Inline edit persistence previously had no pending-write ownership: repeated Save/Enter actions could issue overlapping updates, and the edit field plus Cancel remained active while an earlier update could later close the editor and clear newer local text.
 
-The implementation now treats one edit save as an atomic interaction. It snapshots submitted edit text, blocks repeated Save/Enter, disables the edit field and Cancel while the write is pending, exposes pending state with `aria-busy` and visible `Saving…` text, and preserves the existing failure contract that leaves failed edit text available for retry. Deterministic coverage is provided by `test/inbox-edit-pending-integrity.test.mjs`.
+The implementation treats one edit save as an atomic interaction. It snapshots submitted edit text, blocks repeated Save/Enter, disables the edit field and Cancel while the write is pending, exposes pending state with `aria-busy` and visible `Saving…` text, and preserves the existing failure contract that leaves failed edit text available for retry. Deterministic coverage is provided by `test/inbox-edit-pending-integrity.test.mjs`.
 
-This is frontend interaction/data-entry integrity only. It changes no provider route, method, schema, ownership rule, persisted `inbox-items` shape, categorisation/conversion/deletion behaviour, authentication behaviour, or generic durable execution-session contract.
+This handoff is intentionally post-merge-safe: after PR #345 merges, future continuation must re-enter fresh `main` rather than treating the completed PR or its branch as the active work target.
+
+This remains frontend interaction/data-entry integrity only. It changes no provider route, method, schema, ownership rule, persisted `inbox-items` shape, categorisation/conversion/deletion behaviour, authentication behaviour, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — validate Brain Inbox pending-edit integrity |
-| Gate state | Implementation and deterministic coverage committed; exact-head canonical evidence required |
+| Current gate | INTEGRATION — final exact-head validation for Brain Inbox pending-edit integrity |
+| Gate state | Implementation-head evidence clean; post-merge-safe STATUS committed; final exact-head evidence required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -67,12 +68,13 @@ This is frontend interaction/data-entry integrity only. It changes no provider r
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #344 — Brain Inbox pending-capture integrity; merged at `7a1dd049cb39fafe0cac66487bbf7ef4eed1dc34` |
-| Active delivery | PR #345 — Brain Inbox pending-edit integrity |
-| Branch | `fix/inbox-edit-pending-integrity` |
+| Delivery completing | PR #345 — Brain Inbox pending-edit integrity |
+| Post-merge re-entry target | Fresh `main`; no persistent active PR/branch recorded |
 | Implemented change | One pending edit owns the editor until persistence succeeds or fails; repeated update submission and cancellation are blocked |
 | Deterministic coverage | `test/inbox-edit-pending-integrity.test.mjs` |
-| Canonical validation | NOT_RUN on the current exact head |
-| Review/thread audit | Required after validation |
+| Implementation-head validation | PASS — Application validation run 925 on `1463efffd1e22b22f5a3801105a5f317a648af1b` |
+| Implementation-head review/thread audit | CLEAN — no submitted reviews or inline review threads requiring action |
+| Final exact-head validation | NOT_RUN on this post-handoff head |
 | Provider/data impact | None; `inbox-items` logical model unchanged; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -81,10 +83,10 @@ This is frontend interaction/data-entry integrity only. It changes no provider r
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #345 is the sole active delivery. |
-| What is already happening? | Brain Inbox inline edit now protects one pending update from duplicate submission, cancellation, or local text mutation until it settles. |
-| What has been validated? | The preceding PR #344 completed exact-head validation and merged. PR #345 requires fresh canonical validation. |
-| What is next? | Validate PR #345, repair only evidenced failures, audit review/thread state, prepare a post-merge-safe handoff, revalidate, and complete the repository lifecycle. |
+| Where am I? | Stage 3; PR #345 is completing its repository lifecycle, but post-merge continuation returns to fresh `main`. |
+| What is already happening? | Brain Inbox inline edit protects one pending update from duplicate submission, cancellation, or local text mutation until it settles. |
+| What has been validated? | PR #345 implementation head passed canonical run 925 and the implementation-head review/thread audit is clean. |
+| What is next? | Validate this exact post-handoff head, re-audit review/thread state, complete the lifecycle if clean, then inspect fresh `main` for the next provider-independent Stage 3 integrity outcome. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -94,13 +96,11 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact PR #345 head;
-2. inspect submitted reviews and inline review threads;
-3. repair any evidenced implementation/test issue on the same branch;
-4. when implementation-head evidence is clean, commit a post-merge-safe durable STATUS handoff;
-5. revalidate the exact handoff head and complete the repository-owned lifecycle only if clean and current with `main`;
-6. after merge, re-enter fresh `main` and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome;
-7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on the exact post-handoff PR #345 head;
+2. inspect submitted reviews and inline review threads on that exact head;
+3. complete the repository-owned lifecycle only if validation is clean, review/thread state is clean, the branch is current with `main`, and the PR remains conflict-free and mergeable;
+4. after merge, re-enter fresh `main` and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome;
+5. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
