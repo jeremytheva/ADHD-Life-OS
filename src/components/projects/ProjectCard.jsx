@@ -5,7 +5,7 @@ import SafeIcon from '../../common/SafeIcon'
 
 const { FiMoreVertical, FiEdit2, FiTrash2, FiArchive, FiChevronRight } = FiIcons
 
-const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) => {
+const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive, pending = false }) => {
   const [showMenu, setShowMenu] = React.useState(false)
   const menuTriggerRef = React.useRef(null)
   const menuItemRefs = React.useRef([])
@@ -13,6 +13,10 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
   React.useEffect(() => {
     if (showMenu) menuItemRefs.current[0]?.focus()
   }, [showMenu])
+
+  React.useEffect(() => {
+    if (pending && showMenu) setShowMenu(false)
+  }, [pending, showMenu])
 
   const closeMenu = ({ restoreFocus = false } = {}) => {
     setShowMenu(false)
@@ -94,17 +98,18 @@ const ProjectCard = ({ project, stats, onClick, onEdit, onDelete, onArchive }) =
               type="button"
               onClick={(event) => {
                 event.stopPropagation()
-                setShowMenu((open) => !open)
+                if (!pending) setShowMenu((open) => !open)
               }}
               aria-label={`Project actions for ${project.title}`}
               aria-expanded={showMenu}
               aria-haspopup="menu"
-              className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+              disabled={pending}
+              className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
               <SafeIcon icon={FiMoreVertical} className="w-5 h-5" aria-hidden="true" />
             </button>
 
-            {showMenu && (
+            {showMenu && !pending && (
               <>
                 <div
                   className="fixed inset-0 z-10"
