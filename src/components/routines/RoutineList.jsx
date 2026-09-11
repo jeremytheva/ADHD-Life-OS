@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -26,20 +26,33 @@ const RoutineList = () => {
   const [editingRoutine, setEditingRoutine] = useState(null)
   const [activeRoutine, setActiveRoutine] = useState(null)
   const [statsRoutine, setStatsRoutine] = useState(null)
+  const latestRoutineRequestRef = useRef(0)
 
   const loadRoutines = useCallback(async () => {
+    const requestId = latestRoutineRequestRef.current + 1
+    latestRoutineRequestRef.current = requestId
+
     try {
       setLoading(true)
       setLoadError(false)
       const data = await routineService.getRoutines()
       const filteredData = filterByMode(data, 'routine')
+
+      if (requestId !== latestRoutineRequestRef.current) return true
+
       setRoutines(filteredData)
       setHasLoaded(true)
+      return true
     } catch (error) {
+      if (requestId !== latestRoutineRequestRef.current) return true
+
       console.error('Error loading routines:', error)
       setLoadError(true)
+      return false
     } finally {
-      setLoading(false)
+      if (requestId === latestRoutineRequestRef.current) {
+        setLoading(false)
+      }
     }
   }, [filterByMode])
 
