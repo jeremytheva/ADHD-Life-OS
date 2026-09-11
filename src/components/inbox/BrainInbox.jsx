@@ -18,6 +18,7 @@ const BrainInbox = () => {
   const [editingId, setEditingId] = useState(null)
   const [editText, setEditText] = useState('')
   const inputRef = useRef(null)
+  const latestLoadRequestRef = useRef(0)
   const latestCategoryRequestRef = useRef(new Map())
 
   useEffect(() => {
@@ -31,16 +32,23 @@ const BrainInbox = () => {
   }, [mode])
 
   const loadItems = async () => {
+    const requestId = latestLoadRequestRef.current + 1
+    latestLoadRequestRef.current = requestId
+
     try {
       setLoading(true)
       setLoadError(null)
       const data = await inboxService.getInboxItems()
+      if (requestId !== latestLoadRequestRef.current) return true
       setItems(data)
     } catch (error) {
+      if (requestId !== latestLoadRequestRef.current) return true
       console.error('Error loading inbox items:', error)
       setLoadError(error)
     } finally {
-      setLoading(false)
+      if (requestId === latestLoadRequestRef.current) {
+        setLoading(false)
+      }
     }
   }
 
