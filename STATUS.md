@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete PR #352, which gives Project Detail one authoritative owner for task/subtask persistence and removes the duplicate subtask-completion write path.
+  objective: Complete PR #352 lifecycle from its post-merge-safe handoff, then re-enter fresh main and select the next provider-independent Stage 3 interaction-integrity outcome from current evidence.
   issue: null
-  pr: 352
-  branch: fix/project-detail-pending-mutation-integrity
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the repaired exact PR #352 head.
-  - Repair any further in-scope validation regression on the same PR and revalidate the new exact head.
-  - Audit submitted reviews and inline review threads after exact-head validation.
-  - Mark implementation complete only when all acceptance criteria and exact-head evidence are clean.
-  - Before lifecycle completion, write a post-merge-safe STATUS handoff that returns continuation to fresh main.
+  - Run canonical Application validation on this exact post-merge-safe PR #352 head.
+  - Re-audit submitted reviews and inline review threads after exact-head validation.
+  - Confirm the final head remains current with main and conflict-free.
+  - If evidence remains clean, add lifecycle:implementation-complete and allow the repository lifecycle controller/finalizer to complete PR #352.
+  - Confirm merge on main, then inspect fresh authoritative state before selecting the next delivery.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 962 reached the Node suite with 417/418 tests passing. All new Project Detail pending-mutation tests passed. The sole failure was a stale source assertion expecting aria-busy={detailsLoading}; it has been repaired to accept the intentional combined detailsLoading || mutationPending busy state. A new exact-head canonical run is required.
-last_verified_commit: ca11f4e56f7d637ade3d1a85fb5240155841166e
-last_updated: 2026-09-12T03:24:00+10:00
+validation_basis: Application validation run 964 retry passed canonical npm run platform:validate on implementation head 6c05dfe6b70788f02db6d471debaf5310d1dcc28. The first run-964 attempt had one unrelated Mode Switcher E2E failure plus unrelated browser flakes after governance, lint, typecheck, all 418 Node tests, and build passed; rerunning the exact same head passed without code changes. Submitted reviews and inline review threads were clean after the successful retry, and the branch was 0 commits behind main. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires one final canonical validation before lifecycle completion.
+last_verified_commit: 6c05dfe6b70788f02db6d471debaf5310d1dcc28
+last_updated: 2026-09-12T03:32:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,13 +45,13 @@ last_updated: 2026-09-12T03:24:00+10:00
 
 ## Current objective
 
-PR #351 completed its lifecycle and merged into `main` at `ca11f4e56f7d637ade3d1a85fb5240155841166e` after final exact-head Application validation run 959 passed with clean submitted-review and inline-thread state.
+PR #352 has completed implementation-head validation for Project Detail task/subtask mutation ownership. Application validation run 964 retry passed canonical `npm run platform:validate` on implementation head `6c05dfe6b70788f02db6d471debaf5310d1dcc28`, submitted reviews plus inline review threads were clean afterward, and the branch was current with `main`.
 
-Fresh-main inspection identified the next material provider-independent integrity defect in Project Detail. Task writes were owned by `ProjectDetailView`, but subtask writes were independently issued inside `SubtaskList`. In the completion path this caused the child to call `completeSubtask` and then invoke a parent callback that called `completeSubtask` a second time. More generally, task and subtask writes could overlap without one shared persistence owner, and child create/delete/uncomplete operations did not consistently reconcile through Project Detail.
+The delivery makes `ProjectDetailView` the authoritative owner for task add/update/complete/delete and subtask add/delete/toggle persistence. `SubtaskList` delegates writes to the parent, eliminating the prior duplicate subtask-completion call. One shared pending owner prevents overlapping task/subtask writes, mutation controls reflect that lock, read-only disclosure remains usable, failed subtask creation retains retry text, and write-versus-reconciliation recovery plus celebration gating remain aligned with the accepted Project Detail recovery decision.
 
-PR #352 makes `ProjectDetailView` the authoritative mutation owner for task add/update/complete/delete and subtask add/delete/toggle operations. `SubtaskList` now delegates persistence to the parent, so subtask completion issues one write followed by the established detail refresh/recovery path. The shared pending lock disables mutation launchers while persistence is unresolved, keeps read-only disclosure available, blocks dialog dismissal during a write, and exposes busy/live mutation feedback. Failed subtask creation retains the entered title; successful writes followed by refresh failure retain the accepted partial-success semantics rather than encouraging an unsafe duplicate retry.
+Run 962 originally exposed one stale loading-status source assertion after all new mutation-integrity tests passed; that assertion was synchronized with the intentional combined loading/mutation `aria-busy` state. The first run-964 attempt then passed governance, lint, typecheck, all 418 Node tests, and build but encountered an unrelated Mode Switcher browser failure and several unrelated browser flakes. A retry on the exact same commit passed the complete canonical gate without any product-code workaround, confirming the branch itself is clean.
 
-Application validation run 962 confirmed the new implementation-specific regression coverage passes. Its only failure was the older Project Detail loading-status source assertion, which still required literal `aria-busy={detailsLoading}`. Because the dialog now correctly represents both loading and mutation activity with `aria-busy={detailsLoading || mutationPending}`, that stale assertion was repaired on this PR without weakening the original loading-status contract. Exact-head canonical validation is running again from the repaired state.
+This document is intentionally post-merge-safe. Once PR #352 completes lifecycle, autonomous continuation must begin from fresh `main`, not treat the merged PR branch as active work. This STATUS-only handoff commit itself requires final exact-head canonical validation before lifecycle completion.
 
 The change is frontend interaction integrity only. It changes no project/task/subtask service contract, provider route, method, schema, ownership rule, persisted data shape, authentication behaviour, recommendation policy, or generic durable execution-session contract.
 
@@ -59,8 +59,8 @@ The change is frontend interaction integrity only. It changes no project/task/su
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — repaired exact-head canonical validation for Project Detail mutation ownership |
-| Gate state | Implementation and deterministic coverage committed; run 962 stale-test failure repaired; new exact-head evidence required |
+| Current gate | INTEGRATION — final exact-head validation and lifecycle completion for PR #352 |
+| Gate state | Implementation head validated by run 964 retry; post-merge-safe STATUS committed; final exact-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -69,13 +69,14 @@ The change is frontend interaction integrity only. It changes no project/task/su
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #351 — Projects pending-mutation integrity; merged at `ca11f4e56f7d637ade3d1a85fb5240155841166e` |
-| Active delivery | PR #352 — Project Detail pending-mutation integrity |
-| Active branch | `fix/project-detail-pending-mutation-integrity` |
+| Delivery awaiting final lifecycle completion | PR #352 — Project Detail pending-mutation integrity |
+| Delivery branch | `fix/project-detail-pending-mutation-integrity` |
 | Implemented change | One Project Detail mutation owner across task/subtask writes; duplicate subtask completion removed; child writes reconcile through parent; mutation-aware controls and busy/live feedback |
 | Deterministic coverage | `test/project-detail-pending-mutation-integrity.test.mjs` plus synchronized Project Detail loading/recovery coverage |
-| Prior canonical run | Run 962 FAIL — 417/418 Node tests passed; sole failure was stale `aria-busy` source assertion, now repaired |
-| Canonical validation | NOT_RUN on repaired current exact head |
-| Review/thread audit | PENDING until exact-head validation completes |
+| Canonical implementation-head validation | PASS — Application validation run 964 retry on `6c05dfe6b70788f02db6d471debaf5310d1dcc28` |
+| Review/thread audit | CLEAN after successful run 964 retry; recheck after final exact-head validation |
+| Base freshness | CURRENT — implementation head was 0 commits behind `main` before this STATUS-only handoff |
+| Final exact-head validation | PENDING on this post-merge-safe STATUS head |
 | Provider/data impact | None; logical persisted models unchanged; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -84,10 +85,10 @@ The change is frontend interaction integrity only. It changes no project/task/su
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #352 is the sole active delivery and its one stale validation assertion has been repaired. |
-| What is already happening? | Project Detail serializes task/subtask persistence and subtask writes delegate to that parent owner instead of writing independently. |
-| What has been validated? | Run 962 passed governance/lint/typecheck and 417/418 Node tests; all new mutation-integrity tests passed. The single stale loading-status assertion is repaired. |
-| What is next? | Re-run canonical validation on the repaired exact head, then audit reviews/threads and advance lifecycle only from clean evidence. |
+| Where am I? | Stage 3. PR #352 implementation is validated and only final exact-head lifecycle evidence remains. After merge, start from fresh `main`. |
+| What is already happening? | Project Detail serializes task/subtask persistence under one parent owner and subtask writes no longer execute independently. |
+| What has been validated? | Run 964 retry passed canonical platform validation on the implementation head; review/thread evidence was clean and the branch was current with main. |
+| What is next? | Validate this post-merge-safe exact head, re-audit reviews/threads and freshness, complete lifecycle if still clean, then inspect fresh main for the next material provider-independent Stage 3 outcome. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -97,12 +98,12 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the repaired exact PR #352 head;
-2. repair any remaining in-scope regression on the same PR and revalidate;
-3. audit submitted reviews and inline review threads;
-4. add implementation-complete evidence only when all acceptance criteria and exact-head evidence are clean;
-5. write a post-merge-safe STATUS handoff and complete repository lifecycle only while the final head remains current/conflict-free;
-6. after merge, re-enter fresh `main` and inspect the next material provider-independent Stage 3 frontend accessibility or interaction-integrity outcome;
+1. run canonical Application validation on this exact post-merge-safe PR #352 head;
+2. re-audit submitted reviews and inline review threads;
+3. confirm the final head remains current/conflict-free;
+4. if all acceptance evidence remains clean, add the repository lifecycle implementation-complete marker and allow the readiness controller/merge finalizer to complete the PR lifecycle;
+5. confirm the merge on `main`;
+6. re-enter fresh `main`, inspect authoritative state/current GitHub work, and select the next material provider-independent Stage 3 accessibility or interaction-integrity outcome;
 7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
