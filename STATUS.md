@@ -30,9 +30,9 @@ validation:
   build: PASS
   ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #338 implementation head 48738611851b0c83e6b504083b8c4ca6789932f6 passed canonical Application validation run 899 and was submitted-review/thread clean before this post-merge-safe STATUS-only handoff. The new exact handoff head must pass canonical validation and remain review/thread clean before lifecycle completion.
-last_verified_commit: 48738611851b0c83e6b504083b8c4ca6789932f6
-last_updated: 2026-09-11T12:25:00+10:00
+validation_basis: PR #339 implementation head 2176d45fedeacfc8695c2dfb550c80f309b29367 passed canonical Application validation run 903 and was submitted-review/thread clean before this post-merge-safe STATUS-only handoff. The new exact handoff head must pass canonical validation and remain review/thread clean before lifecycle completion.
+last_verified_commit: 2176d45fedeacfc8695c2dfb550c80f309b29367
+last_updated: 2026-09-11T14:10:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,11 +44,11 @@ last_updated: 2026-09-11T12:25:00+10:00
 
 ## Current objective
 
-The Projects latest-refresh integrity delivery is implementation-complete and its implementation head `48738611851b0c83e6b504083b8c4ca6789932f6` passed canonical Application validation run 899 with clean submitted-review and inline-thread evidence.
+The Project Detail latest-refresh integrity delivery is implementation-complete and its repaired implementation head `2176d45fedeacfc8695c2dfb550c80f309b29367` passed canonical Application validation run 903 with clean submitted-review and inline-thread evidence.
 
-The delivery sequences `ProjectsList.loadProjects()` requests so only the newest request can publish projects, project statistics, Quick Capture project identity, refresh errors, or loading completion. Superseded requests return success to mutation callers because a newer authoritative refresh owns publication. The latest response also clears stale Quick Capture identity when that project is absent.
+The delivery sequences `ProjectDetailView.loadProjectDetails()` requests so only the newest request can publish project/task data, project statistics, detail-load errors, or loading completion. Superseded requests return success to refresh-after-write callers because a newer authoritative refresh owns publication. The existing loading-state contract was updated so stale finalizers cannot clear loading owned by a newer request.
 
-This is frontend interaction-integrity work only. It does not change provider routes, methods, schemas, persistence, project mode semantics, authentication, scheduling, or generic durable execution sessions.
+This is frontend interaction-integrity work only. It does not change provider routes, methods, schemas, persistence, project/task/subtask mutation semantics, authentication, scheduling, or generic durable execution sessions.
 
 This durable checkpoint is intentionally post-merge safe. After the active PR completes its repository lifecycle, autonomous continuation should re-enter from fresh `main`, reconcile current repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome. Generic durable `execution-sessions` remains provider-unverified and fail-closed.
 
@@ -57,7 +57,7 @@ This durable checkpoint is intentionally post-merge safe. After the active PR co
 | Gate field | Current value |
 | --- | --- |
 | Current gate | PROJECT ENTRY — after merge, inspect fresh main for the next evidence-backed Stage 3 frontend outcome |
-| Gate state | Projects latest-refresh implementation evidence is clean; final exact handoff-head validation is required before merge |
+| Gate state | Project Detail latest-refresh implementation evidence is clean; final exact handoff-head validation is required before merge |
 | Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas, transactions, uniqueness, or durable execution behaviour without real target evidence. |
@@ -66,11 +66,11 @@ This durable checkpoint is intentionally post-merge safe. After the active PR co
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #337 — Brain Inbox task-conversion deduplication; merged at `45b844887ac34aa7ad020c06133592da5991401a` |
-| Delivery prepared for merge | PR #338 — Projects latest-refresh interaction integrity |
-| Implemented change | Only the latest Projects refresh can publish projects, stats, Quick Capture identity, errors, or loading completion |
-| Deterministic coverage | `test/projects-latest-refresh-integrity.test.mjs` |
-| Implementation-head validation | PASS — Application validation run 899 on `48738611851b0c83e6b504083b8c4ca6789932f6` |
+| Latest repository delivery on main | PR #338 — Projects latest-refresh interaction integrity; merged at `f93ebdcbe35c3197abe83f1c629a4b1842eef267` |
+| Delivery prepared for merge | PR #339 — Project Detail latest-refresh interaction integrity |
+| Implemented change | Only the latest Project Detail refresh can publish project/task data, stats, load errors, or loading completion |
+| Deterministic coverage | `test/project-detail-latest-refresh-integrity.test.mjs` plus repaired existing loading-state contract coverage |
+| Implementation-head validation | PASS — Application validation run 903 on `2176d45fedeacfc8695c2dfb550c80f309b29367` |
 | Implementation-head review/thread audit | PASS — no submitted reviews or inline review threads requiring action |
 | Final handoff-head validation | REQUIRED after this STATUS-only commit before lifecycle completion |
 | Provider/data impact | No provider contract change; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
@@ -82,8 +82,8 @@ This durable checkpoint is intentionally post-merge safe. After the active PR co
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; after the current delivery merges, re-enter from fresh `main`. |
-| What is already happening? | Projects latest-refresh interaction integrity is complete and implementation-head evidence is clean. |
-| What has been validated? | Canonical Application validation run 899 passed on implementation head `48738611851b0c83e6b504083b8c4ca6789932f6`; submitted reviews and inline threads were clean. |
+| What is already happening? | Project Detail latest-refresh interaction integrity is complete and implementation-head evidence is clean. |
+| What has been validated? | Canonical Application validation run 903 passed on repaired implementation head `2176d45fedeacfc8695c2dfb550c80f309b29367`; submitted reviews and inline threads were clean. |
 | What is next? | Complete final exact-head validation/review evidence for this post-merge-safe handoff, let repository lifecycle merge it, then inspect fresh main for the next evidence-backed frontend integrity outcome. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
