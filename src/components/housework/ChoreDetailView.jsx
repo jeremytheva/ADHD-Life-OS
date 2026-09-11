@@ -17,11 +17,18 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
   const [completing, setCompleting] = useState(false)
   const [operationError, setOperationError] = useState(null)
   const closeTimerRef = useRef(null)
+  const completionPendingRef = useRef(false)
   const titleId = useId()
   const requiredItemsHeadingId = useId()
   const stepsHeadingId = useId()
   const closeLocked = completing || showCelebration
-  const dialogRef = useModalDialog({ onEscape: closeLocked ? undefined : onClose })
+
+  const handleClose = () => {
+    if (completionPendingRef.current || showCelebration) return
+    onClose()
+  }
+
+  const dialogRef = useModalDialog({ onEscape: closeLocked ? undefined : handleClose })
 
   useEffect(() => () => {
     if (closeTimerRef.current) window.clearTimeout(closeTimerRef.current)
@@ -32,12 +39,13 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
   }, [dialogRef, showCelebration])
 
   const handleToggleChecklistItem = (index) => {
-    if (closeLocked) return
+    if (completionPendingRef.current || closeLocked) return
     setChecklistState(prev => ({ ...prev, [index]: !prev[index] }))
   }
 
   const handleComplete = async () => {
-    if (closeLocked) return
+    if (completionPendingRef.current || showCelebration) return
+    completionPendingRef.current = true
     setOperationError(null)
     setCompleting(true)
 
@@ -50,6 +58,7 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
     } catch (error) {
       console.error('Error completing task:', error)
       setOperationError('We couldn’t confirm this chore as complete. Your checked steps are still here, and the chore remains open so you can try again.')
+      completionPendingRef.current = false
       setCompleting(false)
       return
     }
@@ -88,7 +97,7 @@ const ChoreDetailView = ({ task, onClose, onComplete }) => {
               <span className="text-4xl">{getRoomIcon(task.room)}</span>
               <div className="flex-1"><h2 id={titleId} className="text-2xl font-bold mb-2">{task.title}</h2>{task.description && <p className="text-purple-100">{task.description}</p>}</div>
             </div>
-            <button type="button" onClick={onClose} disabled={closeLocked} aria-label="Close chore details" className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:opacity-50"><SafeIcon icon={FiX} className="w-6 h-6" aria-hidden="true" /></button>
+            <button type="button" onClick={handleClose} disabled={closeLocked} aria-label="Close chore details" className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:opacity-50"><SafeIcon icon={FiX} className="w-6 h-6" aria-hidden="true" /></button>
           </div>
           {totalCount > 0 && (
             <div>

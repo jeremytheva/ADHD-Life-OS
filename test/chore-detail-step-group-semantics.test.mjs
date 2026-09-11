@@ -20,5 +20,5 @@ test('Chore Detail retains authoritative pressed-state and completion guards', a
   assert.match(source, /aria-pressed=\{Boolean\(checklistState\[index\]\)\}/)
   assert.match(source, /onClick=\{\(\) => handleToggleChecklistItem\(index\)\}/)
   assert.match(source, /disabled=\{closeLocked\}/)
-  assert.match(source, /if \(closeLocked\) return/)
+  assert.match(source, /if \(completionPendingRef\.current \|\| closeLocked\) return/)
 })
