@@ -25,7 +25,22 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
   const [operationError, setOperationError] = useState(null)
   const [filter, setFilter] = useState('today')
   const [stats, setStats] = useState(null)
+  const [pendingAction, setPendingAction] = useState(null)
   const latestTaskRequestRef = useRef(0)
+  const pendingActionRef = useRef(null)
+  const mutationPending = Boolean(pendingAction)
+
+  const claimMutation = (action) => {
+    if (pendingActionRef.current) return false
+    pendingActionRef.current = action
+    setPendingAction(action)
+    return true
+  }
+
+  const releaseMutation = () => {
+    pendingActionRef.current = null
+    setPendingAction(null)
+  }
 
   const loadTasks = useCallback(async () => {
     const requestId = latestTaskRequestRef.current + 1
@@ -78,25 +93,37 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
   }
 
   const handleCompleteTask = async (taskId) => {
+    if (!claimMutation(`complete:${taskId}`)) return
     setOperationError(null)
     try {
       await houseworkService.completeHouseworkTask(taskId, [])
-      await loadTasks()
+      const refreshed = await loadTasks()
       await loadStats()
+      if (!refreshed) {
+        setOperationError('That chore was marked complete, but we couldn’t refresh your chore list. Refresh before taking another action so you do not repeat the completion.')
+      }
     } catch (error) {
       console.error('Error completing task:', error)
       setOperationError('We couldn’t mark that chore complete. It remains on your chore list and you can try again.')
+    } finally {
+      releaseMutation()
     }
   }
 
   const handleSnoozeTask = async (taskId) => {
+    if (!claimMutation(`snooze:${taskId}`)) return
     setOperationError(null)
     try {
       await houseworkService.snoozeTask(taskId)
-      await loadTasks()
+      const refreshed = await loadTasks()
+      if (!refreshed) {
+        setOperationError('That chore was moved to tomorrow, but we couldn’t refresh your chore list. Refresh before taking another action so you do not repeat the snooze.')
+      }
     } catch (error) {
       console.error('Error snoozing task:', error)
       setOperationError('We couldn’t move that chore to tomorrow. Its current due date has not been changed.')
+    } finally {
+      releaseMutation()
     }
   }
 
@@ -150,10 +177,15 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
   })
 
   return (
-    <div className="space-y-6" aria-busy={loading}>
+    <div className="space-y-6" aria-busy={loading || mutationPending}>
       {loading && (
         <p className="sr-only" role="status" aria-live="polite">
           Refreshing chores...
+        </p>
+      )}
+      {mutationPending && (
+        <p className="sr-only" role="status" aria-live="polite">
+          Updating chores...
         </p>
       )}
 
@@ -214,7 +246,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
               <motion.div key={task.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }} className="bg-white rounded-lg border border-slate-200 p-4 hover:shadow-md transition-all">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3 flex-1">
-                    <button onClick={() => handleCompleteTask(task.id)} className="mt-1 p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" aria-label={`Complete ${task.title}`}><SafeIcon icon={FiCheck} className="w-5 h-5" aria-hidden="true" /></button>
+                    <button onClick={() => handleCompleteTask(task.id)} disabled={mutationPending} className="mt-1 p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" aria-label={`Complete ${task.title}`}><SafeIcon icon={FiCheck} className="w-5 h-5" aria-hidden="true" /></button>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1"><span className="text-xl" aria-hidden="true">{getRoomIcon(task.room)}</span><h4 className="font-medium text-slate-900">{task.title}</h4></div>
                       <div className="flex items-center gap-3 text-sm text-slate-600">
@@ -225,7 +257,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button onClick={() => handleSnoozeTask(task.id)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Move to tomorrow" aria-label={`Move ${task.title} to tomorrow`}><SafeIcon icon={FiMoon} className="w-4 h-4" aria-hidden="true" /></button>
+                    <button onClick={() => handleSnoozeTask(task.id)} disabled={mutationPending} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" title="Move to tomorrow" aria-label={`Move ${task.title} to tomorrow`}><SafeIcon icon={FiMoon} className="w-4 h-4" aria-hidden="true" /></button>
                     <button onClick={() => onSelectTask && onSelectTask(task)} className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors" aria-label={`Open ${task.title}`}><SafeIcon icon={FiChevronRight} className="w-5 h-5" aria-hidden="true" /></button>
                   </div>
                 </div>
