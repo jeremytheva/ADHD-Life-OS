@@ -25,7 +25,10 @@ test('ProjectDetailView exposes non-destructive detail loading and refresh statu
   assert.match(source, /const \[detailsLoading, setDetailsLoading\] = useState\(false\)/)
   assert.match(source, /const \[hasLoadedDetails, setHasLoadedDetails\] = useState\(false\)/)
   assert.match(source, /setDetailsLoading\(true\)/)
-  assert.match(source, /finally \{\s*setDetailsLoading\(false\)\s*\}/)
+  assert.match(
+    source,
+    /finally \{\s*if \(requestId === latestDetailRequestRef\.current\) \{\s*setDetailsLoading\(false\)\s*\}\s*\}/
+  )
   assert.match(source, /aria-busy=\{detailsLoading\}/)
   assert.match(source, /<p role="status" aria-live="polite" className="sr-only">/)
   assert.match(source, /hasLoadedDetails \? 'Refreshing project details\.\.\.' : 'Loading project details\.\.\.'/)
