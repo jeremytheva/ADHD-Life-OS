@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -25,21 +25,34 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
   const [operationError, setOperationError] = useState(null)
   const [filter, setFilter] = useState('today')
   const [stats, setStats] = useState(null)
+  const latestTaskRequestRef = useRef(0)
 
   const loadTasks = useCallback(async () => {
+    const requestId = latestTaskRequestRef.current + 1
+    latestTaskRequestRef.current = requestId
+
     try {
       setLoading(true)
       setLoadError(false)
       const filters = {}
       if (filter === 'today') filters.dueToday = true
       const data = await houseworkService.getHouseworkTasks(filters)
+
+      if (requestId !== latestTaskRequestRef.current) return true
+
       setTasks(data)
       setHasLoaded(true)
+      return true
     } catch (error) {
+      if (requestId !== latestTaskRequestRef.current) return true
+
       console.error('Error loading housework tasks:', error)
       setLoadError(true)
+      return false
     } finally {
-      setLoading(false)
+      if (requestId === latestTaskRequestRef.current) {
+        setLoading(false)
+      }
     }
   }, [filter])
 
