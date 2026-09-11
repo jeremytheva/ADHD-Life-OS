@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -36,33 +36,42 @@ const ProjectsList = () => {
   const [showQuickCapture, setShowQuickCapture] = useState(false)
   const [showTemplates, setShowTemplates] = useState(false)
   const [editingProject, setEditingProject] = useState(null)
+  const latestProjectsRequestRef = useRef(0)
 
   getModePreferences(currentMode.id)
 
   const loadProjects = useCallback(async () => {
+    const requestId = latestProjectsRequestRef.current + 1
+    latestProjectsRequestRef.current = requestId
+
     try {
       setLoading(true)
       setLoadError(null)
       const data = await projectService.getProjects()
       const filteredData = filterByMode(data, 'project')
-      setProjects(filteredData)
-
-      const quickCaptureProject = filteredData.find((project) => project.title === '📥 Quick Capture')
-      if (quickCaptureProject) setQuickCaptureProjectId(quickCaptureProject.id)
 
       const stats = {}
       for (const project of filteredData) {
         stats[project.id] = await projectService.getProjectStats(project.id)
       }
+
+      if (requestId !== latestProjectsRequestRef.current) return true
+
+      setProjects(filteredData)
+      const quickCaptureProject = filteredData.find((project) => project.title === '📥 Quick Capture')
+      setQuickCaptureProjectId(quickCaptureProject?.id || null)
       setProjectStats(stats)
       setHasLoaded(true)
       return true
     } catch (error) {
+      if (requestId !== latestProjectsRequestRef.current) return true
       console.error('Error loading projects:', error)
       setLoadError(error)
       return false
     } finally {
-      setLoading(false)
+      if (requestId === latestProjectsRequestRef.current) {
+        setLoading(false)
+      }
     }
   }, [filterByMode])
 
