@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -31,26 +31,36 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
   const [editingTask, setEditingTask] = useState(null)
   const [showCelebration, setShowCelebration] = useState(false)
   const [celebrationMessage, setCelebrationMessage] = useState('')
+  const latestDetailRequestRef = useRef(0)
   const detailDialogRef = useModalDialog({ onEscape: onClose })
 
   const loadProjectDetails = useCallback(async () => {
+    const requestId = latestDetailRequestRef.current + 1
+    latestDetailRequestRef.current = requestId
     setDetailsLoading(true)
+
     try {
       setDetailLoadError(false)
       const [updatedProject, projectStats] = await Promise.all([
         projectService.getProject(initialProject.id),
         projectService.getProjectStats(initialProject.id)
       ])
+
+      if (requestId !== latestDetailRequestRef.current) return true
+
       setProject(updatedProject)
       setStats(projectStats)
       setHasLoadedDetails(true)
       return true
     } catch (error) {
+      if (requestId !== latestDetailRequestRef.current) return true
       console.error('Error loading project details:', error)
       setDetailLoadError(true)
       return false
     } finally {
-      setDetailsLoading(false)
+      if (requestId === latestDetailRequestRef.current) {
+        setDetailsLoading(false)
+      }
     }
   }, [initialProject.id])
 
