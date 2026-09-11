@@ -4,17 +4,17 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: VALIDATING
+execution_state: IMPLEMENTING
 current_work:
-  objective: Complete repository lifecycle for the validated Brain Inbox pending-delete integrity delivery, then re-enter fresh main for the next dependency-correct Stage 3 frontend outcome.
+  objective: Protect Brain Inbox task conversion with per-item pending ownership so conflicting same-item actions cannot race persistence.
   issue: null
   pr: null
-  branch: main
+  branch: fix/inbox-conversion-pending-integrity
 next_actions:
-  - Run canonical Application validation on this exact post-merge-safe handoff head.
-  - Audit submitted reviews and inline review threads on PR #346 after exact-head validation.
-  - Complete the repository PR lifecycle only if the final exact head remains clean, current, and mergeable.
-  - After merge, re-enter fresh main and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome.
+  - Open one focused Draft PR for the Brain Inbox pending-conversion integrity outcome.
+  - Run canonical Application validation on the exact implementation head.
+  - Audit acceptance criteria, submitted reviews, and inline review threads; repair any in-scope findings on the same PR.
+  - Prepare a post-merge-safe STATUS handoff only after implementation-head evidence is clean.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -30,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 936 passed on repaired implementation head c095bab0e2caa42ca5a521946d8ed1514a4b3b02 after the stale Brain Inbox edit-pending assertions were aligned with the new same-item delete ownership guard. Submitted reviews and inline review threads were clean after that validation. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires canonical revalidation before lifecycle completion.
-last_verified_commit: c095bab0e2caa42ca5a521946d8ed1514a4b3b02
-last_updated: 2026-09-12T00:11:41+10:00
+validation_basis: New provider-independent Brain Inbox interaction-integrity work is implemented on the active branch but has not yet passed canonical exact-head validation.
+last_verified_commit: null
+last_updated: 2026-09-12T01:10:50+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,37 +44,34 @@ last_updated: 2026-09-12T00:11:41+10:00
 
 ## Current objective
 
-PR #346 delivers the next evidence-backed Stage 3 Brain Inbox interaction-integrity outcome. Delete persistence now has explicit per-item ownership: repeated Delete activation is blocked while the destructive request is unresolved, same-item edit/category/task actions cannot begin during that interval, both delete surfaces expose disabled and `aria-busy` state with an accessible `Deleting …` name, and failed deletion keeps the captured item visible and restores its controls for retry.
+PR #346 — Brain Inbox pending-delete integrity — completed its repository lifecycle and merged into `main` at `aaa6939a542102aaf484b954a24b0e1060a809ae` after exact-head Application validation run 937 passed and review/thread state remained clean.
 
-Application validation run 934 confirmed governance, lint, typecheck and the new pending-delete regression coverage, then exposed two stale pending-edit source assertions that still required the prior exact edit guards. Those assertions were repaired on the same PR to require the combined edit/delete ownership contract without weakening either guarantee.
+Fresh-main inspection then identified the next material provider-independent interaction-integrity gap in Brain Inbox task conversion. `inboxService.convertToTask()` already deduplicates duplicate conversion promises for the same item, but the UI did not own that item while conversion was unresolved. A user could therefore change category, delete, or begin editing the same item while conversion was creating a task and removing the inbox source record.
 
-Canonical Application validation run 936 passed on corrected implementation head `c095bab0e2caa42ca5a521946d8ed1514a4b3b02`, and submitted-review plus inline-review-thread audits were clean afterward.
+The active branch now adds per-item conversion ownership. While conversion is pending, duplicate Task activation and conflicting same-item edit/category/delete actions are blocked, the Task control exposes disabled and `aria-busy` state with an explicit `Converting…` label, and failed conversion restores controls while leaving the source inbox item available for retry.
 
-This checkpoint intentionally records the state that should be true after PR #346 merges. Because this documentation commit changes the PR head, canonical validation must pass again on the new exact head before lifecycle completion.
-
-This work is frontend interaction/data-entry integrity only. It changes no provider route, method, schema, ownership rule, persisted `inbox-items` shape, authentication behaviour, or generic durable execution-session contract.
+This work is frontend interaction integrity only. It changes no provider route, method, schema, ownership rule, persisted `inbox-items` shape, task shape, authentication behaviour, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head validation for Brain Inbox pending-delete integrity |
-| Gate state | Implementation-head evidence clean; post-merge-safe handoff committed; final exact-head evidence required |
-| Execution state | VALIDATING |
+| Current gate | INTEGRATION — validate Brain Inbox pending-conversion integrity |
+| Gate state | Implementation and focused regression coverage present; canonical exact-head evidence required |
+| Execution state | IMPLEMENTING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
 ## Delivery checkpoint
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #345 — Brain Inbox pending-edit integrity; merged at `c735a5b649cefd7124ecddf68977c7a7333e8215` |
-| Delivery awaiting lifecycle completion | PR #346 — Brain Inbox pending-delete integrity |
-| Implemented change | Per-item delete ownership blocks duplicate destructive requests and conflicting same-item mutation controls until persistence settles |
-| Deterministic coverage | `test/inbox-delete-pending-integrity.test.mjs` plus aligned `test/inbox-edit-pending-integrity.test.mjs` ownership assertions |
-| Implementation-head canonical validation | PASS — Application validation run 936 on `c095bab0e2caa42ca5a521946d8ed1514a4b3b02` |
-| Implementation-head review/thread audit | CLEAN |
-| Current exact-head validation | NOT_RUN after post-merge-safe STATUS commit |
-| Provider/data impact | None; `inbox-items` logical model unchanged; generic durable `execution-sessions` remains provider-unverified and fail-closed |
+| Latest repository delivery on main | PR #346 — Brain Inbox pending-delete integrity; merged at `aaa6939a542102aaf484b954a24b0e1060a809ae` |
+| Active delivery | Brain Inbox pending-conversion integrity on `fix/inbox-conversion-pending-integrity` |
+| Implemented change | Per-item conversion ownership blocks duplicate conversion UI activation and conflicting same-item mutation controls until conversion persistence settles |
+| Deterministic coverage | New `test/inbox-conversion-pending-integrity.test.mjs` plus aligned delete/edit ownership assertions |
+| Canonical validation | NOT_RUN on current exact head |
+| Review/thread audit | NOT_RUN |
+| Provider/data impact | None; existing service deduplication and logical models remain unchanged; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
 
@@ -82,24 +79,26 @@ This work is frontend interaction/data-entry integrity only. It changes no provi
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; the Brain Inbox pending-delete delivery has clean implementation-head evidence and is completing its final exact-head lifecycle gate. |
-| What is already happening? | Brain Inbox deletion owns the target item until persistence succeeds or fails, blocking duplicate/conflicting actions during that interval and restoring controls on failure. |
-| What has been validated? | Application validation run 936 passed on the corrected implementation head after the stale pending-edit assertions were aligned, with clean submitted-review and inline-thread state. The STATUS-only post-merge-safe head requires revalidation. |
-| What is next? | Validate the exact handoff head, audit review/thread state, complete the repository PR lifecycle if clean, then re-enter fresh `main` for the next dependency-correct Stage 3 frontend outcome. |
+| Where am I? | Stage 3; PR #346 is merged and the next active frontend-integrity outcome is Brain Inbox pending-conversion ownership. |
+| What is already happening? | The conversion service deduplicates same-item conversion promises; the UI now also owns the item during conversion and blocks conflicting same-item actions until persistence settles. |
+| What has been validated? | PR #346 passed run 937 before merge. The new pending-conversion branch has not yet passed canonical exact-head validation. |
+| What is next? | Open the focused Draft PR, run canonical validation, repair any in-scope findings, then complete the lifecycle only from clean exact-head evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #346 changes no persisted entity, ownership rule, provider mapping, or migration state.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. This frontend interaction-integrity work changes no persisted entity, ownership rule, provider mapping, or migration state.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact post-merge-safe handoff head;
-2. audit submitted reviews and inline review threads;
-3. complete the repository PR lifecycle only if exact-head evidence remains clean and the PR is conflict-free/current with `main`;
-4. after merge, re-enter fresh `main` and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome;
-5. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. open one focused Draft PR for the pending-conversion integrity outcome;
+2. run canonical Application validation on its exact current head;
+3. audit acceptance criteria, submitted reviews, and inline review threads and repair any in-scope findings on the same PR;
+4. after clean implementation-head evidence, prepare the post-merge-safe STATUS handoff and revalidate the new exact head;
+5. complete the repository-managed PR lifecycle if current, conflict-free, and clean;
+6. re-enter fresh `main` for the next provider-independent frontend accessibility or interaction-integrity outcome;
+7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
