@@ -19,9 +19,11 @@ const BrainInbox = () => {
   const [editingId, setEditingId] = useState(null)
   const [editText, setEditText] = useState('')
   const [editPending, setEditPending] = useState(false)
+  const [deletingIds, setDeletingIds] = useState(() => new Set())
   const inputRef = useRef(null)
   const latestLoadRequestRef = useRef(0)
   const latestCategoryRequestRef = useRef(new Map())
+  const deletingIdsRef = useRef(new Set())
 
   useEffect(() => {
     loadItems()
@@ -81,6 +83,11 @@ const BrainInbox = () => {
   }
 
   const handleDeleteItem = async (id) => {
+    if (deletingIdsRef.current.has(id)) return
+
+    deletingIdsRef.current.add(id)
+    setDeletingIds(new Set(deletingIdsRef.current))
+
     try {
       setOperationError('')
       await inboxService.deleteInboxItem(id)
@@ -89,18 +96,21 @@ const BrainInbox = () => {
     } catch (error) {
       console.error('Error deleting item:', error)
       setOperationError('We couldn’t delete that inbox item. It has been left in your inbox.')
+    } finally {
+      deletingIdsRef.current.delete(id)
+      setDeletingIds(new Set(deletingIdsRef.current))
     }
   }
 
   const handleStartEdit = (item) => {
-    if (editPending) return
+    if (editPending || deletingIdsRef.current.has(item.id)) return
     setEditingId(item.id)
     setEditText(item.content)
   }
 
   const handleSaveEdit = async (id) => {
     const submittedEdit = editText.trim()
-    if (!submittedEdit || editPending) return
+    if (!submittedEdit || editPending || deletingIdsRef.current.has(id)) return
 
     setEditPending(true)
     try {
@@ -120,6 +130,8 @@ const BrainInbox = () => {
   }
 
   const handleCategoryChange = async (id, category) => {
+    if (deletingIdsRef.current.has(id)) return
+
     const requestId = (latestCategoryRequestRef.current.get(id) || 0) + 1
     latestCategoryRequestRef.current.set(id, requestId)
 
@@ -136,6 +148,8 @@ const BrainInbox = () => {
   }
 
   const handleConvertToTask = async (item) => {
+    if (deletingIdsRef.current.has(item.id)) return
+
     try {
       setOperationError('')
       await inboxService.convertToTask(item.id)
@@ -389,7 +403,7 @@ const BrainInbox = () => {
                           <div className="flex gap-1">
                             <button
                               onClick={() => handleStartEdit(item)}
-                              disabled={editPending}
+                              disabled={editPending || deletingIds.has(item.id)}
                               aria-label={`Edit ${item.content}`}
                               className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
@@ -397,8 +411,10 @@ const BrainInbox = () => {
                             </button>
                             <button
                               onClick={() => handleDeleteItem(item.id)}
-                              aria-label={`Delete ${item.content}`}
-                              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                              disabled={deletingIds.has(item.id)}
+                              aria-busy={deletingIds.has(item.id)}
+                              aria-label={deletingIds.has(item.id) ? `Deleting ${item.content}` : `Delete ${item.content}`}
+                              className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                               <SafeIcon icon={FiTrash2} aria-hidden="true" className="w-4 h-4" />
                             </button>
@@ -498,10 +514,11 @@ const BrainInbox = () => {
                         <button
                           key={cat.value}
                           onClick={() => handleCategoryChange(item.id, cat.value)}
+                          disabled={deletingIds.has(item.id)}
                           className={`
                             px-3 py-2 rounded-lg text-sm font-medium transition-all
                             bg-${cat.color}-100 text-${cat.color}-700 hover:bg-${cat.color}-200
-                            flex items-center gap-2
+                            flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed
                           `}
                         >
                           <span>{cat.icon}</span>
@@ -560,7 +577,8 @@ const BrainInbox = () => {
                             <div className="flex gap-1">
                               <button
                                 onClick={() => handleConvertToTask(item)}
-                                className="px-3 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm flex items-center gap-1"
+                                disabled={deletingIds.has(item.id)}
+                                className="px-3 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                                 title="Convert to task"
                               >
                                 <SafeIcon icon={FiZap} aria-hidden="true" className="w-3 h-3" />
@@ -568,15 +586,18 @@ const BrainInbox = () => {
                               </button>
                               <button
                                 onClick={() => handleCategoryChange(item.id, null)}
-                                className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+                                disabled={deletingIds.has(item.id)}
+                                className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 aria-label={`Remove category from ${item.content}`}
                               >
                                 <SafeIcon icon={FiTag} aria-hidden="true" className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => handleDeleteItem(item.id)}
-                                className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                aria-label={`Delete ${item.content}`}
+                                disabled={deletingIds.has(item.id)}
+                                aria-busy={deletingIds.has(item.id)}
+                                className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                aria-label={deletingIds.has(item.id) ? `Deleting ${item.content}` : `Delete ${item.content}`}
                               >
                                 <SafeIcon icon={FiTrash2} aria-hidden="true" className="w-4 h-4" />
                               </button>
