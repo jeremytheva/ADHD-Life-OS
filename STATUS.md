@@ -6,15 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete repository lifecycle for the validated Brain Inbox latest-refresh integrity delivery, then re-enter fresh main for the next dependency-correct Stage 3 frontend outcome.
+  objective: Validate and complete the Brain Inbox pending-capture integrity delivery without changing provider or persistence contracts.
   issue: null
-  pr: null
-  branch: null
+  pr: 344
+  branch: fix/inbox-capture-pending-integrity
 next_actions:
-  - Run canonical Application validation on this exact post-merge-safe handoff head.
-  - Audit submitted reviews and inline review threads on PR #343 after exact-head validation.
-  - Complete the repository PR lifecycle only if the final exact head remains clean and mergeable.
-  - After merge, re-enter fresh main and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome.
+  - Run canonical Application validation on the exact PR #344 implementation head.
+  - Inspect submitted reviews and inline review threads after validation.
+  - Repair only evidenced implementation or test failures on the same PR.
+  - Once implementation-head evidence is clean, prepare a post-merge-safe STATUS handoff and revalidate that exact head.
+  - Complete the repository PR lifecycle only when the exact head is clean and mergeable.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -30,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 917 passed on implementation head 89d7161a85df0bef666cab02f3aa608fe45e6d29 with clean submitted-review and inline-thread state. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires canonical revalidation before lifecycle completion.
-last_verified_commit: 89d7161a85df0bef666cab02f3aa608fe45e6d29
-last_updated: 2026-09-11T21:22:55+10:00
+validation_basis: PR #343 passed implementation-head Application validation run 917 and final exact-head run 918, then merged through the repository lifecycle at 5f58109296c649f02f7d9bca7075da45aafa97b5. PR #344 is a new provider-independent frontend data-entry integrity delivery and requires fresh exact-head canonical validation.
+last_verified_commit: 5f58109296c649f02f7d9bca7075da45aafa97b5
+last_updated: 2026-09-11T21:32:40+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,20 +45,20 @@ last_updated: 2026-09-11T21:22:55+10:00
 
 ## Current objective
 
-PR #342 — Task List latest-refresh interaction integrity — is merged into `main` at `e945f0865d49a22b7d15b1b17f8a9a7a0efed80e`.
+PR #343 — Brain Inbox latest-refresh interaction integrity — completed its repository-managed lifecycle and merged into `main` at `5f58109296c649f02f7d9bca7075da45aafa97b5` after final exact-head Application validation run 918 passed.
 
-PR #343 delivers Brain Inbox latest-refresh interaction integrity. `BrainInbox.loadItems()` now sequences overlapping initial and retry requests so older asynchronous requests cannot publish stale inbox items, obsolete load-error state, or loading completion while a newer request is authoritative. Superseded requests exit without altering the newest surface state.
+PR #344 addresses the next evidence-backed Stage 3 Brain Inbox integrity defect. While `createInboxItem()` was pending, the capture field remained editable and the form could be submitted again. A repeated submit could create duplicate persisted thoughts, while text typed for a subsequent thought could be erased when the earlier save completed and cleared `currentInput`.
 
-Canonical Application validation run 917 passed on implementation head `89d7161a85df0bef666cab02f3aa608fe45e6d29`, and submitted-review plus inline-review-thread audits were clean. This checkpoint intentionally makes the durable handoff safe for the state that should exist after PR #343 merges; because this documentation commit changes the PR head, canonical validation must pass again on the new exact head before merge.
+The implementation now treats a capture save as one atomic user interaction: it snapshots the submitted thought, blocks repeated submit, disables the capture input until that request settles, exposes the pending state through `aria-busy` and visible saving text, and preserves the existing failure contract that leaves the unsaved thought in the input for retry. Deterministic coverage is provided by `test/inbox-capture-pending-integrity.test.mjs`.
 
-This work remains frontend interaction integrity only. It does not change inbox persistence schemas, provider routes or methods, ownership, inbox mutation/conversion semantics, authentication, or generic durable execution sessions.
+This is frontend interaction/data-entry integrity only. It changes no provider route, method, schema, ownership rule, persisted `inbox-items` shape, categorisation/conversion behaviour, authentication behaviour, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head validation for Brain Inbox latest-refresh integrity |
-| Gate state | Implementation-head evidence clean; post-merge-safe handoff committed; final exact-head evidence required |
+| Current gate | INTEGRATION — validate Brain Inbox pending-capture integrity |
+| Gate state | Implementation and deterministic coverage committed; exact-head canonical evidence required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -65,13 +66,13 @@ This work remains frontend interaction integrity only. It does not change inbox 
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #342 — Task List latest-refresh integrity; merged at `e945f0865d49a22b7d15b1b17f8a9a7a0efed80e` |
-| Delivery awaiting lifecycle completion | PR #343 — Brain Inbox latest-refresh interaction integrity |
-| Implemented change | Only the latest Brain Inbox load may publish inbox items, load errors, or loading completion |
-| Deterministic coverage | `test/inbox-latest-refresh-integrity.test.mjs` |
-| Implementation-head canonical validation | PASS — Application validation run 917 on `89d7161a85df0bef666cab02f3aa608fe45e6d29` |
-| Implementation-head review/thread audit | CLEAN |
-| Current exact-head validation | NOT_RUN after post-merge-safe STATUS commit |
+| Latest repository delivery on main | PR #343 — Brain Inbox latest-refresh integrity; merged at `5f58109296c649f02f7d9bca7075da45aafa97b5` |
+| Active delivery | PR #344 — Brain Inbox pending-capture integrity |
+| Branch | `fix/inbox-capture-pending-integrity` |
+| Implemented change | One pending capture owns the input until persistence succeeds or fails; repeated submit is blocked |
+| Deterministic coverage | `test/inbox-capture-pending-integrity.test.mjs` |
+| Canonical validation | NOT_RUN on the current exact head |
+| Review/thread audit | Required after validation |
 | Provider/data impact | None; `inbox-items` logical model unchanged; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -80,24 +81,26 @@ This work remains frontend interaction integrity only. It does not change inbox 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; the Brain Inbox latest-refresh delivery has clean implementation-head evidence and is completing its final exact-head lifecycle gate. |
-| What is already happening? | Brain Inbox overlapping loads are sequenced; stale requests cannot publish newer-surface state. |
-| What has been validated? | Application validation run 917 passed on the implementation head, with clean submitted-review and inline-thread state. The STATUS-only post-merge-safe head requires revalidation. |
-| What is next? | Validate the exact handoff head, audit review/thread state, complete the repository PR lifecycle if clean, then re-enter fresh `main` for the next dependency-correct Stage 3 frontend outcome. |
+| Where am I? | Stage 3; PR #344 is the sole active delivery. |
+| What is already happening? | Brain Inbox capture now prevents duplicate pending creates and protects the entered thought from an older save clearing later text. |
+| What has been validated? | The preceding PR #343 completed exact-head validation and merged. PR #344 requires fresh canonical validation. |
+| What is next? | Validate PR #344, repair only evidenced failures, audit review/thread state, prepare a post-merge-safe handoff, revalidate, and complete the repository lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. The Brain Inbox latest-refresh delivery changes no persisted entity, ownership rule, provider mapping, or migration state.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #344 does not alter persisted entities, ownership, provider mappings, or migration state.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact post-merge-safe handoff head;
-2. audit submitted reviews and inline review threads;
-3. complete the repository PR lifecycle only if exact-head evidence remains clean and the PR is conflict-free/current with `main`;
-4. after merge, re-enter fresh `main` and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome;
-5. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on the exact PR #344 head;
+2. inspect submitted reviews and inline review threads;
+3. repair any evidenced implementation/test issue on the same branch;
+4. when implementation-head evidence is clean, commit a post-merge-safe durable STATUS handoff;
+5. revalidate the exact handoff head and complete the repository-owned lifecycle only if clean and current with `main`;
+6. after merge, re-enter fresh `main` and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome;
+7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
