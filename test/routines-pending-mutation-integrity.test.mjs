@@ -19,7 +19,7 @@ test('Routines serializes parent-level mutations with immediate ownership', () =
   assert.match(listSource, /const handleDeleteRoutine = async \(id\) => \{\s*if \(pendingActionRef\.current\) return[\s\S]*?if \(!claimMutation\(`delete:\$\{id\}`\)\) return/)
 })
 
-test('Routines exposes pending persistence and disables mutation launchers', () => {
+test('Routines exposes pending persistence and disables conflicting launchers', () => {
   assert.match(listSource, /aria-busy=\{loading \|\| mutationPending\}/)
   assert.match(listSource, /Updating routines\.\.\./)
   const disabledLaunchers = listSource.match(/disabled=\{mutationPending\}/g) ?? []
@@ -27,15 +27,14 @@ test('Routines exposes pending persistence and disables mutation launchers', () 
   assert.match(listSource, /<RoutineCard[\s\S]*?pending=\{mutationPending\}[\s\S]*?\/>/)
 
   assert.match(cardSource, /pending = false/)
-  const disabledCardMutations = cardSource.match(/disabled=\{pending\}/g) ?? []
-  assert.equal(disabledCardMutations.length, 2)
+  const disabledCardActions = cardSource.match(/disabled=\{pending\}/g) ?? []
+  assert.equal(disabledCardActions.length, 3)
 })
 
-test('Routines preserves read-only start and stats actions while persistence owns writes', () => {
+test('Routines keeps stats available but blocks routine execution launch during persistence', () => {
   assert.match(cardSource, /onClick=\{onViewStats\}/)
-  assert.match(cardSource, /onClick=\{onStart\}/)
   assert.doesNotMatch(cardSource, /onClick=\{onViewStats\}[\s\S]{0,160}disabled=\{pending\}/)
-  assert.doesNotMatch(cardSource, /onClick=\{onStart\}[\s\S]{0,160}disabled=\{pending\}/)
+  assert.match(cardSource, /onClick=\{onStart\}\s*disabled=\{pending\}/)
 })
 
 test('Routines keeps mutation ownership through post-write refresh and releases it on every exit', () => {
