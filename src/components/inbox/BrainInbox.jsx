@@ -18,6 +18,7 @@ const BrainInbox = () => {
   const [editingId, setEditingId] = useState(null)
   const [editText, setEditText] = useState('')
   const inputRef = useRef(null)
+  const latestCategoryRequestRef = useRef(new Map())
 
   useEffect(() => {
     loadItems()
@@ -100,11 +101,16 @@ const BrainInbox = () => {
   }
 
   const handleCategoryChange = async (id, category) => {
+    const requestId = (latestCategoryRequestRef.current.get(id) || 0) + 1
+    latestCategoryRequestRef.current.set(id, requestId)
+
     try {
       setOperationError('')
       const updated = await inboxService.updateInboxItem(id, { category })
+      if (latestCategoryRequestRef.current.get(id) !== requestId) return
       setItems(prev => prev.map(item => item.id === id ? updated : item))
     } catch (error) {
+      if (latestCategoryRequestRef.current.get(id) !== requestId) return
       console.error('Error updating category:', error)
       setOperationError('We couldn’t update that category. The inbox item has not been removed.')
     }
