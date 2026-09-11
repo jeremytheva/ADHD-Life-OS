@@ -22,7 +22,7 @@ test('Chore list initial loading state is announced without exposing its decorat
 });
 
 test('Chore list subsequent refresh state preserves the established checklist surface', () => {
-  assert.match(choreListSource, /className="space-y-6" aria-busy=\{loading\}/);
+  assert.match(choreListSource, /className="space-y-6" aria-busy=\{loading \|\| mutationPending\}/);
   assert.match(choreListSource, /Refreshing chores\.\.\./);
 });
 
