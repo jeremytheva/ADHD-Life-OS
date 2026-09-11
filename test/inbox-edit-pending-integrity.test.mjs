@@ -14,9 +14,11 @@ test('brain inbox blocks duplicate edit saves while a write is pending', () => {
 })
 
 test('pending edit owns the editor until its write settles', () => {
+  assert.match(source, /const handleStartEdit = \(item\) => \{\s*if \(editPending\) return/)
   assert.match(source, /className="flex-1 flex gap-2" aria-busy=\{editPending\}/)
   assert.match(source, /onKeyDown=\{\(e\) => e\.key === 'Enter' && handleSaveEdit\(item\.id\)\}[\s\S]*disabled=\{editPending\}/)
   assert.match(source, /disabled=\{editPending \|\| !editText\.trim\(\)\}/)
   assert.match(source, /\{editPending \? 'Saving…' : 'Save'\}/)
   assert.match(source, /type="button"\s*disabled=\{editPending\}\s*onClick=\{\(\) => \{/)
+  assert.match(source, /onClick=\{\(\) => handleStartEdit\(item\)\}\s*disabled=\{editPending\}/)
 })
