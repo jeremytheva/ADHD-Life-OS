@@ -20,6 +20,6 @@ test('ChoreChecklist keeps established controls mounted while filter-driven data
   assert.match(source, /const \[hasLoaded, setHasLoaded\] = useState\(false\)/)
   assert.match(source, /setTasks\(data\)[\s\S]*?setHasLoaded\(true\)/)
   assert.match(source, /if \(loading && !hasLoaded\)/)
-  assert.match(source, /className="space-y-6" aria-busy=\{loading\}/)
+  assert.match(source, /className="space-y-6" aria-busy=\{loading \|\| mutationPending\}/)
   assert.match(source, /loading && \([\s\S]*?role="status"[\s\S]*?aria-live="polite"[\s\S]*?Refreshing chores\.\.\./)
 })
