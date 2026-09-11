@@ -17,10 +17,13 @@ const {
 const TaskItem = ({
   task,
   index,
+  pending = false,
   onComplete,
   onDelete,
   onUpdate,
-  onCompleteSubtask
+  onAddSubtask,
+  onDeleteSubtask,
+  onToggleSubtask
 }) => {
   const [expanded, setExpanded] = useState(false)
   const [showSubtaskInput, setShowSubtaskInput] = useState(false)
@@ -47,8 +50,9 @@ const TaskItem = ({
           <button
             type="button"
             onClick={onComplete}
+            disabled={pending}
             aria-label={`Complete task: ${task.title}`}
-            className={`mt-1 p-2 rounded-lg transition-colors ${
+            className={`mt-1 p-2 rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
               allSubtasksComplete
                 ? 'text-green-600 hover:bg-green-100'
                 : 'text-slate-400 hover:text-green-600 hover:bg-green-50'
@@ -80,8 +84,9 @@ const TaskItem = ({
                 <button
                   type="button"
                   onClick={onDelete}
+                  disabled={pending}
                   aria-label={`Delete task: ${task.title}`}
-                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <SafeIcon icon={FiTrash2} className="w-4 h-4" aria-hidden="true" />
                 </button>
@@ -158,7 +163,8 @@ const TaskItem = ({
                 <button
                   type="button"
                   onClick={() => setShowSubtaskInput(true)}
-                  className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  disabled={pending}
+                  className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 font-medium disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
                   Add Subtasks
@@ -175,7 +181,10 @@ const TaskItem = ({
           <SubtaskList
             taskId={task.id}
             subtasks={task.subtasks || []}
-            onCompleteSubtask={onCompleteSubtask}
+            pending={pending}
+            onAddSubtask={onAddSubtask}
+            onDeleteSubtask={onDeleteSubtask}
+            onToggleSubtask={onToggleSubtask}
             showInput={showSubtaskInput}
             onShowInput={() => setShowSubtaskInput(true)}
             onHideInput={() => setShowSubtaskInput(false)}

@@ -27,12 +27,14 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
   const [detailsLoading, setDetailsLoading] = useState(false)
   const [hasLoadedDetails, setHasLoadedDetails] = useState(false)
   const [operationError, setOperationError] = useState('')
+  const [pendingAction, setPendingAction] = useState(null)
   const [showTaskForm, setShowTaskForm] = useState(false)
   const [editingTask, setEditingTask] = useState(null)
   const [showCelebration, setShowCelebration] = useState(false)
   const [celebrationMessage, setCelebrationMessage] = useState('')
   const latestDetailRequestRef = useRef(0)
-  const detailDialogRef = useModalDialog({ onEscape: onClose })
+  const mutationPending = Boolean(pendingAction)
+  const detailDialogRef = useModalDialog({ onEscape: mutationPending ? null : onClose })
 
   const loadProjectDetails = useCallback(async () => {
     const requestId = latestDetailRequestRef.current + 1
@@ -79,7 +81,10 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
   }
 
   const handleAddTask = async (taskData) => {
+    if (pendingAction) return
+
     setOperationError('')
+    setPendingAction('add-task')
     try {
       await projectService.createTask(project.id, taskData)
       setShowTaskForm(false)
@@ -89,11 +94,16 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
     } catch (error) {
       console.error('Error adding task:', error)
       setOperationError('We couldn’t add this task. Your task form is still open so you can review it and try again.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
   const handleUpdateTask = async (taskId, updates) => {
+    if (pendingAction) return
+
     setOperationError('')
+    setPendingAction(`update-task:${taskId}`)
     try {
       await projectService.updateTask(taskId, updates)
       await refreshAfterWrite(
@@ -102,11 +112,16 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
     } catch (error) {
       console.error('Error updating task:', error)
       setOperationError('We couldn’t update this task. The previous saved task data is still in place.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
   const handleCompleteTask = async (taskId) => {
+    if (pendingAction) return
+
     setOperationError('')
+    setPendingAction(`complete-task:${taskId}`)
     try {
       await projectService.completeTask(taskId)
       const refreshed = await refreshAfterWrite(
@@ -120,13 +135,17 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
     } catch (error) {
       console.error('Error completing task:', error)
       setOperationError('We couldn’t complete this task. It has not been confirmed as completed.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
   const handleDeleteTask = async (taskId) => {
+    if (pendingAction) return
     if (!window.confirm('Delete this task and all its subtasks?')) return
 
     setOperationError('')
+    setPendingAction(`delete-task:${taskId}`)
     try {
       await projectService.deleteTask(taskId)
       await refreshAfterWrite(
@@ -135,24 +154,80 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
     } catch (error) {
       console.error('Error deleting task:', error)
       setOperationError('We couldn’t delete this task. It remains in the project.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
-  const handleCompleteSubtask = async (subtaskId) => {
-    setOperationError('')
-    try {
-      await projectService.completeSubtask(subtaskId)
-      const refreshed = await refreshAfterWrite(
-        'The subtask may have been completed, but the latest project details could not be confirmed. Refresh the project before relying on its completion state.'
-      )
-      if (!refreshed) return
+  const handleAddSubtask = async (taskId, title) => {
+    if (pendingAction) return false
 
-      setCelebrationMessage('Each small step you do is a quick win! ⭐')
-      setShowCelebration(true)
-      setTimeout(() => setShowCelebration(false), 3000)
+    setOperationError('')
+    setPendingAction(`add-subtask:${taskId}`)
+    try {
+      await projectService.createSubtask(taskId, { title })
+      await refreshAfterWrite(
+        'The subtask was saved, but the latest project details could not be reloaded. Refresh the project before making another change.'
+      )
+      return true
     } catch (error) {
-      console.error('Error completing subtask:', error)
-      setOperationError('We couldn’t complete this subtask. It has not been confirmed as completed.')
+      console.error('Error adding subtask:', error)
+      return false
+    } finally {
+      setPendingAction(null)
+    }
+  }
+
+  const handleDeleteSubtask = async (subtaskId) => {
+    if (pendingAction) return false
+
+    setOperationError('')
+    setPendingAction(`delete-subtask:${subtaskId}`)
+    try {
+      await projectService.deleteSubtask(subtaskId)
+      await refreshAfterWrite(
+        'The subtask was deleted, but the latest project details could not be reloaded. Refresh the project before making another change.'
+      )
+      return true
+    } catch (error) {
+      console.error('Error deleting subtask:', error)
+      return false
+    } finally {
+      setPendingAction(null)
+    }
+  }
+
+  const handleToggleSubtask = async (subtask) => {
+    if (pendingAction) return false
+
+    const completing = !subtask.is_completed
+    setOperationError('')
+    setPendingAction(`${completing ? 'complete' : 'uncomplete'}-subtask:${subtask.id}`)
+    try {
+      if (completing) {
+        await projectService.completeSubtask(subtask.id)
+      } else {
+        await projectService.uncompleteSubtask(subtask.id)
+      }
+
+      const refreshed = await refreshAfterWrite(
+        completing
+          ? 'The subtask may have been completed, but the latest project details could not be confirmed. Refresh the project before relying on its completion state.'
+          : 'The subtask may have been marked incomplete, but the latest project details could not be confirmed. Refresh the project before relying on its completion state.'
+      )
+      if (!refreshed) return true
+
+      if (completing) {
+        setCelebrationMessage('Each small step you do is a quick win! ⭐')
+        setShowCelebration(true)
+        setTimeout(() => setShowCelebration(false), 3000)
+      }
+      return true
+    } catch (error) {
+      console.error('Error toggling subtask:', error)
+      return false
+    } finally {
+      setPendingAction(null)
     }
   }
 
@@ -178,7 +253,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
         aria-modal="true"
         aria-labelledby="project-detail-title"
         aria-hidden={showTaskForm ? 'true' : undefined}
-        aria-busy={detailsLoading}
+        aria-busy={detailsLoading || mutationPending}
         tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -188,6 +263,11 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
         {detailsLoading && (
           <p role="status" aria-live="polite" className="sr-only">
             {hasLoadedDetails ? 'Refreshing project details...' : 'Loading project details...'}
+          </p>
+        )}
+        {mutationPending && (
+          <p role="status" aria-live="polite" className="sr-only">
+            Updating project tasks...
           </p>
         )}
 
@@ -205,8 +285,9 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
             <button
               type="button"
               onClick={onClose}
+              disabled={mutationPending}
               aria-label="Close project details"
-              className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+              className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
               <SafeIcon icon={FiX} className="w-6 h-6" aria-hidden="true" />
             </button>
@@ -308,11 +389,12 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
           <div className="mb-4">
             <button
               type="button"
+              disabled={mutationPending}
               onClick={() => {
                 setOperationError('')
                 setShowTaskForm(true)
               }}
-              className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+              className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <SafeIcon icon={FiPlus} className="w-5 h-5" aria-hidden="true" />
               Add Task
@@ -331,10 +413,13 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
                     <TaskItem
                       task={task}
                       index={index}
+                      pending={mutationPending}
                       onComplete={() => handleCompleteTask(task.id)}
                       onDelete={() => handleDeleteTask(task.id)}
                       onUpdate={(updates) => handleUpdateTask(task.id, updates)}
-                      onCompleteSubtask={handleCompleteSubtask}
+                      onAddSubtask={handleAddSubtask}
+                      onDeleteSubtask={handleDeleteSubtask}
+                      onToggleSubtask={handleToggleSubtask}
                     />
                   </div>
                 ))}
@@ -378,8 +463,9 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
               <p className="text-slate-600 mb-4">Break this project down into smaller, manageable tasks</p>
               <button
                 type="button"
+                disabled={mutationPending}
                 onClick={() => setShowTaskForm(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Add Your First Task
               </button>
@@ -395,6 +481,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
             task={editingTask}
             onSave={handleAddTask}
             onCancel={() => {
+              if (mutationPending) return
               setShowTaskForm(false)
               setEditingTask(null)
             }}
