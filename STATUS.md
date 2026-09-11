@@ -6,17 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete PR #350, which gives Project create/update forms explicit pending-write ownership.
+  objective: Complete PR #350 lifecycle from its post-merge-safe handoff, then re-enter fresh main and reassess Projects-list-wide mutation ownership as the next likely provider-independent Stage 3 integrity target.
   issue: null
-  pr: 350
-  branch: fix/project-form-pending-integrity
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the exact current PR #350 head.
-  - Repair any in-scope validation regression on the same PR and revalidate the new exact head.
-  - Audit submitted reviews and inline review threads after exact-head validation.
-  - Mark implementation complete only when all acceptance criteria and exact-head evidence are clean.
-  - Before lifecycle completion, write a post-merge-safe STATUS handoff that returns continuation to fresh main.
-  - Re-inspect Projects-list-wide mutation ownership after this focused form delivery.
+  - Run canonical Application validation on this exact post-merge-safe PR #350 head.
+  - Re-audit submitted reviews and inline review threads after exact-head validation.
+  - If evidence remains clean, add lifecycle:implementation-complete and allow the repository lifecycle controller/finalizer to complete PR #350.
+  - Confirm merge on main, then inspect fresh authoritative state before selecting the next delivery.
+  - Reassess Projects-list-wide delete/archive/template/quick-capture mutation ownership before creating another PR.
+  - Reuse or repair any active work that appears before creating competing work.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -32,9 +32,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #349 completed exact-head Application validation run 951 and merged into main at 1920fb68d75838f6437204b1c9639801fed405b1. Fresh-main inspection found ProjectForm could submit Create/Update repeatedly while its first persistence call remained unresolved. PR #350 adds local pending-save ownership and deterministic coverage; exact-head canonical validation is pending.
-last_verified_commit: 1920fb68d75838f6437204b1c9639801fed405b1
-last_updated: 2026-09-12T02:48:00+10:00
+validation_basis: Application validation run 953 passed canonical npm run platform:validate on implementation head 442504a4fa1cb2cec647a597ca966acd0d1af4ab. Submitted reviews and inline review threads were clean after run 953. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires one final canonical validation before lifecycle completion.
+last_verified_commit: 442504a4fa1cb2cec647a597ca966acd0d1af4ab
+last_updated: 2026-09-12T02:52:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,18 +46,20 @@ last_updated: 2026-09-12T02:48:00+10:00
 
 ## Current objective
 
-PR #350 is the sole active delivery. Fresh-main inspection after PR #349 merged found that `ProjectForm` did not own an unresolved create/update persistence call: repeated submit could invoke overlapping writes, while Escape, Cancel, Close, and editable controls remained active during persistence.
+PR #350 has completed implementation-head validation for Project form pending-save integrity. Application validation run 953 passed canonical `npm run platform:validate` on implementation head `442504a4fa1cb2cec647a597ca966acd0d1af4ab`, and submitted reviews plus inline review threads were clean afterward.
 
-PR #350 adds form-local save ownership consistent with the already-hardened Quick Capture pattern. Duplicate submits are ignored, dismissal and form editing are disabled while persistence is unresolved, and the dialog/submit action expose accessible busy/live `Saving…` feedback. When the parent save path reports a recoverable failure and keeps the form open, the pending state clears and existing entries remain available for retry.
+The delivery gives Project create/update forms explicit ownership of unresolved persistence. Repeated submit is blocked, Escape/Close/Cancel and editable controls are disabled while saving, and the dialog/submit action expose accessible busy/live `Saving…` feedback. Recoverable parent save failures leave the form mounted; the pending state then clears so retained entries can be corrected or retried.
 
-This is a frontend interaction-integrity change only. It does not alter project service/provider routes, methods, schemas, ownership, persisted data, Quick Capture behaviour, or generic durable execution-session behaviour.
+This document is intentionally post-merge-safe. Once PR #350 completes lifecycle, autonomous continuation must begin from fresh `main`, not treat the merged PR branch as active work. This STATUS-only handoff commit itself requires final exact-head canonical validation before lifecycle completion.
+
+The change is frontend interaction integrity only. It changes no project service/provider route, method, schema, ownership rule, persisted data shape, authentication behaviour, Quick Capture contract, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head canonical validation for Project form pending-write ownership |
-| Gate state | Implementation and focused deterministic coverage committed; exact-head evidence pending |
+| Current gate | INTEGRATION — final exact-head validation and lifecycle completion for PR #350 |
+| Gate state | Implementation head validated by run 953; post-merge-safe STATUS committed; final exact-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -66,12 +68,13 @@ This is a frontend interaction-integrity change only. It does not alter project 
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #349 — Tasks pending-mutation UI integrity; merged at `1920fb68d75838f6437204b1c9639801fed405b1` |
-| Active delivery | PR #350 — Project form pending-save integrity |
-| Active branch | `fix/project-form-pending-integrity` |
-| Implemented change | `ProjectForm` owns unresolved create/update persistence, blocks duplicate/dismiss/edit actions, and exposes busy/live feedback |
+| Delivery awaiting final lifecycle completion | PR #350 — Project form pending-save integrity |
+| Delivery branch | `fix/project-form-pending-integrity` |
+| Implemented change | Project create/update form owns unresolved persistence, blocks duplicate/dismiss/edit actions, and exposes busy/live feedback |
 | Deterministic coverage | `test/project-form-pending-integrity.test.mjs` |
-| Canonical validation | PENDING on exact STATUS-synchronized head |
-| Review/thread audit | PENDING until exact-head validation completes |
+| Canonical implementation-head validation | PASS — Application validation run 953 on `442504a4fa1cb2cec647a597ca966acd0d1af4ab` |
+| Review/thread audit | CLEAN after run 953; recheck after final exact-head validation |
+| Final exact-head validation | PENDING on this post-merge-safe STATUS head |
 | Provider/data impact | None; logical persisted models unchanged; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -80,10 +83,10 @@ This is a frontend interaction-integrity change only. It does not alter project 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #350 is the sole active delivery and is ready for exact-head validation. |
-| What is already happening? | Project create/update forms now own their unresolved save and prevent duplicate/dismiss/edit races until persistence settles. |
-| What has been validated? | PR #349 final exact-head run 951 passed and merged; PR #350 focused implementation and test are committed but canonical validation has not yet completed. |
-| What is next? | Validate PR #350 exact head, repair any in-scope regression, audit reviews/threads, then advance lifecycle from clean evidence. |
+| Where am I? | Stage 3. PR #350 implementation is validated and only final exact-head lifecycle evidence remains. After merge, start from fresh `main`. |
+| What is already happening? | Project create/update forms own their unresolved save and prevent duplicate/dismiss/edit races until persistence settles. |
+| What has been validated? | Run 953 passed canonical platform validation on the implementation head; review/thread evidence was clean. |
+| What is next? | Validate this post-merge-safe exact head, re-audit reviews/threads, complete lifecycle if still clean, then reassess Projects-list-wide mutation ownership from fresh main. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -93,13 +96,12 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact current PR #350 head;
-2. repair any in-scope regression on the same PR and revalidate;
-3. audit submitted reviews and inline review threads;
-4. add implementation-complete evidence only when all acceptance criteria and exact-head evidence are clean;
-5. write a post-merge-safe STATUS handoff and complete repository lifecycle only while the final head remains current/conflict-free;
-6. after merge, re-enter fresh `main` and reassess Projects-list-wide mutation ownership before selecting the next provider-independent Stage 3 outcome;
-7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on this exact post-merge-safe PR #350 head;
+2. re-audit submitted reviews and inline review threads;
+3. if all acceptance evidence remains clean, add the repository lifecycle implementation-complete marker and allow the readiness controller/merge finalizer to complete the PR lifecycle;
+4. confirm the merge on `main`;
+5. re-enter fresh `main`, inspect authoritative state/current GitHub work, and reassess Projects-list-wide mutation ownership before selecting the next provider-independent Stage 3 outcome;
+6. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
