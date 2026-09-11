@@ -22,7 +22,7 @@ test('Brain Inbox hides decorative control icons while retaining control text an
   )
   assert.match(
     source,
-    /aria-label=\{`Edit \$\{item\.content\}`\}[\s\S]{0,220}<SafeIcon icon=\{FiEdit3\} aria-hidden="true"/
+    /<button\s+onClick=\{\(\) => handleStartEdit\(item\)\}[\s\S]{0,420}?aria-label=\{`Edit \$\{item\.content\}`\}[\s\S]{0,420}?<SafeIcon icon=\{FiEdit3\} aria-hidden="true"/
   )
   assert.match(
     source,
