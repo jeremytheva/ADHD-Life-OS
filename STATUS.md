@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete PR #349, which aligns the Tasks UI with its existing global pending-mutation serialization contract.
+  objective: Complete PR #349 lifecycle from its post-merge-safe handoff, then re-enter fresh main and select the next material provider-independent Stage 3 frontend accessibility or interaction-integrity outcome.
   issue: null
-  pr: 349
-  branch: fix/tasks-pending-mutation-integrity
+  pr: null
+  branch: main
 next_actions:
-  - Re-run canonical Application validation on the exact current PR #349 head after repairing the two stale assertions exposed by run 947.
-  - Repair any further in-scope validation regression on the same PR and revalidate the new exact head.
-  - Audit submitted reviews and inline review threads after exact-head validation.
-  - Mark implementation complete only when all acceptance criteria and exact-head evidence are clean.
-  - Before lifecycle completion, write a post-merge-safe STATUS handoff that returns continuation to fresh main.
+  - Run canonical Application validation on this exact post-merge-safe PR #349 head.
+  - Re-audit submitted reviews and inline review threads after exact-head validation.
+  - If evidence remains clean, add lifecycle:implementation-complete and allow the repository lifecycle controller/finalizer to complete PR #349.
+  - Confirm merge on main, then inspect fresh authoritative state before selecting the next delivery.
+  - Reuse or repair any active work that appears before creating another PR.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 947 passed governance, lint and typecheck and reached 407/409 passing Node tests. The new pending-mutation integrity tests passed. The only failures were stale assertions for the previous active-item-only TaskCard pending prop and loading-only aria-busy contract; both have been synchronized to the intentional global mutation UI lock and require exact-head revalidation. PR #348 merged into main at 4d994ddea6e6fc078142bbcd790114e822eca0e6 after final run 945 passed.
-last_verified_commit: 4d994ddea6e6fc078142bbcd790114e822eca0e6
-last_updated: 2026-09-12T02:36:00+10:00
+validation_basis: Application validation run 950 passed canonical npm run platform:validate on implementation head ffe8383f4fa79f013da62a996dbca11ba4bfd740 after run 947 exposed two stale assertions. Submitted reviews and inline review threads were clean after run 950. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires one final canonical validation before lifecycle completion.
+last_verified_commit: ffe8383f4fa79f013da62a996dbca11ba4bfd740
+last_updated: 2026-09-12T02:39:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +45,22 @@ last_updated: 2026-09-12T02:36:00+10:00
 
 ## Current objective
 
-PR #349 is the sole active delivery. Fresh-main inspection after PR #348 merged found a Tasks interaction-integrity mismatch: mutation handlers already serialize every create/template/complete/delete write through one global `pendingAction` lock, but the UI only disabled the task card whose identifier matched the active mutation. Other mutation controls remained visually actionable even though their handlers would silently return while persistence was unresolved.
+PR #349 has completed implementation-head validation for Tasks pending-mutation UI integrity. Application validation run 950 passed canonical `npm run platform:validate` on implementation head `ffe8383f4fa79f013da62a996dbca11ba4bfd740`, and submitted reviews plus inline review threads were clean afterward.
 
-PR #349 preserves the established serialization model and exposes it consistently in the UI. A shared `mutationPending` state now disables all task-card complete/delete controls and the Add Task/Templates mutation launchers while any write owns persistence. The Tasks container also exposes mutation activity through `aria-busy` plus polite live feedback. Read-only filter/sort controls remain usable and existing latest-request sequencing continues to own overlapping list reads.
+The delivery preserves the established global `pendingAction` serialization model and exposes it consistently in the Tasks UI. While any create/template/complete/delete write owns persistence, task-card mutation controls and task-creation launchers are disabled, the Tasks container reports `aria-busy`, and polite live feedback announces the unresolved write. Read-only filter/sort interaction remains available and latest-request sequencing still owns overlapping list reads.
 
-Application validation run 947 confirmed the implementation-specific pending-mutation regression tests pass. Its two Node-suite failures were existing assertions bound to the superseded active-item-only pending prop and loading-only busy state. Those assertions are repaired on the same PR to recognize the intentional global mutation lock and combined loading/mutation busy semantics without weakening mutation recovery or loading-surface guarantees.
+Run 947 previously reached 407/409 passing Node tests; the new pending-mutation integrity tests passed. Its only failures were stale assertions for the superseded active-item-only TaskCard pending prop and loading-only busy-state contract. Those assertions were repaired on the same PR, and run 950 then passed the full canonical gate.
 
-This is a frontend interaction-integrity change only. It does not alter task service/provider routes, methods, schemas, ownership, persisted data, or generic durable execution-session behaviour.
+This document is intentionally post-merge-safe. Once PR #349 completes lifecycle, autonomous continuation must begin from fresh `main`, not treat the merged PR branch as active work. This STATUS-only handoff commit itself requires final exact-head canonical validation before lifecycle completion.
+
+The change is frontend interaction integrity only. It changes no task service/provider route, method, schema, ownership rule, persisted data shape, authentication behaviour, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head canonical revalidation for Tasks pending-mutation UI integrity |
-| Gate state | Implementation and focused coverage committed; run 947 stale-test failures repaired; exact-head evidence pending |
+| Current gate | INTEGRATION — final exact-head validation and lifecycle completion for PR #349 |
+| Gate state | Implementation head validated by run 950; post-merge-safe STATUS committed; final exact-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -67,12 +69,13 @@ This is a frontend interaction-integrity change only. It does not alter task ser
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #348 — Brain Inbox pending-category integrity; merged at `4d994ddea6e6fc078142bbcd790114e822eca0e6` |
-| Active delivery | PR #349 — Tasks pending-mutation UI integrity |
-| Active branch | `fix/tasks-pending-mutation-integrity` |
+| Delivery awaiting final lifecycle completion | PR #349 — Tasks pending-mutation UI integrity |
+| Delivery branch | `fix/tasks-pending-mutation-integrity` |
 | Implemented change | Existing global `pendingAction` serialization is reflected across task-card and task-creation mutation controls; Tasks exposes pending mutation busy/live state |
 | Deterministic coverage | `test/tasks-pending-mutation-integrity.test.mjs` plus synchronized mutation-feedback and loading-status assertions |
-| Canonical validation | Run 947 failed only on two stale assertions after 407/409 Node tests passed; repaired exact head requires revalidation |
-| Review/thread audit | PENDING until exact-head validation completes |
+| Canonical implementation-head validation | PASS — Application validation run 950 on `ffe8383f4fa79f013da62a996dbca11ba4bfd740` |
+| Review/thread audit | CLEAN after run 950; recheck after final exact-head validation |
+| Final exact-head validation | PENDING on this post-merge-safe STATUS head |
 | Provider/data impact | None; logical persisted models unchanged; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -81,10 +84,10 @@ This is a frontend interaction-integrity change only. It does not alter task ser
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #349 is the sole active delivery and is at exact-head revalidation after repairing the only run 947 failures. |
-| What is already happening? | Tasks now exposes the same global mutation lock that its handlers already enforce, so conflicting write controls do not remain apparently actionable. |
-| What has been validated? | Run 947 passed governance/lint/typecheck and 407/409 Node tests; the new pending-mutation tests passed. The two stale assertions are repaired. |
-| What is next? | Revalidate the repaired exact head, audit reviews/threads, and advance lifecycle only from clean exact-head evidence. |
+| Where am I? | Stage 3. PR #349 implementation is validated and only final exact-head lifecycle evidence remains. After merge, start from fresh `main`. |
+| What is already happening? | Tasks now exposes the same global mutation lock that its handlers already enforce, preventing conflicting write controls from remaining apparently actionable. |
+| What has been validated? | Run 950 passed canonical platform validation on the implementation head after the two stale run 947 assertions were repaired; review/thread evidence was clean. |
+| What is next? | Validate this post-merge-safe exact head, re-audit reviews/threads, complete lifecycle if still clean, then inspect fresh main for the next material provider-independent Stage 3 task. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -94,13 +97,12 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact repaired PR #349 head;
-2. repair any further in-scope validation regression on the same PR and revalidate;
-3. audit submitted reviews and inline review threads;
-4. add implementation-complete evidence only when all acceptance criteria and exact-head evidence are clean;
-5. write a post-merge-safe STATUS handoff and complete repository lifecycle only while the final head remains current/conflict-free;
-6. after merge, re-enter fresh `main` and inspect the next material provider-independent Stage 3 frontend accessibility or interaction-integrity outcome;
-7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on this exact post-merge-safe PR #349 head;
+2. re-audit submitted reviews and inline review threads;
+3. if all acceptance evidence remains clean, add the repository lifecycle implementation-complete marker and allow the readiness controller/merge finalizer to complete the PR lifecycle;
+4. confirm the merge on `main`;
+5. re-enter fresh `main`, inspect authoritative state and current GitHub work, and select the next material provider-independent Stage 3 frontend accessibility or interaction-integrity outcome;
+6. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
