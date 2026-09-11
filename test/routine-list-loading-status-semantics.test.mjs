@@ -22,7 +22,10 @@ test('Routine list initial loading state is announced without exposing its decor
 });
 
 test('Routine list subsequent refresh preserves the established interactive surface', () => {
-  assert.match(routineListSource, /className="p-6 space-y-6" aria-busy=\{loading\}/);
+  assert.match(
+    routineListSource,
+    /className="p-6 space-y-6" aria-busy=\{loading \|\| mutationPending\}/
+  );
   assert.match(routineListSource, /Refreshing routines\.\.\./);
 });
 
