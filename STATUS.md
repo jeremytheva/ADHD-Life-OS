@@ -6,16 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Revalidate the repaired Brain Inbox pending-edit ownership delivery after aligning a stale accessibility assertion, then prepare a post-merge-safe handoff only after the corrected implementation head is clean.
+  objective: Complete repository lifecycle for the validated Brain Inbox pending-edit integrity delivery, then re-enter fresh main for the next dependency-correct Stage 3 frontend outcome.
   issue: null
-  pr: 345
-  branch: fix/inbox-edit-pending-integrity
+  pr: null
+  branch: null
 next_actions:
-  - Run canonical Application validation on the current exact PR #345 head.
-  - Inspect submitted reviews and inline review threads after validation.
-  - Repair only evidenced in-scope failures on the same PR.
-  - Once the corrected implementation head is clean, prepare a fresh post-merge-safe STATUS handoff and revalidate that exact head.
-  - Complete the repository PR lifecycle only when the final exact head is clean, current with main, and mergeable.
+  - Run canonical Application validation on this exact post-merge-safe handoff head.
+  - Audit submitted reviews and inline review threads on PR #345 after exact-head validation.
+  - Complete the repository PR lifecycle only if the final exact head remains clean, current, and mergeable.
+  - After merge, re-enter fresh main and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #345 implementation head 1463efffd1e22b22f5a3801105a5f317a648af1b passed Application validation run 925, but a subsequent in-scope audit found and repaired a cross-row editor ownership race. Run 929 on repaired head ed08e29ef1acea2aa89cf3f338564b204210bd24 reached the Node suite and failed only because the existing decorative Edit-icon assertion used a proximity bound that no longer covered the added pending-state disabled prop. The test contract has been aligned on the same PR; fresh exact-head canonical validation is required.
-last_verified_commit: 1463efffd1e22b22f5a3801105a5f317a648af1b
-last_updated: 2026-09-11T23:13:25+10:00
+validation_basis: Application validation run 931 passed on corrected implementation head 2e99aad364115e8a6444203c5f5b90552a8e8222 after the stale Brain Inbox Edit-icon proximity assertion was aligned with the pending-state markup. Submitted reviews and inline review threads were clean after that validation. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires canonical revalidation before lifecycle completion.
+last_verified_commit: 2e99aad364115e8a6444203c5f5b90552a8e8222
+last_updated: 2026-09-11T23:18:30+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +44,22 @@ last_updated: 2026-09-11T23:13:25+10:00
 
 ## Current objective
 
-PR #345 remains the sole active delivery. Its first implementation head passed canonical Application validation run 925, but the required criterion-by-criterion audit found a remaining in-scope editor-ownership race: while an edit save was pending, another row's Edit control remained active and could replace `editingId` and `editText`; completion of the first request could then close and clear the newer editor.
+PR #345 delivers the next evidence-backed Stage 3 Brain Inbox interaction-integrity outcome. Inline edit persistence now has explicit ownership: the submitted text is snapshotted, repeated Save/Enter is blocked, the active editor and Cancel control are locked while the write is pending, other rows cannot replace the editor during that write, visible and assistive pending state is exposed, and failed edits retain their text for retry.
 
-The same PR now guards `handleStartEdit` while an edit write is pending and disables the other Edit controls for the duration of that write. Focused deterministic coverage protects both duplicate Save/Enter submission and cross-row editor replacement while pending.
+The first implementation head passed canonical Application validation run 925. The required in-scope audit then found a cross-row editor replacement race, which was repaired on the same PR. Application validation run 929 subsequently exposed only one stale accessibility assertion whose fixed proximity bound no longer covered the Edit icon after the new pending-state `disabled` prop. That test contract was repaired without weakening the decorative-icon requirement.
 
-Canonical Application validation run 929 then reached the Node test suite and exposed one stale pre-existing accessibility assertion in `test/brain-inbox-control-icon-semantics.test.mjs`. The assertion still correctly expected the Edit glyph to be decorative, but its fixed proximity bound no longer reached the icon after the new `disabled={editPending}` pending-state prop was added. The assertion has been repaired on the same PR to target the Edit button and its decorative icon without depending on that old spacing assumption. No application behaviour was weakened or removed.
+Canonical Application validation run 931 passed on corrected implementation head `2e99aad364115e8a6444203c5f5b90552a8e8222`, and submitted-review plus inline-review-thread audits were clean afterward.
 
-The delivery still changes no provider route, method, schema, ownership rule, persisted `inbox-items` shape, categorisation/conversion/deletion behaviour, authentication behaviour, or generic durable execution-session contract.
+This checkpoint intentionally records the state that should be true after PR #345 merges. Because this documentation commit changes the PR head, canonical validation must pass again on the new exact head before lifecycle completion.
+
+This work is frontend interaction/data-entry integrity only. It changes no provider route, method, schema, ownership rule, persisted `inbox-items` shape, categorisation/conversion/deletion behaviour, authentication behaviour, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — revalidate repaired Brain Inbox pending-edit ownership |
-| Gate state | In-scope race repaired; stale test contract aligned; current exact-head canonical evidence required |
+| Current gate | INTEGRATION — final exact-head validation for Brain Inbox pending-edit integrity |
+| Gate state | Implementation-head evidence clean; post-merge-safe handoff committed; final exact-head evidence required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -67,14 +68,12 @@ The delivery still changes no provider route, method, schema, ownership rule, pe
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #344 — Brain Inbox pending-capture integrity; merged at `7a1dd049cb39fafe0cac66487bbf7ef4eed1dc34` |
-| Active delivery | PR #345 — Brain Inbox pending-edit integrity |
-| Branch | `fix/inbox-edit-pending-integrity` |
+| Delivery awaiting lifecycle completion | PR #345 — Brain Inbox pending-edit integrity |
 | Implemented change | One pending edit owns the editor until persistence succeeds or fails; duplicate submission, cancellation, local text mutation, and cross-row edit replacement are blocked |
 | Deterministic coverage | `test/inbox-edit-pending-integrity.test.mjs` plus aligned Brain Inbox control-icon semantics coverage |
-| Prior implementation-head validation | PASS — run 925 on `1463efffd1e22b22f5a3801105a5f317a648af1b`; superseded by the in-scope repair |
-| Latest validation attempt | FAIL — run 929 on `ed08e29ef1acea2aa89cf3f338564b204210bd24`; one stale decorative-icon proximity assertion only |
-| Current exact-head validation | NOT_RUN after the test-contract repair and STATUS update |
-| Review/thread audit | Required after current exact-head validation |
+| Implementation-head canonical validation | PASS — Application validation run 931 on `2e99aad364115e8a6444203c5f5b90552a8e8222` |
+| Implementation-head review/thread audit | CLEAN |
+| Current exact-head validation | NOT_RUN after post-merge-safe STATUS commit |
 | Provider/data impact | None; `inbox-items` logical model unchanged; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -83,26 +82,24 @@ The delivery still changes no provider route, method, schema, ownership rule, pe
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #345 is the sole active delivery. |
-| What is already happening? | Brain Inbox inline edit protects pending persistence from duplicate save, cancellation and cross-row editor replacement. |
-| What has been validated? | The earlier implementation head passed run 925. After the ownership repair, run 929 failed only on a stale accessibility test assumption, which is now repaired; current exact-head validation is required. |
-| What is next? | Validate the current exact head, audit review/thread state, prepare a fresh post-merge-safe handoff, revalidate that handoff head, and complete the lifecycle if clean. |
+| Where am I? | Stage 3; the Brain Inbox pending-edit delivery has clean implementation-head evidence and is completing its final exact-head lifecycle gate. |
+| What is already happening? | Brain Inbox inline edit serializes the update interaction, protects submitted text, prevents cross-row editor replacement while pending, exposes pending state, and preserves failed text for retry. |
+| What has been validated? | Application validation run 931 passed on the corrected implementation head after the stale accessibility assertion was repaired, with clean submitted-review and inline-thread state. The STATUS-only post-merge-safe head requires revalidation. |
+| What is next? | Validate the exact handoff head, audit review/thread state, complete the repository PR lifecycle if clean, then re-enter fresh `main` for the next dependency-correct Stage 3 frontend outcome. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #345 does not alter persisted entities, ownership, provider mappings, or migration state.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #345 changes no persisted entity, ownership rule, provider mapping, or migration state.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the current exact PR #345 head;
-2. inspect submitted reviews and inline review threads;
-3. repair any evidenced implementation/test issue on the same branch;
-4. once the corrected implementation head is clean, commit a fresh post-merge-safe durable STATUS handoff;
-5. revalidate that exact handoff head and complete the repository-owned lifecycle only if clean and current with `main`;
-6. after merge, re-enter fresh `main` and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome;
-7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on the exact post-merge-safe handoff head;
+2. audit submitted reviews and inline review threads;
+3. complete the repository PR lifecycle only if exact-head evidence remains clean and the PR is conflict-free/current with `main`;
+4. after merge, re-enter fresh `main` and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome;
+5. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
