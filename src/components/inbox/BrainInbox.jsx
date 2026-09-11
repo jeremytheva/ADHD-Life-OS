@@ -93,6 +93,7 @@ const BrainInbox = () => {
   }
 
   const handleStartEdit = (item) => {
+    if (editPending) return
     setEditingId(item.id)
     setEditText(item.content)
   }
@@ -388,8 +389,9 @@ const BrainInbox = () => {
                           <div className="flex gap-1">
                             <button
                               onClick={() => handleStartEdit(item)}
+                              disabled={editPending}
                               aria-label={`Edit ${item.content}`}
-                              className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                               <SafeIcon icon={FiEdit3} aria-hidden="true" className="w-4 h-4" />
                             </button>
