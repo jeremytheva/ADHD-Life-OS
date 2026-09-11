@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #354 Routine List parent-level mutation ownership and lifecycle evidence, then re-enter fresh main for the next Stage 3 integrity target.
+  objective: Complete PR #354 lifecycle from this post-merge-safe handoff, then re-enter fresh main and select the next highest-priority Stage 3 integrity target from current evidence.
   issue: null
-  pr: 354
-  branch: fix/routine-list-pending-mutation-integrity
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the repaired exact PR #354 head.
-  - Repair any further in-scope validation or review findings on the same branch rather than creating competing work.
+  - Run canonical Application validation on this exact post-merge-safe PR #354 head.
   - Re-audit submitted reviews and inline review threads after exact-head validation.
   - Confirm the final head remains current with main and conflict-free.
-  - Before lifecycle completion, convert this status to a post-merge-safe handoff and revalidate that exact head.
+  - If evidence remains clean, add lifecycle:implementation-complete and allow the repository lifecycle controller/finalizer to complete PR #354.
+  - Confirm merge on main, then inspect fresh authoritative state before selecting the next delivery.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: Application validation run 970 reached the Node test suite on implementation head 3f745eb65e2127921d15e5f57128a2ca7dbcce40. Governance, lint, and typecheck passed; the new Routine List mutation-ownership regressions passed. One pre-existing refresh-semantics assertion failed because it still expected aria-busy={loading} after the implementation correctly broadened the busy state to loading || mutationPending. That stale assertion was repaired on the same branch. The resulting exact head requires fresh canonical validation before lifecycle progression.
-last_verified_commit: 69cd5885c4ace055eeafa9c1fdc25b134a22f39a
-last_updated: 2026-09-12T06:14:00+10:00
+validation_basis: Application validation run 972 passed canonical npm run platform:validate on repaired implementation head 280361894abfd21854b4acb4d84bac6d85e9eb32. Submitted reviews and inline review threads were clean afterward, and the branch was 0 commits behind main. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires one final canonical validation before lifecycle completion.
+last_verified_commit: 280361894abfd21854b4acb4d84bac6d85e9eb32
+last_updated: 2026-09-12T07:12:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,24 +45,22 @@ last_updated: 2026-09-12T06:14:00+10:00
 
 ## Current objective
 
-PR #353 completed its repository-managed lifecycle and merged into `main` at `69cd5885c4ace055eeafa9c1fdc25b134a22f39a` after canonical exact-head validation passed on the unchanged handoff head and review/thread evidence remained clean.
+PR #354 has completed implementation-head validation for Routine List parent-level mutation ownership. Application validation run 972 passed canonical `npm run platform:validate` on repaired implementation head `280361894abfd21854b4acb4d84bac6d85e9eb32`, submitted reviews plus inline review threads were clean afterward, and the branch was current with `main`.
 
-Fresh-main continuation confirmed the parked Routine List integrity gap: create, update, delete, and template-create persistence paths were independent and could overlap because the parent list had no shared mutation owner. PR #354 is the sole active delivery and gives those writes one immediate owner before the first awaited persistence call.
+The delivery gives routine create, update, delete, and template-create persistence one immediate parent-level mutation owner. Ownership is claimed synchronously before the first awaited write, remains active through the post-write list refresh, and locks conflicting create/template/edit/delete/Start interactions while persistence is unresolved. Read-only Stats remains available. Successful writes followed by refresh failures explicitly tell the user persistence succeeded and warn against duplicate or stale follow-up actions.
 
-The implementation keeps ownership through the post-write routine-list refresh, disables conflicting create/template/edit/delete controls while persistence is unresolved, and also prevents launching Routine Progress with Start during a pending parent write because that interaction can lead into execution persistence. Read-only Stats remains available. Successful writes followed by refresh failures explicitly tell the user that persistence succeeded and warn against duplicate or stale follow-up actions.
+Run 970 previously exposed one stale existing assertion that expected only `loading` to drive the Routine List `aria-busy` state. That test was repaired on the same branch to recognise `loading || mutationPending` without weakening refresh semantics; run 972 then passed the complete repaired head.
 
-The ownership claim uses a ref as the synchronous authority plus state for render/accessibility feedback, so rapid actions cannot exploit the gap before React publishes the pending render state. Existing latest-request sequencing for routine-list reads remains unchanged.
+This document is intentionally post-merge-safe. Once PR #354 completes lifecycle, autonomous continuation must begin from fresh `main`, not treat the merged PR branch as active work. This STATUS-only handoff commit itself requires final exact-head canonical validation before lifecycle completion.
 
-Application validation run 970 reached the Node test suite on implementation head `3f745eb65e2127921d15e5f57128a2ca7dbcce40`. Governance, lint, typecheck, and the new mutation-ownership regression coverage passed. The sole failure was a stale existing assertion in `test/routine-list-loading-status-semantics.test.mjs` that expected only `loading` to drive the established surface's `aria-busy` value. The implementation intentionally adds unresolved parent mutation ownership to that busy state, so the test was repaired to assert `loading || mutationPending` without weakening refresh semantics. Fresh canonical exact-head validation is now required.
-
-This change is frontend interaction/recovery integrity only. It changes no routine service/provider route, method, schema, ownership rule, persisted data shape, authentication behaviour, Routine Progress persistence contract, recommendation policy, or generic durable execution-session contract.
+The change is frontend interaction/recovery integrity only. It changes no routine service/provider route, method, schema, ownership rule, persisted data shape, authentication behaviour, Routine Progress persistence contract, recommendation policy, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — repaired exact-head validation and lifecycle completion for PR #354 |
-| Gate state | Implementation and deterministic coverage committed; run 970 stale-test finding repaired; fresh exact-head evidence pending |
+| Current gate | INTEGRATION — final exact-head validation and lifecycle completion for PR #354 |
+| Gate state | Repaired implementation head validated by run 972; post-merge-safe STATUS committed; final exact-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -71,13 +69,14 @@ This change is frontend interaction/recovery integrity only. It changes no routi
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #353 — Routine Form pending-save field ownership; merged at `69cd5885c4ace055eeafa9c1fdc25b134a22f39a` |
-| Active delivery | PR #354 — Routine List parent-level mutation ownership |
+| Delivery awaiting final lifecycle completion | PR #354 — Routine List parent-level mutation ownership |
 | Delivery branch | `fix/routine-list-pending-mutation-integrity` |
 | Implemented change | Synchronous shared mutation ownership across routine create/update/delete/template writes, retained through refresh; conflicting launchers locked while pending |
 | Deterministic coverage | Added `test/routines-pending-mutation-integrity.test.mjs`; aligned existing refresh-semantics assertion with combined loading/mutation busy state |
-| Canonical exact-head validation | RUN 970 FAILED on a stale pre-existing assertion after governance/lint/typecheck and new ownership tests passed; repaired head requires fresh validation |
-| Review/thread audit | CLEAN before repair; recheck after exact-head validation |
-| Base freshness | Delivery was based directly on fresh `main` merge `69cd5885c4ace055eeafa9c1fdc25b134a22f39a`; recheck before lifecycle completion |
+| Canonical implementation-head validation | PASS — Application validation run 972 on `280361894abfd21854b4acb4d84bac6d85e9eb32` |
+| Review/thread audit | CLEAN after run 972; recheck after final exact-head validation |
+| Base freshness | CURRENT — implementation head was 0 commits behind `main` before this STATUS-only handoff |
+| Final exact-head validation | PENDING on this post-merge-safe STATUS head |
 | Provider/data impact | None; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -86,10 +85,10 @@ This change is frontend interaction/recovery integrity only. It changes no routi
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #354 is the sole active delivery. Its first canonical run found one stale test assertion, now repaired, and the new exact head needs validation. |
+| Where am I? | Stage 3. PR #354 implementation is validated and only final exact-head lifecycle evidence remains. After merge, start from fresh `main`. |
 | What is already happening? | Routine List writes share immediate parent-level ownership, keep that ownership through refresh, and expose/lock conflicting UI while persistence is unresolved. |
-| What has been validated? | Run 970 passed governance, lint, typecheck and the new Routine List ownership regressions before stopping on a stale existing refresh-semantics assertion. |
-| What is next? | Validate the repaired exact head, repair any further in-scope finding on this same branch, audit reviews/threads and base freshness, then create a post-merge-safe status handoff before lifecycle completion. |
+| What has been validated? | Run 972 passed canonical platform validation on the repaired implementation head; review/thread evidence was clean and the branch was current with main. |
+| What is next? | Validate this post-merge-safe exact head, re-audit reviews/threads and freshness, complete lifecycle if still clean, then inspect fresh main for the next Stage 3 integrity target. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -99,14 +98,13 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the repaired exact PR #354 head;
-2. repair any further in-scope failures on the same delivery branch;
-3. re-audit submitted reviews and inline review threads;
-4. confirm the final head remains current with `main` and conflict-free;
-5. when implementation evidence is clean, update this document to a post-merge-safe handoff and rerun canonical validation on that exact head;
-6. add the repository lifecycle implementation-complete marker only after the final handoff head is fully validated;
-7. after merge, re-enter fresh `main` and select the next highest-priority Stage 3 interaction-integrity target from current evidence;
-8. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on this exact post-merge-safe PR #354 head;
+2. re-audit submitted reviews and inline review threads;
+3. confirm the final head remains current/conflict-free;
+4. if all acceptance evidence remains clean, add the repository lifecycle implementation-complete marker and allow the readiness controller/merge finalizer to complete the PR lifecycle;
+5. confirm the merge on `main`;
+6. re-enter fresh `main` and select the next highest-priority Stage 3 interaction-integrity target from current evidence;
+7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
