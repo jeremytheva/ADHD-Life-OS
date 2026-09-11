@@ -20,10 +20,12 @@ const BrainInbox = () => {
   const [editText, setEditText] = useState('')
   const [editPending, setEditPending] = useState(false)
   const [deletingIds, setDeletingIds] = useState(() => new Set())
+  const [convertingIds, setConvertingIds] = useState(() => new Set())
   const inputRef = useRef(null)
   const latestLoadRequestRef = useRef(0)
   const latestCategoryRequestRef = useRef(new Map())
   const deletingIdsRef = useRef(new Set())
+  const convertingIdsRef = useRef(new Set())
 
   useEffect(() => {
     loadItems()
@@ -83,7 +85,7 @@ const BrainInbox = () => {
   }
 
   const handleDeleteItem = async (id) => {
-    if (deletingIdsRef.current.has(id)) return
+    if (deletingIdsRef.current.has(id) || convertingIdsRef.current.has(id)) return
 
     deletingIdsRef.current.add(id)
     setDeletingIds(new Set(deletingIdsRef.current))
@@ -103,14 +105,14 @@ const BrainInbox = () => {
   }
 
   const handleStartEdit = (item) => {
-    if (editPending || deletingIdsRef.current.has(item.id)) return
+    if (editPending || deletingIdsRef.current.has(item.id) || convertingIdsRef.current.has(item.id)) return
     setEditingId(item.id)
     setEditText(item.content)
   }
 
   const handleSaveEdit = async (id) => {
     const submittedEdit = editText.trim()
-    if (!submittedEdit || editPending || deletingIdsRef.current.has(id)) return
+    if (!submittedEdit || editPending || deletingIdsRef.current.has(id) || convertingIdsRef.current.has(id)) return
 
     setEditPending(true)
     try {
@@ -130,7 +132,7 @@ const BrainInbox = () => {
   }
 
   const handleCategoryChange = async (id, category) => {
-    if (deletingIdsRef.current.has(id)) return
+    if (deletingIdsRef.current.has(id) || convertingIdsRef.current.has(id)) return
 
     const requestId = (latestCategoryRequestRef.current.get(id) || 0) + 1
     latestCategoryRequestRef.current.set(id, requestId)
@@ -148,7 +150,10 @@ const BrainInbox = () => {
   }
 
   const handleConvertToTask = async (item) => {
-    if (deletingIdsRef.current.has(item.id)) return
+    if (deletingIdsRef.current.has(item.id) || convertingIdsRef.current.has(item.id)) return
+
+    convertingIdsRef.current.add(item.id)
+    setConvertingIds(new Set(convertingIdsRef.current))
 
     try {
       setOperationError('')
@@ -157,6 +162,9 @@ const BrainInbox = () => {
     } catch (error) {
       console.error('Error converting to task:', error)
       setOperationError('We couldn’t convert that item to a task. It remains in your inbox so you can try again.')
+    } finally {
+      convertingIdsRef.current.delete(item.id)
+      setConvertingIds(new Set(convertingIdsRef.current))
     }
   }
 
@@ -403,7 +411,7 @@ const BrainInbox = () => {
                           <div className="flex gap-1">
                             <button
                               onClick={() => handleStartEdit(item)}
-                              disabled={editPending || deletingIds.has(item.id)}
+                              disabled={editPending || deletingIds.has(item.id) || convertingIds.has(item.id)}
                               aria-label={`Edit ${item.content}`}
                               className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
@@ -411,7 +419,7 @@ const BrainInbox = () => {
                             </button>
                             <button
                               onClick={() => handleDeleteItem(item.id)}
-                              disabled={deletingIds.has(item.id)}
+                              disabled={deletingIds.has(item.id) || convertingIds.has(item.id)}
                               aria-busy={deletingIds.has(item.id)}
                               aria-label={deletingIds.has(item.id) ? `Deleting ${item.content}` : `Delete ${item.content}`}
                               className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -514,7 +522,7 @@ const BrainInbox = () => {
                         <button
                           key={cat.value}
                           onClick={() => handleCategoryChange(item.id, cat.value)}
-                          disabled={deletingIds.has(item.id)}
+                          disabled={deletingIds.has(item.id) || convertingIds.has(item.id)}
                           className={`
                             px-3 py-2 rounded-lg text-sm font-medium transition-all
                             bg-${cat.color}-100 text-${cat.color}-700 hover:bg-${cat.color}-200
@@ -577,16 +585,18 @@ const BrainInbox = () => {
                             <div className="flex gap-1">
                               <button
                                 onClick={() => handleConvertToTask(item)}
-                                disabled={deletingIds.has(item.id)}
+                                disabled={deletingIds.has(item.id) || convertingIds.has(item.id)}
+                                aria-busy={convertingIds.has(item.id)}
+                                aria-label={convertingIds.has(item.id) ? `Converting ${item.content} to task` : `Convert ${item.content} to task`}
                                 className="px-3 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
                                 title="Convert to task"
                               >
                                 <SafeIcon icon={FiZap} aria-hidden="true" className="w-3 h-3" />
-                                <span>Task</span>
+                                <span>{convertingIds.has(item.id) ? 'Converting…' : 'Task'}</span>
                               </button>
                               <button
                                 onClick={() => handleCategoryChange(item.id, null)}
-                                disabled={deletingIds.has(item.id)}
+                                disabled={deletingIds.has(item.id) || convertingIds.has(item.id)}
                                 className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 aria-label={`Remove category from ${item.content}`}
                               >
@@ -594,7 +604,7 @@ const BrainInbox = () => {
                               </button>
                               <button
                                 onClick={() => handleDeleteItem(item.id)}
-                                disabled={deletingIds.has(item.id)}
+                                disabled={deletingIds.has(item.id) || convertingIds.has(item.id)}
                                 aria-busy={deletingIds.has(item.id)}
                                 className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 aria-label={deletingIds.has(item.id) ? `Deleting ${item.content}` : `Delete ${item.content}`}
