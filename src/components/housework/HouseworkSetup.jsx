@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -14,16 +14,21 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
   const [selectedTasks, setSelectedTasks] = useState(new Set())
   const [saving, setSaving] = useState(false)
   const [operationError, setOperationError] = useState(null)
+  const saveInFlightRef = useRef(false)
+
+  const handleClose = () => {
+    if (saveInFlightRef.current || saving) return
+    onClose()
+  }
+
   const dialogRef = useModalDialog({
-    onEscape: () => {
-      if (!saving) onClose()
-    }
+    onEscape: handleClose
   })
 
   const allTemplates = Object.values(HOUSEWORK_TEMPLATES).flat()
 
   const handleToggleTask = (templateId) => {
-    if (saving) return
+    if (saveInFlightRef.current || saving) return
     setOperationError(null)
     setSelectedTasks(prev => {
       const next = new Set(prev)
@@ -34,7 +39,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
   }
 
   const handleSelectStarterSet = () => {
-    if (saving) return
+    if (saveInFlightRef.current || saving) return
     const starterTasks = getStarterSet()
     const starterIndexes = starterTasks
       .map(starter => allTemplates.findIndex(template => template.title === starter.title && template.room === starter.room))
@@ -44,7 +49,8 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
   }
 
   const handleSave = async () => {
-    if (saving || selectedTasks.size === 0) return
+    if (saveInFlightRef.current || saving || selectedTasks.size === 0) return
+    saveInFlightRef.current = true
     setSaving(true)
     setOperationError(null)
 
@@ -69,12 +75,13 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
           ? `${savedCount} of ${selectedIndexes.length} chores were saved before the interruption. Only the unsaved chores remain selected, so retrying will not duplicate the saved chores.`
           : 'We couldn’t add these chores. None were confirmed as saved, and your selections are still here so you can try again.'
       )
-      setSaving(false)
       if (savedCount > 0 && onComplete) onComplete({ close: false })
       return
+    } finally {
+      saveInFlightRef.current = false
+      setSaving(false)
     }
 
-    setSaving(false)
     if (onComplete) onComplete({ close: true })
     onClose()
   }
@@ -107,7 +114,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
             </div>
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               disabled={saving}
               aria-label="Close housework setup"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:opacity-50"
@@ -199,7 +206,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
           <div className="flex gap-3">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               disabled={saving}
               className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition-colors disabled:opacity-50"
             >
