@@ -22,7 +22,7 @@ test('Projects initial loading state is announced without exposing its decorativ
 });
 
 test('Projects subsequent refresh state preserves the established project surface', () => {
-  assert.match(projectsListSource, /className="p-6 space-y-6" aria-busy=\{loading\}/);
+  assert.match(projectsListSource, /className="p-6 space-y-6" aria-busy=\{loading \|\| mutationPending\}/);
   assert.match(projectsListSource, /Refreshing projects\.\.\./);
 });
 
