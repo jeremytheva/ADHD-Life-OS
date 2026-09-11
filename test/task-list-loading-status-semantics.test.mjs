@@ -22,8 +22,9 @@ test('Task list initial loading state is announced without exposing its decorati
 });
 
 test('Task list subsequent refresh preserves the established interactive surface', () => {
-  assert.match(taskListSource, /className="p-6 space-y-6" aria-busy=\{loading\}/);
+  assert.match(taskListSource, /className="p-6 space-y-6" aria-busy=\{loading \|\| mutationPending\}/);
   assert.match(taskListSource, /Refreshing tasks\.\.\./);
+  assert.match(taskListSource, /Updating tasks\.\.\./);
 });
 
 test('Task list refresh failures preserve established context and expose focused recovery', () => {
