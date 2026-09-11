@@ -6,15 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete PR #342 Task List latest-refresh interaction integrity without allowing stale requests to overwrite newer task-surface state.
+  objective: Complete repository lifecycle for the validated Task List latest-refresh integrity delivery, then re-enter fresh main for the next dependency-correct Stage 3 frontend outcome.
   issue: null
-  pr: 342
-  branch: fix/tasks-latest-refresh-integrity
+  pr: null
+  branch: null
 next_actions:
-  - Run canonical Application validation on the new exact head after this governance-state repair.
-  - Audit submitted reviews and inline review threads after validation.
-  - Repair any evidence-backed failure on the same branch rather than starting competing work.
-  - After clean implementation-head evidence, prepare a post-merge-safe STATUS handoff and revalidate that exact head.
+  - Run canonical Application validation on this exact post-merge-safe handoff head.
+  - Audit submitted reviews and inline review threads on PR #342 after exact-head validation.
+  - Complete the repository PR lifecycle only if the final exact head remains clean and mergeable.
+  - After merge, re-enter fresh main and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome.
+  - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -29,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Application validation run 913 failed before lint/typecheck/tests/build because the active STATUS front matter used non-canonical gate, execution-state and validation values. This commit repairs durable governance state; the new exact head requires canonical validation.
-last_verified_commit: a59ca577dab740d05a71613979eb9b445d754e25
-last_updated: 2026-09-11T19:13:52+10:00
+validation_basis: Application validation run 914 passed on implementation head 1761240d0f06d646568eca7dc60ee4eef5cb3c02 with clean submitted-review and inline-thread state. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires canonical revalidation before lifecycle completion.
+last_verified_commit: 1761240d0f06d646568eca7dc60ee4eef5cb3c02
+last_updated: 2026-09-11T20:15:42+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,9 +46,9 @@ last_updated: 2026-09-11T19:13:52+10:00
 
 PR #341 — Housework checklist latest-refresh integrity — is merged into `main` at `a59ca577dab740d05a71613979eb9b445d754e25`.
 
-Draft PR #342 is the sole active delivery. It hardens `TaskList.loadTasks()` so overlapping filter, mode, sort, preference, retry and refresh-after-write requests cannot let an older asynchronous request publish stale tasks, task-load analysis, recommendations, error state, or loading completion. Superseded requests remain safe for existing refresh-after-write callers because a newer authoritative request owns publication.
+PR #342 delivers Task List latest-refresh interaction integrity. `TaskList.loadTasks()` now sequences overlapping filter, mode, sort, preference, retry and refresh-after-write requests so older asynchronous requests cannot publish stale tasks, task-load analysis, recommendations, error state, or loading completion. Superseded requests remain safe for existing refresh-after-write callers because the newest authoritative request owns publication.
 
-Application validation run 913 did not reach lint, typecheck, tests, build or browser tests. Governance validation stopped immediately because the active `STATUS.md` front matter used values outside the repository's canonical governance vocabulary (`Implementation Validation`, `IN_PROGRESS`, and `PENDING` for component validation fields). This checkpoint repairs that durable-state defect without changing the Task List implementation.
+Canonical Application validation run 914 passed on implementation head `1761240d0f06d646568eca7dc60ee4eef5cb3c02`, and the submitted-review and inline-review-thread audits were clean. This checkpoint intentionally makes the durable handoff safe for the state that should exist after PR #342 merges; because this documentation commit changes the PR head, canonical validation must pass again on the new exact head before merge.
 
 This work remains frontend interaction integrity only. It does not change task persistence schemas, provider routes or methods, ownership, task mutation semantics, authentication, recommendation policy, or generic durable execution sessions.
 
@@ -55,8 +56,8 @@ This work remains frontend interaction integrity only. It does not change task p
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — PR #342 Task List latest-refresh integrity |
-| Gate state | Governance-state repair committed; canonical exact-head validation required |
+| Current gate | INTEGRATION — final exact-head validation for Task List latest-refresh integrity |
+| Gate state | Implementation-head evidence clean; post-merge-safe handoff committed; final exact-head evidence required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -65,13 +66,12 @@ This work remains frontend interaction integrity only. It does not change task p
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #341 — Housework checklist latest-refresh integrity; merged at `a59ca577dab740d05a71613979eb9b445d754e25` |
-| Active delivery | Draft PR #342 — Task List latest-refresh interaction integrity |
-| Branch | `fix/tasks-latest-refresh-integrity` |
+| Delivery awaiting lifecycle completion | PR #342 — Task List latest-refresh interaction integrity |
 | Implemented change | Only the latest Task List refresh may publish tasks, analysis, recommendations, task-load errors, or loading completion |
 | Deterministic coverage | `test/tasks-latest-refresh-integrity.test.mjs` |
-| Prior canonical validation | FAIL — run 913 stopped at governance because STATUS front matter was invalid |
-| Current exact-head validation | PENDING after governance-state repair |
-| Review/thread audit | PENDING after canonical validation |
+| Implementation-head canonical validation | PASS — Application validation run 914 on `1761240d0f06d646568eca7dc60ee4eef5cb3c02` |
+| Implementation-head review/thread audit | CLEAN |
+| Current exact-head validation | PENDING after post-merge-safe STATUS commit |
 | Provider/data impact | None; `tasks` logical model unchanged; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -80,26 +80,24 @@ This work remains frontend interaction integrity only. It does not change task p
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; Draft PR #342 is the sole active delivery and is in exact-head validation. |
+| Where am I? | Stage 3; the Task List latest-refresh delivery has clean implementation-head evidence and is completing its final exact-head lifecycle gate. |
 | What is already happening? | Task List overlapping refreshes are sequenced; stale requests cannot publish newer-surface state. |
-| What has been validated? | Fresh `main` includes PR #341. PR #342 run 913 exposed and isolated a governance-state defect before application checks; the corrected exact head still requires validation. |
-| What is next? | Run canonical validation on the corrected exact head, audit review/thread state, repair any evidence-backed failure on the same branch, then prepare the post-merge-safe handoff. |
+| What has been validated? | Application validation run 914 passed on the implementation head, with clean submitted-review and inline-thread state. The STATUS-only post-merge-safe head requires revalidation. |
+| What is next? | Validate the exact handoff head, audit review/thread state, complete the repository PR lifecycle if clean, then re-enter fresh `main` for the next dependency-correct Stage 3 frontend outcome. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #342 changes no persisted entity, ownership rule, provider mapping, or migration state.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. The Task List latest-refresh delivery changes no persisted entity, ownership rule, provider mapping, or migration state.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact corrected PR #342 head;
+1. run canonical Application validation on the exact post-merge-safe handoff head;
 2. audit submitted reviews and inline review threads;
-3. repair any evidence-backed failure on the same delivery branch;
-4. after clean implementation-head evidence, make this handoff post-merge safe and re-run canonical validation on that new exact head;
-5. complete the repository PR lifecycle only after exact-head evidence is clean;
-6. after merge, re-enter fresh `main` and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome;
-7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+3. complete the repository PR lifecycle only if exact-head evidence remains clean and the PR is conflict-free/current with `main`;
+4. after merge, re-enter fresh `main` and inspect the next material provider-independent frontend accessibility or interaction-integrity outcome;
+5. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
