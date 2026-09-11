@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #355 lifecycle from this post-merge-safe handoff, then re-enter fresh main and select the next highest-priority provider-independent Stage 3 integrity target from current evidence.
+  objective: Complete PR #356 lifecycle for Chore Detail synchronous completion ownership, then re-enter fresh main and select the next provider-independent Stage 3 integrity target.
   issue: null
-  pr: null
-  branch: main
+  pr: 356
+  branch: fix/chore-detail-completion-ownership
 next_actions:
-  - Run canonical Application validation on this exact post-merge-safe PR #355 head.
-  - Re-audit submitted reviews and inline review threads after exact-head validation.
-  - Confirm the final head remains current with main and conflict-free.
-  - If evidence remains clean, add lifecycle:implementation-complete and allow the repository lifecycle controller/finalizer to complete PR #355.
-  - Confirm merge on main, then inspect fresh authoritative state before selecting the next delivery.
+  - Run canonical Application validation on the exact PR #356 head.
+  - Repair any in-scope validation or review findings on the same PR.
+  - Audit submitted reviews, inline review threads, base freshness, and mergeability after exact-head validation.
+  - When acceptance is fully evidenced, prepare a post-merge-safe STATUS handoff, revalidate that exact head, then add lifecycle:implementation-complete.
+  - After merge, re-enter fresh main and select the next highest-priority provider-independent Stage 3 integrity target.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 978 passed canonical npm run platform:validate on repaired implementation head 16ad889e9cad42c20f9541a52c5e10138391e609. Submitted reviews and inline review threads were clean afterward, and the branch was 0 commits behind main. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires one final canonical validation before lifecycle completion.
-last_verified_commit: 16ad889e9cad42c20f9541a52c5e10138391e609
-last_updated: 2026-09-12T09:22:00+10:00
+validation_basis: PR #356 implements a provider-independent Chore Detail interaction-integrity repair on fresh main c0cb152fd630e4c03b1b269e26da90ab87f23986. Exact-head canonical validation is required after this durable state update.
+last_verified_commit: c0cb152fd630e4c03b1b269e26da90ab87f23986
+last_updated: 2026-09-12T09:28:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,22 +45,20 @@ last_updated: 2026-09-12T09:22:00+10:00
 
 ## Current objective
 
-PR #355 has completed implementation-head validation for Housework chore checklist mutation ownership. Application validation run 978 passed canonical `npm run platform:validate` on repaired implementation head `16ad889e9cad42c20f9541a52c5e10138391e609`, submitted reviews plus inline review threads were clean afterward, and the branch was current with `main`.
+PR #355 — Housework checklist Complete/Snooze mutation ownership — completed final exact-head Application validation run 979 and merged into `main` at `c0cb152fd630e4c03b1b269e26da90ab87f23986` after clean review/thread/freshness checks and lifecycle finalization.
 
-The delivery gives checklist Complete and Snooze persistence one immediate parent-level mutation owner. Ownership is claimed synchronously before the first awaited write, remains active through post-write chore-list reconciliation, and locks conflicting Complete/Snooze interactions while persistence is unresolved. Read-only chore detail navigation remains available. Successful writes followed by refresh failures explicitly tell the user persistence succeeded and warn against repeating the already-applied action.
+Fresh-main inspection then identified the next provider-independent Housework integrity gap in `ChoreDetailView`. The accepted Housework deep-integrity decision requires completion and close controls to be serialized during persistence, but Chore Detail previously relied only on React `completing` state. A repeated completion event, close action, or checklist mutation could enter before that state had re-rendered and therefore overlap the unresolved completion write.
 
-Run 975 exposed invalid `PENDING` literals in STATUS validation fields, which were repaired to governance-supported states. Run 976 then passed governance, lint, typecheck, and all new pending-mutation regressions before exposing two stale existing Housework assertions that expected only `loading` to drive checklist `aria-busy`. Those assertions were updated on the same branch to recognise `loading || mutationPending` without weakening refresh-surface semantics; run 978 then passed the complete repaired implementation head.
+Draft PR #356 — `fix: own chore detail completion persistence` — is the sole active delivery. It claims completion ownership synchronously with a ref before the first awaited `completeHouseworkTask` call; rejects duplicate completion; guards close and checklist changes against the same owner; retains ownership through confirmed-success celebration/automatic close; and releases ownership after a failed write so the preserved checklist can be retried safely.
 
-This document is intentionally post-merge-safe. Once PR #355 completes lifecycle, autonomous continuation must begin from fresh `main`, not treat the merged PR branch as active work. This STATUS-only handoff commit itself requires final exact-head canonical validation before lifecycle completion.
-
-The change is frontend interaction/recovery integrity only. It changes no housework service/provider route, method, schema, ownership rule, persisted data shape, authentication behaviour, recommendation policy, or generic durable execution-session contract.
+Deterministic regression coverage is added in `test/chore-detail-completion-pending-integrity.test.mjs`. The delivery changes no housework provider route, method, schema, recurrence rule, persisted data shape, authentication behaviour, execution policy, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head validation and lifecycle completion for PR #355 |
-| Gate state | Repaired implementation head validated by run 978; post-merge-safe STATUS committed; final exact-head evidence pending |
+| Current gate | INTEGRATION — exact-head validation for PR #356 |
+| Gate state | Implementation and deterministic regression committed; canonical validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -68,15 +66,12 @@ The change is frontend interaction/recovery integrity only. It changes no housew
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #354 — Routine List parent-level mutation ownership; merged at `49cd72f28f745a8966ff16f60d2df5b083b76481` |
-| Delivery awaiting final lifecycle completion | PR #355 — Housework chore checklist mutation ownership |
-| Delivery branch | `fix/chore-checklist-pending-mutation-integrity` |
-| Implemented change | Synchronous shared mutation ownership across checklist Complete/Snooze writes, retained through reconciliation; conflicting mutation launchers locked while pending |
-| Deterministic coverage | Added `test/housework-pending-mutation-integrity.test.mjs`; aligned two existing refresh-semantics assertions with combined loading/mutation busy state |
-| Canonical implementation-head validation | PASS — Application validation run 978 on `16ad889e9cad42c20f9541a52c5e10138391e609` |
-| Review/thread audit | CLEAN after run 978; recheck after final exact-head validation |
-| Base freshness | CURRENT — implementation head was 0 commits behind `main` before this STATUS-only handoff |
-| Final exact-head validation | PENDING on this post-merge-safe STATUS head |
+| Latest repository delivery on main | PR #355 — Housework checklist mutation ownership; merged at `c0cb152fd630e4c03b1b269e26da90ab87f23986` |
+| Sole active delivery | PR #356 — Chore Detail synchronous completion ownership |
+| Delivery branch | `fix/chore-detail-completion-ownership` |
+| Implemented change | Synchronous completion owner before persistence; duplicate completion, close, and checklist changes guarded while write is unresolved |
+| Deterministic coverage | `test/chore-detail-completion-pending-integrity.test.mjs` |
+| Canonical validation | NOT_RUN on current exact head |
 | Provider/data impact | None; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -85,25 +80,26 @@ The change is frontend interaction/recovery integrity only. It changes no housew
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #355 implementation is validated; this post-merge-safe handoff awaits final exact-head validation and lifecycle completion. |
-| What is already happening? | Housework checklist Complete/Snooze writes share immediate persistence ownership and keep it through reconciliation. |
-| What has been validated? | Canonical run 978 passed the repaired implementation head; reviews/threads were clean and the branch was current with main before this STATUS-only handoff. |
-| What is next? | Validate this exact handoff head, re-audit lifecycle evidence, complete PR #355, then re-enter fresh main. |
+| Where am I? | Stage 3. PR #356 is the sole active delivery and awaits exact-head canonical validation. |
+| What is already happening? | Chore Detail completion now claims synchronous persistence ownership and serializes same-dialog interactions against it. |
+| What has been validated? | PR #355 completed final validation and merged; PR #356 exact-head validation has not yet completed. |
+| What is next? | Run canonical validation, repair any in-scope finding on this branch, then complete lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #355 is frontend interaction/recovery integrity only.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #356 is frontend interaction/recovery integrity only.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on this exact post-merge-safe PR #355 head;
-2. re-audit submitted reviews, inline review threads, base freshness and mergeability;
-3. if all evidence remains clean, add `lifecycle:implementation-complete` and allow the repository lifecycle controller/finalizer to complete the PR;
-4. confirm merge on `main` and re-enter from fresh authoritative state;
-5. select the next provider-independent Stage 3 interaction-integrity target from fresh evidence;
-6. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on the exact PR #356 head;
+2. repair any in-scope validation or review findings on the same PR;
+3. audit submitted reviews, inline review threads, base freshness and mergeability;
+4. prepare a post-merge-safe durable handoff once implementation-head evidence is clean;
+5. revalidate that exact handoff head and complete the repository lifecycle;
+6. confirm merge on `main`, then select the next provider-independent Stage 3 interaction-integrity target from fresh evidence;
+7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
