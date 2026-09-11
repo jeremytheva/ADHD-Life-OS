@@ -21,11 +21,13 @@ const BrainInbox = () => {
   const [editPending, setEditPending] = useState(false)
   const [deletingIds, setDeletingIds] = useState(() => new Set())
   const [convertingIds, setConvertingIds] = useState(() => new Set())
+  const [categoryPendingIds, setCategoryPendingIds] = useState(() => new Set())
   const inputRef = useRef(null)
   const latestLoadRequestRef = useRef(0)
   const latestCategoryRequestRef = useRef(new Map())
   const deletingIdsRef = useRef(new Set())
   const convertingIdsRef = useRef(new Set())
+  const categoryPendingIdsRef = useRef(new Set())
 
   useEffect(() => {
     loadItems()
@@ -85,7 +87,12 @@ const BrainInbox = () => {
   }
 
   const handleDeleteItem = async (id) => {
-    if (deletingIdsRef.current.has(id) || convertingIdsRef.current.has(id)) return
+    if (
+      deletingIdsRef.current.has(id) ||
+      convertingIdsRef.current.has(id) ||
+      categoryPendingIdsRef.current.has(id) ||
+      (editPending && editingId === id)
+    ) return
 
     deletingIdsRef.current.add(id)
     setDeletingIds(new Set(deletingIdsRef.current))
@@ -105,14 +112,25 @@ const BrainInbox = () => {
   }
 
   const handleStartEdit = (item) => {
-    if (editPending || deletingIdsRef.current.has(item.id) || convertingIdsRef.current.has(item.id)) return
+    if (
+      editPending ||
+      deletingIdsRef.current.has(item.id) ||
+      convertingIdsRef.current.has(item.id) ||
+      categoryPendingIdsRef.current.has(item.id)
+    ) return
     setEditingId(item.id)
     setEditText(item.content)
   }
 
   const handleSaveEdit = async (id) => {
     const submittedEdit = editText.trim()
-    if (!submittedEdit || editPending || deletingIdsRef.current.has(id) || convertingIdsRef.current.has(id)) return
+    if (
+      !submittedEdit ||
+      editPending ||
+      deletingIdsRef.current.has(id) ||
+      convertingIdsRef.current.has(id) ||
+      categoryPendingIdsRef.current.has(id)
+    ) return
 
     setEditPending(true)
     try {
@@ -132,10 +150,17 @@ const BrainInbox = () => {
   }
 
   const handleCategoryChange = async (id, category) => {
-    if (deletingIdsRef.current.has(id) || convertingIdsRef.current.has(id)) return
+    if (
+      deletingIdsRef.current.has(id) ||
+      convertingIdsRef.current.has(id) ||
+      categoryPendingIdsRef.current.has(id) ||
+      (editPending && editingId === id)
+    ) return
 
     const requestId = (latestCategoryRequestRef.current.get(id) || 0) + 1
     latestCategoryRequestRef.current.set(id, requestId)
+    categoryPendingIdsRef.current.add(id)
+    setCategoryPendingIds(new Set(categoryPendingIdsRef.current))
 
     try {
       setOperationError('')
@@ -146,11 +171,19 @@ const BrainInbox = () => {
       if (latestCategoryRequestRef.current.get(id) !== requestId) return
       console.error('Error updating category:', error)
       setOperationError('We couldn’t update that category. The inbox item has not been removed.')
+    } finally {
+      categoryPendingIdsRef.current.delete(id)
+      setCategoryPendingIds(new Set(categoryPendingIdsRef.current))
     }
   }
 
   const handleConvertToTask = async (item) => {
-    if (deletingIdsRef.current.has(item.id) || convertingIdsRef.current.has(item.id)) return
+    if (
+      deletingIdsRef.current.has(item.id) ||
+      convertingIdsRef.current.has(item.id) ||
+      categoryPendingIdsRef.current.has(item.id) ||
+      (editPending && editingId === item.id)
+    ) return
 
     convertingIdsRef.current.add(item.id)
     setConvertingIds(new Set(convertingIdsRef.current))
@@ -411,7 +444,7 @@ const BrainInbox = () => {
                           <div className="flex gap-1">
                             <button
                               onClick={() => handleStartEdit(item)}
-                              disabled={editPending || deletingIds.has(item.id) || convertingIds.has(item.id)}
+                              disabled={editPending || deletingIds.has(item.id) || convertingIds.has(item.id) || categoryPendingIds.has(item.id)}
                               aria-label={`Edit ${item.content}`}
                               className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
@@ -419,7 +452,7 @@ const BrainInbox = () => {
                             </button>
                             <button
                               onClick={() => handleDeleteItem(item.id)}
-                              disabled={deletingIds.has(item.id) || convertingIds.has(item.id)}
+                              disabled={deletingIds.has(item.id) || convertingIds.has(item.id) || categoryPendingIds.has(item.id) || (editPending && editingId === item.id)}
                               aria-busy={deletingIds.has(item.id)}
                               aria-label={deletingIds.has(item.id) ? `Deleting ${item.content}` : `Delete ${item.content}`}
                               className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -517,12 +550,13 @@ const BrainInbox = () => {
                       className="flex flex-wrap gap-2"
                       role="group"
                       aria-label={`Choose category for ${item.content}`}
+                      aria-busy={categoryPendingIds.has(item.id)}
                     >
                       {categories.map(cat => (
                         <button
                           key={cat.value}
                           onClick={() => handleCategoryChange(item.id, cat.value)}
-                          disabled={deletingIds.has(item.id) || convertingIds.has(item.id)}
+                          disabled={deletingIds.has(item.id) || convertingIds.has(item.id) || categoryPendingIds.has(item.id) || (editPending && editingId === item.id)}
                           className={`
                             px-3 py-2 rounded-lg text-sm font-medium transition-all
                             bg-${cat.color}-100 text-${cat.color}-700 hover:bg-${cat.color}-200
@@ -534,6 +568,9 @@ const BrainInbox = () => {
                         </button>
                       ))}
                     </div>
+                    {categoryPendingIds.has(item.id) && (
+                      <p className="mt-2 text-xs text-slate-500" role="status">Saving category…</p>
+                    )}
                   </motion.div>
                 ))}
               </div>
@@ -577,15 +614,19 @@ const BrainInbox = () => {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.03 }}
                           className="bg-white rounded-lg border border-slate-200 p-4 ml-6"
+                          aria-busy={categoryPendingIds.has(item.id)}
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div className="flex-1">
                               <p className="text-slate-900">{item.content}</p>
+                              {categoryPendingIds.has(item.id) && (
+                                <p className="mt-1 text-xs text-slate-500" role="status">Saving category…</p>
+                              )}
                             </div>
                             <div className="flex gap-1">
                               <button
                                 onClick={() => handleConvertToTask(item)}
-                                disabled={deletingIds.has(item.id) || convertingIds.has(item.id)}
+                                disabled={deletingIds.has(item.id) || convertingIds.has(item.id) || categoryPendingIds.has(item.id) || (editPending && editingId === item.id)}
                                 aria-busy={convertingIds.has(item.id)}
                                 aria-label={convertingIds.has(item.id) ? `Converting ${item.content} to task` : `Convert ${item.content} to task`}
                                 className="px-3 py-1 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -596,15 +637,16 @@ const BrainInbox = () => {
                               </button>
                               <button
                                 onClick={() => handleCategoryChange(item.id, null)}
-                                disabled={deletingIds.has(item.id) || convertingIds.has(item.id)}
+                                disabled={deletingIds.has(item.id) || convertingIds.has(item.id) || categoryPendingIds.has(item.id) || (editPending && editingId === item.id)}
+                                aria-busy={categoryPendingIds.has(item.id)}
                                 className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                aria-label={`Remove category from ${item.content}`}
+                                aria-label={categoryPendingIds.has(item.id) ? `Removing category from ${item.content}` : `Remove category from ${item.content}`}
                               >
                                 <SafeIcon icon={FiTag} aria-hidden="true" className="w-4 h-4" />
                               </button>
                               <button
                                 onClick={() => handleDeleteItem(item.id)}
-                                disabled={deletingIds.has(item.id) || convertingIds.has(item.id)}
+                                disabled={deletingIds.has(item.id) || convertingIds.has(item.id) || categoryPendingIds.has(item.id) || (editPending && editingId === item.id)}
                                 aria-busy={deletingIds.has(item.id)}
                                 className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 aria-label={deletingIds.has(item.id) ? `Deleting ${item.content}` : `Delete ${item.content}`}
