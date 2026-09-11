@@ -29,19 +29,26 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
     e.preventDefault()
     if (saving) return
 
+    const submittedRoutine = {
+      ...formData,
+      steps: steps.map((step) => ({ ...step }))
+    }
+
     setSaving(true)
     try {
-      await onSave({ ...formData, steps })
+      await onSave(submittedRoutine)
     } finally {
       setSaving(false)
     }
   }
 
   const handleChange = (field, value) => {
+    if (saving) return
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
   const handleStepChange = (index, field, value) => {
+    if (saving) return
     setSteps(prev => prev.map((step, i) =>
       i === index ? { ...step, [field]: value, order_index: i } : step
     ))
@@ -104,7 +111,8 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                disabled={saving}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                 required
               />
             </div>
@@ -117,8 +125,9 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
                 id="routine-description"
                 value={formData.description}
                 onChange={(e) => handleChange('description', e.target.value)}
+                disabled={saving}
                 rows={2}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
@@ -130,7 +139,8 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
                 id="routine-repeat-pattern"
                 value={formData.repeat_pattern}
                 onChange={(e) => handleChange('repeat_pattern', e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                disabled={saving}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value="daily">Daily</option>
                 <option value="weekdays">Weekdays</option>
@@ -144,7 +154,8 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
                 id="is_active"
                 checked={formData.is_active}
                 onChange={(e) => handleChange('is_active', e.target.checked)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
+                disabled={saving}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded disabled:cursor-not-allowed disabled:opacity-50"
               />
               <label htmlFor="is_active" className="ml-2 text-sm text-slate-700">
                 Active routine
@@ -178,7 +189,8 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
                     placeholder="Step name"
                     value={step.name}
                     onChange={(e) => handleStepChange(index, 'name', e.target.value)}
-                    className="flex-1 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    disabled={saving}
+                    className="flex-1 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                   />
 
                   <input
@@ -187,8 +199,9 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
                     placeholder="Minutes"
                     value={step.duration_minutes}
                     onChange={(e) => handleStepChange(index, 'duration_minutes', parseInt(e.target.value))}
+                    disabled={saving}
                     min="1"
-                    className="w-20 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-20 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                   />
 
                   {steps.length > 1 && (
