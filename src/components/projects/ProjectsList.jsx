@@ -29,6 +29,7 @@ const ProjectsList = () => {
   const [hasLoaded, setHasLoaded] = useState(false)
   const [loadError, setLoadError] = useState(null)
   const [operationError, setOperationError] = useState(null)
+  const [pendingAction, setPendingAction] = useState(null)
   const [quickCaptureProjectId, setQuickCaptureProjectId] = useState(null)
   const [viewMode, setViewMode] = useState('grid')
   const [selectedProject, setSelectedProject] = useState(null)
@@ -39,6 +40,7 @@ const ProjectsList = () => {
   const latestProjectsRequestRef = useRef(0)
 
   getModePreferences(currentMode.id)
+  const mutationPending = Boolean(pendingAction)
 
   const loadProjects = useCallback(async () => {
     const requestId = latestProjectsRequestRef.current + 1
@@ -80,7 +82,10 @@ const ProjectsList = () => {
   }, [loadProjects])
 
   const handleQuickCapture = async (items) => {
+    if (pendingAction) return { savedCount: 0, remainingItems: items }
+
     setOperationError(null)
+    setPendingAction('quick-capture')
     let projectId = projects.find((project) => project.title === '📥 Quick Capture')?.id || quickCaptureProjectId
     let savedCount = 0
 
@@ -121,6 +126,8 @@ const ProjectsList = () => {
       }
 
       return { savedCount, remainingItems }
+    } finally {
+      setPendingAction(null)
     }
 
     setShowQuickCapture(false)
@@ -142,7 +149,10 @@ const ProjectsList = () => {
   }
 
   const handleCreateProject = async (projectData) => {
+    if (pendingAction) return
+
     setOperationError(null)
+    setPendingAction('create')
     try {
       await projectService.createProject({
         ...projectData,
@@ -157,11 +167,16 @@ const ProjectsList = () => {
     } catch (error) {
       console.error('Error creating project:', error)
       setOperationError('We couldn’t create that project. The project form is still open and your entries have not been discarded.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
   const handleUpdateProject = async (projectData) => {
+    if (pendingAction || !editingProject) return
+
     setOperationError(null)
+    setPendingAction(`update:${editingProject.id}`)
     try {
       await projectService.updateProject(editingProject.id, projectData)
       setShowForm(false)
@@ -173,13 +188,17 @@ const ProjectsList = () => {
     } catch (error) {
       console.error('Error updating project:', error)
       setOperationError('We couldn’t save those project changes. The project form is still open so you can try again.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
   const handleDeleteProject = async (projectId) => {
+    if (pendingAction) return
     if (!window.confirm('Are you sure you want to delete this project? All tasks and subtasks will be deleted.')) return
 
     setOperationError(null)
+    setPendingAction(`delete:${projectId}`)
     try {
       await projectService.deleteProject(projectId)
       const refreshed = await loadProjects()
@@ -189,11 +208,16 @@ const ProjectsList = () => {
     } catch (error) {
       console.error('Error deleting project:', error)
       setOperationError('We couldn’t delete that project. It has not been removed from your project list.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
   const handleArchiveProject = async (projectId) => {
+    if (pendingAction) return
+
     setOperationError(null)
+    setPendingAction(`archive:${projectId}`)
     try {
       await projectService.updateProject(projectId, { status: 'archived' })
       const refreshed = await loadProjects()
@@ -203,19 +227,23 @@ const ProjectsList = () => {
     } catch (error) {
       console.error('Error archiving project:', error)
       setOperationError('We couldn’t archive that project. It is still active and has not been removed from this list.')
+    } finally {
+      setPendingAction(null)
     }
   }
 
   const handleEditProject = (project) => {
+    if (pendingAction) return
     setOperationError(null)
     setEditingProject(project)
     setShowForm(true)
   }
 
   const handleApplyTemplate = async (template, type) => {
-    if (type !== 'project') return
+    if (type !== 'project' || pendingAction) return
 
     setOperationError(null)
+    setPendingAction('template')
     let newProject = null
     let createdTasks = 0
     let createdSubtasks = 0
@@ -280,6 +308,8 @@ const ProjectsList = () => {
         `The project was created, but the template was only partly applied: ${createdTasks} of ${totalTasks} tasks and ${createdSubtasks} of ${totalSubtasks} subtasks were saved. Do not apply the template again because that can duplicate the saved items. Open the project and finish the missing steps manually.`
       )
       return
+    } finally {
+      setPendingAction(null)
     }
 
     setShowTemplates(false)
@@ -336,10 +366,15 @@ const ProjectsList = () => {
   }
 
   return (
-    <div className="p-6 space-y-6" aria-busy={loading}>
+    <div className="p-6 space-y-6" aria-busy={loading || mutationPending}>
       {loading && (
         <p className="sr-only" role="status" aria-live="polite">
           Refreshing projects...
+        </p>
+      )}
+      {mutationPending && (
+        <p className="sr-only" role="status" aria-live="polite">
+          Updating projects...
         </p>
       )}
 
@@ -365,13 +400,13 @@ const ProjectsList = () => {
           <p className="text-slate-600 mt-1">Organize your goals into manageable steps</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => { setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
+          <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50">
             <SafeIcon icon={FiZap} className="w-4 h-4" /> Quick Capture
           </button>
-          <button onClick={() => { setOperationError(null); setShowTemplates(true) }} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2">
+          <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowTemplates(true) }} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50">
             <SafeIcon icon={FiBookOpen} className="w-4 h-4" /> Templates
           </button>
-          <button onClick={() => { setOperationError(null); setShowForm(true) }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
+          <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowForm(true) }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50">
             <SafeIcon icon={FiPlus} className="w-4 h-4" /> New Project
           </button>
         </div>
@@ -393,7 +428,7 @@ const ProjectsList = () => {
             <div className="flex-1">
               <h3 className="text-lg font-bold text-green-900 mb-2">🧠 Brain Dump First, Organize Later!</h3>
               <p className="text-green-800 mb-4">Feeling overwhelmed? Use <strong>Quick Capture</strong> to dump all your tasks out of your head first. Don't worry about organizing - just get everything written down!</p>
-              <button onClick={() => { setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"><SafeIcon icon={FiZap} className="w-4 h-4" /> Start Brain Dump</button>
+              <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"><SafeIcon icon={FiZap} className="w-4 h-4" /> Start Brain Dump</button>
             </div>
           </div>
         </motion.div>
@@ -425,7 +460,7 @@ const ProjectsList = () => {
         <div role="list" aria-label="Projects" className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-3'}>
           {projects.map((project, index) => (
             <motion.div role="listitem" key={project.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}>
-              <ProjectCard project={project} stats={projectStats[project.id]} onClick={() => setSelectedProject(project)} onEdit={() => handleEditProject(project)} onDelete={() => handleDeleteProject(project.id)} onArchive={() => handleArchiveProject(project.id)} />
+              <ProjectCard project={project} stats={projectStats[project.id]} onClick={() => setSelectedProject(project)} onEdit={() => handleEditProject(project)} onDelete={() => handleDeleteProject(project.id)} onArchive={() => handleArchiveProject(project.id)} pending={mutationPending} />
             </motion.div>
           ))}
         </div>
@@ -435,18 +470,18 @@ const ProjectsList = () => {
           <h3 className="text-lg font-medium text-slate-900 mb-2">{currentMode.id !== 'all' ? `No ${currentMode.label.toLowerCase()} projects yet` : 'No projects yet'}</h3>
           <p className="text-slate-600 mb-4">Break down overwhelming tasks into manageable projects</p>
           <div className="flex gap-3 justify-center">
-            <button onClick={() => { setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"><SafeIcon icon={FiZap} className="w-4 h-4" /> Quick Brain Dump</button>
-            <button onClick={() => { setOperationError(null); setShowForm(true) }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Create Project</button>
-            <button onClick={() => { setOperationError(null); setShowTemplates(true) }} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">Browse Templates</button>
+            <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"><SafeIcon icon={FiZap} className="w-4 h-4" /> Quick Brain Dump</button>
+            <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowForm(true) }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50">Create Project</button>
+            <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowTemplates(true) }} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50">Browse Templates</button>
           </div>
         </div>
       )}
 
       <AnimatePresence>
-        {showQuickCapture && <QuickCaptureModal onSave={handleQuickCapture} onCancel={() => setShowQuickCapture(false)} />}
-        {showForm && <ProjectForm project={editingProject} onSave={editingProject ? handleUpdateProject : handleCreateProject} onCancel={() => { setShowForm(false); setEditingProject(null) }} />}
+        {showQuickCapture && <QuickCaptureModal onSave={handleQuickCapture} onCancel={() => { if (!mutationPending) setShowQuickCapture(false) }} />}
+        {showForm && <ProjectForm project={editingProject} onSave={editingProject ? handleUpdateProject : handleCreateProject} onCancel={() => { if (!mutationPending) { setShowForm(false); setEditingProject(null) } }} />}
         {selectedProject && <ProjectDetailView project={selectedProject} onClose={() => setSelectedProject(null)} onUpdate={loadProjects} />}
-        {showTemplates && <TemplateLibrary onApplyTemplate={handleApplyTemplate} onClose={() => setShowTemplates(false)} />}
+        {showTemplates && <TemplateLibrary onApplyTemplate={handleApplyTemplate} onClose={() => { if (!mutationPending) setShowTemplates(false) }} />}
       </AnimatePresence>
     </div>
   )
