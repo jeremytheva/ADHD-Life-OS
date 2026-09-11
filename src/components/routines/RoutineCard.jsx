@@ -131,7 +131,8 @@ const RoutineCard = ({ routine, onEdit, onDelete, onStart, onViewStats, pending 
         <button
           type="button"
           onClick={onStart}
-          className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+          disabled={pending}
+          className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <SafeIcon icon={FiPlay} className="w-4 h-4" aria-hidden="true" />
           <span>Start</span>
