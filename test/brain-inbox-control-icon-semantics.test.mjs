@@ -34,7 +34,7 @@ test('Brain Inbox hides decorative control icons while retaining control text an
   )
   assert.match(
     source,
-    /aria-label=\{`Remove category from \$\{item\.content\}`\}[\s\S]{0,180}<SafeIcon icon=\{FiTag\} aria-hidden="true"/
+    /aria-label=\{categoryPendingIds\.has\(item\.id\) \? `Removing category from \$\{item\.content\}` : `Remove category from \$\{item\.content\}`\}[\s\S]{0,180}<SafeIcon icon=\{FiTag\} aria-hidden="true"/
   )
 
   const hiddenTrashIcons = source.match(/<SafeIcon icon=\{FiTrash2\} aria-hidden="true"/g) ?? []
