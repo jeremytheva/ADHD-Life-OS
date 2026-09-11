@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete PR #351, which serializes Projects parent-level mutations and aligns mutation controls with the pending-write contract.
+  objective: Complete PR #351 lifecycle from its post-merge-safe handoff, then re-enter fresh main and select the next provider-independent Stage 3 interaction-integrity outcome from current evidence.
   issue: null
-  pr: 351
-  branch: fix/projects-pending-mutation-integrity
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the exact repaired PR #351 head.
-  - Repair any remaining in-scope validation regression on the same PR and revalidate the new exact head.
-  - Audit submitted reviews and inline review threads after exact-head validation.
-  - Mark implementation complete only when all acceptance criteria and exact-head evidence are clean.
-  - Before lifecycle completion, write a post-merge-safe STATUS handoff that returns continuation to fresh main.
+  - Run canonical Application validation on this exact post-merge-safe PR #351 head.
+  - Re-audit submitted reviews and inline review threads after exact-head validation.
+  - If evidence remains clean, add lifecycle:implementation-complete and allow the repository lifecycle controller/finalizer to complete PR #351.
+  - Confirm merge on main, then inspect fresh authoritative state before selecting the next delivery.
+  - Reuse or repair any active work that appears before creating competing work.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 956 reached the Node suite on PR #351 with 413/414 tests passing. All new Projects pending-mutation tests passed. The sole failure was a stale projects-loading-status assertion expecting aria-busy={loading}; it was repaired on the same PR to recognize the combined loading || mutationPending contract. Exact-head revalidation is pending.
-last_verified_commit: 8bf85a3631473f5c2cc6c4fcfc69934b681dea62
-last_updated: 2026-09-12T03:03:00+10:00
+validation_basis: Application validation run 958 passed canonical npm run platform:validate on implementation head 4630ebebad73fcf6aa2a88aa6920d8e0ba3eaf23. Submitted reviews and inline review threads were clean after run 958, and the branch was current with main. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires one final canonical validation before lifecycle completion.
+last_verified_commit: 4630ebebad73fcf6aa2a88aa6920d8e0ba3eaf23
+last_updated: 2026-09-12T03:08:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +45,20 @@ last_updated: 2026-09-12T03:03:00+10:00
 
 ## Current objective
 
-PR #351 is the sole active delivery. Fresh-main inspection after PR #350 merged confirmed a broader Projects interaction-integrity mismatch: create/update/delete/archive/template/Quick Capture writes all affect the same project graph but had no shared parent-level ownership, so a second mutation could begin while another write was unresolved.
+PR #351 has completed implementation-head validation for Projects parent-level mutation ownership. Application validation run 958 passed canonical `npm run platform:validate` on implementation head `4630ebebad73fcf6aa2a88aa6920d8e0ba3eaf23`, submitted reviews plus inline review threads were clean afterward, and the branch was current with `main`.
 
-PR #351 applies the established single-owner mutation pattern already used in Tasks. Projects now tracks one `pendingAction`, guards every parent mutation handler, disables mutation launchers and ProjectCard action menus while persistence is unresolved, and exposes mutation activity through `aria-busy` plus polite live feedback. Read-only project detail navigation and grid/list view switching remain available. Existing latest-request sequencing continues to own overlapping reads, and ProjectForm retains its local save lock from PR #350.
+The delivery gives the Projects parent UI one shared owner for unresolved project writes across create/update/delete/archive/template application and Quick Capture persistence. Mutation launchers and ProjectCard action menus are locked while a write is unresolved, accessible busy/live feedback is exposed, and read-only project detail navigation plus grid/list switching remain available. Existing latest-request sequencing continues to own overlapping reads, ProjectForm retains its local save lock from PR #350, and partial Quick Capture/template recovery semantics remain intact.
 
-Application validation run 956 reached 413/414 passing Node tests. The new pending-mutation coverage passed; the only failure was a stale loading-state assertion that expected the pre-change `aria-busy={loading}` contract. That assertion has been repaired to recognize `loading || mutationPending`, so the repaired exact head now requires canonical revalidation.
+This document is intentionally post-merge-safe. Once PR #351 completes lifecycle, autonomous continuation must begin from fresh `main`, not treat the merged PR branch as active work. This STATUS-only handoff commit itself requires final exact-head canonical validation before lifecycle completion.
 
-This is a frontend interaction-integrity change only. It does not alter project service/provider routes, methods, schemas, ownership, persisted data, authentication behaviour, or generic durable execution-session behaviour.
+The change is frontend interaction integrity only. It changes no project service/provider route, method, schema, ownership rule, persisted data shape, authentication behaviour, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head canonical revalidation for Projects mutation ownership |
-| Gate state | Implementation and focused deterministic coverage committed; run 956 stale-test failure repaired; exact-head evidence pending |
+| Current gate | INTEGRATION — final exact-head validation and lifecycle completion for PR #351 |
+| Gate state | Implementation head validated by run 958; post-merge-safe STATUS committed; final exact-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -67,12 +67,14 @@ This is a frontend interaction-integrity change only. It does not alter project 
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #350 — Project form pending-save integrity; merged at `8bf85a3631473f5c2cc6c4fcfc69934b681dea62` |
-| Active delivery | PR #351 — Projects pending-mutation integrity |
-| Active branch | `fix/projects-pending-mutation-integrity` |
+| Delivery awaiting final lifecycle completion | PR #351 — Projects pending-mutation integrity |
+| Delivery branch | `fix/projects-pending-mutation-integrity` |
 | Implemented change | Parent-level serialization across project create/update/delete/archive/template/Quick Capture plus mutation-aware ProjectCard controls and busy/live feedback |
 | Deterministic coverage | `test/projects-pending-mutation-integrity.test.mjs` plus synchronized Projects loading-state assertion |
-| Canonical validation | Run 956 FAIL only on one stale assertion; repaired exact-head validation pending |
-| Review/thread audit | PENDING until exact-head validation completes |
+| Canonical implementation-head validation | PASS — Application validation run 958 on `4630ebebad73fcf6aa2a88aa6920d8e0ba3eaf23` |
+| Review/thread audit | CLEAN after run 958; recheck after final exact-head validation |
+| Base freshness | CURRENT — implementation head was 0 commits behind `main` before this STATUS-only handoff |
+| Final exact-head validation | PENDING on this post-merge-safe STATUS head |
 | Provider/data impact | None; logical persisted models unchanged; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -81,10 +83,10 @@ This is a frontend interaction-integrity change only. It does not alter project 
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #351 is the sole active delivery and its run 956 stale-test regression has been repaired. |
-| What is already happening? | Projects now exposes and enforces one parent mutation owner across its write paths while keeping read-only interactions available. |
-| What has been validated? | Run 956 passed governance/lint/typecheck and 413/414 Node tests; all new coverage passed. The only stale assertion has been repaired and requires exact-head revalidation. |
-| What is next? | Revalidate PR #351 exact head, repair any remaining in-scope regression, audit reviews/threads, and advance lifecycle only from clean evidence. |
+| Where am I? | Stage 3. PR #351 implementation is validated and only final exact-head lifecycle evidence remains. After merge, start from fresh `main`. |
+| What is already happening? | Projects now enforces one parent-level mutation owner across its write paths while keeping read-only interactions available. |
+| What has been validated? | Run 958 passed canonical platform validation on the implementation head; review/thread evidence was clean and the branch was current with main. |
+| What is next? | Validate this post-merge-safe exact head, re-audit reviews/threads, complete lifecycle if still clean, then inspect fresh main for the next material provider-independent Stage 3 outcome. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -94,13 +96,12 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact repaired PR #351 head;
-2. repair any remaining in-scope regression on the same PR and revalidate;
-3. audit submitted reviews and inline review threads;
-4. add implementation-complete evidence only when all acceptance criteria and exact-head evidence are clean;
-5. write a post-merge-safe STATUS handoff and complete repository lifecycle only while the final head remains current/conflict-free;
-6. after merge, re-enter fresh `main` and inspect the next material provider-independent Stage 3 frontend accessibility or interaction-integrity outcome;
-7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on this exact post-merge-safe PR #351 head;
+2. re-audit submitted reviews and inline review threads;
+3. if all acceptance evidence remains clean, add the repository lifecycle implementation-complete marker and allow the readiness controller/merge finalizer to complete the PR lifecycle;
+4. confirm the merge on `main`;
+5. re-enter fresh `main`, inspect authoritative state/current GitHub work, and select the next material provider-independent Stage 3 accessibility or interaction-integrity outcome;
+6. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
