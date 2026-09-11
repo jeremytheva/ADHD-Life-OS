@@ -18,6 +18,7 @@ const BrainInbox = () => {
   const [capturePending, setCapturePending] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [editText, setEditText] = useState('')
+  const [editPending, setEditPending] = useState(false)
   const inputRef = useRef(null)
   const latestLoadRequestRef = useRef(0)
   const latestCategoryRequestRef = useRef(new Map())
@@ -97,12 +98,14 @@ const BrainInbox = () => {
   }
 
   const handleSaveEdit = async (id) => {
-    if (!editText.trim()) return
+    const submittedEdit = editText.trim()
+    if (!submittedEdit || editPending) return
 
+    setEditPending(true)
     try {
       setOperationError('')
       const updated = await inboxService.updateInboxItem(id, {
-        content: editText.trim()
+        content: submittedEdit
       })
       setItems(prev => prev.map(item => item.id === id ? updated : item))
       setEditingId(null)
@@ -110,6 +113,8 @@ const BrainInbox = () => {
     } catch (error) {
       console.error('Error updating item:', error)
       setOperationError('We couldn’t save that edit. Your edited text is still here so you can try again.')
+    } finally {
+      setEditPending(false)
     }
   }
 
@@ -329,28 +334,33 @@ const BrainInbox = () => {
                       </div>
 
                       {editingId === item.id ? (
-                        <div className="flex-1 flex gap-2">
+                        <div className="flex-1 flex gap-2" aria-busy={editPending}>
                           <input
                             type="text"
                             value={editText}
                             onChange={(e) => setEditText(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit(item.id)}
+                            disabled={editPending}
                             aria-label={`Edit inbox item: ${item.content}`}
-                            className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:bg-slate-50 disabled:text-slate-500"
                             autoFocus
                           />
                           <button
+                            type="button"
                             onClick={() => handleSaveEdit(item.id)}
-                            className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                            disabled={editPending || !editText.trim()}
+                            className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            Save
+                            {editPending ? 'Saving…' : 'Save'}
                           </button>
                           <button
+                            type="button"
+                            disabled={editPending}
                             onClick={() => {
                               setEditingId(null)
                               setEditText('')
                             }}
-                            className="px-3 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300"
+                            className="px-3 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             Cancel
                           </button>
