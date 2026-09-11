@@ -28,16 +28,25 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
     goal: project?.goal || '',
     target_date: project?.target_date || ''
   })
+  const [isSaving, setIsSaving] = useState(false)
   const titleInputRef = useRef(null)
-  const dialogRef = useModalDialog({ onEscape: onCancel, initialFocusRef: titleInputRef })
+  const dialogRef = useModalDialog({ onEscape: isSaving ? null : onCancel, initialFocusRef: titleInputRef })
 
   const handleChange = (field, value) => {
+    if (isSaving) return
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onSave(formData)
+    if (isSaving) return
+
+    setIsSaving(true)
+    try {
+      await onSave(formData)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const dialogTitle = project ? 'Edit Project' : 'New Project'
@@ -49,6 +58,7 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
         role="dialog"
         aria-modal="true"
         aria-labelledby="project-form-title"
+        aria-busy={isSaving ? 'true' : 'false'}
         tabIndex={-1}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -62,7 +72,8 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
             type="button"
             onClick={onCancel}
             aria-label="Close project form"
-            className="p-2 text-slate-400 hover:text-slate-600 transition-colors"
+            disabled={isSaving}
+            className="p-2 text-slate-400 hover:text-slate-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiX} className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -80,7 +91,8 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
               value={formData.title}
               onChange={(e) => handleChange('title', e.target.value)}
               placeholder="e.g., Organize Home"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              disabled={isSaving}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed disabled:opacity-50"
               required
             />
           </div>
@@ -95,7 +107,8 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
               onChange={(e) => handleChange('description', e.target.value)}
               rows={3}
               placeholder="What is this project about?"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              disabled={isSaving}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
 
@@ -109,7 +122,8 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
               onChange={(e) => handleChange('goal', e.target.value)}
               rows={2}
               placeholder="What do you want to achieve?"
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              disabled={isSaving}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
 
@@ -122,11 +136,12 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
               type="date"
               value={formData.target_date}
               onChange={(e) => handleChange('target_date', e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              disabled={isSaving}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:cursor-not-allowed disabled:opacity-50"
             />
           </div>
 
-          <fieldset>
+          <fieldset disabled={isSaving}>
             <legend className="block text-sm font-medium text-slate-700 mb-3">
               Choose Color
             </legend>
@@ -137,7 +152,7 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
                   type="button"
                   onClick={() => handleChange('color', color.value)}
                   aria-pressed={formData.color === color.value}
-                  className={`p-3 rounded-lg border-2 transition-all ${
+                  className={`p-3 rounded-lg border-2 transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
                     formData.color === color.value
                       ? 'border-slate-900 ring-2 ring-slate-300'
                       : 'border-slate-200 hover:border-slate-300'
@@ -152,7 +167,7 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
             </div>
           </fieldset>
 
-          <fieldset>
+          <fieldset disabled={isSaving}>
             <legend className="block text-sm font-medium text-slate-700 mb-3">
               Choose Icon
             </legend>
@@ -164,7 +179,7 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
                   onClick={() => handleChange('icon', icon)}
                   aria-label={`Choose ${icon} project icon`}
                   aria-pressed={formData.icon === icon}
-                  className={`p-3 rounded-lg border-2 text-2xl transition-all ${
+                  className={`p-3 rounded-lg border-2 text-2xl transition-all disabled:cursor-not-allowed disabled:opacity-50 ${
                     formData.icon === icon
                       ? 'border-purple-500 bg-purple-50'
                       : 'border-slate-200 hover:border-purple-300'
@@ -180,18 +195,24 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+              disabled={isSaving}
+              className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+              disabled={isSaving}
+              aria-busy={isSaving ? 'true' : 'false'}
+              className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <SafeIcon icon={FiSave} className="w-4 h-4" aria-hidden="true" />
-              {project ? 'Update' : 'Create'} Project
+              {isSaving ? 'Saving…' : `${project ? 'Update' : 'Create'} Project`}
             </button>
           </div>
+          <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {isSaving ? `Saving ${project ? 'project changes' : 'project'}...` : ''}
+          </span>
         </form>
       </motion.div>
     </div>
