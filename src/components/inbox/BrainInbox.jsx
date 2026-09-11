@@ -15,6 +15,7 @@ const BrainInbox = () => {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(null)
   const [operationError, setOperationError] = useState('')
+  const [capturePending, setCapturePending] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [editText, setEditText] = useState('')
   const inputRef = useRef(null)
@@ -54,12 +55,14 @@ const BrainInbox = () => {
 
   const handleAddItem = async (e) => {
     e.preventDefault()
-    if (!currentInput.trim()) return
+    const submittedContent = currentInput.trim()
+    if (!submittedContent || capturePending) return
 
+    setCapturePending(true)
     try {
       setOperationError('')
       const newItem = await inboxService.createInboxItem({
-        content: currentInput.trim(),
+        content: submittedContent,
         status: 'captured'
       })
       setItems(prev => [newItem, ...prev])
@@ -71,6 +74,8 @@ const BrainInbox = () => {
     } catch (error) {
       console.error('Error adding item:', error)
       setOperationError('We couldn’t save that thought. It is still in the input box so you can try again.')
+    } finally {
+      setCapturePending(false)
     }
   }
 
@@ -260,29 +265,34 @@ const BrainInbox = () => {
             </p>
           </div>
 
-          <form onSubmit={handleAddItem} className="bg-white rounded-lg border-2 border-purple-300 p-4 shadow-md">
+          <form
+            onSubmit={handleAddItem}
+            aria-busy={capturePending}
+            className="bg-white rounded-lg border-2 border-purple-300 p-4 shadow-md"
+          >
             <div className="flex gap-3">
               <input
                 ref={inputRef}
                 type="text"
                 value={currentInput}
                 onChange={(e) => setCurrentInput(e.target.value)}
+                disabled={capturePending}
                 aria-label="Capture a thought"
                 placeholder="Type anything... tasks, ideas, reminders, worries..."
-                className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-lg"
+                className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-lg disabled:bg-slate-50 disabled:text-slate-500"
                 autoFocus
               />
               <button
                 type="submit"
-                disabled={!currentInput.trim()}
+                disabled={capturePending || !currentInput.trim()}
                 className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <SafeIcon icon={FiPlus} aria-hidden="true" className="w-5 h-5" />
-                <span className="font-medium">Add</span>
+                <span className="font-medium">{capturePending ? 'Saving…' : 'Add'}</span>
               </button>
             </div>
             <p className="text-xs text-slate-500 mt-2">
-              💡 Pro tip: Press Enter to quickly add multiple items
+              {capturePending ? 'Saving this thought before the next capture…' : '💡 Pro tip: Press Enter to quickly add multiple items'}
             </p>
           </form>
 
@@ -514,7 +524,7 @@ const BrainInbox = () => {
                       className="text-md font-medium text-slate-700 flex items-center gap-2"
                     >
                       <span>{cat.icon}</span>
-                      <span>{cat.label} ({catItems.length})</span>
+                      <span>{cat.label} ({catItems.length} items)</span>
                     </h4>
 
                     <div
