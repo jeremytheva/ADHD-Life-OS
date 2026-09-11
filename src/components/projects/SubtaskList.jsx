@@ -3,14 +3,16 @@ import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
 import OperationErrorState from '../../common/OperationErrorState'
-import { projectService } from '../../services/projectService'
 
 const { FiCheck, FiPlus, FiTrash2, FiClock } = FiIcons
 
 const SubtaskList = ({
   taskId,
   subtasks,
-  onCompleteSubtask,
+  pending = false,
+  onAddSubtask,
+  onDeleteSubtask,
+  onToggleSubtask,
   showInput,
   onShowInput,
   onHideInput
@@ -18,52 +20,43 @@ const SubtaskList = ({
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('')
   const [adding, setAdding] = useState(false)
   const [operationError, setOperationError] = useState('')
+  const mutationPending = pending || adding
 
   const handleAddSubtask = async () => {
-    if (!newSubtaskTitle.trim()) return
+    if (!newSubtaskTitle.trim() || mutationPending || !onAddSubtask) return
 
     setOperationError('')
+    setAdding(true)
     try {
-      setAdding(true)
-      await projectService.createSubtask(taskId, {
-        title: newSubtaskTitle.trim()
-      })
+      const saved = await onAddSubtask(taskId, newSubtaskTitle.trim())
+      if (!saved) {
+        setOperationError('We couldn’t confirm that subtask was added. Your subtask title is still here so you can review the list and try again.')
+        return
+      }
+
       setNewSubtaskTitle('')
       if (onHideInput) onHideInput()
-      // Parent will reload
-    } catch (error) {
-      console.error('Error adding subtask:', error)
-      setOperationError('We couldn’t confirm that subtask was added. Your subtask title is still here so you can review the list and try again.')
     } finally {
       setAdding(false)
     }
   }
 
   const handleDeleteSubtask = async (subtaskId) => {
+    if (mutationPending || !onDeleteSubtask) return
+
     setOperationError('')
-    try {
-      await projectService.deleteSubtask(subtaskId)
-      // Parent will reload
-    } catch (error) {
-      console.error('Error deleting subtask:', error)
+    const deleted = await onDeleteSubtask(subtaskId)
+    if (!deleted) {
       setOperationError('We couldn’t confirm that subtask was deleted. It is still shown in the list so you can review the current state before trying again.')
     }
   }
 
   const handleToggleSubtask = async (subtask) => {
+    if (mutationPending || !onToggleSubtask) return
+
     setOperationError('')
-    try {
-      if (subtask.is_completed) {
-        await projectService.uncompleteSubtask(subtask.id)
-      } else {
-        await projectService.completeSubtask(subtask.id)
-        if (onCompleteSubtask) {
-          onCompleteSubtask(subtask.id)
-        }
-      }
-      // Parent will reload
-    } catch (error) {
-      console.error('Error toggling subtask:', error)
+    const updated = await onToggleSubtask(subtask)
+    if (!updated) {
       setOperationError('We couldn’t confirm that subtask’s completion change. Its previous state is still shown here so you can review it and try again.')
     }
   }
@@ -73,6 +66,7 @@ const SubtaskList = ({
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: 'auto' }}
       exit={{ opacity: 0, height: 0 }}
+      aria-busy={mutationPending}
       className="border-t border-slate-200 bg-slate-50 p-4"
     >
       {operationError && (
@@ -99,9 +93,10 @@ const SubtaskList = ({
               <button
                 type="button"
                 onClick={() => handleToggleSubtask(subtask)}
+                disabled={mutationPending}
                 aria-label={`${subtask.is_completed ? 'Mark incomplete' : 'Mark complete'}: ${subtask.title}`}
                 aria-pressed={subtask.is_completed}
-                className={`flex-shrink-0 w-5 h-5 rounded flex items-center justify-center transition-colors ${
+                className={`flex-shrink-0 w-5 h-5 rounded flex items-center justify-center transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                   subtask.is_completed
                     ? 'bg-green-500'
                     : 'bg-slate-200 hover:bg-purple-200'
@@ -133,8 +128,9 @@ const SubtaskList = ({
               <button
                 type="button"
                 onClick={() => handleDeleteSubtask(subtask.id)}
+                disabled={mutationPending}
                 aria-label={`Delete subtask: ${subtask.title}`}
-                className="p-1 text-slate-400 hover:text-red-600 transition-colors"
+                className="p-1 text-slate-400 hover:text-red-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <SafeIcon icon={FiTrash2} className="w-4 h-4" aria-hidden="true" />
               </button>
@@ -150,17 +146,17 @@ const SubtaskList = ({
             type="text"
             value={newSubtaskTitle}
             onChange={(e) => setNewSubtaskTitle(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAddSubtask()}
+            onKeyDown={(e) => e.key === 'Enter' && handleAddSubtask()}
             aria-label="New subtask title"
             placeholder="Enter subtask title..."
             className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
             autoFocus
-            disabled={adding}
+            disabled={mutationPending}
           />
           <button
             type="button"
             onClick={handleAddSubtask}
-            disabled={!newSubtaskTitle.trim() || adding}
+            disabled={!newSubtaskTitle.trim() || mutationPending}
             className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
           >
             <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
@@ -173,10 +169,11 @@ const SubtaskList = ({
       {!showInput && subtasks.length > 0 && (
         <button
           type="button"
+          disabled={mutationPending}
           onClick={() => {
             if (onShowInput) onShowInput()
           }}
-          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-purple-300 hover:text-purple-600 transition-colors flex items-center justify-center gap-2"
+          className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-purple-300 hover:text-purple-600 transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
           Add Another Subtask
