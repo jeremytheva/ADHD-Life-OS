@@ -11,8 +11,8 @@ current_work:
   pr: 356
   branch: fix/chore-detail-completion-ownership
 next_actions:
-  - Run canonical Application validation on the exact PR #356 head.
-  - Repair any in-scope validation or review findings on the same PR.
+  - Run canonical Application validation on the exact repaired PR #356 head.
+  - Repair any further in-scope validation or review findings on the same PR.
   - Audit submitted reviews, inline review threads, base freshness, and mergeability after exact-head validation.
   - When acceptance is fully evidenced, prepare a post-merge-safe STATUS handoff, revalidate that exact head, then add lifecycle:implementation-complete.
   - After merge, re-enter fresh main and select the next highest-priority provider-independent Stage 3 integrity target.
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #356 implements a provider-independent Chore Detail interaction-integrity repair on fresh main c0cb152fd630e4c03b1b269e26da90ab87f23986. Exact-head canonical validation is required after this durable state update.
+validation_basis: Application validation run 981 passed governance, lint, typecheck, and all new PR #356 completion-ownership regressions, then failed two stale pre-existing Chore Detail assertions that expected the previous closeLocked-only handler guard. Those assertions have been aligned with the stronger ref-backed ownership guard on this branch. Exact-head canonical validation is required again.
 last_verified_commit: c0cb152fd630e4c03b1b269e26da90ab87f23986
-last_updated: 2026-09-12T09:28:00+10:00
+last_updated: 2026-09-12T09:30:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +45,22 @@ last_updated: 2026-09-12T09:28:00+10:00
 
 ## Current objective
 
-PR #355 — Housework checklist Complete/Snooze mutation ownership — completed final exact-head Application validation run 979 and merged into `main` at `c0cb152fd630e4c03b1b269e26da90ab87f23986` after clean review/thread/freshness checks and lifecycle finalization.
+PR #355 — Housework checklist Complete/Snooze mutation ownership — completed final exact-head Application validation run 979 and merged into `main` at `c0cb152fd630e4c03b1b269e26da90ab87f23986`.
 
-Fresh-main inspection then identified the next provider-independent Housework integrity gap in `ChoreDetailView`. The accepted Housework deep-integrity decision requires completion and close controls to be serialized during persistence, but Chore Detail previously relied only on React `completing` state. A repeated completion event, close action, or checklist mutation could enter before that state had re-rendered and therefore overlap the unresolved completion write.
+Fresh-main inspection identified the next provider-independent Housework integrity gap in `ChoreDetailView`. The accepted Housework deep-integrity decision requires completion and close controls to be serialized during persistence, but Chore Detail previously relied only on React `completing` state. A repeated completion event, close action, or checklist mutation could enter before that state had re-rendered and overlap the unresolved completion write.
 
 Draft PR #356 — `fix: own chore detail completion persistence` — is the sole active delivery. It claims completion ownership synchronously with a ref before the first awaited `completeHouseworkTask` call; rejects duplicate completion; guards close and checklist changes against the same owner; retains ownership through confirmed-success celebration/automatic close; and releases ownership after a failed write so the preserved checklist can be retried safely.
 
-Deterministic regression coverage is added in `test/chore-detail-completion-pending-integrity.test.mjs`. The delivery changes no housework provider route, method, schema, recurrence rule, persisted data shape, authentication behaviour, execution policy, or generic durable execution-session contract.
+Application validation run 981 passed governance, lint, typecheck, and all three new `chore-detail-completion-pending-integrity` tests. Its only failures were two stale existing assertions in `chore-detail-step-group-semantics.test.mjs` and `core-mutation-feedback.test.mjs` that still expected `if (closeLocked) return` and the old direct Escape handler. Both have been updated to preserve their original completion/recovery contract while recognising the stronger synchronous ref-backed guard. No application behaviour was weakened to satisfy the stale tests.
+
+The delivery changes no housework provider route, method, schema, recurrence rule, persisted data shape, authentication behaviour, execution policy, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — exact-head validation for PR #356 |
-| Gate state | Implementation and deterministic regression committed; canonical validation required |
+| Gate state | Run 981 stale-test findings repaired; exact-head canonical validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -69,9 +71,9 @@ Deterministic regression coverage is added in `test/chore-detail-completion-pend
 | Latest repository delivery on main | PR #355 — Housework checklist mutation ownership; merged at `c0cb152fd630e4c03b1b269e26da90ab87f23986` |
 | Sole active delivery | PR #356 — Chore Detail synchronous completion ownership |
 | Delivery branch | `fix/chore-detail-completion-ownership` |
-| Implemented change | Synchronous completion owner before persistence; duplicate completion, close, and checklist changes guarded while write is unresolved |
-| Deterministic coverage | `test/chore-detail-completion-pending-integrity.test.mjs` |
-| Canonical validation | NOT_RUN on current exact head |
+| Implemented change | Synchronous completion owner before persistence; duplicate completion, close, and checklist changes guarded while the write is unresolved |
+| Deterministic coverage | `test/chore-detail-completion-pending-integrity.test.mjs`; two existing assertions aligned with the stronger guard |
+| Canonical validation | Run 981 reached Node tests: governance/lint/typecheck PASS, new PR tests PASS, two stale existing assertions repaired; exact-head rerun required |
 | Provider/data impact | None; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -80,10 +82,10 @@ Deterministic regression coverage is added in `test/chore-detail-completion-pend
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #356 is the sole active delivery and awaits exact-head canonical validation. |
-| What is already happening? | Chore Detail completion now claims synchronous persistence ownership and serializes same-dialog interactions against it. |
-| What has been validated? | PR #355 completed final validation and merged; PR #356 exact-head validation has not yet completed. |
-| What is next? | Run canonical validation, repair any in-scope finding on this branch, then complete lifecycle evidence. |
+| Where am I? | Stage 3. PR #356 is the sole active delivery and awaits exact-head validation after stale-test repairs. |
+| What is already happening? | Chore Detail completion claims synchronous persistence ownership and serializes same-dialog interactions against it. |
+| What has been validated? | Run 981 passed governance, lint, typecheck and all new PR #356 tests before stopping on two stale pre-existing assertions. |
+| What is next? | Re-run canonical validation, repair any further in-scope finding on this branch, then complete lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -93,8 +95,8 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact PR #356 head;
-2. repair any in-scope validation or review findings on the same PR;
+1. run canonical Application validation on the repaired exact PR #356 head;
+2. repair any further in-scope validation or review findings on the same PR;
 3. audit submitted reviews, inline review threads, base freshness and mergeability;
 4. prepare a post-merge-safe durable handoff once implementation-head evidence is clean;
 5. revalidate that exact handoff head and complete the repository lifecycle;
