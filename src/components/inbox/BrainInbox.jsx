@@ -524,7 +524,7 @@ const BrainInbox = () => {
                       className="text-md font-medium text-slate-700 flex items-center gap-2"
                     >
                       <span>{cat.icon}</span>
-                      <span>{cat.label} ({catItems.length} items)</span>
+                      <span>{cat.label} ({catItems.length})</span>
                     </h4>
 
                     <div
