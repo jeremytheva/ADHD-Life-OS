@@ -3,18 +3,17 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Change
+gate: Project Entry
 execution_state: READY
 current_work:
-  objective: Re-enter from fresh main after PR #334 and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
+  objective: Inspect fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
   issue: null
   pr: null
   branch: main
 next_actions:
-  - Run final exact-head canonical validation on this PR #334 post-merge-safe STATUS handoff.
-  - Re-audit submitted reviews and inline review threads on that exact head.
-  - If the final head remains clean, signal lifecycle implementation completion and allow repository-managed readiness/merge finalization to proceed.
-  - After merge, inspect fresh main for the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
+  - Inspect current frontend execution and workflow surfaces for the next material accessibility or interaction-integrity defect.
+  - Verify any candidate against architecture, callers and existing tests before changing code.
+  - Reuse or repair existing patterns rather than creating duplicate abstractions.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -28,11 +27,11 @@ validation:
   typecheck: PASS
   tests: PASS
   build: PASS
-  ci: PENDING
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #334 implementation head d7368a37b36ef68becfcc3f62ab6690806e37959 passed canonical Application validation run 888 after the run 886 test-lint findings were repaired. Submitted reviews and inline review threads were clean. This STATUS-only post-merge-safe handoff commit requires final exact-head canonical validation before lifecycle completion.
-last_verified_commit: d7368a37b36ef68becfcc3f62ab6690806e37959
-last_updated: 2026-09-11T09:18:30+10:00
+validation_basis: PR #334 final head d726916b957dcdef33f2a31750c9b22064dda42b passed canonical Application validation run 889, remained review/thread clean, and merged through the repository lifecycle at 30ef3d2c63f30b23d89064ee0ff3941424ced809. PR #335 reconciliation head d3d55489d8f6298e0943cc0a92a9b56c2a1b2ccf passed canonical Application validation run 890 and was review/thread clean before this post-merge-safe evidence update.
+last_verified_commit: d3d55489d8f6298e0943cc0a92a9b56c2a1b2ccf
+last_updated: 2026-09-11T10:10:23+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,21 +43,17 @@ last_updated: 2026-09-11T09:18:30+10:00
 
 ## Current objective
 
-PR #334 — `fix: keep Today timeline aligned to latest refresh` — has completed its implementation outcome. It prevents stale asynchronous `TodayView` timeline loads from overwriting timeline, error or loading state belonging to a newer mode change or refresh.
+PR #334 — `fix: keep Today timeline aligned to latest refresh` — is merged at `30ef3d2c63f30b23d89064ee0ff3941424ced809`. Its final exact head `d726916b957dcdef33f2a31750c9b22064dda42b` passed canonical Application validation run 889 and was review/thread clean.
 
-Application validation run 886 exposed two mechanical lint findings in the new deterministic test: `URL` was not imported and a regex used literal spaces. Both were repaired in place. Canonical Application validation run 888 then passed on exact implementation head `d7368a37b36ef68becfcc3f62ab6690806e37959`, and submitted reviews plus inline review threads were clean.
-
-This STATUS update is the required post-merge-safe durable handoff. It intentionally removes PR #334 and its soon-to-close source branch as the future re-entry target. The resulting exact handoff head must pass canonical validation and remain review-clean before `lifecycle:implementation-complete` is signalled.
-
-This work remains provider-independent. It does not modify provider routes, methods, schemas, credentials, persistence contracts, execution policy, recommendation scoring, or scheduling policy.
+Fresh-main continuation is active. The next delivery should be the highest-priority evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome found in current implementation. Generic durable `execution-sessions` remains provider-unverified and fail-closed.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — final exact-head lifecycle evidence required |
-| Gate state | PR #334 implementation head validated and review-clean; post-merge-safe STATUS handoff committed and final exact-head validation pending |
-| Execution state | READY after merge; current PR remains at lifecycle validation until its final head passes |
+| Current gate | PROJECT ENTRY — inspect fresh main for the next evidence-backed Stage 3 frontend outcome |
+| Gate state | PR #334 merged; no active implementation delivery inherited from the closed branch |
+| Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -66,26 +61,24 @@ This work remains provider-independent. It does not modify provider routes, meth
 
 | State | Current value |
 | --- | --- |
-| Latest merged delivery | PR #333 — Today Next Action latest-request integrity; merged at `cf35ccf0d355c6c475c2de7930e29083eaec1d95` |
-| Active delivery before merge | PR #334 — Today timeline latest-refresh integrity |
+| Latest merged delivery | PR #334 — Today timeline latest-refresh integrity; merged at `30ef3d2c63f30b23d89064ee0ff3941424ced809` |
 | Implemented change | Only the latest asynchronous Today timeline request may publish timeline/error state or clear loading |
 | Deterministic coverage | `test/today-latest-refresh-integrity.test.mjs` |
-| Implementation-head validation | PASS — Application validation run 888 on `d7368a37b36ef68becfcc3f62ab6690806e37959` |
-| Implementation-head review audit | PASS — no submitted reviews or inline review threads requiring action |
-| Final exact-head validation | PENDING on this STATUS-only handoff head |
+| Final exact-head validation | PASS — Application validation run 889 on `d726916b957dcdef33f2a31750c9b22064dda42b` |
+| Final review/thread audit | PASS — no submitted reviews or inline review threads requiring action |
+| Durable-state reconciliation | PR #335 initial head `d3d55489d8f6298e0943cc0a92a9b56c2a1b2ccf` passed canonical run 890 and was review/thread clean; reconciliation is prepared as a post-merge-safe handoff |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED / not implied by repository validation or merge |
 | Current blocker | None |
-| Deferred dependency | NoCodeBackend/provider certification; production deployment remains unverified |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; after PR #334 merges, re-enter from fresh `main` with no active delivery inherited from this branch. |
-| What is already happening? | Today timeline latest-refresh integrity is complete; this handoff is awaiting final exact-head lifecycle evidence. |
-| What has been validated? | PR #334 implementation head `d7368a37b36ef68becfcc3f62ab6690806e37959` passed canonical run 888 and was review/thread clean. |
-| What is next? | Validate this final handoff head, complete repository lifecycle, then inspect fresh `main` for the next evidence-backed provider-independent Stage 3 interaction-integrity outcome. |
+| Where am I? | Stage 3 on fresh `main`, ready for the next provider-independent frontend integrity outcome. |
+| What is already happening? | PR #334 is merged; no active implementation delivery remains from that delivery. |
+| What has been validated? | PR #334 final exact head passed canonical run 889 and merged through repository lifecycle; PR #335 reconciliation evidence has also passed canonical validation before its final handoff update. |
+| What is next? | Inspect current user-facing execution/workflow surfaces, verify the highest-value material defect, then implement it through one focused PR. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -95,12 +88,10 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run final exact-head canonical Application validation on this PR #334 handoff head;
-2. re-audit submitted reviews and inline review threads on that exact head;
-3. repair any in-scope finding on PR #334 rather than starting competing work;
-4. if the final head is clean, signal `lifecycle:implementation-complete` and allow repository-managed readiness/merge finalization to proceed;
-5. after merge, re-enter from fresh `main` and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity slice;
-6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. re-enter fresh `main` and inspect provider-independent frontend execution/workflow surfaces;
+2. verify the highest-priority material accessibility or interaction-integrity defect against architecture, callers and existing tests;
+3. reuse existing implementation patterns and tests where possible;
+4. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
