@@ -11,7 +11,7 @@ current_work:
   pr: 357
   branch: fix/housework-setup-save-ownership
 next_actions:
-  - Run canonical Application validation on the exact PR #357 head.
+  - Run canonical Application validation on the repaired exact PR #357 head.
   - Repair any in-scope validation failure on the same PR without creating competing work.
   - Audit submitted reviews and inline review threads.
   - Confirm the exact head is current with main and conflict-free.
@@ -26,16 +26,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
-  ci: PENDING
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #357 is implemented from fresh main ee7337d1824b44f5add489e3270f32fffa57de67. Canonical exact-head Application validation is pending after implementation, focused regression coverage and this durable status update.
+validation_basis: Application validation run 987 reached canonical platform validation but stopped in governance because this STATUS update used unsupported PENDING validation enum values. The implementation was not implicated. STATUS now uses the repository-supported NOT_RUN values and requires fresh exact-head validation.
 last_verified_commit: ee7337d1824b44f5add489e3270f32fffa57de67
-last_updated: 2026-09-12T09:47:00+10:00
+last_updated: 2026-09-12T09:49:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -55,14 +55,16 @@ PR #357 — `fix: own housework setup saves synchronously` — is the sole activ
 
 Focused deterministic coverage is added in `test/housework-setup-saving-integrity.test.mjs`; the existing `housework-setup-saving-status-semantics` test remains scoped to accessibility/status behaviour rather than duplicating the new interaction-integrity contract.
 
+Application validation run 987 failed in governance before lint/tests/build because this status document used unsupported `PENDING` validation enum values. The implementation was not implicated. Those enum values are now repaired to repository-supported `NOT_RUN` values and canonical exact-head validation must be rerun.
+
 The change is frontend interaction/recovery integrity only. It changes no housework service/provider route, method, schema, recurrence logic, persisted data shape, authentication behaviour, recommendation policy, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical validation and lifecycle completion for PR #357 |
-| Gate state | Implementation and deterministic ownership regression committed; exact-head canonical evidence pending |
+| Current gate | INTEGRATION — repaired canonical validation and lifecycle completion for PR #357 |
+| Gate state | Implementation and deterministic ownership regression committed; run 987 exposed STATUS-only governance metadata defect; repaired exact-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -75,8 +77,8 @@ The change is frontend interaction/recovery integrity only. It changes no housew
 | Delivery branch | `fix/housework-setup-save-ownership` |
 | Implemented change | Ref-backed synchronous owner before multi-chore persistence; duplicate Save, dismissal and selection mutations guarded while unresolved |
 | Deterministic coverage | `test/housework-setup-saving-integrity.test.mjs`, with existing setup accessibility/status tests retained |
-| Canonical implementation-head validation | PENDING |
-| Review/thread audit | PENDING after validation |
+| Canonical implementation-head validation | RETRY REQUIRED — run 987 stopped at governance on repaired STATUS metadata only |
+| Review/thread audit | CLEAN before retry; recheck after successful validation |
 | Base freshness | Based directly on fresh `main` merge `ee7337d1824b44f5add489e3270f32fffa57de67`; recheck before lifecycle completion |
 | Provider/data impact | None; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
@@ -86,10 +88,10 @@ The change is frontend interaction/recovery integrity only. It changes no housew
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #357 is the sole active delivery and is awaiting canonical exact-head validation. |
+| Where am I? | Stage 3. PR #357 is the sole active delivery; its STATUS metadata defect from run 987 is repaired and exact-head validation is pending. |
 | What is already happening? | Housework Setup now has synchronous ownership around its sequential multi-chore save and conflicting same-dialog interactions. |
-| What has been validated? | PR #356 is merged. PR #357 implementation validation is pending. |
-| What is next? | Validate the exact PR #357 head, repair on the same PR if needed, audit lifecycle evidence, then complete the repository-managed lifecycle. |
+| What has been validated? | PR #356 is merged. Run 987 did not reach PR #357 implementation tests because governance rejected unsupported STATUS validation values. |
+| What is next? | Validate the repaired exact PR #357 head, repair on the same PR if needed, audit lifecycle evidence, then complete the repository-managed lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -99,7 +101,7 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact PR #357 implementation/status head;
+1. run canonical Application validation on the repaired exact PR #357 head;
 2. repair any in-scope failure on PR #357 and re-run validation;
 3. audit submitted reviews, inline review threads, base freshness and mergeability;
 4. after implementation-head validation passes, commit a post-merge-safe STATUS handoff and validate that exact head;
