@@ -21,12 +21,27 @@ const RoutineList = () => {
   const [hasLoaded, setHasLoaded] = useState(false)
   const [loadError, setLoadError] = useState(false)
   const [operationError, setOperationError] = useState('')
+  const [pendingAction, setPendingAction] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [showTemplates, setShowTemplates] = useState(false)
   const [editingRoutine, setEditingRoutine] = useState(null)
   const [activeRoutine, setActiveRoutine] = useState(null)
   const [statsRoutine, setStatsRoutine] = useState(null)
   const latestRoutineRequestRef = useRef(0)
+  const pendingActionRef = useRef(null)
+  const mutationPending = Boolean(pendingAction)
+
+  const claimMutation = (action) => {
+    if (pendingActionRef.current) return false
+    pendingActionRef.current = action
+    setPendingAction(action)
+    return true
+  }
+
+  const releaseMutation = () => {
+    pendingActionRef.current = null
+    setPendingAction(null)
+  }
 
   const loadRoutines = useCallback(async () => {
     const requestId = latestRoutineRequestRef.current + 1
@@ -61,6 +76,8 @@ const RoutineList = () => {
   }, [loadRoutines])
 
   const handleCreateRoutine = async (routineData) => {
+    if (!claimMutation('create')) return
+
     try {
       setOperationError('')
       const routineWithMode = {
@@ -70,15 +87,20 @@ const RoutineList = () => {
 
       await routineService.createRoutine(routineWithMode)
       setShowForm(false)
-      await loadRoutines()
+      const refreshed = await loadRoutines()
+      if (!refreshed) {
+        setOperationError('The routine was created, but the routine list could not refresh. Reload Routines before creating it again.')
+      }
     } catch (error) {
       console.error('Error creating routine:', error)
       setOperationError('We couldn’t create that routine. Your form has been left open so you can review it and try again.')
+    } finally {
+      releaseMutation()
     }
   }
 
   const handleApplyTemplate = async (template, type) => {
-    if (type !== 'routine') return
+    if (type !== 'routine' || !claimMutation('template')) return
 
     try {
       setOperationError('')
@@ -93,43 +115,62 @@ const RoutineList = () => {
 
       await routineService.createRoutine(routineData)
       setShowTemplates(false)
-      await loadRoutines()
+      const refreshed = await loadRoutines()
+      if (!refreshed) {
+        setOperationError('The template routine was created, but the routine list could not refresh. Reload Routines before applying the same template again.')
+      }
     } catch (error) {
       console.error('Error applying template:', error)
       setOperationError('We couldn’t create a routine from that template. Nothing has been removed; you can choose a template and try again.')
+    } finally {
+      releaseMutation()
     }
   }
 
   const handleEditRoutine = (routine) => {
+    if (pendingActionRef.current) return
+    setOperationError('')
     setEditingRoutine(routine)
     setShowForm(true)
   }
 
   const handleUpdateRoutine = async (routineData) => {
+    if (!editingRoutine || !claimMutation(`update:${editingRoutine.id}`)) return
+
     try {
       setOperationError('')
       await routineService.updateRoutine(editingRoutine.id, routineData)
       setShowForm(false)
       setEditingRoutine(null)
-      await loadRoutines()
+      const refreshed = await loadRoutines()
+      if (!refreshed) {
+        setOperationError('The routine changes were saved, but the routine list could not refresh. Reload Routines before editing it again.')
+      }
     } catch (error) {
       console.error('Error updating routine:', error)
       setOperationError('We couldn’t save those routine changes. Your form remains open so you can try again.')
+    } finally {
+      releaseMutation()
     }
   }
 
   const handleDeleteRoutine = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this routine?')) {
-      return
-    }
+    if (pendingActionRef.current) return
+    if (!window.confirm('Are you sure you want to delete this routine?')) return
+    if (!claimMutation(`delete:${id}`)) return
 
     try {
       setOperationError('')
       await routineService.deleteRoutine(id)
-      await loadRoutines()
+      const refreshed = await loadRoutines()
+      if (!refreshed) {
+        setOperationError('The routine was deleted, but the routine list could not refresh. Reload Routines before acting on the stale entry.')
+      }
     } catch (error) {
       console.error('Error deleting routine:', error)
       setOperationError('We couldn’t delete that routine. It is still in your routine list.')
+    } finally {
+      releaseMutation()
     }
   }
 
@@ -142,6 +183,7 @@ const RoutineList = () => {
   }
 
   const handleCloseForm = () => {
+    if (pendingActionRef.current) return
     setShowForm(false)
     setEditingRoutine(null)
   }
@@ -179,10 +221,15 @@ const RoutineList = () => {
   }
 
   return (
-    <div className="p-6 space-y-6" aria-busy={loading}>
+    <div className="p-6 space-y-6" aria-busy={loading || mutationPending}>
       {loading && (
         <p className="sr-only" role="status" aria-live="polite">
           Refreshing routines...
+        </p>
+      )}
+      {mutationPending && (
+        <p className="sr-only" role="status" aria-live="polite">
+          Updating routines...
         </p>
       )}
 
@@ -221,15 +268,17 @@ const RoutineList = () => {
         <h1 className="text-2xl font-medium text-slate-900">Routines</h1>
         <div className="flex gap-2">
           <button
-            onClick={() => setShowTemplates(true)}
-            className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 flex items-center space-x-2"
+            disabled={mutationPending}
+            onClick={() => { setOperationError(''); setShowTemplates(true) }}
+            className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 flex items-center space-x-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiBookOpen} className="w-4 h-4" />
             <span>Templates</span>
           </button>
           <button
-            onClick={() => setShowForm(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
+            disabled={mutationPending}
+            onClick={() => { setOperationError(''); setShowForm(true) }}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiPlus} className="w-4 h-4" />
             <span>Add Routine</span>
@@ -248,15 +297,17 @@ const RoutineList = () => {
             </p>
             <div className="flex gap-3 justify-center">
               <button
-                onClick={() => setShowForm(true)}
-                className="text-blue-600 hover:text-blue-700"
+                disabled={mutationPending}
+                onClick={() => { setOperationError(''); setShowForm(true) }}
+                className="text-blue-600 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Create your first routine
               </button>
               <span className="text-slate-400">or</span>
               <button
-                onClick={() => setShowTemplates(true)}
-                className="text-purple-600 hover:text-purple-700"
+                disabled={mutationPending}
+                onClick={() => { setOperationError(''); setShowTemplates(true) }}
+                className="text-purple-600 hover:text-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Browse templates
               </button>
@@ -274,6 +325,7 @@ const RoutineList = () => {
               >
                 <RoutineCard
                   routine={routine}
+                  pending={mutationPending}
                   onEdit={() => handleEditRoutine(routine)}
                   onDelete={() => handleDeleteRoutine(routine.id)}
                   onStart={() => handleStartRoutine(routine)}
@@ -297,7 +349,9 @@ const RoutineList = () => {
         {showTemplates && (
           <TemplateLibrary
             onApplyTemplate={handleApplyTemplate}
-            onClose={() => setShowTemplates(false)}
+            onClose={() => {
+              if (!pendingActionRef.current) setShowTemplates(false)
+            }}
           />
         )}
 
