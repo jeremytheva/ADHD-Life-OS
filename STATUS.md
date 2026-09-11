@@ -3,18 +3,18 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Change
-execution_state: VALIDATING
+gate: Project Entry
+execution_state: READY
 current_work:
-  objective: Complete PR #336 so Brain Inbox category state and errors remain aligned to the latest per-item categorization intent.
+  objective: Inspect fresh main and continue the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome.
   issue: null
-  pr: 336
-  branch: fix/brain-inbox-latest-category-integrity
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the exact PR #336 head.
-  - Audit submitted reviews and inline review threads on that exact head.
-  - Repair any in-scope validation or review finding on PR #336 rather than starting competing work.
-  - After clean implementation-head evidence, make STATUS.md post-merge safe and run final exact-head validation before lifecycle completion.
+  - Reconcile fresh main and current GitHub state after the active delivery merges.
+  - Inspect current frontend execution and workflow surfaces for the next material accessibility or interaction-integrity defect.
+  - Verify any candidate against architecture, callers and existing tests before changing code.
+  - Reuse or repair existing patterns rather than creating duplicate abstractions.
   - Keep NoCodeBackend-dependent durable execution persistence deferred until real target-instance provider evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -23,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: PENDING
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: PR #336 implementation and deterministic regression coverage are committed on its active branch. Canonical exact-head validation and review/thread audit are now required; no provider/runtime verification is implied.
-last_verified_commit: aa3e6ef43f9743aee16b2cde51cdf9c7cc415a11
-last_updated: 2026-09-11T11:23:00+10:00
+validation_basis: PR #336 implementation/status head 9a0601ab2cb7f4672d073dd51c6812cadae8fe41 passed canonical Application validation run 893 and was submitted-review/thread clean before this post-merge-safe STATUS-only handoff. The new exact handoff head must pass canonical validation and remain review/thread clean before lifecycle completion.
+last_verified_commit: 9a0601ab2cb7f4672d073dd51c6812cadae8fe41
+last_updated: 2026-09-11T11:26:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,19 +44,19 @@ last_updated: 2026-09-11T11:23:00+10:00
 
 ## Current objective
 
-PR #336 — `fix: keep Brain Inbox category intent current` — is the sole active delivery. Fresh-main inspection after PR #335 merged found that repeated category actions for the same Brain Inbox item could overlap. An older persistence response or failure could therefore arrive after a newer categorization request and replace state or surface an error that no longer represented the user's latest intent.
+The Brain Inbox latest-category intent delivery is implementation-complete and its implementation/status head `9a0601ab2cb7f4672d073dd51c6812cadae8fe41` passed canonical Application validation run 893 with clean submitted-review and inline-thread evidence.
 
-The implementation now sequences category requests independently per inbox item. Only the latest request for that item may publish returned category state or expose a category-update failure. Different inbox items remain independent. Existing Brain Inbox organize-mode deterministic coverage is extended rather than creating a competing test surface.
+The delivery sequences category writes independently per inbox item. If a user changes the same item's category again before an older write resolves, only the latest category request may publish returned state or expose a category-update failure. This prevents stale asynchronous completions from replacing newer categorization intent while preserving independent updates for unrelated items.
 
-This work is provider-independent. It does not change category definitions, provider routes, methods, schemas, credentials, persistence contracts, execution policy, recommendation scoring, authentication, or scheduling policy.
+This durable checkpoint is intentionally post-merge safe. After the active PR completes its repository lifecycle, autonomous continuation should re-enter from fresh `main`, reconcile current repository/GitHub state, and select the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome. Generic durable `execution-sessions` remains provider-unverified and fail-closed.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — exact-head validation and review evidence required |
-| Gate state | PR #336 implementation and regression coverage committed; canonical validation pending |
-| Execution state | VALIDATING |
+| Current gate | PROJECT ENTRY — after merge, inspect fresh main for the next evidence-backed Stage 3 frontend outcome |
+| Gate state | Brain Inbox category-integrity implementation evidence is clean; final exact handoff-head validation is required before merge |
+| Execution state | READY |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 | Current restriction | Do not infer or activate physical NoCodeBackend routes, methods, schemas or durable execution behaviour without real target evidence. |
 
@@ -64,13 +64,13 @@ This work is provider-independent. It does not change category definitions, prov
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery | PR #335 — durable STATUS reconciliation after PR #334; merged at `aa3e6ef43f9743aee16b2cde51cdf9c7cc415a11` |
-| Latest product delivery | PR #334 — Today timeline latest-refresh integrity; merged at `30ef3d2c63f30b23d89064ee0ff3941424ced809` |
-| Active delivery | PR #336 — Brain Inbox latest-category intent integrity |
+| Latest repository delivery on main | PR #335 — durable STATUS reconciliation after PR #334; merged at `aa3e6ef43f9743aee16b2cde51cdf9c7cc415a11` |
+| Delivery prepared for merge | Brain Inbox latest-category intent integrity |
 | Implemented change | Category updates are sequenced per inbox item and stale success/error completions are ignored |
 | Deterministic coverage | Existing `test/brain-inbox-organize-list-semantics.test.mjs` extended with latest-category integrity assertions |
-| Canonical validation | PENDING on exact active PR head |
-| Review/thread audit | PENDING on exact active PR head |
+| Implementation-head validation | PASS — Application validation run 893 on `9a0601ab2cb7f4672d073dd51c6812cadae8fe41` |
+| Implementation-head review/thread audit | PASS — no submitted reviews or inline review threads requiring action |
+| Final handoff-head validation | REQUIRED after this STATUS-only commit before lifecycle completion |
 | Provider/data impact | None; generic durable `execution-sessions` remains planned/provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED / not implied by repository validation or merge |
 | Current blocker | None |
@@ -79,10 +79,10 @@ This work is provider-independent. It does not change category definitions, prov
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3, validating PR #336 as the sole active delivery. |
-| What is already happening? | Brain Inbox category mutation sequencing and deterministic coverage are implemented. |
-| What has been validated? | Fresh `main` through PR #335 is the validated entry baseline; PR #336 exact-head canonical validation is pending. |
-| What is next? | Inspect PR #336 canonical validation and review/thread evidence, repair findings in place, then complete the post-merge-safe lifecycle handoff. |
+| Where am I? | Stage 3; after the current delivery merges, re-enter from fresh `main`. |
+| What is already happening? | Brain Inbox category mutation sequencing is complete and implementation-head evidence is clean. |
+| What has been validated? | Canonical Application validation run 893 passed on implementation/status head `9a0601ab2cb7f4672d073dd51c6812cadae8fe41`; submitted reviews and inline threads were clean. |
+| What is next? | Complete final exact-head validation/review evidence for this post-merge-safe handoff, let repository lifecycle merge it, then inspect fresh main for the next evidence-backed frontend integrity outcome. |
 | Can I proceed autonomously? | Yes. No owner decision is currently required. |
 | Why should I stop? | Only for a stop/escalation condition defined in `AGENTS.md`, an external dependency blocking all dependency-correct work, or no actionable work. |
 
@@ -92,14 +92,12 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact PR #336 head;
-2. re-audit submitted reviews and inline review threads on that exact head;
-3. repair any in-scope finding on the existing PR rather than creating competing work;
-4. after clean implementation-head evidence, convert this durable state to a post-merge-safe fresh-main handoff;
-5. run final exact-head canonical validation and review/thread audit after that STATUS-only handoff commit;
-6. signal `lifecycle:implementation-complete` only when the exact final head is clean;
-7. after merge, re-enter fresh `main` for the next evidence-backed provider-independent Stage 3 accessibility or interaction-integrity outcome;
-8. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
+1. before merge, require canonical Application validation and clean submitted-review/thread evidence on the exact post-merge-safe handoff head;
+2. complete the repository-owned PR lifecycle only after that exact-head evidence is clean;
+3. after merge, re-enter fresh `main` and reconcile repository/GitHub state;
+4. inspect current user-facing execution/workflow surfaces and verify the highest-priority material accessibility or interaction-integrity defect;
+5. reuse existing implementation patterns and tests where possible;
+6. keep NoCodeBackend-dependent durable execution work deferred until real target-instance provider evidence exists.
 
 ## Stage 3 exit conditions
 
