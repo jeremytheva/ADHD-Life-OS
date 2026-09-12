@@ -20,7 +20,8 @@ test('TaskList exposes one labelled sort control with every existing option', as
   const source = await read('src/components/tasks/TaskList.jsx')
 
   assert.match(source, /<label htmlFor="task-sort"[^>]*>Sort by:<\/label>/)
-  assert.match(source, /<select[\s\S]*id="task-sort"[\s\S]*value=\{sortBy\}[\s\S]*onChange=\{\(event\) => setSortBy\(event\.target\.value\)\}/)
+  assert.match(source, /const handleSortChange = \(nextSort\) => \{\s*if \(mutationOwnerRef\.current !== null\) return\s*setSortBy\(nextSort\)/)
+  assert.match(source, /<select[\s\S]*id="task-sort"[\s\S]*value=\{sortBy\}[\s\S]*onChange=\{\(event\) => handleSortChange\(event\.target\.value\)\}[\s\S]*disabled=\{mutationPending\}/)
   assert.match(source, /\{ key: 'priority', label: 'Priority' \}/)
   assert.match(source, /\{ key: 'due_date', label: 'Due Date' \}/)
   assert.match(source, /\{ key: 'created', label: 'Recently Added' \}/)
