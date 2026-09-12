@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
+import OperationErrorState from '../../common/OperationErrorState'
 import useModalDialog from '../../common/useModalDialog'
 import { gamificationService } from '../../services/gamificationService'
 
@@ -12,6 +13,7 @@ const RewardShop = ({ onClose }) => {
   const [currency, setCurrency] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [purchaseSuccess, setPurchaseSuccess] = useState(null)
+  const [purchaseError, setPurchaseError] = useState('')
   const dialogRef = useModalDialog({ onEscape: onClose })
 
   useEffect(() => {
@@ -26,18 +28,20 @@ const RewardShop = ({ onClose }) => {
   }
 
   const handlePurchase = (rewardId) => {
+    setPurchaseError('')
     const result = gamificationService.purchaseReward(rewardId)
-    
+
     if (result.success) {
       setPurchaseSuccess(result)
       loadRewards()
-      
+
       setTimeout(() => {
         setPurchaseSuccess(null)
       }, 3000)
-    } else {
-      alert(result.message)
+      return
     }
+
+    setPurchaseError(result.message || 'This reward could not be purchased. Please try again.')
   }
 
   const categories = [
@@ -132,6 +136,15 @@ const RewardShop = ({ onClose }) => {
 
         {/* Rewards Grid */}
         <div className="flex-1 overflow-y-auto p-6">
+          {purchaseError && (
+            <div className="mb-4">
+              <OperationErrorState
+                message={purchaseError}
+                onDismiss={() => setPurchaseError('')}
+              />
+            </div>
+          )}
+
           <div
             role="list"
             aria-label="Available rewards"
@@ -164,7 +177,7 @@ const RewardShop = ({ onClose }) => {
                   <div className="flex items-center gap-1 text-yellow-600 font-bold">
                     <span aria-hidden="true">💰</span> {reward.cost}<span className="sr-only"> coins</span>
                   </div>
-                  
+
                   {reward.purchased ? (
                     <div className="flex items-center gap-1 text-green-600 text-sm font-medium">
                       <SafeIcon icon={FiCheck} className="w-4 h-4" aria-hidden="true" />
