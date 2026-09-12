@@ -25,7 +25,7 @@ test('Today preserves the established surface while timeline refreshes', () => {
   assert.match(todaySource, /setHasLoaded\(true\)/);
   assert.match(todaySource, /if \(loading && !hasLoaded\) return/);
   assert.match(todaySource, /if \(loadError && !hasLoaded\) return/);
-  assert.match(todaySource, /aria-busy=\{loading\}/);
+  assert.match(todaySource, /aria-busy=\{loading \|\| taskMutationPending\}/);
   assert.match(todaySource, /Refreshing Today\.\.\./);
   assert.match(todaySource, /We couldn’t refresh your day/);
   assert.match(todaySource, /Your existing Today view is still available/);
