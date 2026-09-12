@@ -48,6 +48,11 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
     setOperationError(null)
   }
 
+  const handleRoomChange = (room) => {
+    if (saveInFlightRef.current || saving) return
+    setSelectedRoom(room)
+  }
+
   const handleSave = async () => {
     if (saveInFlightRef.current || saving || selectedTasks.size === 0) return
     saveInFlightRef.current = true
@@ -140,7 +145,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
           <div className="flex flex-wrap gap-2" role="group" aria-label="Filter chores by room">
             <button
               type="button"
-              onClick={() => setSelectedRoom('all')}
+              onClick={() => handleRoomChange('all')}
               disabled={saving}
               aria-pressed={selectedRoom === 'all'}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${selectedRoom === 'all' ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
@@ -151,7 +156,7 @@ const HouseworkSetup = ({ onClose, onComplete }) => {
               <button
                 type="button"
                 key={room.value}
-                onClick={() => setSelectedRoom(room.value)}
+                onClick={() => handleRoomChange(room.value)}
                 disabled={saving}
                 aria-pressed={selectedRoom === room.value}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${selectedRoom === room.value ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
