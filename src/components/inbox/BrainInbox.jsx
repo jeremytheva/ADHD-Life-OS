@@ -62,6 +62,19 @@ const BrainInbox = () => {
     }
   }
 
+  const hasActiveMutation = () => (
+    captureOwnerRef.current !== null ||
+    editOwnerRef.current !== null ||
+    deletingIdsRef.current.size > 0 ||
+    convertingIdsRef.current.size > 0 ||
+    categoryPendingIdsRef.current.size > 0
+  )
+
+  const handleModeChange = (nextMode) => {
+    if (hasActiveMutation()) return
+    setMode(nextMode)
+  }
+
   const handleAddItem = async (e) => {
     e.preventDefault()
     const submittedContent = currentInput.trim()
@@ -215,6 +228,7 @@ const BrainInbox = () => {
 
   const uncategorizedItems = items.filter(item => !item.category)
   const categorizedItems = items.filter(item => item.category)
+  const modeChangePending = capturePending || editPending || deletingIds.size > 0 || convertingIds.size > 0 || categoryPendingIds.size > 0
 
   const categories = [
     { value: 'work', label: 'Work', color: 'blue', icon: '💼' },
@@ -277,9 +291,10 @@ const BrainInbox = () => {
           <button
             type="button"
             aria-pressed={mode === 'capture'}
-            onClick={() => setMode('capture')}
+            onClick={() => handleModeChange('capture')}
+            disabled={modeChangePending}
             className={`
-              flex-1 px-4 py-2 rounded-lg font-medium transition-colors
+              flex-1 px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed
               ${mode === 'capture'
                 ? 'bg-purple-600 text-white'
                 : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -294,9 +309,10 @@ const BrainInbox = () => {
           <button
             type="button"
             aria-pressed={mode === 'organize'}
-            onClick={() => setMode('organize')}
+            onClick={() => handleModeChange('organize')}
+            disabled={modeChangePending}
             className={`
-              flex-1 px-4 py-2 rounded-lg font-medium transition-colors
+              flex-1 px-4 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed
               ${mode === 'organize'
                 ? 'bg-purple-600 text-white'
                 : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -494,8 +510,9 @@ const BrainInbox = () => {
                     🎉 Awesome! Now we have your whole list!
                   </p>
                   <button
-                    onClick={() => setMode('organize')}
-                    className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                    onClick={() => handleModeChange('organize')}
+                    disabled={modeChangePending}
+                    className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <span>Ready to organize?</span>
                     <SafeIcon icon={FiArrowRight} aria-hidden="true" className="w-4 h-4" />
@@ -704,8 +721,9 @@ const BrainInbox = () => {
             <div className="bg-white rounded-lg border-2 border-dashed border-slate-300 p-12 text-center">
               <p className="text-slate-600 mb-4">No items to organize yet!</p>
               <button
-                onClick={() => setMode('capture')}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                onClick={() => handleModeChange('capture')}
+                disabled={modeChangePending}
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Start Capturing
               </button>
