@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #362 from this post-merge-safe handoff, then re-enter fresh main and select the next highest-priority provider-independent Stage 3 target.
+  objective: Validate and complete PR #363, which gives Development Profile Mode synchronous ownership before authentication begins.
   issue: null
-  pr: null
-  branch: main
+  pr: 363
+  branch: fix/profile-selector-submit-ownership
 next_actions:
-  - Run canonical Application validation on this exact post-merge-safe PR #362 head.
-  - Re-audit submitted reviews and inline review threads after exact-head validation.
-  - Confirm the final head remains current with main and conflict-free.
-  - If evidence remains clean, add lifecycle:implementation-complete and allow repository lifecycle automation to complete PR #362.
-  - Confirm merge on main, then inspect fresh authoritative state before selecting the next delivery.
+  - Run canonical Application validation on the exact PR #363 head.
+  - Repair any in-scope validation or review finding on the existing branch.
+  - Re-audit submitted reviews, inline review threads, base freshness and mergeability after validation.
+  - When exact-head evidence is clean, write the post-merge-safe STATUS handoff and complete the repository PR lifecycle.
+  - Re-enter fresh main after merge and select the next highest-priority provider-independent Stage 3 target.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: PENDING
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1010 passed canonical npm run platform:validate on implementation head de0e3b97c8c53afcc2cbecc7b6d8f2cfd06ea37c. Submitted reviews and inline review threads were clean afterward, and the branch was 0 commits behind main at ef7f1a45537fb3c99821866c817e130f382c37c1. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires one final canonical validation before lifecycle completion.
-last_verified_commit: de0e3b97c8c53afcc2cbecc7b6d8f2cfd06ea37c
-last_updated: 2026-09-12T17:47:00+10:00
+validation_basis: PR #362 passed final exact-head Application validation run 1011 and merged into main at a71635b0c258f0daf92ed9aa088486265136c6f3. PR #363 is now the sole active delivery; its implementation and focused regression are committed, and canonical exact-head validation is pending on the current branch head.
+last_verified_commit: 0ea38435f59055e2b11d03cf1fd5573701d99ad3
+last_updated: 2026-09-12T17:52:23+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,24 +45,22 @@ last_updated: 2026-09-12T17:47:00+10:00
 
 ## Current objective
 
-PR #362 — `fix: surface reward purchase failures inline` — has passed canonical implementation-head validation.
+PR #363 — `fix: own development profile switches synchronously` — is the sole active delivery.
 
-Reward Shop purchase failures now use the shared focusable `OperationErrorState` inside the existing modal rather than the blocking browser `alert()` API. A new purchase attempt clears stale error feedback, failed purchases can be dismissed without leaving the dialog, and the existing accessible success status remains unchanged.
+Development Profile Mode already disabled profile controls once React rendered `loadingEmail`, but the asynchronous sign-in boundary did not have a synchronous owner. Two rapid selections in the same render window could therefore enter `signIn()` before the pending state had committed.
 
-Focused deterministic regression coverage verifies both the recoverable in-dialog failure path and removal of the browser-alert fallback. Canonical Application validation run 1010 passed governance, zero-warning lint, typecheck, Node tests, production build, and browser coverage on implementation head `de0e3b97c8c53afcc2cbecc7b6d8f2cfd06ea37c`.
+The active change claims a ref-backed owner before any authentication await, snapshots the selected profile email for the owned attempt, rejects competing same-tick switches, and releases ownership only from the attempt that owns it. Existing recoverable error feedback and per-profile busy/live status semantics are retained.
 
-Submitted reviews and inline review threads were clean after the pass, and the branch was 0 commits behind `main` at `ef7f1a45537fb3c99821866c817e130f382c37c1`.
+Focused deterministic coverage in `test/profile-selector-submit-ownership.test.mjs` verifies ownership acquisition before authentication and owner-scoped release.
 
-This document is intentionally post-merge-safe. Once PR #362 completes lifecycle, autonomous continuation must begin from fresh `main`, not treat the merged PR branch as active work. This STATUS-only handoff commit itself requires final exact-head canonical validation before lifecycle completion.
-
-No provider route, schema, persistence contract, authentication, execution policy, or deployment configuration is changed.
+No provider route, credential policy, domain persistence, schema, execution policy, or production deployment behavior is changed.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head validation and lifecycle completion for PR #362 |
-| Gate state | Implementation head validated by run 1010; post-merge-safe STATUS committed; final exact-head evidence pending |
+| Current gate | INTEGRATION — canonical exact-head validation for PR #363 |
+| Gate state | Implementation and focused regression committed; canonical exact-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -70,42 +68,42 @@ No provider route, schema, persistence contract, authentication, execution polic
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #361 — Mode Switcher Escape ownership; merged at `ef7f1a45537fb3c99821866c817e130f382c37c1` after Application validation run 1008 passed |
-| Delivery awaiting final lifecycle completion | PR #362 — Reward Shop recoverable purchase-failure feedback |
-| Delivery branch | `fix/reward-shop-purchase-failure-feedback` |
-| Implemented change | Replace blocking purchase-failure `alert()` with shared focusable `OperationErrorState`; clear stale error on retry; allow dismiss |
-| Deterministic coverage | `test/reward-shop-purchase-failure-feedback.test.mjs` plus existing Reward Shop accessibility semantics coverage |
-| Canonical implementation-head validation | PASS — Application validation run 1010 on `de0e3b97c8c53afcc2cbecc7b6d8f2cfd06ea37c` |
-| Review/thread audit | CLEAN after run 1010; recheck after final exact-head validation |
-| Base freshness | CURRENT — branch was 0 commits behind main before this STATUS-only handoff |
-| Final exact-head validation | Required on this post-merge-safe STATUS head |
+| Latest repository delivery on main | PR #362 — Reward Shop recoverable purchase-failure feedback; merged at `a71635b0c258f0daf92ed9aa088486265136c6f3` after final Application validation run 1011 passed |
+| Active delivery | PR #363 — Development Profile Mode synchronous switch ownership |
+| Delivery branch | `fix/profile-selector-submit-ownership` |
+| Implemented change | Ref-backed synchronous switch ownership before `signIn()`; selected-email snapshot; owner-scoped release |
+| Deterministic coverage | `test/profile-selector-submit-ownership.test.mjs` plus existing Profile Selector feedback semantics coverage |
+| Canonical exact-head validation | PENDING |
+| Review/thread audit | Pending after canonical validation |
+| Base freshness | Based on fresh main `a71635b0c258f0daf92ed9aa088486265136c6f3`; recheck before lifecycle completion |
 | Provider/data impact | None |
-| Runtime/deployment verification | NOT_APPLICABLE for this provider-independent UI correction |
+| Runtime/deployment verification | NOT_APPLICABLE for this development-only interaction correction |
 | Current blocker | None |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #362 implementation is validated; this post-merge-safe handoff awaits final exact-head validation and lifecycle completion. |
-| What is already happening? | Reward Shop purchase failures remain in the modal as recoverable, dismissible application feedback rather than interrupting users with a browser alert. |
-| What has been validated? | Canonical run 1010 passed the implementation head; reviews/threads were clean and the branch was current with main before this STATUS-only handoff. |
-| What is next? | Validate this exact handoff head, re-audit lifecycle evidence, complete PR #362, then re-enter fresh main. |
+| Where am I? | Stage 3. PR #363 is the sole active delivery and awaits canonical exact-head validation. |
+| What is already happening? | Development profile switching now owns the authentication attempt synchronously before rendered pending state exists. |
+| What has been validated? | PR #362 passed final exact-head validation and merged. PR #363 has not yet completed canonical validation on its current head. |
+| What is next? | Run canonical validation, repair any in-scope finding, audit reviews/base state, then complete the PR lifecycle when evidence is clean. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #362 is provider-independent frontend interaction-integrity work and does not alter that boundary.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #363 is provider-independent frontend interaction-integrity work and does not alter that boundary.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on this exact post-merge-safe PR #362 head;
-2. re-audit submitted reviews, inline review threads, base freshness and mergeability;
-3. if all evidence remains clean, add `lifecycle:implementation-complete` and allow repository lifecycle automation to complete the PR;
-4. confirm merge on `main` and re-enter from fresh authoritative state;
-5. select the next provider-independent Stage 3 target from fresh evidence;
-6. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on the exact PR #363 head;
+2. repair any in-scope validation or review finding on the same branch rather than creating competing work;
+3. re-audit submitted reviews, inline review threads, base freshness and mergeability;
+4. if evidence is clean, commit a post-merge-safe STATUS handoff and complete the repository lifecycle;
+5. confirm merge on `main` and re-enter from fresh authoritative state;
+6. select the next provider-independent Stage 3 target from fresh evidence;
+7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
