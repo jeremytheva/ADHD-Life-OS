@@ -49,6 +49,12 @@ const ModeSwitcher = ({ showLabel = true, size = 'default' }) => {
 
   const handleTriggerKeyDown = (event) => {
     switch (event.key) {
+      case 'Escape':
+        if (!isOpen) break
+        event.preventDefault()
+        event.stopPropagation()
+        closeMenu()
+        break
       case 'ArrowDown':
         event.preventDefault()
         openMenu('first')
