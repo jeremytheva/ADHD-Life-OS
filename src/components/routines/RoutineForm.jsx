@@ -9,9 +9,16 @@ const { FiX, FiPlus, FiTrash2 } = FiIcons
 const RoutineForm = ({ routine = null, onSave, onCancel }) => {
   const nameInputRef = useRef(null)
   const addStepButtonRef = useRef(null)
+  const submitOwnerRef = useRef(null)
   const [saving, setSaving] = useState(false)
+
+  const handleCancel = () => {
+    if (submitOwnerRef.current) return
+    onCancel()
+  }
+
   const dialogRef = useModalDialog({
-    onEscape: saving ? null : onCancel,
+    onEscape: handleCancel,
     initialFocusRef: nameInputRef
   })
   const [formData, setFormData] = useState({
@@ -27,8 +34,10 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (saving) return
+    if (submitOwnerRef.current) return
 
+    const owner = Symbol('routine-form-submit')
+    submitOwnerRef.current = owner
     const submittedRoutine = {
       ...formData,
       steps: steps.map((step) => ({ ...step }))
@@ -38,24 +47,27 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
     try {
       await onSave(submittedRoutine)
     } finally {
-      setSaving(false)
+      if (submitOwnerRef.current === owner) {
+        submitOwnerRef.current = null
+        setSaving(false)
+      }
     }
   }
 
   const handleChange = (field, value) => {
-    if (saving) return
+    if (submitOwnerRef.current) return
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
   const handleStepChange = (index, field, value) => {
-    if (saving) return
+    if (submitOwnerRef.current) return
     setSteps(prev => prev.map((step, i) =>
       i === index ? { ...step, [field]: value, order_index: i } : step
     ))
   }
 
   const addStep = () => {
-    if (saving) return
+    if (submitOwnerRef.current) return
     setSteps(prev => [...prev, {
       name: '',
       duration_minutes: 30,
@@ -64,7 +76,7 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
   }
 
   const removeStep = (index) => {
-    if (saving) return
+    if (submitOwnerRef.current) return
     setSteps(prev => prev.filter((_, i) => i !== index))
     addStepButtonRef.current?.focus()
   }
@@ -90,7 +102,7 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
           </h2>
           <button
             type="button"
-            onClick={onCancel}
+            onClick={handleCancel}
             disabled={saving}
             aria-label={`Close ${title}`}
             className="p-1 text-slate-400 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
@@ -223,7 +235,7 @@ const RoutineForm = ({ routine = null, onSave, onCancel }) => {
           <div className="flex space-x-3 pt-4">
             <button
               type="button"
-              onClick={onCancel}
+              onClick={handleCancel}
               disabled={saving}
               className="flex-1 bg-slate-100 text-slate-700 py-2 px-4 rounded-md hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
