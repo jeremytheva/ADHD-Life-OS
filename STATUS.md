@@ -11,7 +11,7 @@ current_work:
   pr: 381
   branch: fix/quick-capture-submit-ownership
 next_actions:
-  - Re-run canonical Application validation after aligning the stale Quick Capture remove-focus source contract to synchronous submit ownership.
+  - Re-run canonical Application validation after aligning the cross-cutting mutation-feedback contract to the accepted Quick Capture snapshot.
   - Repair only further evidenced failures on the same PR.
   - Audit reviews, inline threads, mergeability and base freshness after validation passes.
   - Convert STATUS to a post-merge-safe fresh-main handoff before implementation-complete signaling.
@@ -30,9 +30,9 @@ validation:
   build: NOT_RUN
   ci: FAIL
   runtime: NOT_APPLICABLE
-validation_basis: Run 1115 exposed and repaired a non-canonical STATUS gate. Subsequent canonical runs progressed beyond governance but still failed in the test phase. Repository inspection identified two stale Quick Capture source contracts: partial-save feedback still required onSave(validItems) instead of the accepted ownership snapshot, and remove-focus recovery still required rendered isSaving as its handler authority. Both tests now preserve their original behavioral guarantees while asserting the stronger synchronous submitOwnerRef boundary. Exact-head canonical revalidation is required.
+validation_basis: Exact-head Application validation run 1120 passed dependency audit, governance, lint and typecheck, then reached 482 of 483 passing Node tests. Its sole failure was test/core-mutation-feedback.test.mjs still requiring QuickCaptureModal to call onSave(validItems). That cross-cutting source contract now requires the acceptedItems snapshot and preserves the existing partial-success semantics. Build and browser checks did not run because Node tests stopped validation. Exact-head canonical revalidation is required.
 last_verified_commit: 13f59a96a2244af4a12b8e345e0bc255ce16cc3c
-last_updated: 2026-09-13T07:56:00+10:00
+last_updated: 2026-09-13T07:58:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -50,19 +50,20 @@ Fresh-main reconciliation found no open issues or competing pull requests. PR #3
 
 `QuickCaptureModal` now claims synchronous `submitOwnerRef` ownership before invoking `onSave`, snapshots the accepted task list, permits only the owning attempt to release local saving state, and routes close/Escape plus local capture mutations through the same owner. Existing `ProjectsList` mutation ownership, project/task persistence, partial-success recovery, schemas and provider contracts remain unchanged.
 
-Focused deterministic coverage exists in `test/quick-capture-submit-ownership.test.mjs`. Existing saving-integrity, partial-save and remove-focus source contracts are aligned to the stronger ownership boundary while retaining their previous user-visible guarantees.
+Focused deterministic coverage exists in `test/quick-capture-submit-ownership.test.mjs`. Existing saving-integrity, partial-save, remove-focus and cross-cutting mutation-feedback contracts are aligned to the stronger ownership boundary while retaining their previous user-visible guarantees.
 
 Validation repair history:
 - run 1115 stopped at governance because interim STATUS used invalid `gate: Implementation`; repaired to canonical `gate: Change`;
-- later canonical validation exposed a stale partial-save assertion requiring `onSave(validItems)`; repaired to require persistence of the accepted ownership snapshot;
-- run 1118 still failed in canonical validation; direct inspection identified `quick-capture-remove-focus-recovery` still requiring `isSaving` as the handler guard. It now requires `submitOwnerRef.current !== null` while preserving focus restoration after a permitted removal.
+- later validation exposed a stale partial-save assertion requiring `onSave(validItems)`; repaired to require persistence of the accepted ownership snapshot;
+- run 1118 exposed remove-focus recovery still requiring `isSaving` as the handler authority; repaired to require the synchronous owner while preserving focus restoration;
+- exact-head run 1120 passed audit, governance, lint and typecheck and reached 482/483 Node tests. Its sole failing test was the cross-cutting `core-mutation-feedback` Quick Capture assertion, also still requiring `onSave(validItems)`. It now asserts the ownership-protected `acceptedItems` snapshot instead.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE — repaired exact-head validation of PR #381 |
-| Gate state | Identified governance and source-contract findings repaired on the same PR; exact-head canonical revalidation required |
+| Gate state | Run 1120 isolated one final stale cross-cutting source contract; repaired head requires canonical revalidation |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -74,21 +75,21 @@ Validation repair history:
 | Active delivery | PR #381 — Quick Capture synchronous submit ownership |
 | Delivery branch | `fix/quick-capture-submit-ownership` |
 | Implemented change | Accepted Quick Capture submission synchronously owns resubmit, dismissal and local mutation boundaries until `onSave` settles |
-| Deterministic coverage | New submit-ownership test plus aligned saving-integrity, partial-save and focus-recovery contracts |
-| Canonical validation | Latest run 1118 failed before completion; evidenced stale focus-recovery contract repaired; exact-head revalidation pending |
+| Deterministic coverage | New submit-ownership test plus aligned saving-integrity, partial-save, focus-recovery and core mutation-feedback contracts |
+| Canonical validation | Run 1120: audit/governance/lint/typecheck PASS; Node tests 482/483; sole stale assertion repaired; exact-head revalidation pending |
 | Review/thread audit | NOT_RUN until repaired implementation-head validation passes |
 | Base freshness | Base created from fresh `main` at `13f59a96a2244af4a12b8e345e0bc255ce16cc3c` |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
-| Current blocker | None — identified finding repaired |
+| Current blocker | None — sole evidenced run-1120 failure repaired |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; PR #381 is the sole active delivery. |
-| What is already happening? | Quick Capture uses synchronous submission ownership and ownership-aware source contracts; canonical validation is active. |
-| What has been validated? | PR #380 merged after exact-head validation. PR #381 environment/governance checks have progressed, but the latest exact-head canonical validation has not yet passed. |
+| What is already happening? | Quick Capture uses synchronous submission ownership and aligned ownership-aware source contracts; canonical validation is active. |
+| What has been validated? | PR #380 merged after exact-head validation. On PR #381, audit/governance/lint/typecheck pass; the last Node test failure has been repaired and full validation is pending. |
 | What is next? | Validate the repaired exact head, repair only evidenced failures, then complete review/base/merge lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
