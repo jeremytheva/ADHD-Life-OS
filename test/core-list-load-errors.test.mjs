@@ -11,7 +11,8 @@ test('routine list distinguishes load failures from a genuine empty list', async
   assert.match(source, /const \[loadError, setLoadError\] = useState\(false\)/)
   assert.match(source, /setLoadError\(true\)/)
   assert.match(source, /title="We couldn’t load your routines"/)
-  assert.match(source, /onRetry=\{loadRoutines\}/)
+  assert.match(source, /onRetry=\{retryLoad\}/)
+  assert.match(source, /const retryLoad = \(\) => \{\s*if \(pendingActionRef\.current\) return/)
   assert.match(source, /Your routines have not been removed/)
 })
 
