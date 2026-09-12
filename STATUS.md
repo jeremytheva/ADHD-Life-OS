@@ -6,15 +6,15 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Revalidate repaired PR #380 synchronous Template Edit submission ownership without changing template persistence or provider contracts.
+  objective: Complete PR #380 lifecycle; after merge, re-enter fresh authoritative main and select the next dependency-correct provider-independent Stage 3 integrity target.
   issue: null
-  pr: 380
-  branch: fix/template-edit-submit-ownership
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical validation on the exact repaired PR #380 head.
-  - Repair only evidence-backed failures on this same delivery if validation finds any.
-  - Audit reviews, inline threads, base freshness and mergeability after validation passes.
-  - Convert STATUS.md to a post-merge-safe fresh-main handoff before implementation-complete signaling.
+  - Exact-head validate this post-merge-safe STATUS handoff for PR #380.
+  - Apply implementation-complete lifecycle evidence only if exact-head validation, review/thread audit, base freshness and mergeability remain satisfactory.
+  - After repository merge, inspect fresh main and continue the next provider-independent Stage 3 integrity target.
+  - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -25,13 +25,13 @@ validation:
   governance: PASS
   lint: PASS
   typecheck: PASS
-  tests: FAIL
-  build: NOT_RUN
-  ci: PENDING
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1110 on head 24488b1c04093b990377496b4a63629d7911fe24 passed dependency audit, governance, lint and typecheck and reached 479/480 passing Node tests. The new TemplateEditModal synchronous ownership tests and aligned template pending-integrity test passed. The sole failure was a stale pre-existing template-modal-stack source-contract assertion that still required direct rendered-isApplying Escape suppression. That test is repaired on this PR to require the stronger stack-aware safeClose path, which rejects Escape during either rendered isApplying state or same-render submit ownership. Exact-head revalidation is pending.
-last_verified_commit: 24488b1c04093b990377496b4a63629d7911fe24
-last_updated: 2026-09-13T07:36:00+10:00
+validation_basis: Application validation run 1112 passed the canonical platform validation process on repaired implementation head 6398acffba922859099f053bb0f84c7063abc184 after the stale Template Edit modal-stack source-contract assertion was aligned to synchronous submit ownership. Reviews and inline review threads are empty, PR #380 is mergeable, and main remains exactly at PR #380 base 9478cd4be60f94620a48409fa1597f4950026bda. This STATUS handoff changes the head and therefore requires one final exact-head canonical validation before implementation-complete signaling.
+last_verified_commit: 6398acffba922859099f053bb0f84c7063abc184
+last_updated: 2026-09-13T07:39:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,20 +43,22 @@ last_updated: 2026-09-13T07:36:00+10:00
 
 ## Current objective
 
-PR #379 — `fix: serialize task form submission synchronously` — completed its lifecycle and merged into `main` at `9478cd4be60f94620a48409fa1597f4950026bda` after Application validation runs 1107 and 1108 passed.
+PR #379 — `fix: serialize task form submission synchronously` — completed its lifecycle and merged into `main` at `9478cd4be60f94620a48409fa1597f4950026bda`.
 
-PR #380 — `fix: serialize template editor submission synchronously` — is the sole active delivery. `TemplateEditModal` now claims an accepted submission synchronously through `submitOwnerRef`, snapshots the accepted edited-template payload, only the owning attempt may release that boundary, and routes close/Escape plus all local field and routine-step mutations through the same owner. Existing `TemplateLibrary` application ownership, template services, schemas, provider contracts and persistence semantics remain unchanged.
+PR #380 — `fix: serialize template editor submission synchronously` — has completed repaired implementation-head validation. `TemplateEditModal` now uses one synchronous `submitOwnerRef` so an accepted edit submit claims ownership before invoking `onSave`, snapshots the accepted edited-template payload, only the owning attempt may release that boundary, and close/Escape plus all local field and routine-step mutations consult the same owner. Existing `TemplateLibrary` application ownership, template services, schemas, provider contracts and persistence semantics remain unchanged.
 
-Canonical Application validation run 1110 on prior head `24488b1c04093b990377496b4a63629d7911fe24` passed dependency audit, governance, lint and typecheck. Its Node test phase reached 479/480 passing tests. The focused `TemplateEditModal` ownership tests and the updated template pending-integrity contract passed. The only failure was the older `template-modal-stack-integrity` assertion, which still required `useModalDialog({ onEscape: isApplying ? null : onClose })` in the editor even though the stronger implementation now routes Escape through `safeClose` and synchronously rejects dismissal during either `isApplying` or `submitOwnerRef` ownership.
+Application validation run 1110 isolated one stale pre-existing modal-stack source-contract assertion while the new ownership tests passed. That assertion was repaired on the same PR without weakening application behavior. Application validation run 1112 then passed the canonical repository gate on repaired implementation head `6398acffba922859099f053bb0f84c7063abc184`.
 
-That stale modal-stack assertion has been repaired on this same PR. It continues to enforce shared modal ownership, one semantic dialog, busy state and stack behavior, while now requiring `useModalDialog({ onEscape: safeClose })` and the stronger synchronous dismissal guard. No application behavior was weakened to satisfy the test.
+No submitted reviews or inline review threads exist, PR #380 is mergeable, and `main` remains exactly at its base `9478cd4be60f94620a48409fa1597f4950026bda`.
+
+This durable handoff intentionally points autonomous continuation back to fresh `main` after merge rather than leaving PR #380 or its source branch as the future re-entry target. Because this documentation commit changes the PR head, the exact new head must pass canonical validation before implementation-complete signaling.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head revalidation of repaired PR #380 |
-| Gate state | Run 1110 isolated one stale source-contract assertion; repaired on the same delivery; exact-head revalidation pending |
+| Current gate | INTEGRATION — final exact-head validation of post-merge-safe handoff for PR #380 |
+| Gate state | Repaired implementation head passed run 1112; clean review/thread audit, mergeability and base freshness confirmed; final handoff head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -65,13 +67,14 @@ That stale modal-stack assertion has been repaired on this same PR. It continues
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #379 — Task Form synchronous submit ownership; merged at `9478cd4be60f94620a48409fa1597f4950026bda` |
-| Active delivery | PR #380 — Template Edit synchronous submit ownership |
+| Delivery completing lifecycle | PR #380 — Template Edit synchronous submit ownership |
 | Delivery branch | `fix/template-edit-submit-ownership` |
 | Implemented change | Accepted TemplateEditModal submission synchronously owns resubmit, dismissal and local field/step mutation boundaries until `onSave` settles |
 | Deterministic coverage | `test/template-edit-submit-ownership.test.mjs`, aligned `test/template-apply-pending-integrity.test.mjs`, repaired `test/template-modal-stack-integrity.test.mjs` |
-| Canonical validation | Run 1110 FAIL only on stale modal-stack source contract; repaired exact head requires fresh validation |
-| Review/thread audit | Pending after passing validation |
-| Base freshness | Branch created from fresh main `9478cd4be60f94620a48409fa1597f4950026bda` |
+| Canonical validation | Run 1112 PASS on repaired implementation head; final post-handoff head validation required |
+| Review/thread audit | PASS — no submitted reviews or inline review threads |
+| Base freshness | PASS — current main remains PR base `9478cd4be60f94620a48409fa1597f4950026bda` |
+| Mergeability | PASS — GitHub reports PR #380 mergeable |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
@@ -80,10 +83,10 @@ That stale modal-stack assertion has been repaired on this same PR. It continues
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #380 is the sole active provider-independent integrity delivery. |
-| What is already happening? | Template editor same-render submission, dismissal and local edit controls use synchronous ownership; one stale validation assertion has been repaired. |
-| What has been validated? | Run 1110 passed audit/governance/lint/typecheck and 479/480 tests; the sole stale assertion is repaired and needs exact-head revalidation. |
-| What is next? | Re-run canonical validation on the repaired exact head, then audit lifecycle evidence and prepare the post-merge-safe handoff. |
+| Where am I? | Stage 3; PR #380 is completing lifecycle and the next durable re-entry point is fresh `main` after merge. |
+| What is already happening? | Template editor submission, dismissal and mutation-adjacent controls now use synchronous ownership; repaired implementation-head validation passed. |
+| What has been validated? | Run 1112 passed canonical validation; reviews/threads are empty; PR is mergeable and main is base-fresh. |
+| What is next? | Validate this exact handoff head, complete PR #380 lifecycle, then re-enter fresh main and select the next provider-independent Stage 3 target. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -93,11 +96,10 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. exact-head revalidate repaired PR #380;
-2. repair only evidence-backed failures on this same delivery if needed;
-3. after a passing exact implementation head, audit reviews, inline threads, base freshness and mergeability;
-4. convert durable STATUS.md to a post-merge-safe fresh-main handoff and exact-head validate that handoff before implementation-complete signaling;
-5. after merge, re-enter fresh authoritative `main` and select the next non-duplicate provider-independent Stage 3 target.
+1. exact-head validate this post-merge-safe handoff;
+2. if validation and live lifecycle evidence remain satisfactory, apply implementation-complete signaling and allow repository lifecycle automation to progress PR #380;
+3. after merge, re-enter fresh authoritative `main`, inspect current GitHub/repository state, and continue the next provider-independent Stage 3 integrity target;
+4. leave generic durable execution deferred until the real provider contract is certified.
 
 ## Stage 3 exit conditions
 
