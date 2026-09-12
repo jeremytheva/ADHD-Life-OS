@@ -6,15 +6,14 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate PR #377 after repairing stale RoutineForm source-contract assertions, then complete its repository lifecycle before selecting another provider-independent Stage 3 integrity target.
+  objective: Complete PR #377 lifecycle; after merge, re-enter fresh authoritative main and select the next dependency-correct provider-independent Stage 3 integrity target.
   issue: null
-  pr: 377
-  branch: fix/routine-form-submit-ownership
+  pr: null
+  branch: main
 next_actions:
-  - Run the canonical Application validation process on PR #377 exact repaired head.
-  - Repair any further in-scope validation or review findings on the same PR and revalidate the changed head.
-  - Audit acceptance criteria, review/thread state, base freshness and mergeability.
-  - Commit a post-merge-safe STATUS handoff and exact-head revalidate before implementation-complete signaling.
+  - Exact-head validate this post-merge-safe STATUS handoff for PR #377.
+  - Apply implementation-complete lifecycle evidence only if exact-head validation, review/thread audit, base freshness and mergeability remain satisfactory.
+  - After repository merge, inspect fresh main and continue the next provider-independent Stage 3 integrity target.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -26,12 +25,12 @@ validation:
   governance: PASS
   lint: PASS
   typecheck: PASS
-  tests: FAIL
-  build: NOT_RUN
-  ci: PENDING
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1096 passed dependency audit, governance, lint and typecheck, then reached 472/474 passing Node tests. Its only failures were two stale RoutineForm source-contract assertions that still required rendered saving state as the handler authority. Those assertions are repaired on the active branch to require the stronger synchronous submitOwnerRef contract; exact-head canonical revalidation is required.
-last_verified_commit: null
+validation_basis: Application validation run 1099 passed the canonical platform validation process on repaired implementation head 005423d02d3d0f04c37eb1258807d103328936c5 after stale RoutineForm source-contract assertions were aligned to synchronous submit ownership. Reviews and inline review threads are empty and main remains exactly at PR #377 base 46cae2831a96c0cee2d8b6ce3d1849715c999487. This STATUS handoff changes the head and therefore requires one final exact-head canonical validation before implementation-complete signaling.
+last_verified_commit: 005423d02d3d0f04c37eb1258807d103328936c5
 last_updated: 2026-09-13T06:14:25+10:00
 ---
 
@@ -44,20 +43,20 @@ last_updated: 2026-09-13T06:14:25+10:00
 
 ## Current objective
 
-PR #376 — `fix: lock housework room navigation during save` — is merged into `main` at `46cae2831a96c0cee2d8b6ce3d1849715c999487` after exact-head Application validation run 1093 and repository lifecycle finalization.
+PR #376 — `fix: lock housework room navigation during save` — is merged into `main` at `46cae2831a96c0cee2d8b6ce3d1849715c999487`.
 
-PR #377 — `fix: serialize routine form submission synchronously` — is the sole active delivery. `RoutineForm` now uses one synchronous `submitOwnerRef` so the accepted submit claims ownership before invoking `onSave`, only that owner may release local saving state, and cancel/Escape plus local form/step mutation handlers consult the same owner. Existing routine persistence, recovery, provider contracts, schemas and data semantics remain unchanged.
+PR #377 — `fix: serialize routine form submission synchronously` — has completed implementation-head validation. `RoutineForm` now uses one synchronous `submitOwnerRef` so the accepted submit claims ownership before invoking `onSave`, only that owner may release local saving state, and cancel/Escape plus local form/step mutation handlers consult the same owner. Existing routine persistence, recovery, provider contracts, schemas and data semantics remain unchanged.
 
-Focused deterministic coverage is committed in `test/routine-form-submit-ownership.test.mjs`.
+Application validation run 1099 passed the canonical repository gate on implementation head `005423d02d3d0f04c37eb1258807d103328936c5`. No submitted reviews or inline review threads exist, and `main` remains exactly at PR #377 base `46cae2831a96c0cee2d8b6ce3d1849715c999487`.
 
-Application validation run 1096 passed dependency audit, governance, lint and typecheck and reached 472/474 passing Node tests. The two failures were stale source-contract assertions in `test/routine-form-save-integrity.test.mjs` and `test/routine-step-remove-focus-recovery.test.mjs` that still expected rendered `saving` state to guard Escape and step removal. Both tests are now aligned to the stronger synchronous ownership contract. Exact-head canonical revalidation is required.
+This durable handoff intentionally points autonomous continuation back to fresh `main` after merge rather than leaving PR #377 or its source branch as the future re-entry target. Because this documentation commit changes the PR head, the exact new head must pass canonical validation before implementation-complete signaling.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical exact-head revalidation of PR #377 after stale test repair |
-| Gate state | Implementation and focused regression coverage committed; run 1096 stale source-contract assertions repaired; exact-head validation pending |
+| Current gate | INTEGRATION — final exact-head validation of post-merge-safe handoff for PR #377 |
+| Gate state | Implementation head passed run 1099; clean review/thread audit and base freshness confirmed; final handoff head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -66,13 +65,13 @@ Application validation run 1096 passed dependency audit, governance, lint and ty
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #376 — Housework Setup room-navigation lock; merged at `46cae2831a96c0cee2d8b6ce3d1849715c999487` |
-| Active delivery | PR #377 — Routine Form synchronous submit ownership |
+| Delivery completing lifecycle | PR #377 — Routine Form synchronous submit ownership |
 | Delivery branch | `fix/routine-form-submit-ownership` |
 | Implemented change | Accepted RoutineForm submit synchronously owns duplicate-submit, cancel/Escape and local form mutation boundaries until persistence settles |
-| Deterministic coverage | `test/routine-form-submit-ownership.test.mjs` plus repaired existing RoutineForm source-contract tests |
-| Canonical validation | Run 1096 reached Node tests and failed only two stale source-contract assertions; repaired head requires rerun |
-| Review/thread audit | PENDING after successful implementation-head validation |
-| Base freshness | Branch created from fresh main `46cae2831a96c0cee2d8b6ce3d1849715c999487` |
+| Deterministic coverage | `test/routine-form-submit-ownership.test.mjs` plus aligned existing RoutineForm source-contract tests |
+| Canonical validation | Run 1099 PASS on implementation head; final post-handoff head validation required |
+| Review/thread audit | PASS — no submitted reviews or inline review threads |
+| Base freshness | PASS — current main remains PR base `46cae2831a96c0cee2d8b6ce3d1849715c999487` |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
@@ -81,25 +80,23 @@ Application validation run 1096 passed dependency audit, governance, lint and ty
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #377 is the sole active provider-independent interaction-integrity delivery. |
-| What is already happening? | RoutineForm owns accepted submission synchronously instead of relying only on rendered saving state. |
-| What has been validated? | PR #376 is merged. PR #377 run 1096 passed audit/governance/lint/typecheck and exposed only two stale RoutineForm source-contract assertions, now repaired. |
-| What is next? | Revalidate PR #377 exact head, repair any further findings on the same PR, audit lifecycle evidence, then hand off for merge. |
+| Where am I? | Stage 3; PR #377 is completing lifecycle and the next durable re-entry point is fresh `main` after merge. |
+| What is already happening? | RoutineForm submission and mutation-adjacent controls now use synchronous ownership; implementation-head validation passed. |
+| What has been validated? | Run 1099 passed canonical validation; reviews/threads are empty; main is base-fresh. |
+| What is next? | Validate this exact handoff head, complete PR #377 lifecycle, then re-enter fresh main and select the next provider-independent Stage 3 target. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #377 is independent of that provider dependency.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #377 does not alter that boundary.
 
 ## Next dependency-correct work
 
-1. run canonical exact-head validation for PR #377 after the stale test repair;
-2. repair any further in-scope validation/review findings on the same branch and revalidate;
-3. verify review/thread state, current `main`, mergeability and acceptance criteria;
-4. update this file to a post-merge-safe handoff, revalidate that exact head, then apply implementation-complete lifecycle evidence;
-5. after merge, re-enter fresh authoritative `main` and continue the next provider-independent Stage 3 target;
-6. leave generic durable execution deferred until the real provider contract is certified.
+1. exact-head validate this post-merge-safe handoff;
+2. if validation and live lifecycle evidence remain satisfactory, apply implementation-complete signaling and allow repository lifecycle automation to progress PR #377;
+3. after merge, re-enter fresh authoritative `main`, inspect current GitHub/repository state, and continue the next provider-independent Stage 3 integrity target;
+4. leave generic durable execution deferred until the real provider contract is certified.
 
 ## Stage 3 exit conditions
 
