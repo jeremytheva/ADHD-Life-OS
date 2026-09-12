@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #363 from this post-merge-safe handoff, then re-enter fresh main and select the next highest-priority provider-independent Stage 3 target.
+  objective: Complete PR #364 synchronous Brain Inbox capture/edit ownership, then re-enter fresh main and continue the next provider-independent Stage 3 target.
   issue: null
-  pr: null
-  branch: main
+  pr: 364
+  branch: fix/brain-inbox-submit-ownership
 next_actions:
-  - Run canonical Application validation on this exact post-merge-safe PR #363 head.
-  - Re-audit submitted reviews and inline review threads after exact-head validation.
-  - Confirm the final head remains current with main and conflict-free.
-  - If evidence remains clean, add lifecycle:implementation-complete and allow repository lifecycle automation to complete PR #363.
-  - Confirm merge on main, then inspect fresh authoritative state before selecting the next delivery.
+  - Run canonical Application validation on the exact current PR #364 head.
+  - Repair any in-scope validation or review finding on the same PR.
+  - Audit acceptance criteria, submitted reviews, inline review threads, base freshness and mergeability.
+  - Before implementation-complete handoff, make STATUS.md post-merge-safe and revalidate that exact head.
+  - Complete the repository lifecycle, confirm merge on main, then inspect fresh authoritative state for the next delivery.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1013 passed canonical npm run platform:validate on implementation head f7bb8acf07994160e32cfbc2edf341ff7c7f5b81. Submitted reviews and inline review threads were clean afterward, and the branch was 0 commits behind main at a71635b0c258f0daf92ed9aa088486265136c6f3. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires one final canonical validation before lifecycle completion.
-last_verified_commit: f7bb8acf07994160e32cfbc2edf341ff7c7f5b81
-last_updated: 2026-09-12T17:55:00+10:00
+validation_basis: PR #364 implementation and focused deterministic regression coverage are committed. Canonical npm run platform:validate is required on the exact current head before implementation-complete evidence can be recorded.
+last_verified_commit: e1422aa976dc0a605f1705fd05a8ec9f69fca51a
+last_updated: 2026-09-12T18:17:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,24 +45,22 @@ last_updated: 2026-09-12T17:55:00+10:00
 
 ## Current objective
 
-PR #363 — `fix: own development profile switches synchronously` — has passed canonical implementation-head validation.
+PR #364 — `fix: own brain inbox submissions synchronously` — is the sole active delivery.
 
-Development Profile Mode now claims ref-backed ownership synchronously before the authentication await, snapshots the selected profile email for that owned attempt, rejects same-tick competing switches, and releases ownership only from the attempt that owns it. Existing recoverable failure feedback and per-profile busy/live status semantics remain unchanged.
+Fresh-main inspection after PR #363 merged at `e1422aa976dc0a605f1705fd05a8ec9f69fca51a` found that Brain Inbox capture and edit writes still depended on rendered `capturePending` / `editPending` state at their asynchronous persistence boundaries. That left a same-tick window where duplicate capture/edit submissions or conflicting edit actions could be accepted before React committed the pending render.
 
-Focused deterministic regression coverage verifies ownership is acquired before `signIn()` and released only by the owning attempt. Canonical Application validation run 1013 passed governance, zero-warning lint, typecheck, Node tests, production build, and browser coverage on implementation head `f7bb8acf07994160e32cfbc2edf341ff7c7f5b81`.
+PR #364 now claims synchronous ref-backed ownership before each capture/edit write. Capture snapshots the accepted thought and prevents input mutation until its owned attempt settles. Edit snapshots the accepted text, owns the item before persistence, blocks duplicate save and same-item delete/category/convert actions synchronously, prevents edit-field/cancel mutation while owned, and releases ownership only from the attempt that acquired it. Existing recoverable failure/retry feedback remains unchanged.
 
-Submitted reviews and inline review threads were clean after the pass, and the branch was 0 commits behind `main` at `a71635b0c258f0daf92ed9aa088486265136c6f3`.
+Focused deterministic coverage in `test/brain-inbox-submit-ownership.test.mjs` verifies synchronous acquisition, owner-scoped release, same-item conflict exclusion, and same-tick input/cancel protection.
 
-This document is intentionally post-merge-safe. Once PR #363 completes lifecycle, autonomous continuation must begin from fresh `main`, not treat the merged PR branch as active work. This STATUS-only handoff commit itself requires final exact-head canonical validation before lifecycle completion.
-
-No auth provider route, credential policy, domain persistence, schema, execution policy, or production deployment behavior is changed.
+No provider route, schema, persistence contract, authentication, execution policy, or deployment configuration is changed.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head validation and lifecycle completion for PR #363 |
-| Gate state | Implementation head validated by run 1013; post-merge-safe STATUS committed; final exact-head evidence pending |
+| Current gate | INTEGRATION — canonical validation and lifecycle completion for PR #364 |
+| Gate state | Implementation committed; exact-head canonical validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -70,42 +68,42 @@ No auth provider route, credential policy, domain persistence, schema, execution
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #362 — Reward Shop recoverable purchase-failure feedback; merged at `a71635b0c258f0daf92ed9aa088486265136c6f3` after final Application validation run 1011 passed |
-| Delivery awaiting final lifecycle completion | PR #363 — Development Profile Mode synchronous switch ownership |
-| Delivery branch | `fix/profile-selector-submit-ownership` |
-| Implemented change | Ref-backed synchronous switch ownership before `signIn()`; selected-email snapshot; owner-scoped release |
-| Deterministic coverage | `test/profile-selector-submit-ownership.test.mjs` plus existing Profile Selector feedback semantics coverage |
-| Canonical implementation-head validation | PASS — Application validation run 1013 on `f7bb8acf07994160e32cfbc2edf341ff7c7f5b81` |
-| Review/thread audit | CLEAN after run 1013; recheck after final exact-head validation |
-| Base freshness | CURRENT — branch was 0 commits behind main before this STATUS-only handoff |
-| Final exact-head validation | Required on this post-merge-safe STATUS head |
+| Latest repository delivery on main | PR #363 — Development Profile synchronous switch ownership; merged at `e1422aa976dc0a605f1705fd05a8ec9f69fca51a` |
+| Active delivery | PR #364 — Brain Inbox synchronous capture/edit ownership |
+| Delivery branch | `fix/brain-inbox-submit-ownership` |
+| Implemented change | Ref-backed capture ownership; per-item edit ownership; same-tick field/cancel guards; same-item conflict exclusion |
+| Deterministic coverage | `test/brain-inbox-submit-ownership.test.mjs` |
+| Canonical validation | NOT_RUN on the current PR head |
+| Review/thread audit | Pending after canonical validation |
+| Base freshness | PR created from current `main` at `e1422aa976dc0a605f1705fd05a8ec9f69fca51a` |
 | Provider/data impact | None |
-| Runtime/deployment verification | NOT_APPLICABLE for this development-only interaction correction |
+| Runtime/deployment verification | NOT_APPLICABLE for this provider-independent interaction correction |
 | Current blocker | None |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #363 implementation is validated; this post-merge-safe handoff awaits final exact-head validation and lifecycle completion. |
-| What is already happening? | Development profile switching owns each authentication attempt synchronously before rendered pending state exists. |
-| What has been validated? | Canonical run 1013 passed the implementation head; reviews/threads were clean and the branch was current with main before this STATUS-only handoff. |
-| What is next? | Validate this exact handoff head, re-audit lifecycle evidence, complete PR #363, then re-enter fresh main. |
+| Where am I? | Stage 3. PR #364 is the sole active delivery and is awaiting canonical validation. |
+| What is already happening? | Brain Inbox capture/edit persistence now owns accepted writes synchronously before rendered pending state exists. |
+| What has been validated? | Previous repository delivery PR #363 merged cleanly; PR #364 exact-head canonical validation is not yet recorded. |
+| What is next? | Validate PR #364, repair any in-scope findings, audit lifecycle evidence, prepare a post-merge-safe STATUS handoff, and complete the PR lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #363 is provider-independent frontend interaction-integrity work and does not alter that boundary.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #364 is provider-independent frontend interaction-integrity work and does not alter that boundary.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on this exact post-merge-safe PR #363 head;
-2. re-audit submitted reviews, inline review threads, base freshness and mergeability;
-3. if all evidence remains clean, add `lifecycle:implementation-complete` and allow repository lifecycle automation to complete the PR;
-4. confirm merge on `main` and re-enter from fresh authoritative state;
-5. select the next provider-independent Stage 3 target from fresh evidence;
-6. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on the exact current PR #364 head;
+2. repair any in-scope validation/review finding on the same branch;
+3. audit acceptance criteria, submitted reviews, inline review threads, base freshness and mergeability;
+4. make this handoff post-merge-safe before implementation-complete signalling and revalidate the resulting exact head;
+5. complete repository lifecycle and confirm merge on `main`;
+6. re-enter from fresh authoritative state and select the next provider-independent Stage 3 target;
+7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
