@@ -11,8 +11,8 @@ current_work:
   pr: 364
   branch: fix/brain-inbox-submit-ownership
 next_actions:
-  - Run canonical Application validation on the exact current PR #364 head.
-  - Repair any in-scope validation or review finding on the same PR.
+  - Run canonical Application validation on the exact repaired PR #364 head.
+  - Repair any remaining in-scope validation or review finding on the same PR.
   - Audit acceptance criteria, submitted reviews, inline review threads, base freshness and mergeability.
   - Before implementation-complete handoff, make STATUS.md post-merge-safe and revalidate that exact head.
   - Complete the repository lifecycle, confirm merge on main, then inspect fresh authoritative state for the next delivery.
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: FAIL
   build: NOT_RUN
-  ci: NOT_RUN
+  ci: FAIL
   runtime: NOT_APPLICABLE
-validation_basis: PR #364 implementation and focused deterministic regression coverage are committed. Canonical npm run platform:validate is required on the exact current head before implementation-complete evidence can be recorded.
+validation_basis: Application validation run 1016 reached Node tests after dependency audit, governance, zero-warning lint and typecheck passed. The new synchronous ownership regression tests passed. Three older source-contract assertions failed because they still required the superseded capturePending/editPending handler guards. Those stale tests have been repaired on the same PR to assert the stronger ref-backed ownership contract. Canonical npm run platform:validate must now pass on the exact repaired head.
 last_verified_commit: e1422aa976dc0a605f1705fd05a8ec9f69fca51a
-last_updated: 2026-09-12T18:17:00+10:00
+last_updated: 2026-09-12T18:20:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -53,14 +53,16 @@ PR #364 now claims synchronous ref-backed ownership before each capture/edit wri
 
 Focused deterministic coverage in `test/brain-inbox-submit-ownership.test.mjs` verifies synchronous acquisition, owner-scoped release, same-item conflict exclusion, and same-tick input/cancel protection.
 
+Application validation run 1016 confirmed dependency audit, governance, lint and typecheck before Node tests. The new ownership coverage passed. Three older Brain Inbox source-contract assertions failed because they encoded the weaker rendered-state implementation details (`capturePending` / `editPending`) that this change intentionally replaces at handler boundaries. `test/inbox-capture-pending-integrity.test.mjs` and `test/inbox-edit-pending-integrity.test.mjs` have been repaired on the same PR to preserve their UI-pending assertions while requiring synchronous ownership for duplicate/conflict exclusion.
+
 No provider route, schema, persistence contract, authentication, execution policy, or deployment configuration is changed.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical validation and lifecycle completion for PR #364 |
-| Gate state | Implementation committed; exact-head canonical validation required |
+| Current gate | INTEGRATION — repaired canonical validation and lifecycle completion for PR #364 |
+| Gate state | Implementation committed; stale regression contracts repaired; exact-head canonical validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -72,22 +74,22 @@ No provider route, schema, persistence contract, authentication, execution polic
 | Active delivery | PR #364 — Brain Inbox synchronous capture/edit ownership |
 | Delivery branch | `fix/brain-inbox-submit-ownership` |
 | Implemented change | Ref-backed capture ownership; per-item edit ownership; same-tick field/cancel guards; same-item conflict exclusion |
-| Deterministic coverage | `test/brain-inbox-submit-ownership.test.mjs` |
-| Canonical validation | NOT_RUN on the current PR head |
-| Review/thread audit | Pending after canonical validation |
+| Deterministic coverage | `test/brain-inbox-submit-ownership.test.mjs` plus repaired existing capture/edit pending-integrity contracts |
+| Canonical validation | Run 1016 FAIL at three stale source-contract assertions after audit/governance/lint/typecheck PASS; repaired exact head requires rerun |
+| Review/thread audit | Pending after canonical validation passes |
 | Base freshness | PR created from current `main` at `e1422aa976dc0a605f1705fd05a8ec9f69fca51a` |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this provider-independent interaction correction |
-| Current blocker | None |
+| Current blocker | None — validation findings were in-scope stale tests and have been repaired |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #364 is the sole active delivery and is awaiting canonical validation. |
+| Where am I? | Stage 3. PR #364 is the sole active delivery; stale validation assertions were repaired and canonical validation must rerun. |
 | What is already happening? | Brain Inbox capture/edit persistence now owns accepted writes synchronously before rendered pending state exists. |
-| What has been validated? | Previous repository delivery PR #363 merged cleanly; PR #364 exact-head canonical validation is not yet recorded. |
-| What is next? | Validate PR #364, repair any in-scope findings, audit lifecycle evidence, prepare a post-merge-safe STATUS handoff, and complete the PR lifecycle. |
+| What has been validated? | Run 1016 passed audit/governance/lint/typecheck and the new ownership regression coverage; three superseded source assertions failed and were repaired. |
+| What is next? | Validate the repaired exact head, repair any remaining in-scope finding, audit lifecycle evidence, prepare a post-merge-safe STATUS handoff, and complete the PR lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -97,8 +99,8 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact current PR #364 head;
-2. repair any in-scope validation/review finding on the same branch;
+1. run canonical Application validation on the exact repaired PR #364 head;
+2. repair any remaining in-scope validation/review finding on the same branch;
 3. audit acceptance criteria, submitted reviews, inline review threads, base freshness and mergeability;
 4. make this handoff post-merge-safe before implementation-complete signalling and revalidate the resulting exact head;
 5. complete repository lifecycle and confirm merge on `main`;
