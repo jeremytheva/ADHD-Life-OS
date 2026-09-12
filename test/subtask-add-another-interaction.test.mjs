@@ -12,11 +12,17 @@ const taskItemSource = fs.readFileSync(
   'utf8'
 )
 
-test('Add Another Subtask opens the existing subtask input', () => {
+test('Add Another Subtask opens the existing subtask input through the mutation ownership boundary', () => {
   assert.match(
     subtaskListSource,
-    /onShowInput,[\s\S]*?Add More Button[\s\S]*?if \(onShowInput\) onShowInput\(\)/,
-    'SubtaskList should invoke an explicit show-input callback from Add Another Subtask'
+    /const handleShowInput = \(\) => \{\s*if \(mutationOwnerRef\.current \|\| pending\) return\s*if \(onShowInput\) onShowInput\(\)\s*\}/,
+    'SubtaskList should guard the explicit show-input callback with synchronous mutation ownership'
+  )
+
+  assert.match(
+    subtaskListSource,
+    /Add More Button[\s\S]*?onClick=\{handleShowInput\}[\s\S]*?Add Another Subtask/,
+    'Add Another Subtask should route through the guarded show-input handler'
   )
 
   assert.match(
