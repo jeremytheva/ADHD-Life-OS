@@ -19,6 +19,8 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
   const [stepStartTime, setStepStartTime] = useState(null)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const completionAttemptedRef = useRef(false)
+  const initializationPendingRef = useRef(false)
+  const actionOwnerRef = useRef(null)
   const routineRef = useRef(routine)
   routineRef.current = routine
 
@@ -31,7 +33,23 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
   const dialogTitleId = `routine-progress-title-${routineId}`
   const allStepsHeadingId = `routine-progress-all-steps-${routineId}`
 
+  const claimAction = useCallback((action) => {
+    if (actionOwnerRef.current) return null
+    actionOwnerRef.current = action
+    setActionPending(true)
+    return action
+  }, [])
+
+  const releaseAction = useCallback((owner) => {
+    if (actionOwnerRef.current !== owner) return
+    actionOwnerRef.current = null
+    setActionPending(false)
+  }, [])
+
   const initializeSession = useCallback(async () => {
+    if (initializationPendingRef.current) return
+    initializationPendingRef.current = true
+
     try {
       setLoading(true)
       setLoadError(false)
@@ -48,14 +66,16 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
       console.error('Error initializing session:', error)
       setLoadError(true)
     } finally {
+      initializationPendingRef.current = false
       setLoading(false)
     }
   }, [routineId])
 
   const handleCompleteRoutine = useCallback(async () => {
-    if (!session || actionPending) return
+    if (!session) return
+    const owner = claimAction(`complete-routine:${session.id}`)
+    if (!owner) return
 
-    setActionPending(true)
     setOperationError('')
     try {
       await routineProgressService.completeRoutine(session.id)
@@ -65,15 +85,16 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
       console.error('Error completing routine:', error)
       setOperationError('All steps are recorded, but we couldn’t save the routine as finished. Your session remains open; try finishing again.')
     } finally {
-      setActionPending(false)
+      releaseAction(owner)
     }
-  }, [actionPending, onClose, onComplete, session])
+  }, [claimAction, onClose, onComplete, releaseAction, session])
 
   const handleCancel = useCallback(async () => {
-    if (!session || actionPending) return
+    if (!session || actionOwnerRef.current) return
     if (!window.confirm('Are you sure you want to cancel this routine?')) return
+    const owner = claimAction(`cancel-routine:${session.id}`)
+    if (!owner) return
 
-    setActionPending(true)
     setOperationError('')
     try {
       await routineProgressService.cancelRoutine(session.id)
@@ -82,12 +103,12 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
       console.error('Error canceling routine:', error)
       setOperationError('We couldn’t cancel this routine session. It remains active, so you can keep working or try cancelling again.')
     } finally {
-      setActionPending(false)
+      releaseAction(owner)
     }
-  }, [actionPending, onClose, session])
+  }, [claimAction, onClose, releaseAction, session])
 
   const handleEscape = useCallback(() => {
-    if (loading || actionPending) return
+    if (loading || actionOwnerRef.current) return
 
     if (loadError || !session) {
       onClose()
@@ -95,7 +116,7 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
     }
 
     void handleCancel()
-  }, [actionPending, handleCancel, loadError, loading, onClose, session])
+  }, [handleCancel, loadError, loading, onClose, session])
 
   const dialogRef = useModalDialog({ onEscape: handleEscape })
 
@@ -135,42 +156,50 @@ const RoutineProgress = ({ routine, onClose, onComplete }) => {
   }, [hasCurrentStep, stepStartTime])
 
   const handleCompleteStep = async () => {
-    if (actionPending) return
+    if (!session || !currentStep) return
+    const owner = claimAction(`complete-step:${session.id}:${session.current_step_index}`)
+    if (!owner) return
 
-    setActionPending(true)
+    const acceptedSessionId = session.id
+    const acceptedStepIndex = session.current_step_index
+    const acceptedStepId = currentStep.id
     setOperationError('')
     try {
       const updatedSession = await routineProgressService.completeStep(
-        session.id,
-        session.current_step_index,
-        currentStep.id
+        acceptedSessionId,
+        acceptedStepIndex,
+        acceptedStepId
       )
       setSession(updatedSession)
     } catch (error) {
       console.error('Error completing step:', error)
       setOperationError('We couldn’t save this step as completed. It has not been advanced, so you can safely try again.')
     } finally {
-      setActionPending(false)
+      releaseAction(owner)
     }
   }
 
   const handleSkipStep = async () => {
-    if (actionPending) return
+    if (!session || !currentStep) return
+    const owner = claimAction(`skip-step:${session.id}:${session.current_step_index}`)
+    if (!owner) return
 
-    setActionPending(true)
+    const acceptedSessionId = session.id
+    const acceptedStepIndex = session.current_step_index
+    const acceptedStepId = currentStep.id
     setOperationError('')
     try {
       const updatedSession = await routineProgressService.skipStep(
-        session.id,
-        session.current_step_index,
-        currentStep.id
+        acceptedSessionId,
+        acceptedStepIndex,
+        acceptedStepId
       )
       setSession(updatedSession)
     } catch (error) {
       console.error('Error skipping step:', error)
       setOperationError('We couldn’t save this step as skipped. The routine has not advanced, so you can safely try again.')
     } finally {
-      setActionPending(false)
+      releaseAction(owner)
     }
   }
 

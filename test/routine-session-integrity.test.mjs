@@ -71,12 +71,13 @@ test('routine progress keeps one semantic dialog shell across transient states',
   assert.match(source, /Preparing the next routine step…/)
 })
 
-test('routine progress Escape follows cancellation semantics and write lockouts', async () => {
+test('routine progress Escape follows cancellation semantics and synchronous write ownership', async () => {
   const source = await read('src/components/routines/RoutineProgress.jsx')
 
-  assert.match(source, /const handleEscape = useCallback\(\(\) => \{\s+if \(loading \|\| actionPending\) return/)
+  assert.match(source, /const handleEscape = useCallback\(\(\) => \{\s+if \(loading \|\| actionOwnerRef\.current\) return/)
   assert.match(source, /if \(loadError \|\| !session\) \{\s+onClose\(\)\s+return\s+\}/)
   assert.match(source, /void handleCancel\(\)/)
+  assert.match(source, /if \(!session \|\| actionOwnerRef\.current\) return/)
   assert.match(source, /if \(!window\.confirm\('Are you sure you want to cancel this routine\?'\)\) return/)
   assert.match(source, /await routineProgressService\.cancelRoutine\(session\.id\)/)
 })
