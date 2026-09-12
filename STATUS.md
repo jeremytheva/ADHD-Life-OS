@@ -4,18 +4,19 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: VALIDATING
+execution_state: IMPLEMENTING
 current_work:
-  objective: Complete PR #358 lifecycle from this post-merge-safe handoff, then re-enter fresh main and select the next highest-priority provider-independent Stage 3 integrity target from current evidence.
+  objective: Validate and complete the shared Settings preference-mutation ownership fix, then continue fresh-main provider-independent Stage 3 interaction-integrity work.
   issue: null
   pr: null
-  branch: main
+  branch: fix/settings-preference-mutation-ownership
 next_actions:
-  - Run canonical Application validation on this exact post-merge-safe PR #358 head.
-  - Re-audit submitted reviews and inline review threads after exact-head validation.
-  - Confirm the final head remains current with main and conflict-free.
-  - If evidence remains clean, add lifecycle:implementation-complete and allow the repository lifecycle controller/finalizer to complete PR #358.
-  - Confirm merge on main, then inspect fresh authoritative state before selecting the next delivery.
+  - Open one focused Draft PR for the current Settings preference-mutation ownership delivery.
+  - Run canonical Application validation on the exact PR head.
+  - Repair any in-scope validation or review findings on the same PR.
+  - After implementation-head validation passes, re-audit acceptance, reviews, base freshness and mergeability.
+  - Commit a post-merge-safe STATUS handoff, revalidate that exact head, then complete lifecycle.
+  - Re-enter fresh main after merge and select the next provider-independent Stage 3 integrity target.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +25,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: Application validation run 993 passed canonical npm run platform:validate on repaired implementation head 5834242d3e58c46649ee24f5b37611efcf3294d2. Submitted reviews and inline review threads were clean afterward, and main remained at the PR base 81eabc032f041942932b1b6bacb7ff5e25a5ab12. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires one final canonical validation before lifecycle completion.
-last_verified_commit: 5834242d3e58c46649ee24f5b37611efcf3294d2
-last_updated: 2026-09-12T12:15:00+10:00
+validation_basis: PR #358 completed exact-head Application validation run 994 and merged into main at 356d1949b036dabb3af6b7050135ef2027ea0e6d. Fresh-main inspection then identified the shared Settings preference persistence path as the next provider-independent interaction-integrity gap. Current branch implementation and focused regression coverage are not yet canonically validated.
+last_verified_commit: 356d1949b036dabb3af6b7050135ef2027ea0e6d
+last_updated: 2026-09-12T13:12:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,41 +46,35 @@ last_updated: 2026-09-12T12:15:00+10:00
 
 ## Current objective
 
-PR #357 — Housework Setup synchronous save ownership — completed its repository-owned lifecycle and merged into `main` at `81eabc032f041942932b1b6bacb7ff5e25a5ab12`.
+PR #358 — `fix: own day setup saves synchronously` — completed final exact-head Application validation run 994 and merged into `main` at `356d1949b036dabb3af6b7050135ef2027ea0e6d`.
 
-Draft PR #358 — `fix: own day setup saves synchronously` — is the sole active delivery. It closes the Day Setup interaction-integrity gap where duplicate submit and field-change exclusion depended only on rendered React `saving` state, leaving a same-tick window before React committed that state. Day Setup now claims ref-backed synchronous save ownership before React state changes or persistence begins, rejects duplicate submit and field changes while ownership is held, snapshots submitted preference values before awaiting persistence, preserves optional work-time normalization to `null`, and releases ownership after success or failure so retry remains possible.
+Fresh-main inspection found the next provider-independent interaction-integrity gap in `src/components/settings/Settings.jsx`. Theme, notification, Day Setup and retry persistence all converge on `handleUpdatePreferences`, but that shared parent persistence boundary did not synchronously own an unresolved mutation. Two preference changes could therefore enter before React rendered any pending state, allowing overlapping writes against the same preferences record.
 
-Application validation run 990 reached the deterministic suite after governance, lint and typecheck passed; the new synchronous-ownership regression passed, then one stale existing semantics assertion stopped the suite because it still required the weaker render-lagged `if (saving) return` implementation detail. That assertion was repaired on the same branch to require `saveOwnerRef.current`. Application validation run 993 then passed canonical `npm run platform:validate` completely on repaired implementation head `5834242d3e58c46649ee24f5b37611efcf3294d2`.
+The active branch `fix/settings-preference-mutation-ownership` now claims ref-backed synchronous ownership before the first preference write, snapshots the pending update payload, exposes a shared saving state, prevents retry while a write is active, disables Day Setup and App Preferences controls while the shared write is unresolved, and reports a recoverable busy error rather than starting a competing same-tick mutation. Focused deterministic coverage is in `test/settings-preference-mutation-integrity.test.mjs`.
 
-Submitted reviews and inline review threads were clean after run 993, PR #358 remained conflict-free/mergeable, and `main` remained at its base `81eabc032f041942932b1b6bacb7ff5e25a5ab12`.
-
-This document is intentionally post-merge-safe. Once PR #358 completes lifecycle, autonomous continuation must begin from fresh `main`, not treat the merged PR branch as active work. This STATUS-only handoff commit itself requires final exact-head canonical validation before lifecycle completion.
-
-The change is frontend interaction/recovery integrity only. It changes no preferences schema, repository/provider route, authentication behaviour, recommendation/execution policy, or generic durable execution-session contract.
+This change is frontend interaction/recovery integrity only. It changes no preference schema, provider route/method, authentication behaviour, execution/recommendation policy, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head validation and lifecycle completion for PR #358 |
-| Gate state | Repaired implementation head validated by run 993; post-merge-safe STATUS committed; final exact-head evidence pending |
-| Execution state | VALIDATING |
+| Current gate | INTEGRATION — canonical validation and lifecycle completion for shared Settings preference ownership |
+| Gate state | Implementation and deterministic coverage committed; canonical validation not yet run |
+| Execution state | IMPLEMENTING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
 ## Delivery checkpoint
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #357 — Housework Setup synchronous save ownership; merged at `81eabc032f041942932b1b6bacb7ff5e25a5ab12` |
-| Delivery awaiting final lifecycle completion | PR #358 — Day Setup synchronous save ownership |
-| Delivery branch | `fix/day-setup-save-ownership` |
-| Implemented change | Ref-backed synchronous owner before Day Setup preference persistence; duplicate submit/change excluded while unresolved; submitted values snapshotted |
-| Deterministic coverage | `test/day-setup-saving-integrity.test.mjs` plus repaired `test/day-setup-saving-status-semantics.test.mjs` |
-| Validation history | Run 990: governance/lint/typecheck PASS; new ownership regression PASS; stopped on one stale existing semantics assertion, repaired on same branch. Run 993: canonical validation PASS on repaired implementation head. |
-| Canonical implementation-head validation | PASS — Application validation run 993 on `5834242d3e58c46649ee24f5b37611efcf3294d2` |
-| Review/thread audit | CLEAN after run 993; recheck after final exact-head validation |
-| Base freshness | CURRENT — `main` remained at PR base `81eabc032f041942932b1b6bacb7ff5e25a5ab12` before this STATUS-only handoff |
-| Final exact-head validation | PENDING on this post-merge-safe STATUS head |
+| Latest repository delivery on main | PR #358 — Day Setup synchronous save ownership; merged at `356d1949b036dabb3af6b7050135ef2027ea0e6d` |
+| Active delivery | Shared Settings preference-mutation ownership |
+| Delivery branch | `fix/settings-preference-mutation-ownership` |
+| Implemented change | Parent-level ref-backed owner around `updateUserPreferences`; stable payload snapshot; shared pending state; conflicting Settings controls disabled while unresolved |
+| Deterministic coverage | `test/settings-preference-mutation-integrity.test.mjs` |
+| Canonical implementation-head validation | NOT_RUN |
+| Review/thread audit | NOT_RUN |
+| Base freshness | Branch created from current `main` merge `356d1949b036dabb3af6b7050135ef2027ea0e6d` |
 | Provider/data impact | None; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -88,25 +83,26 @@ The change is frontend interaction/recovery integrity only. It changes no prefer
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #358 implementation is validated; this post-merge-safe handoff awaits final exact-head validation and lifecycle completion. |
-| What is already happening? | Day Setup now synchronously owns an unresolved save and freezes conflicting same-form mutations. |
-| What has been validated? | Canonical run 993 passed the repaired implementation head; reviews/threads were clean and the branch was current with main before this STATUS-only handoff. |
-| What is next? | Validate this exact handoff head, re-audit lifecycle evidence, complete PR #358, then re-enter fresh main. |
+| Where am I? | Stage 3. Fresh-main provider-independent interaction-integrity work is active in Settings. |
+| What is already happening? | The shared preference write path now has synchronous mutation ownership and freezes conflicting Settings controls while persistence is unresolved. |
+| What has been validated? | PR #358 is merged after exact-head run 994; the current Settings branch has not yet passed canonical validation. |
+| What is next? | Open the focused Draft PR, run canonical validation, repair findings on the same branch, then progress lifecycle from current evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #358 is provider-independent frontend integrity work.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. Current work remains independent of that provider boundary.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on this exact post-merge-safe PR #358 head;
-2. re-audit submitted reviews, inline review threads, base freshness and mergeability;
-3. if all evidence remains clean, add `lifecycle:implementation-complete` and allow the repository lifecycle controller/finalizer to complete the PR;
-4. confirm merge on `main` and re-enter from fresh authoritative state;
-5. select the next provider-independent Stage 3 interaction-integrity target from fresh evidence;
-6. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. open the focused Draft PR for the current Settings preference ownership implementation;
+2. run canonical `npm run platform:validate` through Application validation on the exact PR head;
+3. repair any in-scope validation/review findings on the same PR;
+4. after implementation-head validation passes, audit acceptance, reviews/threads, base freshness and mergeability;
+5. commit a post-merge-safe `STATUS.md` handoff, revalidate the new exact head, and complete lifecycle;
+6. confirm merge on `main` and continue from fresh authoritative state;
+7. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
