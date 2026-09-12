@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #364 from this post-merge-safe handoff, then re-enter fresh main and select the next highest-priority provider-independent Stage 3 target.
+  objective: Complete PR #365 synchronous TaskList mutation ownership, then re-enter fresh main and continue the next provider-independent Stage 3 target.
   issue: null
-  pr: null
-  branch: main
+  pr: 365
+  branch: fix/task-list-mutation-ownership
 next_actions:
-  - Run canonical Application validation on this exact post-merge-safe PR #364 head.
-  - Re-audit submitted reviews and inline review threads after exact-head validation.
-  - Confirm the final head remains current with main and conflict-free.
-  - If evidence remains clean, complete the repository lifecycle for PR #364.
-  - Confirm merge on main, then inspect fresh authoritative state before selecting the next delivery.
+  - Run canonical Application validation on the exact current PR #365 head.
+  - Repair any in-scope validation or review finding on the same PR.
+  - Audit acceptance criteria, reviews, inline threads, base freshness and mergeability.
+  - Before implementation-complete handoff, make STATUS.md post-merge-safe and revalidate that exact head.
+  - Complete repository lifecycle, confirm merge on main, then inspect fresh authoritative state.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1019 passed canonical npm run platform:validate on implementation head bbcbaab7f1a21995bbf0d8b53b1ccf0fbb1c6bf1 after the stale Brain Inbox source-contract assertions were repaired. Submitted reviews and inline review threads were clean afterward, and the branch was 0 commits behind main at e1422aa976dc0a605f1705fd05a8ec9f69fca51a. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires one final canonical validation before lifecycle completion.
-last_verified_commit: bbcbaab7f1a21995bbf0d8b53b1ccf0fbb1c6bf1
-last_updated: 2026-09-12T18:24:00+10:00
+validation_basis: PR #365 implementation and focused deterministic regression coverage are committed. Canonical npm run platform:validate is required on the exact current head before implementation-complete evidence can be recorded.
+last_verified_commit: 40a42f54129dcf3c90a50cf7f25010fde8f5f6b1
+last_updated: 2026-09-12T18:31:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,26 +45,22 @@ last_updated: 2026-09-12T18:24:00+10:00
 
 ## Current objective
 
-PR #364 — `fix: own brain inbox submissions synchronously` — has passed canonical implementation-head validation.
+PR #365 — `fix: serialize task list mutations synchronously` — is the sole active delivery.
 
-Brain Inbox capture and edit writes now claim synchronous ref-backed ownership before persistence begins, closing the same-tick window that previously existed before React rendered `capturePending` / `editPending`. Capture snapshots the accepted thought and protects the input until the owned attempt settles. Edit snapshots the accepted text, owns the item before persistence, blocks duplicate save and same-item delete/category/convert actions synchronously, prevents edit-field/cancel mutation while owned, and releases ownership only from the attempt that acquired it. Existing recoverable failure/retry feedback is preserved.
+PR #364 completed lifecycle and merged into `main` at `40a42f54129dcf3c90a50cf7f25010fde8f5f6b1` after final exact-head Application validation run 1020 passed.
 
-Focused deterministic coverage in `test/brain-inbox-submit-ownership.test.mjs` verifies synchronous acquisition, owner-scoped release, same-item conflict exclusion, and same-tick input/cancel protection. Existing capture/edit pending-integrity contracts were updated to retain their UI-pending assertions while requiring the stronger synchronous ownership boundary.
+Fresh-main inspection then found that TaskList create, template, complete and delete persistence shared only rendered `pendingAction` state for exclusion. Because React state does not provide synchronous ownership at the handler boundary, competing same-tick task mutations could enter persistence before the pending render committed.
 
-Initial Application validation run 1016 passed dependency audit, governance, lint, typecheck and the new ownership coverage, then stopped on three stale assertions that still required the superseded rendered-state handler guards. Those assertions were repaired without changing implementation scope. Application validation run 1019 then passed canonical `npm run platform:validate` on implementation head `bbcbaab7f1a21995bbf0d8b53b1ccf0fbb1c6bf1`.
+PR #365 adds one ref-backed `mutationOwnerRef` across TaskList persistence actions. Each accepted create/template/complete/delete action claims ownership before setting rendered pending state or awaiting the service, and only the acquiring attempt may release ownership. Task and template modal close paths also consult the synchronous owner so an accepted persistence attempt cannot be invalidated before rendered pending state catches up. Existing `pendingAction` UX, recoverable failure messaging, list reconciliation and provider/service contracts remain unchanged.
 
-Submitted reviews and inline review threads were clean after the pass, and the branch was 0 commits behind `main` at `e1422aa976dc0a605f1705fd05a8ec9f69fca51a`.
-
-This document is intentionally post-merge-safe. Once PR #364 completes lifecycle, autonomous continuation must begin from fresh `main`, not treat the merged PR branch as active work. This STATUS-only handoff commit itself requires final exact-head canonical validation before lifecycle completion.
-
-No provider route, schema, persistence contract, authentication, execution policy, or deployment configuration is changed.
+Focused deterministic coverage in `test/task-list-mutation-ownership.test.mjs` verifies shared ownership, claim-before-persistence ordering, attempt-scoped release, and modal-close exclusion.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — final exact-head validation and lifecycle completion for PR #364 |
-| Gate state | Implementation head validated by run 1019; post-merge-safe STATUS committed; final exact-head evidence pending |
+| Current gate | INTEGRATION — canonical validation and lifecycle completion for PR #365 |
+| Gate state | Implementation committed; exact-head canonical validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -72,15 +68,14 @@ No provider route, schema, persistence contract, authentication, execution polic
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #363 — Development Profile synchronous switch ownership; merged at `e1422aa976dc0a605f1705fd05a8ec9f69fca51a` |
-| Delivery awaiting final lifecycle completion | PR #364 — Brain Inbox synchronous capture/edit ownership |
-| Delivery branch | `fix/brain-inbox-submit-ownership` |
-| Implemented change | Ref-backed capture ownership; per-item edit ownership; same-tick field/cancel guards; same-item conflict exclusion |
-| Deterministic coverage | `test/brain-inbox-submit-ownership.test.mjs` plus repaired existing capture/edit pending-integrity contracts |
-| Canonical implementation-head validation | PASS — Application validation run 1019 on `bbcbaab7f1a21995bbf0d8b53b1ccf0fbb1c6bf1` |
-| Review/thread audit | CLEAN after run 1019; recheck after final exact-head validation |
-| Base freshness | CURRENT — branch was 0 commits behind main before this STATUS-only handoff |
-| Final exact-head validation | Required on this post-merge-safe STATUS head |
+| Latest repository delivery on main | PR #364 — Brain Inbox synchronous capture/edit ownership; merged at `40a42f54129dcf3c90a50cf7f25010fde8f5f6b1` |
+| Active delivery | PR #365 — TaskList synchronous mutation ownership |
+| Delivery branch | `fix/task-list-mutation-ownership` |
+| Implemented change | One ref-backed owner serializes create/template/complete/delete and guards modal close while persistence owns the task surface |
+| Deterministic coverage | `test/task-list-mutation-ownership.test.mjs` |
+| Canonical validation | NOT_RUN on the current PR head |
+| Review/thread audit | Pending after canonical validation |
+| Base freshness | PR created from current `main` at `40a42f54129dcf3c90a50cf7f25010fde8f5f6b1` |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this provider-independent interaction correction |
 | Current blocker | None |
@@ -89,25 +84,25 @@ No provider route, schema, persistence contract, authentication, execution polic
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #364 implementation is validated; this post-merge-safe handoff awaits final exact-head validation and lifecycle completion. |
-| What is already happening? | Brain Inbox capture/edit persistence owns accepted writes synchronously before rendered pending state exists. |
-| What has been validated? | Canonical run 1019 passed the implementation head; reviews/threads were clean and the branch was current with main before this STATUS-only handoff. |
-| What is next? | Validate this exact handoff head, re-audit lifecycle evidence, complete PR #364, then re-enter fresh main. |
+| Where am I? | Stage 3. PR #365 is the sole active delivery and is awaiting canonical validation. |
+| What is already happening? | Task create/template/complete/delete persistence now claims one synchronous mutation owner before rendered pending state. |
+| What has been validated? | PR #364 merged after final run 1020 passed; PR #365 exact-head canonical validation is not yet recorded. |
+| What is next? | Validate PR #365, repair any in-scope finding, audit lifecycle evidence, prepare a post-merge-safe STATUS handoff, and complete the PR lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #364 is provider-independent frontend interaction-integrity work and does not alter that boundary.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #365 is provider-independent frontend interaction-integrity work and does not alter that boundary.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on this exact post-merge-safe PR #364 head;
-2. re-audit submitted reviews, inline review threads, base freshness and mergeability;
-3. if all evidence remains clean, complete the repository lifecycle for PR #364;
-4. confirm merge on `main` and re-enter from fresh authoritative state;
-5. select and continue the next highest-priority provider-independent Stage 3 target;
-6. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+1. run canonical Application validation on the exact current PR #365 head;
+2. repair any in-scope validation/review finding on the same branch;
+3. audit acceptance criteria, reviews, inline threads, base freshness and mergeability;
+4. make this handoff post-merge-safe before implementation-complete signalling and revalidate the resulting exact head;
+5. complete repository lifecycle and confirm merge on `main`;
+6. re-enter from fresh authoritative state and select the next provider-independent Stage 3 target.
 
 ## Stage 3 exit conditions
 
