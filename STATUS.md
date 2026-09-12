@@ -11,8 +11,8 @@ current_work:
   pr: 371
   branch: fix/chore-list-mutation-navigation-integrity
 next_actions:
-  - Run canonical npm run platform:validate on the exact PR #371 head.
-  - Repair any in-scope validation failures on the same PR without weakening the interaction-integrity contract.
+  - Rerun canonical npm run platform:validate on the repaired exact PR #371 head.
+  - Repair any further in-scope validation failures on the same PR without weakening the interaction-integrity contract.
   - Audit reviews, review threads, mergeability, and base freshness after validation passes.
   - Convert this STATUS handoff to post-merge-safe state before lifecycle completion.
   - Re-enter from fresh main after merge and continue the next provider-independent Stage 3 target.
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
-  ci: PENDING
+  governance: FAIL
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: FAIL
   runtime: NOT_APPLICABLE
-validation_basis: PR #370 merged at main commit 6565ce5eba77449516507d81e8474ed4e191d249 after exact-head Application validation run 1056 passed. Fresh-main inspection found a provider-independent interaction-integrity race in ChoreChecklist: refresh, filter changes, or detail navigation could still cross the synchronous complete/snooze mutation boundary before rendered pending state became authoritative. PR #371 reuses pendingActionRef as the immediate interaction owner and adds deterministic regression coverage; canonical validation is pending on the current exact head.
+validation_basis: Application validation run 1058 on PR #371 head a26f92b63e6c1a2e7f4e31adb2168aebb8fcb58a passed npm audit, then failed validate:governance before lint, typecheck, tests, build or Playwright because STATUS.md used unsupported PENDING validation enum values. The implementation was not implicated. This STATUS repairs those fields to repository-valid FAIL/NOT_RUN states and requires exact-head canonical rerun. Submitted reviews and inline review threads are empty.
 last_verified_commit: 6565ce5eba77449516507d81e8474ed4e191d249
-last_updated: 2026-09-13T01:20:00+10:00
+last_updated: 2026-09-13T01:22:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -55,12 +55,14 @@ PR #371 now makes the existing mutation owner authoritative for these adjacent i
 
 Focused deterministic coverage is in `test/chore-list-mutation-navigation-integrity.test.mjs`.
 
+Application validation run 1058 passed dependency audit but stopped at governance because this STATUS handoff used `PENDING` in validation fields, while the repository governance schema accepts only `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE`. That documentation-only validation-state defect is now corrected; the implementation itself was not implicated and requires exact-head canonical rerun.
+
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical validation of PR #371 exact head |
-| Gate state | Implementation committed; canonical validation pending |
+| Current gate | INTEGRATION — canonical revalidation of repaired PR #371 exact head |
+| Gate state | Run 1058 classified as governance-only STATUS enum failure; repair committed; exact-head rerun required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -73,9 +75,9 @@ Focused deterministic coverage is in `test/chore-list-mutation-navigation-integr
 | Delivery branch | `fix/chore-list-mutation-navigation-integrity` |
 | Implemented change | Refresh, filter and detail-open actions now consult the same synchronous mutation owner as complete/snooze writes and expose the rendered lock through disabled controls |
 | Deterministic coverage | `test/chore-list-mutation-navigation-integrity.test.mjs` |
-| Canonical validation | PENDING on current PR #371 head |
-| Review/thread audit | PENDING after validation |
-| Base freshness | Branch created from fresh `main` commit `6565ce5eba77449516507d81e8474ed4e191d249` |
+| Canonical validation | Run 1058: dependency audit PASS; governance FAIL only because STATUS used unsupported validation enum values; repaired exact-head rerun required |
+| Review/thread audit | Clean: no submitted reviews and no inline review threads |
+| Base freshness | Branch created from fresh `main` commit `6565ce5eba77449516507d81e8474ed4e191d249`; final freshness audit required after canonical pass |
 | Provider/data impact | None; provider contracts, schemas and persistence semantics unchanged |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
@@ -86,8 +88,8 @@ Focused deterministic coverage is in `test/chore-list-mutation-navigation-integr
 | --- | --- |
 | Where am I? | Stage 3 with PR #371 as the sole active delivery. |
 | What is already happening? | Housework complete/snooze mutations now also own refresh/filter/detail navigation synchronously until persistence/reconciliation settles. |
-| What has been validated? | PR #370 exact-head run 1056 passed and that delivery merged. PR #371 canonical validation is pending. |
-| What is next? | Validate PR #371, repair any in-scope failures, complete review/base/lifecycle evidence, then re-enter fresh `main`. |
+| What has been validated? | PR #370 exact-head run 1056 passed and that delivery merged. PR #371 run 1058 passed dependency audit, then exposed and classified a STATUS governance-enum defect; implementation validation remains pending. |
+| What is next? | Revalidate the repaired exact PR #371 head, repair any further in-scope findings, complete review/base/lifecycle evidence, then re-enter fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -97,8 +99,8 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` on the exact PR #371 head;
-2. repair any in-scope validation findings on the same PR;
+1. rerun canonical `npm run platform:validate` on the repaired exact PR #371 head;
+2. repair any further in-scope validation findings on the same PR;
 3. audit submitted reviews, inline review threads, mergeability and base freshness after validation passes;
 4. update this file to a post-merge-safe handoff and revalidate that exact head before lifecycle completion;
 5. merge through the repository lifecycle when all gates are satisfied;
