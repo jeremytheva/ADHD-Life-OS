@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
@@ -38,6 +38,7 @@ const NCBAuth = ({ mode = 'login' }) => {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const submitPendingRef = useRef(false)
   const { signIn, signUp, user } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
@@ -49,21 +50,40 @@ const NCBAuth = ({ mode = 'login' }) => {
     return <Navigate to={redirectPath} replace />
   }
 
+  const handleEmailChange = (event) => {
+    if (submitPendingRef.current) return
+    setEmail(event.target.value)
+  }
+
+  const handlePasswordChange = (event) => {
+    if (submitPendingRef.current) return
+    setPassword(event.target.value)
+  }
+
+  const handleAlternateClick = (event) => {
+    if (submitPendingRef.current) event.preventDefault()
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
+    if (submitPendingRef.current) return
+
+    submitPendingRef.current = true
+    const pendingCredentials = { email, password }
     setError('')
     setLoading(true)
 
     try {
       if (isRegister) {
-        await signUp(email, password)
+        await signUp(pendingCredentials.email, pendingCredentials.password)
       } else {
-        await signIn(email, password)
+        await signIn(pendingCredentials.email, pendingCredentials.password)
       }
       navigate(redirectPath, { replace: true })
     } catch (err) {
       setError(err.message || `Failed to ${isRegister ? 'register' : 'sign in'}`)
     } finally {
+      submitPendingRef.current = false
       setLoading(false)
     }
   }
@@ -94,7 +114,7 @@ const NCBAuth = ({ mode = 'login' }) => {
           </motion.div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" aria-busy={loading}>
           <div>
             <label htmlFor="auth-email" className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -105,8 +125,9 @@ const NCBAuth = ({ mode = 'login' }) => {
                 id="auth-email"
                 type="email"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={handleEmailChange}
+                disabled={loading}
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-60"
                 placeholder="Enter your email"
                 autoComplete="email"
                 required
@@ -124,8 +145,9 @@ const NCBAuth = ({ mode = 'login' }) => {
                 id="auth-password"
                 type="password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={handlePasswordChange}
+                disabled={loading}
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-60"
                 placeholder="Enter your password"
                 autoComplete={isRegister ? 'new-password' : 'current-password'}
                 required
@@ -158,7 +180,13 @@ const NCBAuth = ({ mode = 'login' }) => {
 
         <p className="text-sm text-gray-600 mt-6 text-center">
           {copy.alternatePrompt}{' '}
-          <Link to={copy.alternateTo} className="font-medium text-blue-600 hover:text-blue-700">
+          <Link
+            to={copy.alternateTo}
+            onClick={handleAlternateClick}
+            aria-disabled={loading}
+            tabIndex={loading ? -1 : undefined}
+            className={`font-medium ${loading ? 'text-blue-300 cursor-not-allowed' : 'text-blue-600 hover:text-blue-700'}`}
+          >
             {copy.alternateLabel}
           </Link>
         </p>
