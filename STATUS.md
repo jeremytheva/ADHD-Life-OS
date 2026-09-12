@@ -6,16 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #366 lifecycle, then re-enter from fresh main and select the next provider-independent Stage 3 target.
+  objective: Prevent Reward Shop from charging an already-owned reward again before rendered ownership state catches up.
   issue: null
   pr: null
-  branch: main
+  branch: fix/reward-purchase-idempotence
 next_actions:
-  - Revalidate this post-merge-safe STATUS handoff on the exact PR #366 head.
-  - Allow the repository lifecycle to complete PR #366 if exact-head validation and finalizer evidence remain clean.
-  - Re-enter from fresh authoritative main after merge.
-  - Inspect current repository state and select the next highest-priority provider-independent Stage 3 target.
-  - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
+  - Open the sole delivery PR for the reward-purchase integrity correction.
+  - Run canonical Application validation on the exact PR head.
+  - Repair any in-scope validation or review finding on the same PR.
+  - Audit reviews, inline threads, base freshness and mergeability.
+  - Make STATUS post-merge-safe after implementation-head validation passes, revalidate that exact handoff head, and complete lifecycle.
+  - Re-enter from fresh main and continue the next provider-independent Stage 3 target.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -23,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1031 passed canonical npm run platform:validate on implementation head dae5ca336cf2797835bb5230f1ca60a986c50a76 after the run-1028 stale test contracts were repaired. Reviews and inline review threads were empty and the branch was 0 commits behind main. This STATUS-only post-merge-safe handoff now requires exact-head revalidation before lifecycle completion.
-last_verified_commit: dae5ca336cf2797835bb5230f1ca60a986c50a76
-last_updated: 2026-09-12T21:24:00+10:00
+validation_basis: Fresh-main inspection after PR #366 merged identified a Reward Shop integrity gap. The UI treats a purchased reward as Owned, but a second click can occur before React rerenders. RewardShop now keeps a synchronous set of already-owned reward ids, refreshes that set from authoritative shop data, rejects an already-owned id before purchaseReward can charge it, and records a successful purchase in the set before rerender. Focused deterministic coverage was added; canonical validation is pending.
+last_verified_commit: fb0a73679f49e25b05835f779f0e7bc72fda3985
+last_updated: 2026-09-12T21:34:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,20 +45,20 @@ last_updated: 2026-09-12T21:24:00+10:00
 
 ## Current objective
 
-PR #366 — `fix: serialize project mutations synchronously` — has passed implementation-head canonical validation and final pre-handoff review/base audit. This STATUS is intentionally post-merge-safe: after PR #366 merges, autonomous continuation must re-enter from fresh `main` and select the next provider-independent Stage 3 target rather than treating PR #366 as active work.
+Complete the provider-independent Reward Shop purchase-integrity correction on `fix/reward-purchase-idempotence`.
 
-PR #366 adds one ref-backed `mutationOwnerRef` across Projects Quick Capture, create, update, delete, archive and template persistence. Each accepted mutation claims ownership synchronously before rendered pending state and before persistence, only its owning attempt can release the boundary, and accepted create/update/quick-capture inputs are snapshotted. Modal open/close, project selection and edit transitions also respect the synchronous owner so they cannot invalidate an unresolved accepted mutation.
+PR #366 merged into `main` at `fb0a73679f49e25b05835f779f0e7bc72fda3985`. Fresh-main inspection found no open PRs or issues and identified the next concrete data-integrity gap in `RewardShop`: the rendered UI marks any previously purchased reward as **Owned**, but immediately after a successful synchronous purchase React has not necessarily rerendered yet. A rapid second activation can therefore enter `gamificationService.purchaseReward(rewardId)` again and deduct the reward cost twice.
 
-Existing visible pending state, recoverable operation feedback, load reconciliation, service/provider routes and data contracts remain unchanged. Focused deterministic coverage is in `test/project-list-mutation-ownership.test.mjs`, with existing quick-capture and pending-mutation source contracts aligned to the stronger accepted-input and synchronous-owner behaviour.
+The current correction keeps a synchronous `purchasedRewardIdsRef` aligned with authoritative `getAvailableRewards()` results. `handlePurchase` rejects an id already in that set before calling the purchase service, and a successful purchase adds the id to the set synchronously before the UI refresh. This preserves the repository's existing one-time-ownership UI contract and avoids changing provider, persistence, or reward catalogue semantics.
 
-Application validation run 1027 exposed an invalid STATUS validation-state encoding and run 1028 exposed two stale source-contract assertions. Both were repaired on the same PR without weakening the implementation. Application validation run 1031 then passed canonical `npm run platform:validate` on implementation head `dae5ca336cf2797835bb5230f1ca60a986c50a76`. The subsequent review audit found no submitted reviews or inline review threads, and the branch was 0 commits behind `main`.
+Focused deterministic coverage is in `test/reward-purchase-integrity.test.mjs`.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head validation of post-merge-safe PR #366 handoff |
-| Gate state | Implementation-head validation PASS; handoff exact-head validation pending |
+| Current gate | INTEGRATION — canonical validation for Reward Shop purchase integrity |
+| Gate state | Implementation and focused regression committed; exact-head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -65,41 +66,41 @@ Application validation run 1027 exposed an invalid STATUS validation-state encod
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #365 — TaskList synchronous mutation ownership; merged at `c92b3158647ea5aca63fd72721e4304ff5f5056f` |
-| Delivery completing | PR #366 — Projects synchronous mutation ownership |
-| Delivery branch | `fix/project-mutation-ownership` |
-| Implemented change | One synchronous ref-backed owner serializes project persistence and guards competing modal/selection transitions |
-| Deterministic coverage | `test/project-list-mutation-ownership.test.mjs` plus aligned quick-capture and pending-mutation contracts |
-| Canonical validation | Run 1031 PASS on implementation head `dae5ca336cf2797835bb5230f1ca60a986c50a76`; STATUS-only handoff exact-head rerun required |
-| Review/thread audit | Clean after run 1031: no submitted reviews and no inline review threads |
-| Base freshness | 0 commits behind `main` after run 1031 |
-| Provider/data impact | None |
-| Runtime/deployment verification | NOT_APPLICABLE for this provider-independent interaction correction |
+| Latest repository delivery on main | PR #366 — Projects synchronous mutation ownership; merged at `fb0a73679f49e25b05835f779f0e7bc72fda3985` |
+| Active delivery | Reward Shop purchase idempotence correction |
+| Delivery branch | `fix/reward-purchase-idempotence` |
+| Implemented change | Reject already-owned reward ids synchronously before another charge can occur |
+| Deterministic coverage | `test/reward-purchase-integrity.test.mjs` |
+| Canonical validation | Pending |
+| Review/thread audit | Pending |
+| Base freshness | Branch created directly from current main merge commit `fb0a73679f49e25b05835f779f0e7bc72fda3985` |
+| Provider/data impact | No provider contract change; prevents duplicate local reward charge through the live shop UI |
+| Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #366 is completing lifecycle; this handoff points future execution to fresh `main`. |
-| What is already happening? | Projects mutations have synchronous shared ownership, accepted-input snapshots and deterministic regression coverage. |
-| What has been validated? | Canonical run 1031 passed on implementation head `dae5ca336cf2797835bb5230f1ca60a986c50a76`; reviews/threads are clean and the branch is current with main. |
-| What is next? | Revalidate this STATUS-only handoff head, complete PR #366 lifecycle, then re-enter fresh main and select the next provider-independent Stage 3 target. |
+| Where am I? | Stage 3. Reward Shop duplicate-purchase integrity is the sole active delivery. |
+| What is already happening? | The implementation and focused source-contract regression are committed on `fix/reward-purchase-idempotence`. |
+| What has been validated? | The prior main delivery is validated and merged; this new exact head still requires canonical validation. |
+| What is next? | Open the PR, validate it, repair any in-scope finding, audit lifecycle evidence, make the handoff post-merge-safe, revalidate and merge. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #366 is provider-independent frontend interaction-integrity work and does not alter that boundary.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. This Reward Shop correction is provider-independent and does not alter that boundary.
 
 ## Next dependency-correct work
 
-1. revalidate this post-merge-safe STATUS handoff on the exact PR #366 head;
-2. complete repository lifecycle and confirm merge on `main` if finalizer evidence remains clean;
-3. re-enter from fresh authoritative `main`;
-4. inspect current implementation/tests/issues and select the next provider-independent Stage 3 integrity target;
-5. continue successive safe work under the WIP-one rule;
-6. leave generic durable execution deferred until the real provider contract is certified.
+1. open the sole delivery PR from `fix/reward-purchase-idempotence`;
+2. run canonical `npm run platform:validate` through the Application validation workflow;
+3. repair any in-scope finding on the same PR;
+4. confirm reviews, threads, base freshness and mergeability;
+5. make the durable STATUS handoff post-merge-safe and revalidate the exact handoff head;
+6. complete repository lifecycle and re-enter from fresh main.
 
 ## Stage 3 exit conditions
 
