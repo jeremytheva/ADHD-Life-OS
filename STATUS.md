@@ -25,13 +25,13 @@ validation:
   governance: PASS
   lint: PASS
   typecheck: PASS
-  tests: REVALIDATING
-  build: REVALIDATING
-  ci: REVALIDATING
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: PENDING
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1071 on PR #373 head 459bb1375d47b12a587abbe2db3429c4086414ac passed audit, governance, lint, typecheck, and all new TaskList mutation-navigation regression coverage. It stopped at four stale pre-existing source-contract assertions that still required direct filter/sort/retry wiring or the previous four-control disabled count. Those assertions were repaired on the same PR to require the stronger mutation-aware handlers and expanded six-control UI lock. Exact-head canonical revalidation is now required.
+validation_basis: Application validation run 1071 on PR #373 head 459bb1375d47b12a587abbe2db3429c4086414ac passed audit, governance, lint, typecheck, and all new TaskList mutation-navigation regression coverage. It stopped at four stale pre-existing source-contract assertions that still required direct filter/sort/retry wiring or the previous four-control disabled count. Those assertions were repaired on the same PR to require the stronger mutation-aware handlers and expanded six-control UI lock. Run 1076 then correctly rejected interim STATUS front-matter values that were not allowed by repository governance; the durable state now uses canonical NOT_RUN/PENDING lifecycle values. Exact-head canonical revalidation is required.
 last_verified_commit: d3aefcebf0619119bc22638650f50502d980275a
-last_updated: 2026-09-13T02:26:00+10:00
+last_updated: 2026-09-13T02:28:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -51,14 +51,16 @@ PR #373 makes the existing synchronous mutation owner authoritative for those ad
 
 Focused deterministic coverage is in `test/task-list-mutation-navigation-integrity.test.mjs`.
 
-Application validation run 1071 passed dependency audit, governance, lint, typecheck, and the new TaskList mutation-navigation tests. It reached the broader Node test suite and identified four stale source-contract assertions: timeframe filtering still required direct `setFilter`, refresh recovery still required direct `loadTasks`, sort still required direct `setSortBy`, and the existing global-mutation UI test expected only four rendered `disabled={mutationPending}` controls. Each stale assertion has been repaired on the same PR to require the stronger synchronous mutation-aware boundary instead of weakening the implementation. Exact-head canonical revalidation is required now.
+Application validation run 1071 passed dependency audit, governance, lint, typecheck, and the new TaskList mutation-navigation tests. It reached the broader Node test suite and identified four stale source-contract assertions: timeframe filtering still required direct `setFilter`, refresh recovery still required direct `loadTasks`, sort still required direct `setSortBy`, and the existing global-mutation UI test expected only four rendered `disabled={mutationPending}` controls. Each stale assertion has been repaired on the same PR to require the stronger synchronous mutation-aware boundary instead of weakening the implementation.
+
+Application validation run 1076 then stopped immediately at governance because interim STATUS front matter used `REVALIDATING`, which is not an allowed value for `tests`, `build`, or `ci`. This was a durable-state formatting defect, not an application failure. STATUS now uses the repository's canonical `NOT_RUN` / `PENDING` states until the exact repaired head completes validation.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — canonical revalidation of repaired PR #373 head |
-| Gate state | Run 1071 classified four stale source-contract failures; all four repaired; exact-head canonical validation pending |
+| Gate state | Four stale source-contract failures repaired; run 1076 STATUS governance enum defect repaired; exact-head canonical validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -71,7 +73,7 @@ Application validation run 1071 passed dependency audit, governance, lint, typec
 | Delivery branch | `fix/task-list-mutation-navigation-integrity` |
 | Implemented change | Retry, create/template entry, filter, sort and recommended-task focus actions consult the same synchronous mutation owner as task persistence writes |
 | Deterministic coverage | `test/task-list-mutation-navigation-integrity.test.mjs`; four stale TaskList source-contract tests aligned to the stronger guarded behavior after run 1071 |
-| Canonical validation | Run 1071 partial PASS through audit/governance/lint/typecheck and new regression coverage; exact repaired-head rerun required |
+| Canonical validation | Run 1071 partial PASS through audit/governance/lint/typecheck/new regression; run 1076 rejected invalid interim STATUS enums; exact repaired-head rerun required |
 | Review/thread audit | Pending after canonical validation |
 | Base freshness | Branch was created from fresh `main` at PR #372 merge `d3aefcebf0619119bc22638650f50502d980275a` |
 | Provider/data impact | None; provider contracts, schemas and task persistence semantics unchanged |
@@ -84,8 +86,8 @@ Application validation run 1071 passed dependency audit, governance, lint, typec
 | --- | --- |
 | Where am I? | Stage 3; PR #373 is the sole active delivery and its repaired exact head is validating. |
 | What is already happening? | Task persistence mutations synchronously own retry, entry, filter, sort and task-focus interactions until persistence/reconciliation settles. |
-| What has been validated? | Fresh main through PR #372 is green. Run 1071 passed audit/governance/lint/typecheck and the new PR #373 regression tests, then exposed four stale source contracts that have now been repaired. |
-| What is next? | Revalidate the repaired exact head, audit review/thread/base evidence, then perform the post-merge-safe STATUS handoff and final exact-head rerun. |
+| What has been validated? | Fresh main through PR #372 is green. Run 1071 passed audit/governance/lint/typecheck and the new PR #373 regression tests, then exposed four stale source contracts that are repaired. Run 1076 identified and stopped on invalid STATUS lifecycle enums, which are now repaired. |
+| What is next? | Revalidate the exact repaired head, audit review/thread/base evidence, then perform the post-merge-safe STATUS handoff and final exact-head rerun. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
