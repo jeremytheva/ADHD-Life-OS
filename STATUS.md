@@ -4,17 +4,16 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Change
-execution_state: IMPLEMENTING
+execution_state: VALIDATING
 current_work:
-  objective: Complete PR #382 synchronous project-task form submit ownership and validate it canonically.
+  objective: Finish PR #382 lifecycle; after merge, re-enter from fresh authoritative main and select the next dependency-correct provider-independent Stage 3 task.
   issue: null
   pr: 382
   branch: fix/project-task-form-submit-ownership
 next_actions:
-  - Run canonical Application validation for the exact PR #382 head.
-  - Repair only evidenced implementation or source-contract failures on the same PR.
-  - Audit reviews, inline threads, mergeability and base freshness after validation passes.
-  - Convert STATUS to a post-merge-safe fresh-main handoff before implementation-complete signaling.
+  - Validate this final post-merge-safe STATUS head canonically.
+  - If exact-head validation passes and mergeability/review/base evidence remains clean, mark PR #382 implementation-complete and merge it through the repository lifecycle.
+  - After merge, inspect fresh main before selecting further work; do not re-enter the closed PR branch.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -23,16 +22,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
   ci: PENDING
   runtime: NOT_APPLICABLE
-validation_basis: PR #381 merged into main at 90a75e4f1e12898369a9b9617ef269b00fbfb302 after exact-head canonical validation. Fresh-main reconciliation found no open issues or competing pull requests. PR #382 is the sole active delivery. ProjectDetailView already owns project-task persistence synchronously, while its TaskForm previously relied on rendered saving state for resubmit, dismissal and local mutation protection. The form now claims synchronous submit ownership before crossing onSave, snapshots accepted form data, and allows only the owning attempt to release local saving state. Canonical validation has not yet completed on this delivery head.
-last_verified_commit: 90a75e4f1e12898369a9b9617ef269b00fbfb302
-last_updated: 2026-09-13T08:07:00+10:00
+validation_basis: Application validation run 1125 passed the canonical platform validation on implementation head 5b50613da5612ca263f8308a13a6c63bd4bb781b. Reviews and inline review threads are empty, PR #382 is mergeable, and main remains exactly at base 90a75e4f1e12898369a9b9617ef269b00fbfb302. This documentation-only post-merge-safe handoff is the final head and requires exact-head canonical validation before implementation-complete signaling.
+last_verified_commit: 5b50613da5612ca263f8308a13a6c63bd4bb781b
+last_updated: 2026-09-13T08:13:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,19 +45,21 @@ last_updated: 2026-09-13T08:07:00+10:00
 
 PR #381 — `fix: serialize quick capture submission synchronously` — completed its lifecycle and merged into `main` at `90a75e4f1e12898369a9b9617ef269b00fbfb302`.
 
-Fresh-main reconciliation found no open issues or competing pull requests. The next dependency-correct provider-independent Stage 3 integrity gap is the project-detail Task Form. Its parent `ProjectDetailView` already claims task persistence synchronously through `mutationOwnerRef`, but `src/components/projects/TaskForm.jsx` previously trusted rendered `saving` state for duplicate-submit, cancel/Escape and field-mutation protection. A same-render second submit could therefore cross `onSave`; the parent would reject that duplicate synchronously, while the second form invocation could finish and clear local saving state before the accepted persistence operation settled.
+PR #382 — `fix: serialize project task form submission synchronously` — is the sole active delivery and has passed canonical validation on its implementation head. The remaining lifecycle step is exact-head validation of this post-merge-safe durable handoff, followed by implementation-complete signaling and merge if review, mergeability and base-freshness evidence remains clean.
 
-PR #382 — `fix: serialize project task form submission synchronously` — is the sole active delivery. The form now claims `submitOwnerRef` ownership before crossing `onSave`, snapshots the accepted form payload, allows only the owning attempt to clear local pending state, and routes cancel/Escape plus local field mutation through that same synchronous owner. Existing `ProjectDetailView` persistence ownership, failure recovery, schemas and provider contracts remain unchanged.
+After PR #382 merges, autonomous continuation must re-enter from fresh authoritative `main`. This branch and PR must not remain the durable active re-entry target after merge.
 
-Focused deterministic coverage was added in `test/project-task-form-submit-ownership.test.mjs`, and the existing project-task form pending-integrity contract was aligned to the stronger synchronous ownership boundary.
+The project-detail Task Form now claims `submitOwnerRef` ownership before crossing `onSave`, snapshots the accepted form payload, allows only the owning attempt to clear local pending state, and routes cancel/Escape plus local field mutation through that same synchronous owner. Existing `ProjectDetailView` persistence ownership, failure recovery, schemas and provider contracts remain unchanged.
+
+Focused deterministic coverage exists in `test/project-task-form-submit-ownership.test.mjs`, and the existing project-task form pending-integrity contract is aligned to the stronger synchronous ownership boundary.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — canonical validation of PR #382 |
-| Gate state | Implementation and focused coverage committed; exact-head canonical validation pending |
-| Execution state | IMPLEMENTING |
+| Current gate | CHANGE — final exact-head lifecycle validation for PR #382 |
+| Gate state | Implementation-head validation passed; final post-merge-safe STATUS head pending exact-head validation |
+| Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
 ## Delivery checkpoint
@@ -70,9 +71,10 @@ Focused deterministic coverage was added in `test/project-task-form-submit-owner
 | Delivery branch | `fix/project-task-form-submit-ownership` |
 | Implemented change | Accepted project-task form submission synchronously owns resubmit, dismissal and local field-mutation boundaries until `onSave` settles |
 | Deterministic coverage | `test/project-task-form-submit-ownership.test.mjs`, aligned `test/project-task-form-saving-guard.test.mjs` |
-| Canonical validation | PENDING on current delivery head |
-| Review/thread audit | NOT_RUN until implementation-head validation passes |
-| Base freshness | Base created from fresh `main` at `90a75e4f1e12898369a9b9617ef269b00fbfb302` |
+| Canonical validation | Run 1125 PASS on implementation head `5b50613da5612ca263f8308a13a6c63bd4bb781b`; final documentation head pending exact-head validation |
+| Review/thread audit | Clean — no submitted reviews or inline review threads |
+| Base freshness | Clean — `main` remains PR base `90a75e4f1e12898369a9b9617ef269b00fbfb302` |
+| Mergeability | Mergeable |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
@@ -81,10 +83,10 @@ Focused deterministic coverage was added in `test/project-task-form-submit-owner
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #382 is the sole active delivery. |
-| What is already happening? | Project-task Task Form submission and mutation-adjacent controls now use synchronous ownership; canonical validation is pending. |
-| What has been validated? | PR #381 merged after exact-head canonical validation. PR #382 has not yet completed canonical validation. |
-| What is next? | Advance the existing PR #382 validation, repair evidenced failures only, then complete review/base/merge lifecycle evidence. |
+| Where am I? | Stage 3; PR #382 is finishing its lifecycle. |
+| What is already happening? | Project-task Task Form synchronous submit ownership is implemented and canonically validated; final post-merge-safe handoff validation is pending. |
+| What has been validated? | Run 1125 passed the implementation head; reviews/threads are clean, mergeability is true, and the base is fresh. |
+| What is next? | Validate this final documentation head, merge #382 if evidence remains clean, then inspect fresh main for the next task. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -98,13 +100,11 @@ Project-task persistence already uses a parent-level synchronous mutation owner 
 
 ## Next dependency-correct work
 
-1. run/advance canonical validation for PR #382 exact head;
-2. repair only evidenced failures on the same PR and revalidate;
-3. audit reviews, inline threads, mergeability and base freshness;
-4. update this file to a post-merge-safe fresh-main handoff and exact-head validate that documentation head;
-5. apply implementation-complete signaling only when all lifecycle evidence is satisfied;
-6. after merge, re-enter fresh authoritative `main` and select the next provider-independent Stage 3 integrity target;
-7. leave generic durable execution deferred until the real provider contract is certified.
+1. exact-head validate this post-merge-safe PR #382 handoff;
+2. if clean, signal implementation-complete and merge through the repository lifecycle;
+3. after merge, re-enter fresh authoritative `main` and reconcile current issues/branches/checks before selecting work;
+4. choose the next provider-independent Stage 3 integrity target only from that fresh-main state;
+5. leave generic durable execution deferred until real provider certification exists.
 
 ## Stage 3 exit conditions
 
