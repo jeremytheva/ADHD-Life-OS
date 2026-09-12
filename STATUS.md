@@ -11,7 +11,7 @@ current_work:
   pr: 358
   branch: fix/day-setup-save-ownership
 next_actions:
-  - Run canonical Application validation on the exact PR #358 head.
+  - Run canonical Application validation on the repaired exact PR #358 head.
   - Repair only evidence-backed defects on the existing branch if validation fails.
   - Re-audit submitted reviews, inline review threads, base freshness and mergeability after validation.
   - After implementation-head validation passes, write a post-merge-safe STATUS handoff and revalidate its exact head.
@@ -32,9 +32,9 @@ validation:
   build: NOT_RUN
   ci: NOT_RUN
   runtime: UNVERIFIED
-validation_basis: PR #358 was opened from fresh main 81eabc032f041942932b1b6bacb7ff5e25a5ab12 after PR #357 merged. Day Setup now claims synchronous ref-backed ownership before the saving render or persistence begins, rejects same-form changes while owned, snapshots the submitted values, and releases ownership after settlement. Canonical exact-head validation is pending.
+validation_basis: Application validation run 990 reached the deterministic suite after governance, lint and typecheck passed, then stopped on one stale pre-existing Day Setup assertion that still required the render-lagged `if (saving) return` guard. The implementation's new synchronous ownership regression passed. The stale assertion has been aligned with `saveOwnerRef.current`; canonical exact-head validation is required on the repaired head.
 last_verified_commit: 81eabc032f041942932b1b6bacb7ff5e25a5ab12
-last_updated: 2026-09-12T11:14:00+10:00
+last_updated: 2026-09-12T11:16:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -52,14 +52,16 @@ Fresh-main inspection found no competing open PR and no matching open Day Setup 
 
 Draft PR #358 — `fix: own day setup saves synchronously` — is the sole active delivery. It adds ref-backed synchronous save ownership before `setSaving(true)` or the first awaited write, rejects duplicate submit and field changes while ownership is held, snapshots the submitted preferences before persistence, preserves optional work-time normalization to `null`, and releases ownership after success or failure so retry remains possible. Existing loading/accessibility feedback remains intact.
 
+Application validation run 990 reached the deterministic test suite after governance, lint and typecheck passed. The new Day Setup synchronous-ownership regression passed. One older semantics test failed because it still asserted the superseded `if (saving) return` implementation detail. That stale assertion has been repaired on the same branch to require the stronger `saveOwnerRef.current` ownership contract instead. The repaired exact head now requires canonical validation.
+
 The change is frontend interaction/recovery integrity only. It changes no preferences schema, repository/provider route, authentication behaviour, recommendation/execution policy, or generic durable execution-session contract.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head validation for PR #358 |
-| Gate state | Implementation and focused deterministic regression committed; canonical validation pending |
+| Current gate | INTEGRATION — repaired exact-head validation for PR #358 |
+| Gate state | Run 990 classified to a stale test assertion; assertion repaired; canonical validation pending on the repaired head |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED |
 
@@ -71,9 +73,10 @@ The change is frontend interaction/recovery integrity only. It changes no prefer
 | Active delivery | Draft PR #358 — Day Setup synchronous save ownership |
 | Delivery branch | `fix/day-setup-save-ownership` |
 | Implemented change | Ref-backed synchronous owner before Day Setup preference persistence; duplicate submit/change excluded while unresolved; submitted values snapshotted |
-| Deterministic coverage | `test/day-setup-saving-integrity.test.mjs`, with existing Day Setup status/label tests retained |
-| Canonical implementation-head validation | NOT_RUN on the current PR #358 head |
-| Review/thread audit | Pending after validation |
+| Deterministic coverage | `test/day-setup-saving-integrity.test.mjs` plus repaired `test/day-setup-saving-status-semantics.test.mjs` |
+| Validation history | Run 990: governance/lint/typecheck PASS; new ownership regression PASS; stopped on one stale pre-existing semantics assertion, now repaired |
+| Canonical implementation-head validation | NOT_RUN on the repaired current head |
+| Review/thread audit | Pending after repaired validation |
 | Base freshness | Based directly on fresh main `81eabc032f041942932b1b6bacb7ff5e25a5ab12` |
 | Provider/data impact | None; generic durable `execution-sessions` remains provider-unverified and fail-closed |
 | Runtime/deployment verification | UNVERIFIED |
@@ -83,10 +86,10 @@ The change is frontend interaction/recovery integrity only. It changes no prefer
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. Draft PR #358 is the sole active delivery and awaits canonical exact-head validation. |
+| Where am I? | Stage 3. Draft PR #358 is the sole active delivery and the run-990 stale assertion has been repaired. |
 | What is already happening? | Day Setup now synchronously owns an unresolved save and freezes conflicting same-form mutations. |
-| What has been validated? | PR #357 is merged on main. PR #358 implementation has focused regression coverage but canonical validation has not yet completed. |
-| What is next? | Validate the exact PR #358 head, repair evidence-backed failures on the same branch, audit lifecycle evidence, then complete the repository-owned merge lifecycle. |
+| What has been validated? | Run 990 passed governance, lint and typecheck and passed the new ownership regression before one stale existing assertion stopped the suite. |
+| What is next? | Validate the repaired exact PR #358 head, repair any evidence-backed failure on the same branch, audit lifecycle evidence, then complete the repository-owned merge lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -96,7 +99,7 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact PR #358 head;
+1. run canonical Application validation on the repaired exact PR #358 head;
 2. repair only evidence-backed failures on the same branch if needed;
 3. re-audit submitted reviews, inline review threads, base freshness and mergeability;
 4. after implementation-head validation passes, write the required post-merge-safe STATUS handoff and revalidate that exact head;
