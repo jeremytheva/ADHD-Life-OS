@@ -10,7 +10,8 @@ const rewardShopSource = await readFile(
 
 test('Reward Shop rejects an already-owned reward before charging it again', () => {
   assert.match(rewardShopSource, /const purchasedRewardIdsRef = useRef\(new Set\(\)\)/)
-  assert.match(rewardShopSource, /purchasedRewardIdsRef\.current = new Set\(/[\s\S]*?availableRewards\.filter\(reward => reward\.purchased\)\.map\(reward => reward\.id\)/)
+  assert.match(rewardShopSource, /purchasedRewardIdsRef\.current = new Set\(/)
+  assert.match(rewardShopSource, /availableRewards\.filter\(reward => reward\.purchased\)\.map\(reward => reward\.id\)/)
   assert.match(rewardShopSource, /if \(purchasedRewardIdsRef\.current\.has\(rewardId\)\) \{[\s\S]*?coin balance was not changed/)
   assert.match(rewardShopSource, /const result = gamificationService\.purchaseReward\(rewardId\)/)
   assert.match(rewardShopSource, /if \(result\.success\) \{\s*purchasedRewardIdsRef\.current\.add\(rewardId\)/)
