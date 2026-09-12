@@ -7,9 +7,11 @@ const source = await readFile(new URL('../src/components/projects/ProjectForm.js
 
 test('Project form owns a save until persistence settles', () => {
   assert.match(source, /const \[isSaving, setIsSaving\] = useState\(false\)/)
-  assert.match(source, /const handleSubmit = async \(e\) => \{\s*e\.preventDefault\(\)\s*if \(isSaving\) return/)
-  assert.match(source, /setIsSaving\(true\)[\s\S]*?await onSave\(formData\)[\s\S]*?setIsSaving\(false\)/)
-  assert.match(source, /useModalDialog\(\{ onEscape: isSaving \? null : onCancel, initialFocusRef: titleInputRef \}\)/)
+  assert.match(source, /const submitOwnerRef = useRef\(null\)/)
+  assert.match(source, /const handleSubmit = async \(e\) => \{\s*e\.preventDefault\(\)\s*if \(submitOwnerRef\.current\) return/)
+  assert.match(source, /const owner = Symbol\('project-form-submit'\)[\s\S]*?submitOwnerRef\.current = owner[\s\S]*?const submittedProject = \{ \.\.\.formData \}[\s\S]*?setIsSaving\(true\)[\s\S]*?await onSave\(submittedProject\)[\s\S]*?if \(submitOwnerRef\.current === owner\)[\s\S]*?submitOwnerRef\.current = null[\s\S]*?setIsSaving\(false\)/)
+  assert.match(source, /const handleCancel = \(\) => \{\s*if \(submitOwnerRef\.current\) return\s*onCancel\(\)\s*\}/)
+  assert.match(source, /useModalDialog\(\{ onEscape: handleCancel, initialFocusRef: titleInputRef \}\)/)
 })
 
 test('Project form exposes pending persistence and locks conflicting controls', () => {
