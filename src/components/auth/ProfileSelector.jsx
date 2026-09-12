@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import * as FiIcons from 'react-icons/fi';
@@ -10,6 +10,7 @@ const { FiUser, FiBriefcase, FiHeart, FiSmile, FiAlertCircle, FiCheck } = FiIcon
 const ProfileSelector = () => {
   const [loadingEmail, setLoadingEmail] = useState(null);
   const [error, setError] = useState('');
+  const switchOwnerRef = useRef(null);
   const { signIn, user } = useAuth();
 
   const profiles = [
@@ -48,15 +49,22 @@ const ProfileSelector = () => {
   ];
 
   const handleProfileSelect = async (email) => {
+    if (switchOwnerRef.current !== null) return;
+
+    const selectedEmail = email;
+    switchOwnerRef.current = selectedEmail;
     setError('');
-    setLoadingEmail(email);
+    setLoadingEmail(selectedEmail);
 
     try {
-      await signIn(email, 'password123');
+      await signIn(selectedEmail, 'password123');
     } catch (err) {
-      setError(`Failed to switch to ${email}: ${err.message}`);
+      setError(`Failed to switch to ${selectedEmail}: ${err.message}`);
     } finally {
-      setLoadingEmail(null);
+      if (switchOwnerRef.current === selectedEmail) {
+        switchOwnerRef.current = null;
+        setLoadingEmail(null);
+      }
     }
   };
 
