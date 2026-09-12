@@ -3,15 +3,15 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Implementation
-execution_state: IMPLEMENTING
+gate: Change
+execution_state: VALIDATING
 current_work:
   objective: Complete PR #381 synchronous Quick Capture submit ownership and validate it canonically.
   issue: null
   pr: 381
   branch: fix/quick-capture-submit-ownership
 next_actions:
-  - Run canonical Application validation for the exact PR #381 head.
+  - Re-run canonical Application validation after correcting the STATUS canonical gate classification exposed by run 1115.
   - Repair only evidenced implementation or source-contract failures on the same PR.
   - Audit reviews, inline threads, mergeability and base freshness after validation passes.
   - Convert STATUS to a post-merge-safe fresh-main handoff before implementation-complete signaling.
@@ -23,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
+  governance: FAIL
   lint: NOT_RUN
   typecheck: NOT_RUN
   tests: NOT_RUN
   build: NOT_RUN
-  ci: PENDING
+  ci: FAIL
   runtime: NOT_APPLICABLE
-validation_basis: PR #381 is the sole active delivery from fresh main 13f59a96a2244af4a12b8e345e0bc255ce16cc3c. QuickCaptureModal now uses synchronous submit ownership before crossing onSave, snapshots accepted items, allows only the owning attempt to release local saving state, and routes close/Escape plus local capture mutations through the same owner. Focused deterministic ownership coverage was added and existing pending-integrity coverage aligned. Canonical validation has not yet completed on this delivery head.
+validation_basis: Application validation run 1115 reached canonical platform validation after successful checkout, dependency installation and Chromium setup, then failed governance because this STATUS handoff used non-canonical gate value Implementation. The repository permits Project Entry, Change, Integration, Release or Completion. The delivery is now correctly classified as Change; application validation beyond governance has not yet run on this repaired head.
 last_verified_commit: 13f59a96a2244af4a12b8e345e0bc255ce16cc3c
-last_updated: 2026-09-13T07:50:00+10:00
+last_updated: 2026-09-13T07:52:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,19 +46,21 @@ last_updated: 2026-09-13T07:50:00+10:00
 
 PR #380 — `fix: serialize template editor submission synchronously` — completed its lifecycle and merged into `main` at `13f59a96a2244af4a12b8e345e0bc255ce16cc3c`.
 
-Fresh-main reconciliation found no open issues or competing pull requests. The next dependency-correct provider-independent Stage 3 interaction-integrity gap is Quick Capture. Its parent `ProjectsList` already synchronously owns the multi-write persistence operation, but `QuickCaptureModal` itself relied on rendered `isSaving` for duplicate-submit, close/Escape and local mutation protection. A same-render second submit could therefore reach `onSave`; the parent would fail it closed immediately, and that second modal invocation could clear local saving state while the accepted persistence operation remained unresolved.
+Fresh-main reconciliation found no open issues or competing pull requests. PR #381 — `fix: serialize quick capture submission synchronously` — is the sole active delivery. Its target is a provider-independent Stage 3 interaction-integrity gap: `ProjectsList` already synchronously owns Quick Capture multi-write persistence, but `QuickCaptureModal` previously relied on rendered `isSaving` for duplicate-submit, dismissal and local mutation protection.
 
-PR #381 — `fix: serialize quick capture submission synchronously` — is the sole active delivery. `QuickCaptureModal` now claims synchronous `submitOwnerRef` ownership before `onSave`, snapshots the accepted task list, permits only the owning attempt to release local saving state, and routes close/Escape, input mutation, add/remove, advanced-option toggling and save-feedback dismissal through that same owner. Existing `ProjectsList` mutation ownership, partial-success recovery, provider contracts, schemas and persistence semantics are unchanged.
+`QuickCaptureModal` now claims synchronous `submitOwnerRef` ownership before invoking `onSave`, snapshots the accepted task list, permits only the owning attempt to release local saving state, and routes close/Escape plus local capture mutations through the same owner. Existing parent mutation ownership, project/task persistence, partial-success recovery, schemas and provider contracts remain unchanged.
 
-Focused deterministic coverage was added in `test/quick-capture-submit-ownership.test.mjs`, and the existing Quick Capture pending-integrity source contract was aligned to the stronger synchronous ownership boundary.
+Focused deterministic coverage was added in `test/quick-capture-submit-ownership.test.mjs`; `test/quick-capture-saving-integrity.test.mjs` was aligned to the stronger ownership boundary.
+
+Application validation run 1115 exposed a durable-state governance classification error before application checks ran: `gate: Implementation` is not a canonical STATUS gate. That value has been repaired to `gate: Change` without altering application behaviour.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | IMPLEMENTATION — canonical validation of PR #381 |
-| Gate state | Implementation and focused coverage committed; exact-head canonical validation pending |
-| Execution state | IMPLEMENTING |
+| Current gate | CHANGE — repaired canonical validation of PR #381 |
+| Gate state | Run 1115 exposed only an invalid STATUS gate classification; repaired head requires canonical revalidation |
+| Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
 ## Delivery checkpoint
@@ -70,21 +72,21 @@ Focused deterministic coverage was added in `test/quick-capture-submit-ownership
 | Delivery branch | `fix/quick-capture-submit-ownership` |
 | Implemented change | Accepted Quick Capture submission synchronously owns resubmit, dismissal and local mutation boundaries until `onSave` settles |
 | Deterministic coverage | `test/quick-capture-submit-ownership.test.mjs`, aligned `test/quick-capture-saving-integrity.test.mjs` |
-| Canonical validation | PENDING on current delivery head |
-| Review/thread audit | NOT_RUN until implementation-head validation passes |
+| Canonical validation | Run 1115 FAIL at governance due non-canonical STATUS gate; repaired head pending revalidation |
+| Review/thread audit | NOT_RUN until repaired implementation-head validation passes |
 | Base freshness | Base created from fresh `main` at `13f59a96a2244af4a12b8e345e0bc255ce16cc3c` |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
-| Current blocker | None |
+| Current blocker | None — governance classification repaired |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; PR #381 is the sole active delivery. |
-| What is already happening? | Quick Capture submission and mutation-adjacent controls now use synchronous ownership; canonical validation is pending. |
-| What has been validated? | PR #380 merged after exact-head canonical validation. PR #381 has not yet completed canonical validation. |
-| What is next? | Advance the existing PR #381 validation, repair evidenced failures only, then complete review/base/merge lifecycle evidence. |
+| What is already happening? | Quick Capture uses synchronous submission ownership; run 1115 exposed and this head repairs a STATUS governance classification. |
+| What has been validated? | PR #380 merged after exact-head validation. For PR #381, environment setup passed but run 1115 stopped at governance before lint/typecheck/tests/build. |
+| What is next? | Revalidate this repaired PR #381 head, repair only evidenced failures, then complete review/base/merge lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -94,17 +96,17 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Relevant integrity decision
 
-Quick Capture is a multi-record operation with explicit partial-success semantics. Confirmed persisted tasks must be removed from the retry set, and the retained Quick Capture project identifier prevents duplicate project creation after reconciliation failure. Synchronous modal ownership strengthens the interaction boundary without changing those accepted semantics.
+Quick Capture is a multi-record operation with explicit partial-success semantics. Confirmed persisted tasks remain excluded from retry, and the retained Quick Capture project identifier continues preventing duplicate project creation after reconciliation failure. Synchronous modal ownership strengthens only the interaction boundary.
 
 ## Next dependency-correct work
 
-1. run/advance canonical validation for PR #381 exact head;
-2. repair only evidenced failures on the same PR and revalidate;
+1. exact-head revalidate repaired PR #381;
+2. repair only evidenced failures on the same PR;
 3. audit reviews, inline threads, mergeability and base freshness;
-4. update this file to a post-merge-safe fresh-main handoff and exact-head validate that documentation head;
-5. apply implementation-complete signaling only when all lifecycle evidence is satisfied;
-6. after merge, re-enter fresh authoritative `main` and select the next provider-independent Stage 3 integrity target;
-7. leave generic durable execution deferred until the real provider contract is certified.
+4. update STATUS to a post-merge-safe fresh-main handoff and exact-head validate it;
+5. apply implementation-complete signaling only when lifecycle evidence is satisfied;
+6. after merge, re-enter fresh authoritative `main` and select the next provider-independent Stage 3 target;
+7. leave generic durable execution deferred until real provider certification exists.
 
 ## Stage 3 exit conditions
 
