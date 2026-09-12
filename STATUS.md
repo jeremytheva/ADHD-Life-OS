@@ -6,13 +6,13 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Finish PR #381 lifecycle; after merge, re-enter from fresh authoritative main and select the next dependency-correct provider-independent Stage 3 task.
+  objective: Finish PR #382 lifecycle; after merge, re-enter from fresh authoritative main and select the next dependency-correct provider-independent Stage 3 task.
   issue: null
-  pr: 381
-  branch: fix/quick-capture-submit-ownership
+  pr: 382
+  branch: fix/project-task-form-submit-ownership
 next_actions:
   - Validate this final post-merge-safe STATUS head canonically.
-  - If exact-head validation passes and mergeability/review/base evidence remains clean, mark PR #381 implementation-complete and merge it through the repository lifecycle.
+  - If exact-head validation passes and mergeability/review/base evidence remains clean, mark PR #382 implementation-complete and merge it through the repository lifecycle.
   - After merge, inspect fresh main before selecting further work; do not re-enter the closed PR branch.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
@@ -29,9 +29,9 @@ validation:
   build: PASS
   ci: PENDING
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1122 passed the canonical platform validation on repaired delivery head bf615e6854fbc90016f432dcc4c274320fd4e54a after run 1120 had isolated the sole remaining stale cross-cutting Quick Capture assertion at 482/483 Node tests. Reviews and inline review threads are empty, PR #381 is mergeable, and main remains exactly at base 13f59a96a2244af4a12b8e345e0bc255ce16cc3c. This documentation-only post-merge-safe handoff is the final head and requires exact-head canonical validation before merge-ready signaling.
-last_verified_commit: bf615e6854fbc90016f432dcc4c274320fd4e54a
-last_updated: 2026-09-13T08:01:00+10:00
+validation_basis: Application validation run 1125 passed the canonical platform validation on implementation head 5b50613da5612ca263f8308a13a6c63bd4bb781b. Reviews and inline review threads are empty, PR #382 is mergeable, and main remains exactly at base 90a75e4f1e12898369a9b9617ef269b00fbfb302. This documentation-only post-merge-safe handoff is the final head and requires exact-head canonical validation before implementation-complete signaling.
+last_verified_commit: 5b50613da5612ca263f8308a13a6c63bd4bb781b
+last_updated: 2026-09-13T08:13:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,27 +43,22 @@ last_updated: 2026-09-13T08:01:00+10:00
 
 ## Current objective
 
-PR #381 — `fix: serialize quick capture submission synchronously` — is the sole active delivery and has passed canonical validation on its repaired implementation/status head. The remaining lifecycle step is exact-head validation of this post-merge-safe durable handoff, followed by implementation-complete signaling and merge if the clean review/base evidence remains unchanged.
+PR #381 — `fix: serialize quick capture submission synchronously` — completed its lifecycle and merged into `main` at `90a75e4f1e12898369a9b9617ef269b00fbfb302`.
 
-After PR #381 merges, autonomous continuation must re-enter from fresh authoritative `main`. This branch and PR must not remain the durable active re-entry target after merge.
+PR #382 — `fix: serialize project task form submission synchronously` — is the sole active delivery and has passed canonical validation on its implementation head. The remaining lifecycle step is exact-head validation of this post-merge-safe durable handoff, followed by implementation-complete signaling and merge if review, mergeability and base-freshness evidence remains clean.
 
-`QuickCaptureModal` now claims synchronous `submitOwnerRef` ownership before invoking `onSave`, snapshots the accepted task list, permits only the owning attempt to release local saving state, and routes close/Escape plus local capture mutations through the same owner. Existing `ProjectsList` mutation ownership, project/task persistence, partial-success recovery, schemas and provider contracts remain unchanged.
+After PR #382 merges, autonomous continuation must re-enter from fresh authoritative `main`. This branch and PR must not remain the durable active re-entry target after merge.
 
-Focused deterministic coverage exists in `test/quick-capture-submit-ownership.test.mjs`. Existing saving-integrity, partial-save, remove-focus and cross-cutting mutation-feedback contracts are aligned to the stronger ownership boundary while retaining their previous user-visible guarantees.
+The project-detail Task Form now claims `submitOwnerRef` ownership before crossing `onSave`, snapshots the accepted form payload, allows only the owning attempt to clear local pending state, and routes cancel/Escape plus local field mutation through that same synchronous owner. Existing `ProjectDetailView` persistence ownership, failure recovery, schemas and provider contracts remain unchanged.
 
-Validation repair history:
-- run 1115 stopped at governance because interim STATUS used invalid `gate: Implementation`; repaired to canonical `gate: Change`;
-- later validation exposed stale partial-save and focus-recovery source assertions; both were aligned to synchronous ownership without weakening their behavioral guarantees;
-- exact-head run 1120 passed audit, governance, lint and typecheck and reached 482/483 Node tests; its sole failure was the cross-cutting `core-mutation-feedback` assertion still requiring `onSave(validItems)`;
-- that contract was repaired to require the ownership-protected `acceptedItems` snapshot;
-- exact repaired run 1122 passed canonical platform validation.
+Focused deterministic coverage exists in `test/project-task-form-submit-ownership.test.mjs`, and the existing project-task form pending-integrity contract is aligned to the stronger synchronous ownership boundary.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — final exact-head lifecycle validation for PR #381 |
-| Gate state | Repaired delivery validation passed; final post-merge-safe STATUS head pending exact-head validation |
+| Current gate | CHANGE — final exact-head lifecycle validation for PR #382 |
+| Gate state | Implementation-head validation passed; final post-merge-safe STATUS head pending exact-head validation |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -71,14 +66,14 @@ Validation repair history:
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #380 — Template Edit synchronous submit ownership; merged at `13f59a96a2244af4a12b8e345e0bc255ce16cc3c` |
-| Active delivery | PR #381 — Quick Capture synchronous submit ownership |
-| Delivery branch | `fix/quick-capture-submit-ownership` |
-| Implemented change | Accepted Quick Capture submission synchronously owns resubmit, dismissal and local mutation boundaries until `onSave` settles |
-| Deterministic coverage | New submit-ownership test plus aligned saving-integrity, partial-save, focus-recovery and core mutation-feedback contracts |
-| Canonical validation | Run 1122 PASS on repaired delivery head `bf615e6854fbc90016f432dcc4c274320fd4e54a`; final documentation head pending exact-head validation |
+| Latest repository delivery on main | PR #381 — Quick Capture synchronous submit ownership; merged at `90a75e4f1e12898369a9b9617ef269b00fbfb302` |
+| Active delivery | PR #382 — project-task Task Form synchronous submit ownership |
+| Delivery branch | `fix/project-task-form-submit-ownership` |
+| Implemented change | Accepted project-task form submission synchronously owns resubmit, dismissal and local field-mutation boundaries until `onSave` settles |
+| Deterministic coverage | `test/project-task-form-submit-ownership.test.mjs`, aligned `test/project-task-form-saving-guard.test.mjs` |
+| Canonical validation | Run 1125 PASS on implementation head `5b50613da5612ca263f8308a13a6c63bd4bb781b`; final documentation head pending exact-head validation |
 | Review/thread audit | Clean — no submitted reviews or inline review threads |
-| Base freshness | Clean — `main` remains PR base `13f59a96a2244af4a12b8e345e0bc255ce16cc3c` |
+| Base freshness | Clean — `main` remains PR base `90a75e4f1e12898369a9b9617ef269b00fbfb302` |
 | Mergeability | Mergeable |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
@@ -88,24 +83,24 @@ Validation repair history:
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #381 is finishing its lifecycle. |
-| What is already happening? | Quick Capture synchronous submit ownership is implemented and canonically validated; final post-merge-safe handoff validation is pending. |
-| What has been validated? | Run 1122 passed the repaired delivery head; reviews/threads are clean, mergeability is true, and the base is fresh. |
-| What is next? | Validate this final documentation head, merge #381 if evidence remains clean, then inspect fresh main for the next task. |
+| Where am I? | Stage 3; PR #382 is finishing its lifecycle. |
+| What is already happening? | Project-task Task Form synchronous submit ownership is implemented and canonically validated; final post-merge-safe handoff validation is pending. |
+| What has been validated? | Run 1125 passed the implementation head; reviews/threads are clean, mergeability is true, and the base is fresh. |
+| What is next? | Validate this final documentation head, merge #382 if evidence remains clean, then inspect fresh main for the next task. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #381 does not alter that boundary.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #382 does not alter that boundary.
 
 ## Relevant integrity decision
 
-Quick Capture is a multi-record operation with explicit partial-success semantics. Confirmed persisted tasks remain excluded from retry, and the retained Quick Capture project identifier continues preventing duplicate project creation after reconciliation failure. Synchronous modal ownership strengthens only the interaction boundary.
+Project-task persistence already uses a parent-level synchronous mutation owner and failure recovery that keeps the task form open when creation is not confirmed. Form-level synchronous ownership strengthens the local interaction boundary so same-render duplicate invocation cannot prematurely re-enable controls while the accepted parent persistence remains unresolved.
 
 ## Next dependency-correct work
 
-1. exact-head validate this post-merge-safe PR #381 handoff;
+1. exact-head validate this post-merge-safe PR #382 handoff;
 2. if clean, signal implementation-complete and merge through the repository lifecycle;
 3. after merge, re-enter fresh authoritative `main` and reconcile current issues/branches/checks before selecting work;
 4. choose the next provider-independent Stage 3 integrity target only from that fresh-main state;
