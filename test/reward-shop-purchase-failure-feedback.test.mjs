@@ -16,6 +16,11 @@ test('reward purchase failures use recoverable in-dialog feedback instead of a b
   assert.doesNotMatch(rewardShopSource, /\balert\s*\(/)
 })
 
-test('a new purchase attempt clears stale failure feedback before evaluating the result', () => {
-  assert.match(rewardShopSource, /const handlePurchase = \(rewardId\) => \{\s*setPurchaseError\(''\)\s*const result = gamificationService\.purchaseReward\(rewardId\)/)
+test('a new purchase attempt clears stale failure feedback before ownership and purchase evaluation', () => {
+  assert.match(rewardShopSource, /const handlePurchase = \(rewardId\) => \{\s*setPurchaseError\(''\)/)
+
+  const clearError = rewardShopSource.indexOf("setPurchaseError('')", rewardShopSource.indexOf('const handlePurchase'))
+  const ownershipGuard = rewardShopSource.indexOf('if (purchasedRewardIdsRef.current.has(rewardId))')
+  const purchaseCall = rewardShopSource.indexOf('gamificationService.purchaseReward(rewardId)')
+  assert.ok(clearError >= 0 && ownershipGuard > clearError && purchaseCall > ownershipGuard)
 })

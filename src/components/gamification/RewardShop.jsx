@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -14,6 +14,7 @@ const RewardShop = ({ onClose }) => {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [purchaseSuccess, setPurchaseSuccess] = useState(null)
   const [purchaseError, setPurchaseError] = useState('')
+  const purchasedRewardIdsRef = useRef(new Set())
   const dialogRef = useModalDialog({ onEscape: onClose })
 
   useEffect(() => {
@@ -23,15 +24,25 @@ const RewardShop = ({ onClose }) => {
   const loadRewards = () => {
     const availableRewards = gamificationService.getAvailableRewards()
     const currencyData = gamificationService.getCurrency()
+    purchasedRewardIdsRef.current = new Set(
+      availableRewards.filter(reward => reward.purchased).map(reward => reward.id)
+    )
     setRewards(availableRewards)
     setCurrency(currencyData)
   }
 
   const handlePurchase = (rewardId) => {
     setPurchaseError('')
+
+    if (purchasedRewardIdsRef.current.has(rewardId)) {
+      setPurchaseError('This reward is already owned. Your coin balance was not changed.')
+      return
+    }
+
     const result = gamificationService.purchaseReward(rewardId)
 
     if (result.success) {
+      purchasedRewardIdsRef.current.add(rewardId)
       setPurchaseSuccess(result)
       loadRewards()
 
