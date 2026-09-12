@@ -7,7 +7,7 @@ const read = (path) => fs.readFile(new URL(`../${path}`, import.meta.url), 'utf8
 
 test('TemplateLibrary claims apply ownership before rendered pending state', async () => {
   const source = await read('src/components/templates/TemplateLibrary.jsx')
-  const runApply = source.match(/const runApply = async[\s\S]*?\n  }\n\n  const handleDirectApply/)?.[0] ?? ''
+  const runApply = source.match(/const runApply = async[\s\S]*?const handleDirectApply/)?.[0] ?? ''
 
   assert.match(runApply, /if \(!onApplyTemplate \|\| applyPendingRef\.current\) return false/)
   assert.match(runApply, /applyPendingRef\.current = true[\s\S]*?setIsApplying\(true\)/)
