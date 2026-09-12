@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: FAIL
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: FAIL
   build: NOT_RUN
   ci: FAIL
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1058 on PR #371 head a26f92b63e6c1a2e7f4e31adb2168aebb8fcb58a passed npm audit, then failed validate:governance before lint, typecheck, tests, build or Playwright because STATUS.md used unsupported PENDING validation enum values. The implementation was not implicated. This STATUS repairs those fields to repository-valid FAIL/NOT_RUN states and requires exact-head canonical rerun. Submitted reviews and inline review threads are empty.
+validation_basis: Application validation run 1059 on repaired PR #371 head d47eeb668a4eea2e2c5a9ba297e8b356a42396c8 passed dependency audit, governance, lint, typecheck, and the new chore mutation-navigation regression coverage. Node tests reached 458/460 passing; the two failures were pre-existing source-contract assertions that assumed only two mutation-disabled controls and required the Refresh chores aria-label immediately before the button close token. Both stale tests were repaired on this PR to preserve accessibility semantics while recognizing the stronger shared mutation lock. Build and Playwright did not run after the Node-test stop. Exact-head canonical rerun is required.
 last_verified_commit: 6565ce5eba77449516507d81e8474ed4e191d249
-last_updated: 2026-09-13T01:22:00+10:00
+last_updated: 2026-09-13T01:24:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -55,14 +55,14 @@ PR #371 now makes the existing mutation owner authoritative for these adjacent i
 
 Focused deterministic coverage is in `test/chore-list-mutation-navigation-integrity.test.mjs`.
 
-Application validation run 1058 passed dependency audit but stopped at governance because this STATUS handoff used `PENDING` in validation fields, while the repository governance schema accepts only `PASS`, `FAIL`, `NOT_RUN`, or `NOT_APPLICABLE`. That documentation-only validation-state defect is now corrected; the implementation itself was not implicated and requires exact-head canonical rerun.
+Run 1058 exposed and led to repair of an unsupported STATUS validation enum. Run 1059 then passed dependency audit, governance, lint, typecheck, and the new regression coverage, reaching 458/460 passing Node tests. Its only failures were two older source-contract tests whose assumptions became stale when refresh/filter/detail controls joined the existing mutation lock. Those tests were repaired on the same PR without weakening the implementation.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — canonical revalidation of repaired PR #371 exact head |
-| Gate state | Run 1058 classified as governance-only STATUS enum failure; repair committed; exact-head rerun required |
+| Gate state | Run 1059 reached Node tests; two stale source-contract assertions repaired; exact-head rerun required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -74,9 +74,9 @@ Application validation run 1058 passed dependency audit but stopped at governanc
 | Active delivery | PR #371 — ChoreChecklist mutation-adjacent interaction lock |
 | Delivery branch | `fix/chore-list-mutation-navigation-integrity` |
 | Implemented change | Refresh, filter and detail-open actions now consult the same synchronous mutation owner as complete/snooze writes and expose the rendered lock through disabled controls |
-| Deterministic coverage | `test/chore-list-mutation-navigation-integrity.test.mjs` |
-| Canonical validation | Run 1058: dependency audit PASS; governance FAIL only because STATUS used unsupported validation enum values; repaired exact-head rerun required |
-| Review/thread audit | Clean: no submitted reviews and no inline review threads |
+| Deterministic coverage | `test/chore-list-mutation-navigation-integrity.test.mjs`; stale chore source contracts aligned to the stronger lock |
+| Canonical validation | Run 1059: audit/governance/lint/typecheck PASS; 458/460 Node tests PASS; two stale source contracts repaired; exact-head rerun required |
+| Review/thread audit | Clean before the latest repair: no submitted reviews and no inline review threads; final audit required after canonical pass |
 | Base freshness | Branch created from fresh `main` commit `6565ce5eba77449516507d81e8474ed4e191d249`; final freshness audit required after canonical pass |
 | Provider/data impact | None; provider contracts, schemas and persistence semantics unchanged |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
@@ -88,7 +88,7 @@ Application validation run 1058 passed dependency audit but stopped at governanc
 | --- | --- |
 | Where am I? | Stage 3 with PR #371 as the sole active delivery. |
 | What is already happening? | Housework complete/snooze mutations now also own refresh/filter/detail navigation synchronously until persistence/reconciliation settles. |
-| What has been validated? | PR #370 exact-head run 1056 passed and that delivery merged. PR #371 run 1058 passed dependency audit, then exposed and classified a STATUS governance-enum defect; implementation validation remains pending. |
+| What has been validated? | PR #370 exact-head run 1056 passed and merged. PR #371 run 1059 passed through typecheck and reached 458/460 Node tests; its two stale source-contract failures are repaired. |
 | What is next? | Revalidate the repaired exact PR #371 head, repair any further in-scope findings, complete review/base/lifecycle evidence, then re-enter fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
