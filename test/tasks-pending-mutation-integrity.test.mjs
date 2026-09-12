@@ -16,9 +16,10 @@ test('Tasks exposes the existing global mutation lock in the UI while persistenc
   assert.match(source, /<TaskCard[\s\S]*?pending=\{mutationPending\}[\s\S]*?\/>/)
 })
 
-test('Tasks retains handler-level serialization as defense in depth', () => {
-  assert.match(source, /const handleCreateTask = async \(taskData\) => \{\s*if \(pendingAction\) return/)
-  assert.match(source, /const handleApplyTemplate = async \(template, type\) => \{\s*if \(type !== 'task' \|\| pendingAction\) return/)
-  assert.match(source, /const handleCompleteTask = async \(id\) => \{\s*if \(pendingAction\) return/)
-  assert.match(source, /const handleDeleteTask = async \(id\) => \{\s*if \(pendingAction\) return/)
+test('Tasks retains handler-level serialization through synchronous mutation ownership', () => {
+  assert.match(source, /const mutationOwnerRef = useRef\(null\)/)
+  assert.match(source, /const handleCreateTask = async \(taskData\) => \{\s*if \(mutationOwnerRef\.current !== null\) return/)
+  assert.match(source, /const handleApplyTemplate = async \(template, type\) => \{\s*if \(type !== 'task' \|\| mutationOwnerRef\.current !== null\) return/)
+  assert.match(source, /const handleCompleteTask = async \(id\) => \{\s*if \(mutationOwnerRef\.current !== null\) return/)
+  assert.match(source, /const handleDeleteTask = async \(id\) => \{\s*if \(mutationOwnerRef\.current !== null\) return/)
 })
