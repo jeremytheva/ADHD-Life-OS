@@ -6,14 +6,14 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Revalidate repaired PR #373 task-list mutation-adjacent interaction lock and advance it through the repository lifecycle when exact-head gates are satisfied.
+  objective: Complete the repository lifecycle for validated PR #373, then re-enter from fresh main and select the next provider-independent Stage 3 integrity target.
   issue: null
-  pr: 373
-  branch: fix/task-list-mutation-navigation-integrity
+  pr: null
+  branch: null
 next_actions:
-  - Run canonical npm run platform:validate on the exact repaired PR #373 implementation/status head.
-  - If canonical validation passes, audit submitted reviews, inline threads, base freshness and mergeability.
-  - Commit a post-merge-safe STATUS handoff, revalidate its exact head, then signal lifecycle:implementation-complete when all gates remain satisfied.
+  - Revalidate the STATUS-only handoff commit on PR #373 exact head.
+  - Allow the repository lifecycle to move validated PR #373 through READY, MERGEABLE, and MERGED when all exact-head gates remain satisfied.
+  - Re-enter from fresh main after merge and inspect authoritative state before selecting the next dependency-correct provider-independent Stage 3 target.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -25,13 +25,13 @@ validation:
   governance: PASS
   lint: PASS
   typecheck: PASS
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: PENDING
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1071 on PR #373 head 459bb1375d47b12a587abbe2db3429c4086414ac passed audit, governance, lint, typecheck, and all new TaskList mutation-navigation regression coverage. It stopped at four stale pre-existing source-contract assertions that still required direct filter/sort/retry wiring or the previous four-control disabled count. Those assertions were repaired on the same PR to require the stronger mutation-aware handlers and expanded six-control UI lock. Run 1076 then correctly rejected interim STATUS front-matter values that were not allowed by repository governance; the durable state now uses canonical NOT_RUN/PENDING lifecycle values. Exact-head canonical revalidation is required.
-last_verified_commit: d3aefcebf0619119bc22638650f50502d980275a
-last_updated: 2026-09-13T02:28:00+10:00
+validation_basis: Application validation run 1077 passed on PR #373 implementation/status head 64fcb97c191574a0c5144d36fcedf2a27a15c199 after four stale TaskList source-contract assertions and one interim STATUS governance-enum defect were repaired without weakening the synchronous mutation boundary. Submitted reviews and inline review threads were empty, PR #373 was mergeable, and main remained exactly at PR base d3aefcebf0619119bc22638650f50502d980275a before this STATUS-only handoff commit. Exact-head canonical revalidation is required because this documentation commit changes the PR head.
+last_verified_commit: 64fcb97c191574a0c5144d36fcedf2a27a15c199
+last_updated: 2026-09-13T02:31:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -43,24 +43,22 @@ last_updated: 2026-09-13T02:28:00+10:00
 
 ## Current objective
 
-PR #373 — `fix: lock task list navigation during mutations` — is the sole active delivery after PR #372 completed repository lifecycle and merged into fresh `main` at `d3aefcebf0619119bc22638650f50502d980275a`.
+PR #373 — `fix: lock task list navigation during mutations` — has completed its implementation audit and passed canonical Application validation run 1077 on implementation/status head `64fcb97c191574a0c5144d36fcedf2a27a15c199`.
 
-Task persistence already uses synchronous `mutationOwnerRef` ownership, but TaskList retry, create/template entry, filter, sort and recommended-task focus navigation could still cross that unresolved persistence/reconciliation boundary before React rendered `pendingAction`. Filter and sort were the highest integrity risk because an accepted mutation can later reconcile through the earlier `loadTasks` closure and republish a list based on controls that the user has already changed.
+The change makes the existing synchronous TaskList mutation owner authoritative for adjacent retry/recovery, create/template entry, timeframe filter, sort, and recommended-task focus actions. These interactions now return immediately while `mutationOwnerRef.current` is held, and filter/sort controls expose the same rendered lock through disabled state. This prevents same-tick navigation/control changes from crossing unresolved task persistence and reconciliation before React has rendered `pendingAction`. Existing task persistence semantics, latest-request refresh protection, provider contracts, schemas, and recommendation policy are unchanged.
 
-PR #373 makes the existing synchronous mutation owner authoritative for those adjacent interactions. Retry, entry, filter, sort and recommended-task focus handlers return immediately while mutation ownership is held. Filter and sort controls also expose the rendered lock through disabled state. Existing task persistence, recovery messages, latest-request refresh sequencing, provider contracts, schemas and recommendation policy are unchanged.
+Focused deterministic coverage is in `test/task-list-mutation-navigation-integrity.test.mjs`. Run 1071 first exposed four stale pre-existing source-contract assertions requiring the previous direct handlers or old disabled-control count; those were aligned to the stronger guarded behavior. Run 1076 then correctly rejected temporary STATUS validation values that were outside the governance schema; the durable front matter was repaired to canonical lifecycle values. Run 1077 subsequently passed the full canonical repository process.
 
-Focused deterministic coverage is in `test/task-list-mutation-navigation-integrity.test.mjs`.
+Submitted reviews are empty, inline review threads are empty, PR #373 is mergeable, and `main` remained at the PR base `d3aefcebf0619119bc22638650f50502d980275a` before this STATUS-only handoff commit.
 
-Application validation run 1071 passed dependency audit, governance, lint, typecheck, and the new TaskList mutation-navigation tests. It reached the broader Node test suite and identified four stale source-contract assertions: timeframe filtering still required direct `setFilter`, refresh recovery still required direct `loadTasks`, sort still required direct `setSortBy`, and the existing global-mutation UI test expected only four rendered `disabled={mutationPending}` controls. Each stale assertion has been repaired on the same PR to require the stronger synchronous mutation-aware boundary instead of weakening the implementation.
-
-Application validation run 1076 then stopped immediately at governance because interim STATUS front matter used `REVALIDATING`, which is not an allowed value for `tests`, `build`, or `ci`. This was a durable-state formatting defect, not an application failure. STATUS now uses the repository's canonical `NOT_RUN` / `PENDING` states until the exact repaired head completes validation.
+This file is intentionally post-merge-safe: after PR #373 merges, autonomous continuation must re-enter from fresh authoritative `main` rather than treating the soon-to-close PR/branch as active work.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical revalidation of repaired PR #373 head |
-| Gate state | Four stale source-contract failures repaired; run 1076 STATUS governance enum defect repaired; exact-head canonical validation pending |
+| Current gate | INTEGRATION — exact-head revalidation of post-merge-safe STATUS handoff |
+| Gate state | Implementation/status head passed run 1077; STATUS-only handoff committed; exact-head canonical revalidation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -69,13 +67,13 @@ Application validation run 1076 then stopped immediately at governance because i
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #372 — RoutineList mutation-adjacent interaction lock; merged at `d3aefcebf0619119bc22638650f50502d980275a` |
-| Active delivery | PR #373 — TaskList mutation-adjacent interaction lock |
-| Delivery branch | `fix/task-list-mutation-navigation-integrity` |
-| Implemented change | Retry, create/template entry, filter, sort and recommended-task focus actions consult the same synchronous mutation owner as task persistence writes |
-| Deterministic coverage | `test/task-list-mutation-navigation-integrity.test.mjs`; four stale TaskList source-contract tests aligned to the stronger guarded behavior after run 1071 |
-| Canonical validation | Run 1071 partial PASS through audit/governance/lint/typecheck/new regression; run 1076 rejected invalid interim STATUS enums; exact repaired-head rerun required |
-| Review/thread audit | Pending after canonical validation |
-| Base freshness | Branch was created from fresh `main` at PR #372 merge `d3aefcebf0619119bc22638650f50502d980275a` |
+| Active delivery | PR #373 — TaskList mutation-adjacent interaction lock, implementation complete and in final lifecycle validation |
+| Delivery branch | `fix/task-list-mutation-navigation-integrity` until merge; not the post-merge re-entry target |
+| Implemented change | Retry/recovery, create/template entry, timeframe filter, sort, and recommended-task focus consult the same synchronous mutation owner as task persistence writes |
+| Deterministic coverage | `test/task-list-mutation-navigation-integrity.test.mjs`; four stale TaskList source contracts aligned to guarded behavior |
+| Canonical validation | Run 1077 PASS on implementation/status head `64fcb97c191574a0c5144d36fcedf2a27a15c199`; exact-head rerun required after this STATUS-only commit |
+| Review/thread audit | No submitted reviews; no inline review threads |
+| Base freshness | `main` remained at PR base `d3aefcebf0619119bc22638650f50502d980275a` before STATUS handoff |
 | Provider/data impact | None; provider contracts, schemas and task persistence semantics unchanged |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
@@ -84,10 +82,10 @@ Application validation run 1076 then stopped immediately at governance because i
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #373 is the sole active delivery and its repaired exact head is validating. |
-| What is already happening? | Task persistence mutations synchronously own retry, entry, filter, sort and task-focus interactions until persistence/reconciliation settles. |
-| What has been validated? | Fresh main through PR #372 is green. Run 1071 passed audit/governance/lint/typecheck and the new PR #373 regression tests, then exposed four stale source contracts that are repaired. Run 1076 identified and stopped on invalid STATUS lifecycle enums, which are now repaired. |
-| What is next? | Revalidate the exact repaired head, audit review/thread/base evidence, then perform the post-merge-safe STATUS handoff and final exact-head rerun. |
+| Where am I? | Stage 3; PR #373 implementation is validated and only its STATUS-handoff exact-head lifecycle validation remains. |
+| What is already happening? | Task persistence mutations synchronously own retry/entry/filter/sort/task-focus interactions until persistence/reconciliation settles. |
+| What has been validated? | PR #372 merged after final validation. PR #373 implementation/status head passed canonical run 1077 with clean review/thread and base-freshness evidence. |
+| What is next? | Revalidate the STATUS-only exact head, complete lifecycle merge, then re-enter fresh `main` and inspect the next provider-independent Stage 3 target. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -97,12 +95,11 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. validate the exact repaired PR #373 implementation/status head with canonical `npm run platform:validate`;
-2. if validation passes, confirm submitted reviews, inline threads, current base and mergeability are clean;
-3. commit a post-merge-safe STATUS handoff and revalidate its exact head;
-4. signal `lifecycle:implementation-complete` only after all exact-head gates are satisfied;
-5. re-enter from fresh authoritative `main` after merge and select the next provider-independent Stage 3 target;
-6. leave generic durable execution deferred until the real provider contract is certified.
+1. revalidate the exact PR #373 head containing this post-merge-safe STATUS handoff;
+2. keep review/thread/base/mergeability evidence current and allow the lifecycle finalizer to merge when all gates remain satisfied;
+3. re-enter from fresh authoritative `main` after merge;
+4. inspect current code, tests, roadmap, decisions, branches and PRs for the next provider-independent Stage 3 integrity target;
+5. leave generic durable execution deferred until the real provider contract is certified.
 
 ## Stage 3 exit conditions
 
