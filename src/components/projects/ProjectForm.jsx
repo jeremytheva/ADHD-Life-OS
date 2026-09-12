@@ -29,23 +29,37 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
     target_date: project?.target_date || ''
   })
   const [isSaving, setIsSaving] = useState(false)
+  const submitOwnerRef = useRef(null)
   const titleInputRef = useRef(null)
-  const dialogRef = useModalDialog({ onEscape: isSaving ? null : onCancel, initialFocusRef: titleInputRef })
+
+  const handleCancel = () => {
+    if (submitOwnerRef.current) return
+    onCancel()
+  }
+
+  const dialogRef = useModalDialog({ onEscape: handleCancel, initialFocusRef: titleInputRef })
 
   const handleChange = (field, value) => {
-    if (isSaving) return
+    if (submitOwnerRef.current) return
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (isSaving) return
+    if (submitOwnerRef.current) return
 
+    const owner = Symbol('project-form-submit')
+    submitOwnerRef.current = owner
+    const submittedProject = { ...formData }
     setIsSaving(true)
+
     try {
-      await onSave(formData)
+      await onSave(submittedProject)
     } finally {
-      setIsSaving(false)
+      if (submitOwnerRef.current === owner) {
+        submitOwnerRef.current = null
+        setIsSaving(false)
+      }
     }
   }
 
@@ -70,7 +84,7 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
           </h3>
           <button
             type="button"
-            onClick={onCancel}
+            onClick={handleCancel}
             aria-label="Close project form"
             disabled={isSaving}
             className="p-2 text-slate-400 hover:text-slate-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
@@ -194,7 +208,7 @@ const ProjectForm = ({ project = null, onSave, onCancel }) => {
           <div className="flex gap-3 pt-4 border-t border-slate-200">
             <button
               type="button"
-              onClick={onCancel}
+              onClick={handleCancel}
               disabled={isSaving}
               className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
