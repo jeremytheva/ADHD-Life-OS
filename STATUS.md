@@ -11,7 +11,7 @@ current_work:
   pr: 361
   branch: fix/mode-switcher-escape-ownership
 next_actions:
-  - Run canonical Application validation on the exact PR #361 head.
+  - Run canonical Application validation on the repaired exact PR #361 head.
   - Repair any implementation-correlated failure on the same branch.
   - Re-audit submitted reviews, inline review threads, base freshness and mergeability.
   - Complete a post-merge-safe STATUS handoff after clean implementation-head evidence.
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
+  governance: FAIL
   lint: NOT_RUN
   typecheck: NOT_RUN
   tests: NOT_RUN
   build: NOT_RUN
-  ci: PENDING
-  runtime: UNVERIFIED
-validation_basis: PR #360 completed lifecycle and merged into main at fdbbf320dc094c0f43a9c8df758f5f0ed5232cc7 after final exact-head Application validation run 1001 passed. Fresh-main inspection found no open PRs. Run 1000 had exposed a repeated Mode Switcher desktop Escape/focus failure plus a related mobile nested-Escape flake. Root-cause inspection showed ModeSwitcher defers popup focus with requestAnimationFrame, leaving a window where its trigger remains focused while the menu is open; the trigger did not own Escape, so dismissal could be missed or Escape could reach the parent mobile navigation owner. PR #361 adds trigger-level Escape ownership with preventDefault/stopPropagation while retaining popup-level Escape ownership and adds deterministic regression coverage. Canonical validation is pending on the exact STATUS-updated head.
+  ci: FAIL
+  runtime: NOT_RUN
+validation_basis: Application validation run 1003 stopped at governance before lint, typecheck, tests, build, or browser validation because STATUS.md omitted the repository-required scheduled autonomous re-entry answers. This was a durable-state defect introduced while recording PR #361, not an implementation failure. The continuation contract is repaired on this head and requires a fresh canonical run. PR #360 had previously completed lifecycle and merged into main at fdbbf320dc094c0f43a9c8df758f5f0ed5232cc7 after final exact-head run 1001 passed. Fresh-main inspection found no open PRs. PR #361 addresses the repeated Mode Switcher Escape/focus failure and related mobile nested-Escape flake exposed during run 1000 by making the trigger own Escape while deferred popup focus is still transferring, while retaining popup Escape ownership after focus moves.
 last_verified_commit: fdbbf320dc094c0f43a9c8df758f5f0ed5232cc7
-last_updated: 2026-09-12T17:24:00+10:00
+last_updated: 2026-09-12T17:26:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -51,12 +51,14 @@ Canonical validation of PR #360 exposed an interaction-integrity weakness alread
 
 PR #361 makes the trigger own Escape whenever the menu is open: it prevents default handling, stops propagation, closes the menu, and uses the existing focus-restoration path. The existing popup Escape owner remains in place after focus transfers. Focused deterministic coverage asserts both ownership paths. No mode policy, provider, persistence, routing, schema, or execution-domain behavior changes.
 
+Application validation run 1003 did not test that implementation. It stopped in governance because the first PR #361 STATUS update omitted the repository-required scheduled autonomous re-entry answer section. This document repairs that governance defect and records the failed gate accurately; canonical validation must run again on this new exact head.
+
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical exact-head validation for PR #361 |
-| Gate state | Root-cause correction and deterministic regression committed; canonical validation pending |
+| Current gate | INTEGRATION — repaired exact-head canonical validation for PR #361 |
+| Gate state | Mode Switcher correction and regression committed; STATUS continuation contract repaired after run 1003 governance failure |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -69,10 +71,22 @@ PR #361 makes the trigger own Escape whenever the menu is open: it prevents defa
 | Delivery branch | `fix/mode-switcher-escape-ownership` |
 | Implemented change | Trigger-level Escape owner while open; popup-level owner retained; nested Escape propagation contained |
 | Deterministic coverage | `test/mode-switcher-escape-ownership.test.mjs` plus existing Mode Switcher Playwright coverage |
-| Canonical validation | PENDING on the exact head created by this STATUS update |
+| Validation history | Run 1003: governance FAIL because STATUS omitted scheduled autonomous re-entry answers; later gates NOT_RUN. Governance defect repaired on this head. |
+| Canonical validation | Required on this repaired exact head |
 | Provider/data impact | None |
-| Runtime/deployment verification | UNVERIFIED |
+| Runtime/deployment verification | NOT_RUN |
 | Current blocker | None |
+
+## Autonomous continuation entry answers
+
+| Question | Durable answer |
+| --- | --- |
+| Where am I? | Stage 3. PR #361 is the sole active delivery and is in VALIDATING after a STATUS-only governance repair. |
+| What is already happening? | ModeSwitcher now owns Escape both while focus is still on its trigger and after focus transfers into the popup, preventing nested mobile navigation from receiving the first Escape. |
+| What has been validated? | Run 1003 validated checkout/dependencies/browser setup, then stopped at governance. The implementation has not yet been exercised by canonical lint/typecheck/tests/build/browser gates on the repaired head. |
+| What is next? | Run canonical validation on this exact head, repair only correlated failures, audit lifecycle evidence, then complete the post-merge-safe handoff and final exact-head gate. |
+| Can I proceed autonomously? | Yes. No owner decision is required. |
+| Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no remaining actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
@@ -80,7 +94,7 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the exact PR #361 head;
+1. run canonical Application validation on the repaired exact PR #361 head;
 2. repair only implementation-correlated failures on the same branch;
 3. audit reviews, threads, base freshness and mergeability;
 4. commit a post-merge-safe STATUS handoff after clean implementation evidence;
