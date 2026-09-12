@@ -32,5 +32,7 @@ test('Task list refresh failures preserve established context and expose focused
   assert.match(taskListSource, /loadError === 'tasks' && hasLoaded && !operationError/);
   assert.match(taskListSource, /title="We couldn’t refresh your tasks"/);
   assert.match(taskListSource, /Your current task list is still shown and may be out of date/);
-  assert.match(taskListSource, /onRetry=\{loadTasks\}/);
+  assert.match(taskListSource, /const retryLoad = \(\) => \{\s*if \(mutationOwnerRef\.current !== null\) return/);
+  const retryUses = taskListSource.match(/onRetry=\{retryLoad\}/g) ?? [];
+  assert.equal(retryUses.length, 2);
 });

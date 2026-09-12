@@ -132,12 +132,35 @@ const TaskList = () => {
   }, [loadTasks, preferences])
 
   const retryLoad = () => {
+    if (mutationOwnerRef.current !== null) return
     setOperationError(null)
     if (preferences) {
       loadTasks()
     } else {
       loadPreferences()
     }
+  }
+
+  const handleOpenForm = () => {
+    if (mutationOwnerRef.current !== null) return
+    setOperationError(null)
+    setShowForm(true)
+  }
+
+  const handleOpenTemplates = () => {
+    if (mutationOwnerRef.current !== null) return
+    setOperationError(null)
+    setShowTemplates(true)
+  }
+
+  const handleFilterChange = (nextFilter) => {
+    if (mutationOwnerRef.current !== null) return
+    setFilter(nextFilter)
+  }
+
+  const handleSortChange = (nextSort) => {
+    if (mutationOwnerRef.current !== null) return
+    setSortBy(nextSort)
   }
 
   const handleCreateTask = async (taskData) => {
@@ -318,7 +341,7 @@ const TaskList = () => {
         <LoadErrorState
           title="We couldn’t refresh your tasks"
           message="Your current task list is still shown and may be out of date. Check your connection and try again."
-          onRetry={loadTasks}
+          onRetry={retryLoad}
         />
       )}
 
@@ -343,7 +366,7 @@ const TaskList = () => {
         <div className="flex gap-2">
           <button
             type="button"
-            onClick={() => { setOperationError(null); setShowTemplates(true) }}
+            onClick={handleOpenTemplates}
             disabled={mutationPending}
             className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 flex items-center space-x-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -352,7 +375,7 @@ const TaskList = () => {
           </button>
           <button
             type="button"
-            onClick={() => { setOperationError(null); setShowForm(true) }}
+            onClick={handleOpenForm}
             disabled={mutationPending}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -369,6 +392,7 @@ const TaskList = () => {
         <RecommendedTasks
           tasks={recommendedTasks}
           onTaskClick={(task) => {
+            if (mutationOwnerRef.current !== null) return
             const element = document.getElementById(`task-${task.id}`)
             if (element) {
               element.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -385,9 +409,10 @@ const TaskList = () => {
             <button
               type="button"
               key={filterOption.key}
-              onClick={() => setFilter(filterOption.key)}
+              onClick={() => handleFilterChange(filterOption.key)}
+              disabled={mutationPending}
               aria-pressed={filter === filterOption.key}
-              className={`px-3 py-2 rounded-md text-sm transition-colors ${filter === filterOption.key ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-slate-100'}`}
+              className={`px-3 py-2 rounded-md text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${filter === filterOption.key ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-slate-100'}`}
             >
               {filterOption.label}
             </button>
@@ -399,8 +424,9 @@ const TaskList = () => {
           <select
             id="task-sort"
             value={sortBy}
-            onChange={(event) => setSortBy(event.target.value)}
-            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            onChange={(event) => handleSortChange(event.target.value)}
+            disabled={mutationPending}
+            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {sortOptions.map((option) => (
               <option key={option.key} value={option.key}>{option.label}</option>
@@ -417,7 +443,7 @@ const TaskList = () => {
           <div className="flex gap-3 justify-center">
             <button
               type="button"
-              onClick={() => setShowForm(true)}
+              onClick={handleOpenForm}
               disabled={mutationPending}
               className="text-blue-600 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -426,7 +452,7 @@ const TaskList = () => {
             <span className="text-slate-400">or</span>
             <button
               type="button"
-              onClick={() => setShowTemplates(true)}
+              onClick={handleOpenTemplates}
               disabled={mutationPending}
               className="text-purple-600 hover:text-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
             >

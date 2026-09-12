@@ -11,5 +11,6 @@ test('TaskList exposes timeframe filters as a labelled stateful control group', 
   assert.match(source, /role="group"/)
   assert.match(source, /aria-label="Filter tasks by timeframe"/)
   assert.match(source, /aria-pressed=\{filter === filterOption\.key\}/)
-  assert.match(source, /onClick=\{\(\) => setFilter\(filterOption\.key\)\}/)
+  assert.match(source, /const handleFilterChange = \(nextFilter\) => \{\s*if \(mutationOwnerRef\.current !== null\) return\s*setFilter\(nextFilter\)/)
+  assert.match(source, /onClick=\{\(\) => handleFilterChange\(filterOption\.key\)\}\s*disabled=\{mutationPending\}/)
 })
