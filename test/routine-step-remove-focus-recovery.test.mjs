@@ -10,6 +10,6 @@ test('removing a routine step returns focus to the persistent Add Step control',
 
   assert.match(form, /const addStepButtonRef = useRef\(null\)/)
   assert.match(form, /ref=\{addStepButtonRef\}[\s\S]*?<span>Add Step<\/span>/)
-  assert.match(form, /const removeStep = \(index\) => \{\s*if \(saving\) return\s*setSteps\(prev => prev\.filter\(\(_, i\) => i !== index\)\)\s*addStepButtonRef\.current\?\.focus\(\)\s*\}/)
+  assert.match(form, /const removeStep = \(index\) => \{\s*if \(submitOwnerRef\.current\) return\s*setSteps\(prev => prev\.filter\(\(_, i\) => i !== index\)\)\s*addStepButtonRef\.current\?\.focus\(\)\s*\}/)
   assert.match(form, /onClick=\{\(\) => removeStep\(index\)\}/)
 })
