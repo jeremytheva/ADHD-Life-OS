@@ -17,7 +17,8 @@ test('preferences domain repository exposes canonical validated methods', () => 
 
 test('Settings supplies authenticated user context and gives retry actions for preference errors', () => {
   assert.match(settings, /getUserPreferences\(user\)/)
-  assert.match(settings, /updateUserPreferences\(user, updates\)/)
+  assert.match(settings, /const pendingUpdates = \{ \.\.\.updates \}/)
+  assert.match(settings, /updateUserPreferences\(user, pendingUpdates\)/)
   assert.match(settings, /Retry loading/)
   assert.match(settings, /Retry saving/)
 })

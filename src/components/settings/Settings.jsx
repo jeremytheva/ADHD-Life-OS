@@ -19,10 +19,12 @@ const Settings = () => {
   const [loadError, setLoadError] = useState(null)
   const [saveError, setSaveError] = useState(null)
   const [lastUpdates, setLastUpdates] = useState(null)
+  const [savingPreferences, setSavingPreferences] = useState(false)
   const [showModePrefs, setShowModePrefs] = useState(false)
   const [showAccessibility, setShowAccessibility] = useState(false)
   const [selectedModeForPrefs, setSelectedModeForPrefs] = useState(null)
   const loadErrorRef = useRef(null)
+  const preferenceSaveOwnerRef = useRef(false)
 
   const loadPreferences = useCallback(async () => {
     setLoading(true)
@@ -51,15 +53,28 @@ const Settings = () => {
   }, [loadError])
 
   const handleUpdatePreferences = async (updates) => {
+    if (preferenceSaveOwnerRef.current) {
+      setSaveError(new Error('Another preference change is still saving. Try again after it finishes.'))
+      return false
+    }
+
+    const pendingUpdates = { ...updates }
+    preferenceSaveOwnerRef.current = true
+    setSavingPreferences(true)
     setSaveError(null)
-    setLastUpdates(updates)
+    setLastUpdates(pendingUpdates)
+
     try {
-      const updated = await updateUserPreferences(user, updates)
+      const updated = await updateUserPreferences(user, pendingUpdates)
       setPreferences(updated)
+      return true
     } catch (error) {
       console.error('Error updating preferences:', error)
       setSaveError(error)
       throw error
+    } finally {
+      preferenceSaveOwnerRef.current = false
+      setSavingPreferences(false)
     }
   }
 
@@ -89,7 +104,7 @@ const Settings = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6" aria-busy={savingPreferences ? 'true' : 'false'}>
       <h1 className="text-2xl font-medium text-slate-900">Settings</h1>
 
       {loadError && (
@@ -104,11 +119,15 @@ const Settings = () => {
       {saveError && (
         <div className="flex items-center justify-between gap-4 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
           <p role="alert" aria-atomic="true">Could not save preferences: {saveError.message}</p>
-          <button onClick={() => handleUpdatePreferences(lastUpdates)} disabled={!lastUpdates} className="shrink-0 rounded-md bg-red-700 px-3 py-2 text-sm font-medium text-white hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-50">
+          <button onClick={() => handleUpdatePreferences(lastUpdates)} disabled={!lastUpdates || savingPreferences} className="shrink-0 rounded-md bg-red-700 px-3 py-2 text-sm font-medium text-white hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-50">
             Retry saving
           </button>
         </div>
       )}
+
+      <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {savingPreferences ? 'Saving preferences...' : ''}
+      </span>
 
       <div className="space-y-6">
         {/* Account Info */}
@@ -218,10 +237,12 @@ const Settings = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <DaySetup
-              preferences={preferences}
-              onUpdate={handleUpdatePreferences}
-            />
+            <fieldset disabled={savingPreferences} className="m-0 min-w-0 border-0 p-0">
+              <DaySetup
+                preferences={preferences}
+                onUpdate={handleUpdatePreferences}
+              />
+            </fieldset>
           </motion.div>
         )}
 
@@ -235,7 +256,7 @@ const Settings = () => {
           <h2 className="text-lg font-medium text-slate-900 mb-4">
             App Preferences
           </h2>
-          <div className="space-y-4">
+          <fieldset disabled={savingPreferences} className="space-y-4">
             <div>
               <label htmlFor="app-theme" className="block text-sm font-medium text-slate-700 mb-2">
                 Theme
@@ -246,7 +267,7 @@ const Settings = () => {
                 onChange={(e) =>
                   handleUpdatePreferences({ theme: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
@@ -264,13 +285,13 @@ const Settings = () => {
                     notifications_enabled: e.target.checked
                   })
                 }
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded disabled:cursor-not-allowed disabled:opacity-60"
               />
               <label htmlFor="notifications" className="ml-2 text-sm text-slate-700">
                 Enable notifications
               </label>
             </div>
-          </div>
+          </fieldset>
         </motion.div>
       </div>
 
