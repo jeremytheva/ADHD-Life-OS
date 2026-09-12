@@ -6,15 +6,14 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Revalidate PR #378 after repairing its stale ProjectForm source-contract assertion, then complete the repository lifecycle.
+  objective: Complete PR #378 lifecycle; after merge, re-enter fresh authoritative main and select the next dependency-correct provider-independent Stage 3 integrity target.
   issue: null
-  pr: 378
-  branch: fix/project-form-submit-ownership
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical exact-head validation for PR #378 after the stale-test repair.
-  - Repair any further in-scope findings on the same branch and revalidate.
-  - Audit acceptance criteria, reviews/threads, base freshness and mergeability.
-  - Commit a post-merge-safe STATUS handoff and exact-head revalidate before implementation-complete signaling.
+  - Exact-head validate this post-merge-safe STATUS handoff for PR #378.
+  - Apply implementation-complete lifecycle evidence only if exact-head validation, review/thread audit, base freshness and mergeability remain satisfactory.
+  - After repository merge, inspect fresh main and continue the next provider-independent Stage 3 integrity target.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -26,13 +25,13 @@ validation:
   governance: PASS
   lint: PASS
   typecheck: PASS
-  tests: FAIL
-  build: NOT_RUN
-  ci: PENDING
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1102 passed dependency audit, governance, lint and typecheck and reached 475/476 passing Node tests. The only failure was the pre-existing project-form-pending-integrity source contract still requiring rendered isSaving as handler authority. The new synchronous ownership tests passed. That stale assertion is repaired on the active branch; exact-head canonical revalidation is required.
-last_verified_commit: null
-last_updated: 2026-09-13T06:14:25+10:00
+validation_basis: Application validation run 1104 passed the canonical platform validation process on repaired implementation head 2173264ad451f5d0a5a8f75e64903bd3b8de6f67 after the stale ProjectForm source-contract assertion was aligned to synchronous submit ownership. Reviews and inline review threads are empty and main remains exactly at PR #378 base 32a32f5aa162524b1516db079ae53b6f835c1f5c. This STATUS handoff changes the head and therefore requires one final exact-head canonical validation before implementation-complete signaling.
+last_verified_commit: 2173264ad451f5d0a5a8f75e64903bd3b8de6f67
+last_updated: 2026-09-13T07:15:15+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,16 +45,18 @@ last_updated: 2026-09-13T06:14:25+10:00
 
 PR #377 — `fix: serialize routine form submission synchronously` — is merged into `main` at `32a32f5aa162524b1516db079ae53b6f835c1f5c` after exact-head Application validation run 1100 and lifecycle finalization.
 
-PR #378 — `fix: serialize project form submission synchronously` — is the sole active delivery. `ProjectForm` now claims synchronous `submitOwnerRef` ownership before invoking `onSave`, snapshots the accepted project payload, allows only the owner to release local saving state, and routes cancel/Escape plus local field changes through the same owner. Existing project persistence, schemas, provider contracts and data semantics remain unchanged.
+PR #378 — `fix: serialize project form submission synchronously` — has completed implementation-head validation. `ProjectForm` now uses one synchronous `submitOwnerRef` so the accepted submit claims ownership before invoking `onSave`, snapshots the accepted project payload, only that owner may release local saving state, and cancel/Escape plus local project field mutations consult the same owner. Existing project persistence, recovery, provider contracts, schemas and data semantics remain unchanged.
 
-Application validation run 1102 passed dependency audit, governance, lint and typecheck and reached 475/476 passing Node tests. Its only failure was a stale existing assertion in `test/project-form-pending-integrity.test.mjs` that still required `isSaving` as the handler guard. The focused new ownership tests passed. The stale assertion has now been aligned to the stronger synchronous-owner contract; exact-head canonical revalidation is required.
+Application validation run 1104 passed the canonical repository gate on implementation head `2173264ad451f5d0a5a8f75e64903bd3b8de6f67`. No submitted reviews or inline review threads exist, and `main` remains exactly at PR #378 base `32a32f5aa162524b1516db079ae53b6f835c1f5c`.
+
+This durable handoff intentionally points autonomous continuation back to fresh `main` after merge rather than leaving PR #378 or its source branch as the future re-entry target. Because this documentation commit changes the PR head, the exact new head must pass canonical validation before implementation-complete signaling.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head revalidation of PR #378 after stale-test repair |
-| Gate state | Implementation and ownership coverage committed; run 1102 stale assertion repaired; revalidation pending |
+| Current gate | INTEGRATION — final exact-head validation of post-merge-safe handoff for PR #378 |
+| Gate state | Implementation head passed run 1104; clean review/thread audit and base freshness confirmed; final handoff head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -64,40 +65,38 @@ Application validation run 1102 passed dependency audit, governance, lint and ty
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #377 — Routine Form synchronous submit ownership; merged at `32a32f5aa162524b1516db079ae53b6f835c1f5c` |
-| Active delivery | PR #378 — Project Form synchronous submit ownership |
+| Delivery completing lifecycle | PR #378 — Project Form synchronous submit ownership |
 | Delivery branch | `fix/project-form-submit-ownership` |
 | Implemented change | Accepted ProjectForm submission synchronously owns duplicate-submit, cancel/Escape and local mutation boundaries until persistence settles |
-| Deterministic coverage | `test/project-form-submit-ownership.test.mjs` plus repaired existing pending-integrity contract |
-| Canonical validation | Run 1102 failed only one stale source-contract assertion; repaired exact head requires rerun |
-| Review/thread audit | PENDING after successful implementation-head validation |
-| Base freshness | Branch created from fresh main `32a32f5aa162524b1516db079ae53b6f835c1f5c` |
+| Deterministic coverage | `test/project-form-submit-ownership.test.mjs` plus aligned existing ProjectForm pending-integrity source-contract test |
+| Canonical validation | Run 1104 PASS on implementation head; final post-handoff head validation required |
+| Review/thread audit | PASS — no submitted reviews or inline review threads |
+| Base freshness | PASS — current main remains PR base `32a32f5aa162524b1516db079ae53b6f835c1f5c` |
 | Provider/data impact | None |
-| Runtime/deployment verification | NOT_APPLICABLE for this provider-independent correction |
+| Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #378 is the sole active provider-independent interaction-integrity delivery. |
-| What is already happening? | ProjectForm submission and mutation-adjacent controls use synchronous ownership. |
-| What has been validated? | Run 1102 passed audit/governance/lint/typecheck and exposed only one stale source-contract assertion, now repaired. |
-| What is next? | Revalidate PR #378 exact head, repair any further findings on the same branch, audit lifecycle evidence, then hand off for merge. |
+| Where am I? | Stage 3; PR #378 is completing lifecycle and the next durable re-entry point is fresh `main` after merge. |
+| What is already happening? | ProjectForm submission and mutation-adjacent controls now use synchronous ownership; implementation-head validation passed. |
+| What has been validated? | Run 1104 passed canonical validation; reviews/threads are empty; main is base-fresh. |
+| What is next? | Validate this exact handoff head, complete PR #378 lifecycle, then re-enter fresh main and select the next provider-independent Stage 3 target. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #378 is independent of that provider dependency.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #378 does not alter that boundary.
 
 ## Next dependency-correct work
 
-1. run canonical exact-head validation for PR #378 after the stale-test repair;
-2. repair any further in-scope validation/review findings on the same PR and revalidate;
-3. verify review/thread state, current `main`, mergeability and acceptance criteria;
-4. update this file to a post-merge-safe handoff, revalidate that exact head, then apply implementation-complete lifecycle evidence;
-5. after merge, re-enter fresh authoritative `main` and continue the next provider-independent Stage 3 target;
-6. leave generic durable execution deferred until the real provider contract is certified.
+1. exact-head validate this post-merge-safe handoff;
+2. if validation and live lifecycle evidence remain satisfactory, apply implementation-complete signaling and allow repository lifecycle automation to progress PR #378;
+3. after merge, re-enter fresh authoritative `main`, inspect current GitHub/repository state, and continue the next provider-independent Stage 3 integrity target;
+4. leave generic durable execution deferred until the real provider contract is certified.
 
 ## Stage 3 exit conditions
 
