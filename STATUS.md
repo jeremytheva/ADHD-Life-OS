@@ -11,8 +11,8 @@ current_work:
   pr: 366
   branch: fix/project-mutation-ownership
 next_actions:
-  - Run canonical Application validation on the exact PR #366 head.
-  - Repair any in-scope validation or review finding on the same PR.
+  - Re-run canonical Application validation on the repaired exact PR #366 head.
+  - Repair any additional in-scope validation or review finding on the same PR.
   - Confirm reviews, inline threads, base freshness and mergeability are clean.
   - After implementation-head validation passes, make STATUS post-merge-safe and revalidate that exact handoff head.
   - Complete repository lifecycle and re-enter from fresh main for the next provider-independent Stage 3 target.
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
-  ci: PENDING
+  governance: FAIL
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: FAIL
   runtime: NOT_APPLICABLE
-validation_basis: PR #366 implementation and deterministic regression coverage are committed from fresh main. Canonical npm run platform:validate has not yet completed on the current exact head.
+validation_basis: Application validation run 1027 reached canonical npm run platform:validate and failed at governance because this STATUS front matter used unsupported PENDING values for governance, lint, typecheck, tests and build. The durable state has been repaired to use canonical validation-state values; implementation behaviour was not implicated and exact-head revalidation is required.
 last_verified_commit: c92b3158647ea5aca63fd72721e4304ff5f5056f
-last_updated: 2026-09-12T20:21:00+10:00
+last_updated: 2026-09-12T21:16:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -53,12 +53,14 @@ PR #366 adds one ref-backed `mutationOwnerRef` across those persistence actions.
 
 Existing visible pending state, recoverable operation feedback, load reconciliation, service/provider routes and data contracts remain unchanged. Focused deterministic coverage is in `test/project-list-mutation-ownership.test.mjs`.
 
+Application validation run 1027 reached `npm run platform:validate` but stopped at governance before lint/typecheck/tests/build because the newly-written STATUS front matter used `PENDING` for validation fields whose schema only allows `PASS`, `FAIL`, `NOT_RUN` or `NOT_APPLICABLE`. That durable-state defect is repaired on this branch; the project implementation itself was not implicated by run 1027.
+
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical validation for PR #366 |
-| Gate state | Implementation committed; exact-head validation pending |
+| Current gate | INTEGRATION — canonical revalidation for PR #366 |
+| Gate state | Run 1027 governance failure classified and repaired; exact-head validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -71,21 +73,21 @@ Existing visible pending state, recoverable operation feedback, load reconciliat
 | Delivery branch | `fix/project-mutation-ownership` |
 | Implemented change | One synchronous ref-backed owner serializes project persistence and guards competing modal/selection transitions |
 | Deterministic coverage | `test/project-list-mutation-ownership.test.mjs` |
-| Canonical validation | PENDING on current exact PR head |
+| Canonical validation | Run 1027 FAIL at governance due invalid STATUS validation-state values; repaired exact-head rerun required |
 | Review/thread audit | Required after canonical validation |
 | Base freshness | Created directly from current `main` merge commit `c92b3158647ea5aca63fd72721e4304ff5f5056f` |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this provider-independent interaction correction |
-| Current blocker | None |
+| Current blocker | None; governance defect repaired and validation should rerun automatically on this commit |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #366 is the sole active delivery and is validating. |
-| What is already happening? | Projects mutations now have synchronous shared ownership and deterministic regression coverage. |
-| What has been validated? | The branch is based on the latest merged main; canonical validation for the current PR head is pending. |
-| What is next? | Run canonical validation, repair in-scope findings on the same PR, audit reviews/base, perform post-merge-safe STATUS handoff, revalidate and complete lifecycle. |
+| Where am I? | Stage 3. PR #366 is the sole active delivery and is validating after a repaired governance-state defect. |
+| What is already happening? | Projects mutations have synchronous shared ownership and deterministic regression coverage. |
+| What has been validated? | Run 1027 reached the canonical gate but stopped at governance because STATUS used unsupported validation-state values; implementation checks did not run. |
+| What is next? | Revalidate the repaired exact head, repair any in-scope finding, audit reviews/base, perform post-merge-safe STATUS handoff, revalidate and complete lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -95,8 +97,8 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. validate the exact PR #366 head with canonical Application validation;
-2. repair any in-scope finding on the same branch if necessary;
+1. revalidate the repaired exact PR #366 head with canonical Application validation;
+2. repair any additional in-scope finding on the same branch if necessary;
 3. confirm review/thread/base/mergeability evidence is clean;
 4. make the durable STATUS handoff post-merge-safe and revalidate that exact head;
 5. complete repository lifecycle and confirm merge on `main`;
