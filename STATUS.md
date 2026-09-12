@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: FAIL
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: FAIL
   build: NOT_RUN
   ci: FAIL
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1027 reached canonical npm run platform:validate and failed at governance because this STATUS front matter used unsupported PENDING values for governance, lint, typecheck, tests and build. The durable state has been repaired to use canonical validation-state values; implementation behaviour was not implicated and exact-head revalidation is required.
+validation_basis: Application validation run 1028 passed npm audit, governance, lint and typecheck. The new Projects mutation-ownership regression coverage passed. Node tests reached 444/446 passing; the only failures were two stale source-contract assertions that still expected unsnapshotted quick-capture input and pendingAction as the handler-level serialization guard. Both assertions have been repaired on this PR to require the acceptedItems snapshot and synchronous mutationOwnerRef ownership. Exact-head canonical revalidation is required.
 last_verified_commit: c92b3158647ea5aca63fd72721e4304ff5f5056f
-last_updated: 2026-09-12T21:16:00+10:00
+last_updated: 2026-09-12T21:20:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -53,14 +53,14 @@ PR #366 adds one ref-backed `mutationOwnerRef` across those persistence actions.
 
 Existing visible pending state, recoverable operation feedback, load reconciliation, service/provider routes and data contracts remain unchanged. Focused deterministic coverage is in `test/project-list-mutation-ownership.test.mjs`.
 
-Application validation run 1027 reached `npm run platform:validate` but stopped at governance before lint/typecheck/tests/build because the newly-written STATUS front matter used `PENDING` for validation fields whose schema only allows `PASS`, `FAIL`, `NOT_RUN` or `NOT_APPLICABLE`. That durable-state defect is repaired on this branch; the project implementation itself was not implicated by run 1027.
+Application validation run 1027 first exposed an invalid durable STATUS validation-state encoding; that was repaired without changing implementation behaviour. Run 1028 then passed npm audit, governance, lint, typecheck and the new ownership tests. It reached 444/446 passing Node tests and stopped only on two stale source-contract assertions: one still expected quick-capture retry slicing from the mutable `items` input instead of the accepted snapshot, and one still expected rendered `pendingAction` as the handler-level serialization boundary. Those assertions now require `acceptedItems` and synchronous `mutationOwnerRef` ownership respectively.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | INTEGRATION — canonical revalidation for PR #366 |
-| Gate state | Run 1027 governance failure classified and repaired; exact-head validation required |
+| Gate state | Run 1028 stale-test findings classified and repaired; exact-head validation required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -72,22 +72,22 @@ Application validation run 1027 reached `npm run platform:validate` but stopped 
 | Active delivery | PR #366 — Projects synchronous mutation ownership |
 | Delivery branch | `fix/project-mutation-ownership` |
 | Implemented change | One synchronous ref-backed owner serializes project persistence and guards competing modal/selection transitions |
-| Deterministic coverage | `test/project-list-mutation-ownership.test.mjs` |
-| Canonical validation | Run 1027 FAIL at governance due invalid STATUS validation-state values; repaired exact-head rerun required |
-| Review/thread audit | Required after canonical validation |
-| Base freshness | Created directly from current `main` merge commit `c92b3158647ea5aca63fd72721e4304ff5f5056f` |
+| Deterministic coverage | `test/project-list-mutation-ownership.test.mjs` plus repaired existing quick-capture and pending-mutation contracts |
+| Canonical validation | Run 1028: audit/governance/lint/typecheck PASS; Node tests 444/446 with two stale assertions, both repaired; exact-head rerun required |
+| Review/thread audit | Clean before the run-1028 repair: no submitted reviews and no inline review threads; recheck after validation |
+| Base freshness | 0 commits behind `main` before the run-1028 repair; recheck after validation |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this provider-independent interaction correction |
-| Current blocker | None; governance defect repaired and validation should rerun automatically on this commit |
+| Current blocker | None; stale tests repaired and validation should rerun on the current head |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #366 is the sole active delivery and is validating after a repaired governance-state defect. |
-| What is already happening? | Projects mutations have synchronous shared ownership and deterministic regression coverage. |
-| What has been validated? | Run 1027 reached the canonical gate but stopped at governance because STATUS used unsupported validation-state values; implementation checks did not run. |
-| What is next? | Revalidate the repaired exact head, repair any in-scope finding, audit reviews/base, perform post-merge-safe STATUS handoff, revalidate and complete lifecycle. |
+| Where am I? | Stage 3. PR #366 is the sole active delivery and is validating after two stale test contracts were repaired. |
+| What is already happening? | Projects mutations have synchronous shared ownership, accepted-input snapshots and deterministic regression coverage. |
+| What has been validated? | Run 1028 passed audit, governance, lint, typecheck and the new ownership tests; only two stale source assertions failed and are repaired. |
+| What is next? | Revalidate the repaired exact head, repair any further in-scope finding, audit reviews/base, perform post-merge-safe STATUS handoff, revalidate and complete lifecycle. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
