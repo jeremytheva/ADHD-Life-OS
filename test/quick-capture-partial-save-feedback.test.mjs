@@ -14,10 +14,13 @@ test('quick capture keeps partial-save feedback inside the open modal', () => {
   assert.match(source, /<OperationErrorState message=\{saveError\}/)
 })
 
-test('quick capture clears stale save feedback before a new save attempt', () => {
+test('quick capture clears stale save feedback before the accepted snapshot is persisted', () => {
   const clearIndex = source.indexOf('setSaveError(null)')
-  const saveIndex = source.indexOf('const result = await onSave(validItems)')
+  const snapshotIndex = source.indexOf('const acceptedItems = [...validItems]')
+  const saveIndex = source.indexOf('const result = await onSave(acceptedItems)')
 
   assert.ok(clearIndex > -1, 'save feedback should be cleared before retrying')
+  assert.ok(snapshotIndex > -1, 'accepted items should be snapshotted for the owning submission')
   assert.ok(saveIndex > clearIndex, 'stale feedback must clear before invoking the save operation')
+  assert.ok(saveIndex > snapshotIndex, 'the accepted snapshot must be established before persistence')
 })
