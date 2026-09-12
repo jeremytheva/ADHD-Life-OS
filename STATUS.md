@@ -6,15 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #371 lifecycle, then re-enter from fresh main and continue the next provider-independent Stage 3 target.
+  objective: Validate and complete PR #372, which prevents routine-list navigation and adjacent entry actions from racing unresolved routine persistence mutations.
   issue: null
-  pr: null
-  branch: main
+  pr: 372
+  branch: fix/routine-list-mutation-navigation-integrity
 next_actions:
-  - Revalidate this post-merge-safe STATUS handoff on the exact PR #371 head.
-  - Complete repository lifecycle if final validation and finalizer evidence remain clean.
-  - Re-enter from fresh authoritative main after merge.
-  - Inspect implementation, tests and repository state and select the next highest-priority provider-independent Stage 3 target.
+  - Run canonical npm run platform:validate on the exact PR #372 head.
+  - Repair any in-scope validation failures on the same PR without weakening the interaction-integrity contract.
+  - Audit reviews, review threads, mergeability, and base freshness after validation passes.
+  - Convert this STATUS handoff to post-merge-safe state before lifecycle completion.
+  - Re-enter from fresh main after merge and continue the next provider-independent Stage 3 target.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -23,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
+  ci: NOT_RUN
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1062 passed canonical npm run platform:validate on repaired PR #371 implementation head 52d4684ef5f423d9b5d975cd169cd37a672d760b after stale source-contract tests were aligned to the stronger chore mutation lock. Submitted reviews and inline review threads were empty, PR #371 was mergeable, and main remained exactly at the PR base 6565ce5eba77449516507d81e8474ed4e191d249. This STATUS-only post-merge-safe handoff now requires exact-head canonical revalidation before lifecycle completion.
-last_verified_commit: 52d4684ef5f423d9b5d975cd169cd37a672d760b
-last_updated: 2026-09-13T01:26:00+10:00
+validation_basis: PR #371 merged into main at 22f0d8857bbe535f1db47891509d88c610fa5b92 after implementation-head run 1062 and final handoff run 1063 passed. Fresh-main inspection found that RoutineList persistence mutations already own a synchronous pendingActionRef boundary, but retry/refresh, create/template entry, routine start, and routine statistics navigation did not all consult that owner synchronously. PR #372 routes those adjacent interactions through mutation-aware handlers and adds deterministic regression coverage. Canonical validation is pending on the current exact head.
+last_verified_commit: 22f0d8857bbe535f1db47891509d88c610fa5b92
+last_updated: 2026-09-13T01:35:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,24 +45,22 @@ last_updated: 2026-09-13T01:26:00+10:00
 
 ## Current objective
 
-PR #371 — `fix: lock chore list navigation during mutations` — has passed implementation-head canonical validation and the final implementation review/base audit. This STATUS is intentionally post-merge-safe: after PR #371 merges, autonomous continuation must re-enter from fresh `main` and select the next provider-independent Stage 3 target rather than treating PR #371 as active work.
+PR #372 — `fix: lock routine navigation during mutations` — is the sole active delivery.
 
-PR #371 closes an interaction-integrity race in `ChoreChecklist`. Complete and snooze writes already acquired synchronous ownership through `pendingActionRef`, but refresh, filter changes, and chore-detail navigation could still cross that unresolved write boundary. Filter changes were especially unsafe because an accepted mutation could later reconcile through the earlier `loadTasks` closure and republish an old-filter result after the visible filter changed.
+PR #371 completed its lifecycle and merged into `main` at `22f0d8857bbe535f1db47891509d88c610fa5b92` after both canonical implementation-head validation and final post-handoff validation passed. Fresh-main inspection then identified the next provider-independent interaction-integrity gap in `src/components/routines/RoutineList.jsx`.
 
-The delivery makes the existing synchronous mutation owner authoritative for those adjacent interactions. Refresh, filter change, and detail-open handlers now return immediately while mutation ownership is held, and the corresponding controls expose the same lock through rendered disabled state. Existing complete/snooze persistence, recovery messages, provider contracts, schemas, and generic execution-session behavior remain unchanged.
+`RoutineList` already serializes create, template, update, and delete persistence through `pendingActionRef`, but several adjacent interactions depended only on rendered `mutationPending`. Before React could render that state, a same-tick retry/refresh, create/template modal entry, routine start, or statistics navigation could cross the unresolved mutation boundary.
 
-Focused deterministic coverage is in `test/chore-list-mutation-navigation-integrity.test.mjs`. Existing chore accessibility and pending-mutation source contracts were aligned to recognize the stronger lock without weakening their original semantics.
+PR #372 now makes the existing synchronous owner authoritative for those actions. Retry/refresh, create entry, template entry, start, and statistics handlers return immediately while `pendingActionRef.current` is held. Existing rendered disabled state remains in place, persistence semantics are unchanged, and provider/schema contracts are untouched.
 
-Run 1058 exposed an unsupported STATUS validation enum and was repaired. Run 1059 passed governance, lint, typecheck and the new regression coverage, then exposed two stale source-contract assertions. Those were repaired on the same PR. Application validation run 1062 then passed the full canonical `npm run platform:validate` gate on implementation head `52d4684ef5f423d9b5d975cd169cd37a672d760b`.
-
-The subsequent audit found no submitted reviews or inline review threads, PR #371 remained mergeable, and `main` remained exactly at the PR base `6565ce5eba77449516507d81e8474ed4e191d249`.
+Focused deterministic coverage is in `test/routine-list-mutation-navigation-integrity.test.mjs`.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head validation of post-merge-safe PR #371 handoff |
-| Gate state | Implementation-head validation PASS; handoff exact-head validation pending |
+| Current gate | INTEGRATION — canonical validation of PR #372 exact head |
+| Gate state | Implementation and focused regression committed; canonical validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -69,15 +68,15 @@ The subsequent audit found no submitted reviews or inline review threads, PR #37
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #370 — Today task-completion synchronous ownership; merged at `6565ce5eba77449516507d81e8474ed4e191d249` |
-| Delivery completing | PR #371 — ChoreChecklist mutation-adjacent interaction lock |
-| Delivery branch | `fix/chore-list-mutation-navigation-integrity` |
-| Implemented change | Refresh, filter and detail-open actions now consult the same synchronous mutation owner as complete/snooze writes and expose the rendered lock through disabled controls |
-| Deterministic coverage | `test/chore-list-mutation-navigation-integrity.test.mjs`; existing chore accessibility/pending contracts aligned to stronger behavior |
-| Canonical validation | Run 1062 PASS on implementation head `52d4684ef5f423d9b5d975cd169cd37a672d760b`; STATUS-only handoff exact-head rerun required |
-| Review/thread audit | Clean after run 1062: no submitted reviews and no inline review threads |
-| Base freshness | `main` remained at PR base `6565ce5eba77449516507d81e8474ed4e191d249` after run 1062 |
-| Provider/data impact | None; provider contracts, schemas and persistence semantics unchanged |
+| Latest repository delivery on main | PR #371 — chore-list mutation-adjacent interaction lock; merged at `22f0d8857bbe535f1db47891509d88c610fa5b92` |
+| Active delivery | PR #372 — RoutineList mutation-adjacent interaction lock |
+| Delivery branch | `fix/routine-list-mutation-navigation-integrity` |
+| Implemented change | Retry/refresh, create/template entry, routine start, and statistics navigation now consult the same synchronous mutation owner as routine persistence writes |
+| Deterministic coverage | `test/routine-list-mutation-navigation-integrity.test.mjs` |
+| Canonical validation | NOT_RUN on current PR #372 head |
+| Review/thread audit | Pending after canonical validation |
+| Base freshness | Branch created from fresh `main` commit `22f0d8857bbe535f1db47891509d88c610fa5b92` |
+| Provider/data impact | None; provider contracts, schemas and routine persistence semantics unchanged |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
 
@@ -85,25 +84,26 @@ The subsequent audit found no submitted reviews or inline review threads, PR #37
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #371 is completing lifecycle; this handoff points future execution to fresh `main`. |
-| What is already happening? | Housework complete/snooze mutations now own refresh/filter/detail interactions synchronously until persistence/reconciliation settles. |
-| What has been validated? | Canonical run 1062 passed on implementation head `52d4684ef5f423d9b5d975cd169cd37a672d760b`; reviews/threads are clean and the branch base remains current. |
-| What is next? | Revalidate this STATUS-only handoff head, complete PR #371 lifecycle, then re-enter fresh main and select the next provider-independent Stage 3 target. |
+| Where am I? | Stage 3 with PR #372 as the sole active delivery. |
+| What is already happening? | Routine persistence mutations now also own retry/create/template/start/stats interactions synchronously until persistence/reconciliation settles. |
+| What has been validated? | PR #371 merged after canonical runs 1062 and 1063 passed. PR #372 validation is pending. |
+| What is next? | Validate PR #372, repair any in-scope findings, complete review/base/lifecycle evidence, then re-enter fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #371 hardens the existing frontend interaction/data-integrity boundary without changing that provider constraint.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #372 is independent of that provider dependency.
 
 ## Next dependency-correct work
 
-1. revalidate this post-merge-safe STATUS handoff on the exact PR #371 head;
-2. complete repository lifecycle and confirm merge on `main` if finalizer evidence remains clean;
-3. re-enter from fresh authoritative `main`;
-4. inspect current implementation/tests and select the next provider-independent Stage 3 integrity target;
-5. continue successive safe work under the WIP-one rule;
-6. leave generic durable execution deferred until the real provider contract is certified.
+1. run canonical `npm run platform:validate` on the exact PR #372 head;
+2. repair any in-scope validation findings on the same PR;
+3. audit submitted reviews, inline review threads, mergeability and base freshness after validation passes;
+4. update this file to a post-merge-safe handoff and revalidate that exact head before lifecycle completion;
+5. merge through the repository lifecycle when all gates are satisfied;
+6. re-enter from fresh authoritative `main` and continue the next provider-independent Stage 3 integrity target;
+7. leave generic durable execution deferred until the real provider contract is certified.
 
 ## Stage 3 exit conditions
 
