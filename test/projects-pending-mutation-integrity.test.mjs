@@ -7,17 +7,18 @@ const listSource = await readFile(new URL('../src/components/projects/ProjectsLi
 const cardSource = await readFile(new URL('../src/components/projects/ProjectCard.jsx', import.meta.url), 'utf8')
 
 test('Projects serializes parent-level mutations and exposes the pending lock', () => {
+  assert.match(listSource, /const mutationOwnerRef = useRef\(null\)/)
   assert.match(listSource, /const \[pendingAction, setPendingAction\] = useState\(null\)/)
   assert.match(listSource, /const mutationPending = Boolean\(pendingAction\)/)
   assert.match(listSource, /aria-busy=\{loading \|\| mutationPending\}/)
   assert.match(listSource, /Updating projects\.\.\./)
 
-  assert.match(listSource, /const handleCreateProject = async \(projectData\) => \{\s*if \(pendingAction\) return/)
-  assert.match(listSource, /const handleUpdateProject = async \(projectData\) => \{\s*if \(pendingAction \|\| !editingProject\) return/)
-  assert.match(listSource, /const handleDeleteProject = async \(projectId\) => \{\s*if \(pendingAction\) return/)
-  assert.match(listSource, /const handleArchiveProject = async \(projectId\) => \{\s*if \(pendingAction\) return/)
-  assert.match(listSource, /const handleApplyTemplate = async \(template, type\) => \{\s*if \(type !== 'project' \|\| pendingAction\) return/)
-  assert.match(listSource, /const handleQuickCapture = async \(items\) => \{\s*if \(pendingAction\) return/)
+  assert.match(listSource, /const handleCreateProject = async \(projectData\) => \{\s*if \(mutationOwnerRef\.current !== null\) return/)
+  assert.match(listSource, /const handleUpdateProject = async \(projectData\) => \{\s*if \(mutationOwnerRef\.current !== null \|\| !editingProject\) return/)
+  assert.match(listSource, /const handleDeleteProject = async \(projectId\) => \{\s*if \(mutationOwnerRef\.current !== null\) return/)
+  assert.match(listSource, /const handleArchiveProject = async \(projectId\) => \{\s*if \(mutationOwnerRef\.current !== null\) return/)
+  assert.match(listSource, /const handleApplyTemplate = async \(template, type\) => \{\s*if \(type !== 'project' \|\| mutationOwnerRef\.current !== null\) return/)
+  assert.match(listSource, /const handleQuickCapture = async \(items\) => \{\s*if \(mutationOwnerRef\.current !== null\) return/)
 })
 
 test('Projects disables mutation launchers and project action menus while another write owns persistence', () => {

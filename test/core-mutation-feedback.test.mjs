@@ -52,9 +52,10 @@ test('project mutations distinguish failed writes from failed post-write refresh
 test('quick capture preserves only unsaved tasks after a partial write failure', async () => {
   const listSource = await read('src/components/projects/ProjectsList.jsx')
   const modalSource = await read('src/components/projects/QuickCaptureModal.jsx')
+  assert.match(listSource, /const acceptedItems = \[\.\.\.items\]/)
   assert.match(listSource, /let savedCount = 0/)
   assert.match(listSource, /savedCount \+= 1/)
-  assert.match(listSource, /const remainingItems = items\.slice\(savedCount\)/)
+  assert.match(listSource, /const remainingItems = acceptedItems\.slice\(savedCount\)/)
   assert.match(listSource, /Only the unsaved tasks remain in the capture window/)
   assert.match(listSource, /quickCaptureProjectId/)
   assert.match(modalSource, /const result = await onSave\(validItems\)/)
