@@ -34,7 +34,7 @@ test('Chore Checklist hides decorative heading and status glyphs while visible t
 test('Chore Checklist keeps icon-only actions named while hiding their glyphs', () => {
   assert.match(
     choreChecklistSource,
-    /aria-label="Refresh chores">[\s\S]*?<SafeIcon icon=\{FiRefreshCw\} className="w-5 h-5" aria-hidden="true" \/>/
+    /aria-label="Refresh chores"[\s\S]*?>[\s\S]*?<SafeIcon icon=\{FiRefreshCw\} className="w-5 h-5" aria-hidden="true" \/>/
   );
   assert.match(
     choreChecklistSource,

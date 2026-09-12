@@ -87,9 +87,21 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
   }, [loadStats, loadTasks])
 
   const retryLoad = () => {
+    if (pendingActionRef.current) return
     setOperationError(null)
     loadTasks()
     loadStats()
+  }
+
+  const handleFilterChange = (value) => {
+    if (pendingActionRef.current) return
+    setOperationError(null)
+    setFilter(value)
+  }
+
+  const handleOpenTask = (task) => {
+    if (pendingActionRef.current) return
+    if (onSelectTask) onSelectTask(task)
   }
 
   const handleCompleteTask = async (taskId) => {
@@ -200,7 +212,12 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
               <p className="text-sm text-slate-600">Keep your space comfortable</p>
             </div>
           </div>
-          <button onClick={retryLoad} className="p-2 text-purple-600 hover:bg-purple-100 rounded-lg transition-colors" aria-label="Refresh chores">
+          <button
+            onClick={retryLoad}
+            disabled={mutationPending}
+            className="p-2 text-purple-600 hover:bg-purple-100 rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label="Refresh chores"
+          >
             <SafeIcon icon={FiRefreshCw} className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
@@ -229,9 +246,10 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
           <button
             type="button"
             key={value}
-            onClick={() => { setOperationError(null); setFilter(value) }}
+            onClick={() => handleFilterChange(value)}
+            disabled={mutationPending}
             aria-pressed={filter === value}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === value ? 'bg-purple-600 text-white' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'}`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${filter === value ? 'bg-purple-600 text-white' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'}`}
           >
             {value === 'today' ? 'Ready Now' : 'All Chores'}
           </button>
@@ -258,7 +276,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
                   </div>
                   <div className="flex items-center gap-2">
                     <button onClick={() => handleSnoozeTask(task.id)} disabled={mutationPending} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" title="Move to tomorrow" aria-label={`Move ${task.title} to tomorrow`}><SafeIcon icon={FiMoon} className="w-4 h-4" aria-hidden="true" /></button>
-                    <button onClick={() => onSelectTask && onSelectTask(task)} className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors" aria-label={`Open ${task.title}`}><SafeIcon icon={FiChevronRight} className="w-5 h-5" aria-hidden="true" /></button>
+                    <button onClick={() => handleOpenTask(task)} disabled={mutationPending} className="p-2 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" aria-label={`Open ${task.title}`}><SafeIcon icon={FiChevronRight} className="w-5 h-5" aria-hidden="true" /></button>
                   </div>
                 </div>
               </motion.div>
@@ -275,7 +293,7 @@ const ChoreChecklist = ({ onSelectTask, mode = 'home' }) => {
               <motion.div key={task.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }} className="bg-white rounded-lg border border-slate-200 p-4 opacity-75">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3"><span className="text-xl" aria-hidden="true">{getRoomIcon(task.room)}</span><span className="sr-only">{task.room.replace('_', ' ')}</span><div><h4 className="font-medium text-slate-900">{task.title}</h4><div className="text-sm text-slate-600">Due {format(parseISO(task.next_due_date), 'MMM d')}</div></div></div>
-                  <button onClick={() => onSelectTask && onSelectTask(task)} className="p-2 text-slate-400 hover:text-purple-600 transition-colors" aria-label={`Open ${task.title}`}><SafeIcon icon={FiChevronRight} className="w-5 h-5" aria-hidden="true" /></button>
+                  <button onClick={() => handleOpenTask(task)} disabled={mutationPending} className="p-2 text-slate-400 hover:text-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" aria-label={`Open ${task.title}`}><SafeIcon icon={FiChevronRight} className="w-5 h-5" aria-hidden="true" /></button>
                 </div>
               </motion.div>
             ))}

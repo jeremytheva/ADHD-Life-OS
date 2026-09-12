@@ -21,7 +21,7 @@ test('Housework keeps ownership through reconciliation and exposes pending state
   assert.match(source, /aria-busy=\{loading \|\| mutationPending\}/)
   assert.match(source, /Updating chores\.\.\./)
   const disabledActions = source.match(/disabled=\{mutationPending\}/g) ?? []
-  assert.equal(disabledActions.length, 2)
+  assert.equal(disabledActions.length, 6)
 })
 
 test('Housework warns when persistence succeeds but reconciliation fails', () => {
