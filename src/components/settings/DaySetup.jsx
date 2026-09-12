@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 
 const DaySetup = ({ preferences, onUpdate }) => {
@@ -10,28 +10,34 @@ const DaySetup = ({ preferences, onUpdate }) => {
   })
 
   const [saving, setSaving] = useState(false)
+  const saveOwnerRef = useRef(false)
 
   const handleChange = (field, value) => {
-    if (saving) return
+    if (saveOwnerRef.current) return
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (saving) return
+    if (saveOwnerRef.current) return
+
+    saveOwnerRef.current = true
     setSaving(true)
+
+    const pendingChanges = {
+      ...formData,
+      work_start_time: formData.work_start_time || null,
+      work_end_time: formData.work_end_time || null
+    }
 
     try {
       // Empty optional time inputs are represented as null in the canonical
       // preferences schema instead of the browser's empty-string value.
-      await onUpdate({
-        ...formData,
-        work_start_time: formData.work_start_time || null,
-        work_end_time: formData.work_end_time || null
-      })
+      await onUpdate(pendingChanges)
     } catch (error) {
       console.error('Error updating day setup:', error)
     } finally {
+      saveOwnerRef.current = false
       setSaving(false)
     }
   }
