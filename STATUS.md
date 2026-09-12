@@ -4,15 +4,15 @@ portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
 gate: Integration
-execution_state: IMPLEMENTING
+execution_state: VALIDATING
 current_work:
-  objective: Complete PR #380 synchronous Template Edit submission ownership and canonical validation without changing template persistence or provider contracts.
+  objective: Revalidate repaired PR #380 synchronous Template Edit submission ownership without changing template persistence or provider contracts.
   issue: null
   pr: 380
   branch: fix/template-edit-submit-ownership
 next_actions:
-  - Run canonical validation on the exact PR #380 head.
-  - Repair only evidence-backed implementation or stale source-contract failures on this same delivery.
+  - Run canonical validation on the exact repaired PR #380 head.
+  - Repair only evidence-backed failures on this same delivery if validation finds any.
   - Audit reviews, inline threads, base freshness and mergeability after validation passes.
   - Convert STATUS.md to a post-merge-safe fresh-main handoff before implementation-complete signaling.
 blockers: []
@@ -22,16 +22,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: FAIL
   build: NOT_RUN
   ci: PENDING
   runtime: NOT_APPLICABLE
-validation_basis: PR #380 is the sole active delivery from fresh main 9478cd4be60f94620a48409fa1597f4950026bda. TemplateEditModal now claims an accepted edit submission synchronously before onSave and routes dismissal plus local field/step mutation through the same owner. TemplateLibrary's existing synchronous applyPendingRef remains authoritative for persistence/application and provider/data semantics are unchanged. Exact-head canonical validation is pending.
-last_verified_commit: null
-last_updated: 2026-09-13T07:34:00+10:00
+validation_basis: Application validation run 1110 on head 24488b1c04093b990377496b4a63629d7911fe24 passed dependency audit, governance, lint and typecheck and reached 479/480 passing Node tests. The new TemplateEditModal synchronous ownership tests and aligned template pending-integrity test passed. The sole failure was a stale pre-existing template-modal-stack source-contract assertion that still required direct rendered-isApplying Escape suppression. That test is repaired on this PR to require the stronger stack-aware safeClose path, which rejects Escape during either rendered isApplying state or same-render submit ownership. Exact-head revalidation is pending.
+last_verified_commit: 24488b1c04093b990377496b4a63629d7911fe24
+last_updated: 2026-09-13T07:36:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,19 +45,19 @@ last_updated: 2026-09-13T07:34:00+10:00
 
 PR #379 — `fix: serialize task form submission synchronously` — completed its lifecycle and merged into `main` at `9478cd4be60f94620a48409fa1597f4950026bda` after Application validation runs 1107 and 1108 passed.
 
-Fresh-main inspection found no competing active delivery. Historical PR #188 already protects template application persistence synchronously in `TemplateLibrary` with `applyPendingRef`, and freezes the editor once rendered `isApplying` becomes true. The remaining local same-render gap was in `TemplateEditModal`: after an accepted submit but before parent `isApplying` rerendered, a second submit, close/Escape, or local field/step mutation could still enter the child component.
-
 PR #380 — `fix: serialize template editor submission synchronously` — is the sole active delivery. `TemplateEditModal` now claims an accepted submission synchronously through `submitOwnerRef`, snapshots the accepted edited-template payload, only the owning attempt may release that boundary, and routes close/Escape plus all local field and routine-step mutations through the same owner. Existing `TemplateLibrary` application ownership, template services, schemas, provider contracts and persistence semantics remain unchanged.
 
-Focused deterministic coverage was added in `test/template-edit-submit-ownership.test.mjs`, and the historical `test/template-apply-pending-integrity.test.mjs` source contract was aligned to require the stronger child-level ownership boundary while retaining rendered `isApplying` accessibility/busy checks.
+Canonical Application validation run 1110 on prior head `24488b1c04093b990377496b4a63629d7911fe24` passed dependency audit, governance, lint and typecheck. Its Node test phase reached 479/480 passing tests. The focused `TemplateEditModal` ownership tests and the updated template pending-integrity contract passed. The only failure was the older `template-modal-stack-integrity` assertion, which still required `useModalDialog({ onEscape: isApplying ? null : onClose })` in the editor even though the stronger implementation now routes Escape through `safeClose` and synchronously rejects dismissal during either `isApplying` or `submitOwnerRef` ownership.
+
+That stale modal-stack assertion has been repaired on this same PR. It continues to enforce shared modal ownership, one semantic dialog, busy state and stack behavior, while now requiring `useModalDialog({ onEscape: safeClose })` and the stronger synchronous dismissal guard. No application behavior was weakened to satisfy the test.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical validation of PR #380 implementation |
-| Gate state | Implementation and focused deterministic coverage committed; exact-head validation pending |
-| Execution state | IMPLEMENTING |
+| Current gate | INTEGRATION — exact-head revalidation of repaired PR #380 |
+| Gate state | Run 1110 isolated one stale source-contract assertion; repaired on the same delivery; exact-head revalidation pending |
+| Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
 ## Delivery checkpoint
@@ -68,10 +68,10 @@ Focused deterministic coverage was added in `test/template-edit-submit-ownership
 | Active delivery | PR #380 — Template Edit synchronous submit ownership |
 | Delivery branch | `fix/template-edit-submit-ownership` |
 | Implemented change | Accepted TemplateEditModal submission synchronously owns resubmit, dismissal and local field/step mutation boundaries until `onSave` settles |
-| Deterministic coverage | `test/template-edit-submit-ownership.test.mjs` plus aligned `test/template-apply-pending-integrity.test.mjs` |
-| Canonical validation | Pending exact-head Application validation |
-| Review/thread audit | Pending after validation |
-| Base freshness | Created from fresh main `9478cd4be60f94620a48409fa1597f4950026bda` |
+| Deterministic coverage | `test/template-edit-submit-ownership.test.mjs`, aligned `test/template-apply-pending-integrity.test.mjs`, repaired `test/template-modal-stack-integrity.test.mjs` |
+| Canonical validation | Run 1110 FAIL only on stale modal-stack source contract; repaired exact head requires fresh validation |
+| Review/thread audit | Pending after passing validation |
+| Base freshness | Branch created from fresh main `9478cd4be60f94620a48409fa1597f4950026bda` |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
@@ -81,9 +81,9 @@ Focused deterministic coverage was added in `test/template-edit-submit-ownership
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; PR #380 is the sole active provider-independent integrity delivery. |
-| What is already happening? | Template editor same-render submission, dismissal and local edit controls now use synchronous ownership. |
-| What has been validated? | Historical PR #188 scope and current parent application ownership were inspected; canonical exact-head validation is pending. |
-| What is next? | Run/inspect canonical validation, repair evidence-backed failures on PR #380, then complete lifecycle evidence and post-merge-safe handoff. |
+| What is already happening? | Template editor same-render submission, dismissal and local edit controls use synchronous ownership; one stale validation assertion has been repaired. |
+| What has been validated? | Run 1110 passed audit/governance/lint/typecheck and 479/480 tests; the sole stale assertion is repaired and needs exact-head revalidation. |
+| What is next? | Re-run canonical validation on the repaired exact head, then audit lifecycle evidence and prepare the post-merge-safe handoff. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -93,8 +93,8 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical validation on the exact PR #380 head;
-2. repair only evidence-backed implementation or stale source-contract failures on this same delivery;
+1. exact-head revalidate repaired PR #380;
+2. repair only evidence-backed failures on this same delivery if needed;
 3. after a passing exact implementation head, audit reviews, inline threads, base freshness and mergeability;
 4. convert durable STATUS.md to a post-merge-safe fresh-main handoff and exact-head validate that handoff before implementation-complete signaling;
 5. after merge, re-enter fresh authoritative `main` and select the next non-duplicate provider-independent Stage 3 target.
