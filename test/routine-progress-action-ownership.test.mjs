@@ -13,11 +13,14 @@ test('Routine Progress guards initialization synchronously before session discov
   assert.match(source, /finally \{\s*initializationPendingRef\.current = false\s*setLoading\(false\)/)
 })
 
-test('Routine Progress owns mutations synchronously instead of using rendered actionPending as the authority', () => {
+test('Routine Progress owns mutations synchronously instead of using rendered actionPending as the handler authority', () => {
   assert.match(source, /const actionOwnerRef = useRef\(null\)/)
   assert.match(source, /const claimAction = useCallback\(\(action\) => \{\s*if \(actionOwnerRef\.current\) return null\s*actionOwnerRef\.current = action\s*setActionPending\(true\)\s*return action/)
   assert.match(source, /const releaseAction = useCallback\(\(owner\) => \{\s*if \(actionOwnerRef\.current !== owner\) return\s*actionOwnerRef\.current = null\s*setActionPending\(false\)/)
-  assert.doesNotMatch(source, /if \([^\n]*actionPending[^\n]*\) return/)
+  assert.doesNotMatch(source, /const handleCompleteStep = async \(\) => \{\s*if \(actionPending\) return/)
+  assert.doesNotMatch(source, /const handleSkipStep = async \(\) => \{\s*if \(actionPending\) return/)
+  assert.doesNotMatch(source, /const handleCompleteRoutine = useCallback\(async \(\) => \{\s*if \(!session \|\| actionPending\) return/)
+  assert.doesNotMatch(source, /const handleCancel = useCallback\(async \(\) => \{\s*if \(!session \|\| actionPending\) return/)
   assert.equal((source.match(/releaseAction\(owner\)/g) ?? []).length, 4)
 })
 
@@ -37,8 +40,9 @@ test('accepted step coordinates are snapshotted before awaiting persistence', ()
   assert.match(source, /routineProgressService\.skipStep\(\s*acceptedSessionId,\s*acceptedStepIndex,\s*acceptedStepId/)
 })
 
-test('rendered pending state remains the accessible UI signal', () => {
+test('rendered pending state remains the accessible UI signal and may gate automatic completion effects', () => {
   assert.match(source, /aria-busy=\{loading \|\| actionPending\}/)
   assert.match(source, /disabled=\{actionPending\}/)
+  assert.match(source, /if \(!isFinishingSession \|\| !hasSession \|\| actionPending \|\| completionAttemptedRef\.current\) return/)
   assert.match(source, /Saving your completed routine…/)
 })
