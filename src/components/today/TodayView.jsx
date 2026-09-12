@@ -36,6 +36,8 @@ const TodayView = () => {
   const [showUnscheduledTasks, setShowUnscheduledTasks] = useState(false)
   const [showAllUnscheduled, setShowAllUnscheduled] = useState(false)
   const latestTimelineRequestRef = useRef(0)
+  const pendingTaskRef = useRef(null)
+  const taskMutationPending = pendingTaskId !== null
 
   const loadTimeline = useCallback(async () => {
     const requestId = latestTimelineRequestRef.current + 1
@@ -81,11 +83,14 @@ const TodayView = () => {
   useEffect(() => { loadTimeline() }, [loadTimeline])
 
   const handleCompleteTask = async (blockId, taskId) => {
-    if (pendingTaskId) return
+    if (pendingTaskRef.current) return
+    pendingTaskRef.current = taskId
     setOperationError(null)
     setPendingTaskId(taskId)
+    const acceptedTaskId = taskId
+
     try {
-      await taskService.completeTask(taskId)
+      await taskService.completeTask(acceptedTaskId)
       const refreshed = await loadTimeline()
       if (!refreshed) {
         setLoadError(false)
@@ -95,7 +100,10 @@ const TodayView = () => {
       console.error('Error completing task:', error)
       setOperationError('We couldn’t complete that task. It has not been confirmed as completed and remains safe to retry.')
     } finally {
-      setPendingTaskId(null)
+      if (pendingTaskRef.current === acceptedTaskId) {
+        pendingTaskRef.current = null
+        setPendingTaskId(null)
+      }
     }
   }
 
@@ -149,10 +157,15 @@ const TodayView = () => {
   const hasAdditionalUnscheduledTasks = unscheduledTaskCount > DEFAULT_UNSCHEDULED_LIMIT
 
   return (
-    <div className="p-6 space-y-6" aria-busy={loading}>
+    <div className="p-6 space-y-6" aria-busy={loading || taskMutationPending}>
       {loading && (
         <p className="sr-only" role="status" aria-live="polite">
           Refreshing Today...
+        </p>
+      )}
+      {taskMutationPending && (
+        <p className="sr-only" role="status" aria-live="polite">
+          Completing task...
         </p>
       )}
 
@@ -185,7 +198,7 @@ const TodayView = () => {
                 <div role="list" aria-labelledby={`today-${group.key}-heading`} className="space-y-3">
                   {group.blocks.map((block, index) => (
                     <div role="listitem" key={`${block.ref_type}-${block.ref_id}-${index}`}>
-                      <BlockCard block={block} onComplete={handleCompleteTask} pending={block.ref_type === 'task' && pendingTaskId === block.ref_id} />
+                      <BlockCard block={block} onComplete={handleCompleteTask} pending={block.ref_type === 'task' && taskMutationPending} />
                     </div>
                   ))}
                 </div>
