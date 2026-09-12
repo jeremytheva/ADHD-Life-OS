@@ -6,15 +6,14 @@ stage: execution and next-action experience
 gate: Change
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #381 synchronous Quick Capture submit ownership and validate the repaired exact head canonically.
+  objective: Finish PR #381 lifecycle; after merge, re-enter from fresh authoritative main and select the next dependency-correct provider-independent Stage 3 task.
   issue: null
   pr: 381
   branch: fix/quick-capture-submit-ownership
 next_actions:
-  - Re-run canonical Application validation after aligning the cross-cutting mutation-feedback contract to the accepted Quick Capture snapshot.
-  - Repair only further evidenced failures on the same PR.
-  - Audit reviews, inline threads, mergeability and base freshness after validation passes.
-  - Convert STATUS to a post-merge-safe fresh-main handoff before implementation-complete signaling.
+  - Validate this final post-merge-safe STATUS head canonically.
+  - If exact-head validation passes and mergeability/review/base evidence remains clean, mark PR #381 implementation-complete and merge it through the repository lifecycle.
+  - After merge, inspect fresh main before selecting further work; do not re-enter the closed PR branch.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -26,13 +25,13 @@ validation:
   governance: PASS
   lint: PASS
   typecheck: PASS
-  tests: FAIL
-  build: NOT_RUN
-  ci: FAIL
+  tests: PASS
+  build: PASS
+  ci: PENDING
   runtime: NOT_APPLICABLE
-validation_basis: Exact-head Application validation run 1120 passed dependency audit, governance, lint and typecheck, then reached 482 of 483 passing Node tests. Its sole failure was test/core-mutation-feedback.test.mjs still requiring QuickCaptureModal to call onSave(validItems). That cross-cutting source contract now requires the acceptedItems snapshot and preserves the existing partial-success semantics. Build and browser checks did not run because Node tests stopped validation. Exact-head canonical revalidation is required.
-last_verified_commit: 13f59a96a2244af4a12b8e345e0bc255ce16cc3c
-last_updated: 2026-09-13T07:58:00+10:00
+validation_basis: Application validation run 1122 passed the canonical platform validation on repaired delivery head bf615e6854fbc90016f432dcc4c274320fd4e54a after run 1120 had isolated the sole remaining stale cross-cutting Quick Capture assertion at 482/483 Node tests. Reviews and inline review threads are empty, PR #381 is mergeable, and main remains exactly at base 13f59a96a2244af4a12b8e345e0bc255ce16cc3c. This documentation-only post-merge-safe handoff is the final head and requires exact-head canonical validation before merge-ready signaling.
+last_verified_commit: bf615e6854fbc90016f432dcc4c274320fd4e54a
+last_updated: 2026-09-13T08:01:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,9 +43,9 @@ last_updated: 2026-09-13T07:58:00+10:00
 
 ## Current objective
 
-PR #380 — `fix: serialize template editor submission synchronously` — merged into `main` at `13f59a96a2244af4a12b8e345e0bc255ce16cc3c` after completing its lifecycle.
+PR #381 — `fix: serialize quick capture submission synchronously` — is the sole active delivery and has passed canonical validation on its repaired implementation/status head. The remaining lifecycle step is exact-head validation of this post-merge-safe durable handoff, followed by implementation-complete signaling and merge if the clean review/base evidence remains unchanged.
 
-Fresh-main reconciliation found no open issues or competing pull requests. PR #381 — `fix: serialize quick capture submission synchronously` — is the sole active delivery.
+After PR #381 merges, autonomous continuation must re-enter from fresh authoritative `main`. This branch and PR must not remain the durable active re-entry target after merge.
 
 `QuickCaptureModal` now claims synchronous `submitOwnerRef` ownership before invoking `onSave`, snapshots the accepted task list, permits only the owning attempt to release local saving state, and routes close/Escape plus local capture mutations through the same owner. Existing `ProjectsList` mutation ownership, project/task persistence, partial-success recovery, schemas and provider contracts remain unchanged.
 
@@ -54,16 +53,17 @@ Focused deterministic coverage exists in `test/quick-capture-submit-ownership.te
 
 Validation repair history:
 - run 1115 stopped at governance because interim STATUS used invalid `gate: Implementation`; repaired to canonical `gate: Change`;
-- later validation exposed a stale partial-save assertion requiring `onSave(validItems)`; repaired to require persistence of the accepted ownership snapshot;
-- run 1118 exposed remove-focus recovery still requiring `isSaving` as the handler authority; repaired to require the synchronous owner while preserving focus restoration;
-- exact-head run 1120 passed audit, governance, lint and typecheck and reached 482/483 Node tests. Its sole failing test was the cross-cutting `core-mutation-feedback` Quick Capture assertion, also still requiring `onSave(validItems)`. It now asserts the ownership-protected `acceptedItems` snapshot instead.
+- later validation exposed stale partial-save and focus-recovery source assertions; both were aligned to synchronous ownership without weakening their behavioral guarantees;
+- exact-head run 1120 passed audit, governance, lint and typecheck and reached 482/483 Node tests; its sole failure was the cross-cutting `core-mutation-feedback` assertion still requiring `onSave(validItems)`;
+- that contract was repaired to require the ownership-protected `acceptedItems` snapshot;
+- exact repaired run 1122 passed canonical platform validation.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — repaired exact-head validation of PR #381 |
-| Gate state | Run 1120 isolated one final stale cross-cutting source contract; repaired head requires canonical revalidation |
+| Current gate | CHANGE — final exact-head lifecycle validation for PR #381 |
+| Gate state | Repaired delivery validation passed; final post-merge-safe STATUS head pending exact-head validation |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -76,21 +76,22 @@ Validation repair history:
 | Delivery branch | `fix/quick-capture-submit-ownership` |
 | Implemented change | Accepted Quick Capture submission synchronously owns resubmit, dismissal and local mutation boundaries until `onSave` settles |
 | Deterministic coverage | New submit-ownership test plus aligned saving-integrity, partial-save, focus-recovery and core mutation-feedback contracts |
-| Canonical validation | Run 1120: audit/governance/lint/typecheck PASS; Node tests 482/483; sole stale assertion repaired; exact-head revalidation pending |
-| Review/thread audit | NOT_RUN until repaired implementation-head validation passes |
-| Base freshness | Base created from fresh `main` at `13f59a96a2244af4a12b8e345e0bc255ce16cc3c` |
+| Canonical validation | Run 1122 PASS on repaired delivery head `bf615e6854fbc90016f432dcc4c274320fd4e54a`; final documentation head pending exact-head validation |
+| Review/thread audit | Clean — no submitted reviews or inline review threads |
+| Base freshness | Clean — `main` remains PR base `13f59a96a2244af4a12b8e345e0bc255ce16cc3c` |
+| Mergeability | Mergeable |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
-| Current blocker | None — sole evidenced run-1120 failure repaired |
+| Current blocker | None |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #381 is the sole active delivery. |
-| What is already happening? | Quick Capture uses synchronous submission ownership and aligned ownership-aware source contracts; canonical validation is active. |
-| What has been validated? | PR #380 merged after exact-head validation. On PR #381, audit/governance/lint/typecheck pass; the last Node test failure has been repaired and full validation is pending. |
-| What is next? | Validate the repaired exact head, repair only evidenced failures, then complete review/base/merge lifecycle evidence. |
+| Where am I? | Stage 3; PR #381 is finishing its lifecycle. |
+| What is already happening? | Quick Capture synchronous submit ownership is implemented and canonically validated; final post-merge-safe handoff validation is pending. |
+| What has been validated? | Run 1122 passed the repaired delivery head; reviews/threads are clean, mergeability is true, and the base is fresh. |
+| What is next? | Validate this final documentation head, merge #381 if evidence remains clean, then inspect fresh main for the next task. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -104,13 +105,11 @@ Quick Capture is a multi-record operation with explicit partial-success semantic
 
 ## Next dependency-correct work
 
-1. exact-head revalidate repaired PR #381;
-2. repair only evidenced failures on the same PR;
-3. audit reviews, inline threads, mergeability and base freshness;
-4. update STATUS to a post-merge-safe fresh-main handoff and exact-head validate it;
-5. apply implementation-complete signaling only when lifecycle evidence is satisfied;
-6. after merge, re-enter fresh authoritative `main` and select the next provider-independent Stage 3 target;
-7. leave generic durable execution deferred until real provider certification exists.
+1. exact-head validate this post-merge-safe PR #381 handoff;
+2. if clean, signal implementation-complete and merge through the repository lifecycle;
+3. after merge, re-enter fresh authoritative `main` and reconcile current issues/branches/checks before selecting work;
+4. choose the next provider-independent Stage 3 integrity target only from that fresh-main state;
+5. leave generic durable execution deferred until real provider certification exists.
 
 ## Stage 3 exit conditions
 
