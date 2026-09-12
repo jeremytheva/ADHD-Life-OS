@@ -11,8 +11,8 @@ current_work:
   pr: 376
   branch: fix/housework-setup-room-navigation
 next_actions:
-  - Run the canonical Application validation process on the exact PR #376 head.
-  - Repair any in-scope validation or review findings on the same delivery branch.
+  - Re-run the canonical Application validation process on the exact repaired PR #376 head.
+  - Repair any remaining in-scope validation or review findings on the same delivery branch.
   - Audit submitted reviews, inline threads, base freshness and mergeability after validation passes.
   - Commit a post-merge-safe STATUS handoff, revalidate that exact head, then allow repository lifecycle automation to finalize the PR.
   - Re-enter from fresh main after merge and select the next dependency-correct provider-independent Stage 3 target.
@@ -31,9 +31,9 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: NOT_APPLICABLE
-validation_basis: PR #375 passed exact-head Application validation run 1088 and merged into main at cb9ac9ef8715cf926010f27394905af39346d5a4. PR #376 implementation and focused deterministic coverage are committed from that fresh main; exact-head canonical validation is pending.
+validation_basis: Application validation run 1090 on head 26d81df40827a1043cffa21970ad43b4118d8da6 passed dependency audit and governance, then failed ESLint only because the new deterministic test used literal repeated spaces in one regex. The test matcher was repaired without changing application behaviour. Exact-head canonical revalidation is pending after the repair and this durable status update.
 last_verified_commit: 2d4eef290c19acbd230997ea9b2211ded473f804
-last_updated: 2026-09-13T05:31:00+10:00
+last_updated: 2026-09-13T05:33:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -51,12 +51,14 @@ PR #376 — `fix: lock housework room navigation during save` — is the sole ac
 
 Provider contracts, schemas, housework template data, task-creation semantics, and partial-save recovery are unchanged. Focused deterministic coverage is in `test/housework-setup-room-navigation-integrity.test.mjs`.
 
+Application validation run 1090 passed dependency audit and governance but stopped at ESLint because one newly added test regex contained literal repeated spaces prohibited by `no-regex-spaces`. The test matcher has been repaired on the same PR; application code did not fail and was not weakened.
+
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical validation of PR #376 |
-| Gate state | Implementation and focused coverage committed; exact-head canonical validation pending |
+| Current gate | INTEGRATION — canonical revalidation of repaired PR #376 |
+| Gate state | Run 1090 lint-only test failure repaired; exact-head canonical revalidation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -68,20 +70,20 @@ Provider contracts, schemas, housework template data, task-creation semantics, a
 | Active delivery | PR #376 — Housework Setup room-navigation lock |
 | Delivery branch | `fix/housework-setup-room-navigation` |
 | Implemented change | Room-filter changes consult `saveInFlightRef` before changing setup context |
-| Deterministic coverage | `test/housework-setup-room-navigation-integrity.test.mjs` |
-| Canonical validation | Pending on exact STATUS-updated PR #376 head |
+| Deterministic coverage | `test/housework-setup-room-navigation-integrity.test.mjs`; run-1090 regex lint finding repaired |
+| Canonical validation | Run 1090 stopped at ESLint on the new test; repaired exact-head rerun pending |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
-| Current blocker | None |
+| Current blocker | None; validation repair is committed and revalidation is actionable |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3; PR #376 is the sole active delivery and is in canonical validation. |
+| Where am I? | Stage 3; PR #376 is the sole active delivery and is in canonical revalidation after a narrow test-lint repair. |
 | What is already happening? | Housework save persistence already has synchronous ownership; PR #376 extends that same owner to room-filter navigation. |
-| What has been validated? | PR #375 exact head passed run 1088 and merged. PR #376 validation is pending. |
-| What is next? | Complete canonical validation, repair in-scope findings, audit lifecycle gates, make the post-merge-safe handoff, and finalize PR #376. |
+| What has been validated? | PR #375 exact head passed run 1088 and merged. Run 1090 on PR #376 passed audit/governance and exposed one new-test ESLint finding that is now repaired. |
+| What is next? | Revalidate the repaired exact head, address any remaining in-scope findings, audit lifecycle gates, make the post-merge-safe handoff, and finalize PR #376. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -91,8 +93,8 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. validate the exact PR #376 head with the canonical repository process;
-2. repair any in-scope failures without opening competing work;
+1. revalidate the exact repaired PR #376 head with the canonical repository process;
+2. repair any remaining in-scope failures without opening competing work;
 3. audit reviews, threads, base freshness and mergeability after validation passes;
 4. commit a post-merge-safe STATUS handoff and revalidate that exact head;
 5. allow the repository lifecycle controller/finalizer to complete the merge when all gates remain satisfied;
