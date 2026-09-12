@@ -14,10 +14,22 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
   const inputRef = useRef(null)
-  const dialogRef = useModalDialog({ onEscape: isSaving ? null : onCancel, initialFocusRef: inputRef })
+  const submitOwnerRef = useRef(null)
+
+  const handleCancel = () => {
+    if (submitOwnerRef.current !== null) return
+    onCancel()
+  }
+
+  const dialogRef = useModalDialog({ onEscape: handleCancel, initialFocusRef: inputRef })
+
+  const handleInputChange = (value) => {
+    if (submitOwnerRef.current !== null) return
+    setCurrentInput(value)
+  }
 
   const handleAddItem = () => {
-    if (isSaving) return
+    if (submitOwnerRef.current !== null) return
 
     if (currentInput.trim()) {
       setItems([...items.filter(i => i), currentInput.trim()])
@@ -33,32 +45,50 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
   }
 
   const handleRemoveItem = (index) => {
-    if (isSaving) return
+    if (submitOwnerRef.current !== null) return
     setItems(items.filter((_, i) => i !== index))
     inputRef.current?.focus()
   }
 
-  const handleSaveAll = async () => {
-    const validItems = items.filter(i => i.trim())
-    if (validItems.length === 0 || isSaving) return
+  const handleToggleAdvanced = () => {
+    if (submitOwnerRef.current !== null) return
+    setShowAdvanced((current) => !current)
+  }
 
+  const handleDismissSaveError = () => {
+    if (submitOwnerRef.current !== null) return
+    setSaveError(null)
+  }
+
+  const handleSaveAll = async () => {
+    if (submitOwnerRef.current !== null) return
+
+    const validItems = items.filter(i => i.trim())
+    if (validItems.length === 0) return
+
+    const submitOwner = {}
+    submitOwnerRef.current = submitOwner
+    const acceptedItems = [...validItems]
     setSaveError(null)
     setIsSaving(true)
     try {
-      const result = await onSave(validItems)
+      const result = await onSave(acceptedItems)
       if (result?.remainingItems) {
         setItems(result.remainingItems.length > 0 ? result.remainingItems : [''])
 
         if (result.remainingItems.length > 0) {
           setSaveError(
             result.savedCount > 0
-              ? `${result.savedCount} of ${validItems.length} quick-capture tasks were saved before the interruption. Only the unsaved tasks remain here, so retrying will not duplicate the saved tasks.`
+              ? `${result.savedCount} of ${acceptedItems.length} quick-capture tasks were saved before the interruption. Only the unsaved tasks remain here, so retrying will not duplicate the saved tasks.`
               : 'We couldn’t save these quick-capture tasks. None were saved, and your list is still available to retry.'
           )
         }
       }
     } finally {
-      setIsSaving(false)
+      if (submitOwnerRef.current === submitOwner) {
+        submitOwnerRef.current = null
+        setIsSaving(false)
+      }
     }
   }
 
@@ -90,7 +120,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
             </div>
             <button
               type="button"
-              onClick={onCancel}
+              onClick={handleCancel}
               aria-label="Close quick capture"
               disabled={isSaving}
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -101,7 +131,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
         </div>
 
         <div className="flex-1 overflow-y-auto p-6">
-          <OperationErrorState message={saveError} onDismiss={() => setSaveError(null)} />
+          <OperationErrorState message={saveError} onDismiss={handleDismissSaveError} />
 
           <div className={`bg-blue-50 rounded-lg p-4 border border-blue-200 mb-6 ${saveError ? 'mt-4' : ''}`}>
             <p className="text-blue-800 text-center font-medium">
@@ -119,7 +149,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
                 id="quick-capture-input"
                 type="text"
                 value={currentInput}
-                onChange={(e) => setCurrentInput(e.target.value)}
+                onChange={(e) => handleInputChange(e.target.value)}
                 onKeyPress={handleKeyPress}
                 disabled={isSaving}
                 placeholder="e.g., Call dentist, Buy groceries, Fix leaky faucet..."
@@ -220,7 +250,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
             <div className="mt-6">
               <button
                 type="button"
-                onClick={() => setShowAdvanced(!showAdvanced)}
+                onClick={handleToggleAdvanced}
                 aria-expanded={showAdvanced}
                 aria-controls="quick-capture-organization-options"
                 disabled={isSaving}
@@ -278,7 +308,7 @@ const QuickCaptureModal = ({ onSave, onCancel }) => {
           <div className="flex gap-3">
             <button
               type="button"
-              onClick={onCancel}
+              onClick={handleCancel}
               disabled={isSaving}
               className="flex-1 px-4 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
