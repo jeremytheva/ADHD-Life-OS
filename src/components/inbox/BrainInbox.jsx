@@ -25,6 +25,8 @@ const BrainInbox = () => {
   const inputRef = useRef(null)
   const latestLoadRequestRef = useRef(0)
   const latestCategoryRequestRef = useRef(new Map())
+  const captureOwnerRef = useRef(null)
+  const editOwnerRef = useRef(null)
   const deletingIdsRef = useRef(new Set())
   const convertingIdsRef = useRef(new Set())
   const categoryPendingIdsRef = useRef(new Set())
@@ -63,8 +65,10 @@ const BrainInbox = () => {
   const handleAddItem = async (e) => {
     e.preventDefault()
     const submittedContent = currentInput.trim()
-    if (!submittedContent || capturePending) return
+    if (!submittedContent || captureOwnerRef.current !== null) return
 
+    const captureOwner = Symbol('brain-inbox-capture')
+    captureOwnerRef.current = captureOwner
     setCapturePending(true)
     try {
       setOperationError('')
@@ -82,7 +86,10 @@ const BrainInbox = () => {
       console.error('Error adding item:', error)
       setOperationError('We couldn’t save that thought. It is still in the input box so you can try again.')
     } finally {
-      setCapturePending(false)
+      if (captureOwnerRef.current === captureOwner) {
+        captureOwnerRef.current = null
+        setCapturePending(false)
+      }
     }
   }
 
@@ -91,7 +98,7 @@ const BrainInbox = () => {
       deletingIdsRef.current.has(id) ||
       convertingIdsRef.current.has(id) ||
       categoryPendingIdsRef.current.has(id) ||
-      (editPending && editingId === id)
+      editOwnerRef.current?.id === id
     ) return
 
     deletingIdsRef.current.add(id)
@@ -113,7 +120,7 @@ const BrainInbox = () => {
 
   const handleStartEdit = (item) => {
     if (
-      editPending ||
+      editOwnerRef.current !== null ||
       deletingIdsRef.current.has(item.id) ||
       convertingIdsRef.current.has(item.id) ||
       categoryPendingIdsRef.current.has(item.id)
@@ -126,12 +133,14 @@ const BrainInbox = () => {
     const submittedEdit = editText.trim()
     if (
       !submittedEdit ||
-      editPending ||
+      editOwnerRef.current !== null ||
       deletingIdsRef.current.has(id) ||
       convertingIdsRef.current.has(id) ||
       categoryPendingIdsRef.current.has(id)
     ) return
 
+    const editOwner = { id }
+    editOwnerRef.current = editOwner
     setEditPending(true)
     try {
       setOperationError('')
@@ -145,7 +154,10 @@ const BrainInbox = () => {
       console.error('Error updating item:', error)
       setOperationError('We couldn’t save that edit. Your edited text is still here so you can try again.')
     } finally {
-      setEditPending(false)
+      if (editOwnerRef.current === editOwner) {
+        editOwnerRef.current = null
+        setEditPending(false)
+      }
     }
   }
 
@@ -154,7 +166,7 @@ const BrainInbox = () => {
       deletingIdsRef.current.has(id) ||
       convertingIdsRef.current.has(id) ||
       categoryPendingIdsRef.current.has(id) ||
-      (editPending && editingId === id)
+      editOwnerRef.current?.id === id
     ) return
 
     const requestId = (latestCategoryRequestRef.current.get(id) || 0) + 1
@@ -182,7 +194,7 @@ const BrainInbox = () => {
       deletingIdsRef.current.has(item.id) ||
       convertingIdsRef.current.has(item.id) ||
       categoryPendingIdsRef.current.has(item.id) ||
-      (editPending && editingId === item.id)
+      editOwnerRef.current?.id === item.id
     ) return
 
     convertingIdsRef.current.add(item.id)
@@ -336,7 +348,9 @@ const BrainInbox = () => {
                 ref={inputRef}
                 type="text"
                 value={currentInput}
-                onChange={(e) => setCurrentInput(e.target.value)}
+                onChange={(e) => {
+                  if (captureOwnerRef.current === null) setCurrentInput(e.target.value)
+                }}
                 disabled={capturePending}
                 aria-label="Capture a thought"
                 placeholder="Type anything... tasks, ideas, reminders, worries..."
@@ -394,7 +408,9 @@ const BrainInbox = () => {
                           <input
                             type="text"
                             value={editText}
-                            onChange={(e) => setEditText(e.target.value)}
+                            onChange={(e) => {
+                              if (editOwnerRef.current === null) setEditText(e.target.value)
+                            }}
                             onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit(item.id)}
                             disabled={editPending}
                             aria-label={`Edit inbox item: ${item.content}`}
@@ -413,6 +429,7 @@ const BrainInbox = () => {
                             type="button"
                             disabled={editPending}
                             onClick={() => {
+                              if (editOwnerRef.current !== null) return
                               setEditingId(null)
                               setEditText('')
                             }}
