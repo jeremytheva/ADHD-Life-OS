@@ -10,8 +10,10 @@ test('Tasks exposes the existing global mutation lock in the UI while persistenc
   assert.match(source, /<div className="p-6 space-y-6" aria-busy=\{loading \|\| mutationPending\}>/)
   assert.match(source, /\{mutationPending && \(\s*<p className="sr-only" role="status" aria-live="polite">\s*Updating tasks\.\.\.\s*<\/p>/)
 
-  const mutationLaunchers = source.match(/disabled=\{mutationPending\}/g) ?? []
-  assert.equal(mutationLaunchers.length, 4)
+  const mutationLockControls = source.match(/disabled=\{mutationPending\}/g) ?? []
+  assert.equal(mutationLockControls.length, 6)
+  assert.match(source, /onClick=\{\(\) => handleFilterChange\(filterOption\.key\)\}\s*disabled=\{mutationPending\}/)
+  assert.match(source, /onChange=\{\(event\) => handleSortChange\(event\.target\.value\)\}\s*disabled=\{mutationPending\}/)
 
   assert.match(source, /<TaskCard[\s\S]*?pending=\{mutationPending\}[\s\S]*?\/>/)
 })
