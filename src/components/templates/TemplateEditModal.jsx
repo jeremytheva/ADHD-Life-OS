@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -10,8 +10,12 @@ const TemplateEditModal = ({ template, onClose, onSave, isApplying = false }) =>
   const isRoutine = template.type === 'routine'
   const dialogTitleId = `template-edit-title-${template.id}`
   const fieldIdPrefix = `template-edit-${template.id}`
-  const dialogRef = useModalDialog({ onEscape: isApplying ? null : onClose })
-  const safeClose = () => { if (!isApplying) onClose() }
+  const submitOwnerRef = useRef(null)
+  const safeClose = () => {
+    if (isApplying || submitOwnerRef.current) return
+    onClose()
+  }
+  const dialogRef = useModalDialog({ onEscape: safeClose })
 
   const [formData, setFormData] = useState(() => isRoutine ? {
     name: template.name,
@@ -27,29 +31,42 @@ const TemplateEditModal = ({ template, onClose, onSave, isApplying = false }) =>
   })
 
   const handleChange = (field, value) => {
-    if (isApplying) return
+    if (isApplying || submitOwnerRef.current) return
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
   const handleStepChange = (index, field, value) => {
-    if (isApplying) return
+    if (isApplying || submitOwnerRef.current) return
     setFormData(prev => ({ ...prev, steps: prev.steps.map((step, i) => i === index ? { ...step, [field]: value } : step) }))
   }
 
   const addStep = () => {
-    if (isApplying) return
+    if (isApplying || submitOwnerRef.current) return
     setFormData(prev => ({ ...prev, steps: [...prev.steps, { name: '', duration_minutes: 30, order_index: prev.steps.length, is_essential: false }] }))
   }
 
   const removeStep = (index) => {
-    if (isApplying) return
+    if (isApplying || submitOwnerRef.current) return
     setFormData(prev => ({ ...prev, steps: prev.steps.filter((_, i) => i !== index).map((step, i) => ({ ...step, order_index: i })) }))
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    if (isApplying) return
-    await onSave(formData, template.type)
+    if (isApplying || submitOwnerRef.current) return
+
+    const owner = Symbol('template-edit-submit')
+    submitOwnerRef.current = owner
+    const submittedTemplate = isRoutine
+      ? { ...formData, steps: formData.steps?.map(step => ({ ...step })) || [] }
+      : { ...formData }
+
+    try {
+      await onSave(submittedTemplate, template.type)
+    } finally {
+      if (submitOwnerRef.current === owner) {
+        submitOwnerRef.current = null
+      }
+    }
   }
 
   const totalDuration = isRoutine ? formData.steps?.reduce((sum, step) => sum + (step.duration_minutes || 0), 0) : formData.estimated_duration
