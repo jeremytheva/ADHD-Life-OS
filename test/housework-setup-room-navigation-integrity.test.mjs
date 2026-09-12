@@ -7,7 +7,7 @@ const read = (path) => fs.readFile(new URL(`../${path}`, import.meta.url), 'utf8
 
 test('HouseworkSetup room navigation consults synchronous save ownership', async () => {
   const source = await read('src/components/housework/HouseworkSetup.jsx')
-  const handler = source.match(/const handleRoomChange = \(room\) => \{[\s\S]*?\n  \}/)?.[0] ?? ''
+  const handler = source.match(/const handleRoomChange = \(room\) => \{[\s\S]*?const handleSave/)?.[0] ?? ''
 
   assert.match(handler, /if \(saveInFlightRef\.current \|\| saving\) return/)
   assert.match(handler, /setSelectedRoom\(room\)/)
