@@ -11,8 +11,8 @@ current_work:
   pr: 377
   branch: fix/routine-form-submit-ownership
 next_actions:
-  - Run the canonical Application validation process on PR #377 exact head.
-  - Repair any in-scope validation or review findings on the same PR and revalidate the changed head.
+  - Re-run the canonical Application validation process on PR #377 exact head after correcting STATUS validation-state classification.
+  - Repair any further in-scope validation or review findings on the same PR and revalidate the changed head.
   - Audit acceptance criteria, review/thread state, base freshness and mergeability.
   - Commit a post-merge-safe STATUS handoff and exact-head revalidate before implementation-complete signaling.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
@@ -23,16 +23,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PENDING
-  lint: PENDING
-  typecheck: PENDING
-  tests: PENDING
-  build: PENDING
+  governance: NOT_RUN
+  lint: NOT_RUN
+  typecheck: NOT_RUN
+  tests: NOT_RUN
+  build: NOT_RUN
   ci: PENDING
   runtime: NOT_APPLICABLE
-validation_basis: PR #377 was created from fresh main 46cae2831a96c0cee2d8b6ce3d1849715c999487 after PR #376 merged. RoutineForm now uses synchronous submit ownership and focused deterministic coverage is committed; canonical exact-head validation is pending.
+validation_basis: Application validation run 1095 stopped at repository governance because interim STATUS.md incorrectly used PENDING for per-gate fields whose schema permits PASS, FAIL, NOT_RUN or NOT_APPLICABLE. The implementation was not reached by downstream lint, typecheck, tests, build or Playwright. STATUS classification is corrected on this head and exact-head canonical revalidation is required.
 last_verified_commit: null
-last_updated: 2026-09-13T05:45:00+10:00
+last_updated: 2026-09-13T05:47:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -50,14 +50,16 @@ PR #377 — `fix: serialize routine form submission synchronously` — is the so
 
 The repair introduces one synchronous `submitOwnerRef` in `RoutineForm`. The accepted submit claims ownership before invoking `onSave`, only that owner may release local saving state, and cancel/Escape plus local form/step mutation handlers consult the same owner. Existing routine persistence, recovery, provider contracts, schemas and data semantics are unchanged.
 
-Focused deterministic coverage is committed in `test/routine-form-submit-ownership.test.mjs`. Canonical exact-head validation is now required.
+Focused deterministic coverage is committed in `test/routine-form-submit-ownership.test.mjs`.
+
+Application validation run 1095 did not reach lint, typecheck, tests, build, or Playwright. It stopped at governance because this active-delivery STATUS handoff used `PENDING` for per-gate fields where the repository schema requires `NOT_RUN` until those gates have actually executed. That durable-state classification has been corrected; canonical exact-head revalidation is now required.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical exact-head validation of PR #377 |
-| Gate state | Implementation and focused regression coverage committed; canonical validation pending |
+| Current gate | INTEGRATION — canonical exact-head revalidation of PR #377 after governance-state repair |
+| Gate state | Implementation and focused regression coverage committed; run 1095 governance classification repaired; exact-head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -70,8 +72,8 @@ Focused deterministic coverage is committed in `test/routine-form-submit-ownersh
 | Delivery branch | `fix/routine-form-submit-ownership` |
 | Implemented change | Accepted RoutineForm submit synchronously owns duplicate-submit, cancel/Escape and local form mutation boundaries until persistence settles |
 | Deterministic coverage | `test/routine-form-submit-ownership.test.mjs` |
-| Canonical validation | PENDING on current PR head |
-| Review/thread audit | PENDING after validation |
+| Canonical validation | Run 1095 stopped at governance on invalid interim STATUS validation-state values; repaired head requires rerun |
+| Review/thread audit | PENDING after successful implementation-head validation |
 | Base freshness | Branch created from fresh main `46cae2831a96c0cee2d8b6ce3d1849715c999487` |
 | Provider/data impact | None |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
@@ -83,8 +85,8 @@ Focused deterministic coverage is committed in `test/routine-form-submit-ownersh
 | --- | --- |
 | Where am I? | Stage 3; PR #377 is the sole active provider-independent interaction-integrity delivery. |
 | What is already happening? | RoutineForm now owns accepted submission synchronously instead of relying only on rendered saving state. |
-| What has been validated? | PR #376 is merged. PR #377 focused coverage is committed; full canonical validation is pending. |
-| What is next? | Validate PR #377 exact head, repair findings on the same PR, audit lifecycle evidence, then hand off for merge. |
+| What has been validated? | PR #376 is merged. PR #377 run 1095 identified only an interim STATUS governance-state classification defect before downstream validation ran. |
+| What is next? | Revalidate PR #377 exact head, repair any further findings on the same PR, audit lifecycle evidence, then hand off for merge. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -94,8 +96,8 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical exact-head validation for PR #377;
-2. repair any in-scope validation/review findings on the same branch and revalidate;
+1. re-run canonical exact-head validation for PR #377 after the STATUS governance repair;
+2. repair any further in-scope validation/review findings on the same branch and revalidate;
 3. verify review/thread state, current `main`, mergeability and acceptance criteria;
 4. update this file to a post-merge-safe handoff, revalidate that exact head, then apply implementation-complete lifecycle evidence;
 5. after merge, re-enter fresh authoritative `main` and continue the next provider-independent Stage 3 target;
