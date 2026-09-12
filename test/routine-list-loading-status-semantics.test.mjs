@@ -34,5 +34,6 @@ test('Routine list refresh failures preserve established context and expose focu
   assert.match(routineListSource, /loadError && hasLoaded && !operationError/);
   assert.match(routineListSource, /title="We couldn’t refresh your routines"/);
   assert.match(routineListSource, /Your current routine list is still shown and may be out of date/);
-  assert.match(routineListSource, /onRetry=\{loadRoutines\}/);
+  assert.match(routineListSource, /onRetry=\{retryLoad\}/);
+  assert.match(routineListSource, /const retryLoad = \(\) => \{\s*if \(pendingActionRef\.current\) return/);
 });
