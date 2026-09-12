@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../common/SafeIcon'
@@ -18,17 +18,44 @@ const SubtaskList = ({
   onHideInput
 }) => {
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('')
-  const [adding, setAdding] = useState(false)
+  const [localPendingAction, setLocalPendingAction] = useState(null)
   const [operationError, setOperationError] = useState('')
-  const mutationPending = pending || adding
+  const mutationOwnerRef = useRef(null)
+  const mutationPending = pending || Boolean(localPendingAction)
+
+  const claimMutation = (action) => {
+    if (mutationOwnerRef.current || pending) return null
+    const owner = { action }
+    mutationOwnerRef.current = owner
+    setLocalPendingAction(action)
+    return owner
+  }
+
+  const releaseMutation = (owner) => {
+    if (mutationOwnerRef.current !== owner) return
+    mutationOwnerRef.current = null
+    setLocalPendingAction(null)
+  }
+
+  const handleTitleChange = (value) => {
+    if (mutationOwnerRef.current || pending) return
+    setNewSubtaskTitle(value)
+  }
+
+  const handleShowInput = () => {
+    if (mutationOwnerRef.current || pending) return
+    if (onShowInput) onShowInput()
+  }
 
   const handleAddSubtask = async () => {
-    if (!newSubtaskTitle.trim() || mutationPending || !onAddSubtask) return
+    const acceptedTitle = newSubtaskTitle.trim()
+    if (!acceptedTitle || !onAddSubtask) return
+    const owner = claimMutation(`add:${taskId}`)
+    if (!owner) return
 
     setOperationError('')
-    setAdding(true)
     try {
-      const saved = await onAddSubtask(taskId, newSubtaskTitle.trim())
+      const saved = await onAddSubtask(taskId, acceptedTitle)
       if (!saved) {
         setOperationError('We couldn’t confirm that subtask was added. Your subtask title is still here so you can review the list and try again.')
         return
@@ -37,27 +64,39 @@ const SubtaskList = ({
       setNewSubtaskTitle('')
       if (onHideInput) onHideInput()
     } finally {
-      setAdding(false)
+      releaseMutation(owner)
     }
   }
 
   const handleDeleteSubtask = async (subtaskId) => {
-    if (mutationPending || !onDeleteSubtask) return
+    if (!onDeleteSubtask) return
+    const owner = claimMutation(`delete:${subtaskId}`)
+    if (!owner) return
 
     setOperationError('')
-    const deleted = await onDeleteSubtask(subtaskId)
-    if (!deleted) {
-      setOperationError('We couldn’t confirm that subtask was deleted. It is still shown in the list so you can review the current state before trying again.')
+    try {
+      const deleted = await onDeleteSubtask(subtaskId)
+      if (!deleted) {
+        setOperationError('We couldn’t confirm that subtask was deleted. It is still shown in the list so you can review the current state before trying again.')
+      }
+    } finally {
+      releaseMutation(owner)
     }
   }
 
   const handleToggleSubtask = async (subtask) => {
-    if (mutationPending || !onToggleSubtask) return
+    if (!onToggleSubtask) return
+    const owner = claimMutation(`toggle:${subtask.id}`)
+    if (!owner) return
 
     setOperationError('')
-    const updated = await onToggleSubtask(subtask)
-    if (!updated) {
-      setOperationError('We couldn’t confirm that subtask’s completion change. Its previous state is still shown here so you can review it and try again.')
+    try {
+      const updated = await onToggleSubtask(subtask)
+      if (!updated) {
+        setOperationError('We couldn’t confirm that subtask’s completion change. Its previous state is still shown here so you can review it and try again.')
+      }
+    } finally {
+      releaseMutation(owner)
     }
   }
 
@@ -145,7 +184,7 @@ const SubtaskList = ({
           <input
             type="text"
             value={newSubtaskTitle}
-            onChange={(e) => setNewSubtaskTitle(e.target.value)}
+            onChange={(e) => handleTitleChange(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleAddSubtask()}
             aria-label="New subtask title"
             placeholder="Enter subtask title..."
@@ -157,10 +196,11 @@ const SubtaskList = ({
             type="button"
             onClick={handleAddSubtask}
             disabled={!newSubtaskTitle.trim() || mutationPending}
+            aria-busy={localPendingAction?.startsWith('add:') || undefined}
             className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
           >
             <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
-            Add
+            {localPendingAction?.startsWith('add:') ? 'Adding…' : 'Add'}
           </button>
         </div>
       )}
@@ -170,15 +210,17 @@ const SubtaskList = ({
         <button
           type="button"
           disabled={mutationPending}
-          onClick={() => {
-            if (onShowInput) onShowInput()
-          }}
+          onClick={handleShowInput}
           className="w-full px-3 py-2 border-2 border-dashed border-slate-300 rounded-lg text-sm text-slate-600 hover:border-purple-300 hover:text-purple-600 transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <SafeIcon icon={FiPlus} className="w-4 h-4" aria-hidden="true" />
           Add Another Subtask
         </button>
       )}
+
+      <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {localPendingAction ? 'Updating subtasks...' : ''}
+      </span>
     </motion.div>
   )
 }
