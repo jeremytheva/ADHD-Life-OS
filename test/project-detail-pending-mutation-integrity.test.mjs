@@ -9,33 +9,55 @@ const detailSource = await read('src/components/projects/ProjectDetailView.jsx')
 const taskItemSource = await read('src/components/projects/TaskItem.jsx')
 const subtaskSource = await read('src/components/projects/SubtaskList.jsx')
 
-test('Project Detail owns one mutation at a time across task and subtask writes', () => {
+test('Project Detail owns one mutation synchronously across task and subtask writes', () => {
   assert.match(detailSource, /const \[pendingAction, setPendingAction\] = useState\(null\)/)
+  assert.match(detailSource, /const mutationOwnerRef = useRef\(null\)/)
   assert.match(detailSource, /const mutationPending = Boolean\(pendingAction\)/)
+  assert.match(detailSource, /const claimMutation = \(action\) => \{\s*if \(mutationOwnerRef\.current\) return null\s*mutationOwnerRef\.current = action\s*setPendingAction\(action\)\s*return action/)
+  assert.match(detailSource, /const releaseMutation = \(owner\) => \{\s*if \(mutationOwnerRef\.current !== owner\) return\s*mutationOwnerRef\.current = null\s*setPendingAction\(null\)/)
 
   for (const handler of [
     'handleAddTask',
     'handleUpdateTask',
     'handleCompleteTask',
-    'handleDeleteTask',
     'handleAddSubtask',
-    'handleDeleteSubtask',
-    'handleToggleSubtask'
+    'handleDeleteSubtask'
   ]) {
-    assert.match(detailSource, new RegExp(`const ${handler} = async \\([^)]*\\) => \\{\\s*if \\(pendingAction\\) return`))
+    assert.match(detailSource, new RegExp(`const ${handler} = async \\([^)]*\\) => \\{\\s*const owner = claimMutation\\(`))
   }
+
+  assert.match(detailSource, /const handleDeleteTask = async \(taskId\) => \{\s*if \(mutationOwnerRef\.current\) return[\s\S]*?const owner = claimMutation\(`delete-task:\$\{taskId\}`\)/)
+  assert.match(detailSource, /const handleToggleSubtask = async \(subtask\) => \{[\s\S]*?const owner = claimMutation\(`\$\{completing \? 'complete' : 'uncomplete'\}-subtask:\$\{subtask\.id\}`\)/)
+  assert.equal((detailSource.match(/releaseMutation\(owner\)/g) ?? []).length, 7)
+  assert.doesNotMatch(detailSource, /if \(pendingAction\) return/)
 
   assert.match(detailSource, /aria-busy=\{detailsLoading \|\| mutationPending\}/)
   assert.match(detailSource, /Updating project tasks\.\.\./)
-  assert.match(detailSource, /onEscape: mutationPending \? null : onClose/)
   assert.match(detailSource, /pending=\{mutationPending\}/)
+})
+
+test('Project Detail navigation cannot invalidate a synchronously owned mutation', () => {
+  assert.match(detailSource, /const closeProject = \(\) => \{\s*if \(mutationOwnerRef\.current\) return\s*onClose\(\)/)
+  assert.match(detailSource, /const openTaskForm = \(\) => \{\s*if \(mutationOwnerRef\.current\) return/)
+  assert.match(detailSource, /useModalDialog\(\{ onEscape: closeProject \}\)/)
+  assert.match(detailSource, /onClick=\{closeProject\}/)
+  assert.match(detailSource, /onClick=\{openTaskForm\}/)
+  assert.match(detailSource, /onCancel=\{\(\) => \{\s*if \(mutationOwnerRef\.current\) return/)
+})
+
+test('accepted task payloads are snapshotted before persistence', () => {
+  assert.match(detailSource, /const acceptedTaskData = \{ \.\.\.taskData \}/)
+  assert.match(detailSource, /await projectService\.createTask\(project\.id, acceptedTaskData\)/)
+  assert.match(detailSource, /const acceptedUpdates = \{ \.\.\.updates \}/)
+  assert.match(detailSource, /await projectService\.updateTask\(taskId, acceptedUpdates\)/)
+  assert.match(detailSource, /const acceptedSubtaskId = subtask\.id/)
+  assert.match(detailSource, /await projectService\.completeSubtask\(acceptedSubtaskId\)/)
+  assert.match(detailSource, /await projectService\.uncompleteSubtask\(acceptedSubtaskId\)/)
 })
 
 test('subtask completion has one persistence owner and reconciles through Project Detail', () => {
   assert.equal((detailSource.match(/await projectService\.completeSubtask\(/g) ?? []).length, 1)
   assert.doesNotMatch(subtaskSource, /projectService/)
-  assert.match(detailSource, /await projectService\.completeSubtask\(subtask\.id\)/)
-  assert.match(detailSource, /await projectService\.uncompleteSubtask\(subtask\.id\)/)
   assert.match(detailSource, /const refreshed = await refreshAfterWrite\(/)
   assert.match(detailSource, /if \(completing\) \{[\s\S]*?setCelebrationMessage\('Each small step you do is a quick win! ⭐'\)/)
 })
