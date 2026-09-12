@@ -3,19 +3,19 @@ project: ADHD Life OS
 portfolio_state: ACTIVE
 phase: Stage 3
 stage: execution and next-action experience
-gate: Change
-execution_state: IMPLEMENTING
+gate: Integration
+execution_state: VALIDATING
 current_work:
-  objective: Harden the live NoCodeBackend authentication form so one accepted login or registration attempt owns the submit boundary synchronously until settlement.
+  objective: Validate and complete PR #360, which gives the live NoCodeBackend login/register submit boundary one synchronous mutation owner.
   issue: null
-  pr: null
+  pr: 360
   branch: fix/auth-submit-mutation-ownership
 next_actions:
-  - Open the delivery PR for the implemented auth submit ownership change.
-  - Run canonical Application validation on the exact PR head.
+  - Run canonical Application validation on the exact PR #360 head.
   - Repair any implementation-correlated validation failure on the same branch.
-  - Audit reviews, threads, base freshness and mergeability after validation.
-  - Complete the repository lifecycle only when exact-head evidence is clean.
+  - Audit submitted reviews, inline review threads, base freshness and mergeability after validation.
+  - Complete a post-merge-safe STATUS handoff when implementation-head evidence is clean.
+  - Revalidate that exact handoff head and apply lifecycle:implementation-complete only when all gates remain satisfied.
   - Re-enter fresh main after merge and select the next provider-independent Stage 3 integrity target.
 blockers: []
 requires_owner_decision: false
@@ -29,11 +29,11 @@ validation:
   typecheck: NOT_RUN
   tests: NOT_RUN
   build: NOT_RUN
-  ci: NOT_RUN
+  ci: PENDING
   runtime: UNVERIFIED
-validation_basis: Fresh-main inspection after PR #359 merged at f975e1630c7973afd899bdfa5de0cedece70b2f9 identified the live NCBAuth submit boundary as the next provider-independent interaction-integrity gap. Login and registration previously relied on rendered React loading state, allowing same-tick duplicate submits or competing field/navigation actions before pending state committed. Implementation and deterministic regression coverage are committed on this branch; canonical validation has not yet run on the delivery head.
+validation_basis: PR #360 is the sole active delivery from fresh main f975e1630c7973afd899bdfa5de0cedece70b2f9. It adds synchronous ref-backed ownership around the live NCBAuth login/register submit boundary, snapshots accepted credentials, excludes competing same-tick actions, and adds deterministic regression coverage. This STATUS update creates the validation head; canonical Application validation is pending.
 last_verified_commit: f975e1630c7973afd899bdfa5de0cedece70b2f9
-last_updated: 2026-09-12T16:14:00+10:00
+last_updated: 2026-09-12T16:19:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,19 +45,19 @@ last_updated: 2026-09-12T16:14:00+10:00
 
 ## Current objective
 
-Fresh `main` was inspected after PR #359 completed lifecycle and merged at `f975e1630c7973afd899bdfa5de0cedece70b2f9`. There were no other open pull requests, so the repository work-in-progress lane was clear.
+PR #360 — `fix: own auth submissions synchronously` — is the sole active delivery. It was selected from fresh `main` after PR #359 merged at `f975e1630c7973afd899bdfa5de0cedece70b2f9` and no other pull requests remained open.
 
-The next dependency-correct provider-independent integrity target is the live `NCBAuth` login/registration submit boundary. It previously used React `loading` state as its only exclusion mechanism. Because state rendering is asynchronous, a second same-tick submit could enter before the disabled UI committed; field changes or alternate-auth navigation could also compete with the accepted attempt.
+The live `NCBAuth` login/registration form previously used rendered React `loading` state as its only exclusion mechanism. Because that state is not committed synchronously, a second same-tick submit could enter before the disabled UI rendered; field changes or alternate login/register navigation could also compete with the already accepted attempt.
 
-The branch `fix/auth-submit-mutation-ownership` now claims synchronous ref-backed ownership before the first auth await, snapshots the accepted email/password pair, rejects duplicate submit entry, prevents field mutation and alternate login/register navigation while ownership is active, disables the visible controls while pending, and releases ownership after settlement for safe retry. No authentication route, credential policy, provider mapping, schema, or execution-domain behaviour changed.
+PR #360 now claims synchronous ref-backed ownership before the first auth await, snapshots the accepted email/password pair, rejects duplicate submit entry, prevents field mutation and alternate login/register navigation while ownership is active, disables visible controls while pending, and releases ownership after settlement for safe retry. It reuses the existing `AuthContext` sign-in/sign-up boundary and changes no authentication route, credential policy, provider mapping, schema, or execution-domain behaviour.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | CHANGE — validate focused auth interaction-integrity implementation |
-| Gate state | Implementation and deterministic regression committed; delivery PR and canonical exact-head validation remain |
-| Execution state | IMPLEMENTING |
+| Current gate | INTEGRATION — canonical exact-head validation for PR #360 |
+| Gate state | Implementation, deterministic regression and durable active-work handoff committed; canonical validation pending |
+| Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution; unchanged by this work |
 
 ## Delivery checkpoint
@@ -65,11 +65,11 @@ The branch `fix/auth-submit-mutation-ownership` now claims synchronous ref-backe
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #359 — Settings preference mutation serialization; merged at `f975e1630c7973afd899bdfa5de0cedece70b2f9` |
-| Active delivery | Auth submit synchronous mutation ownership; PR not yet opened |
+| Active delivery | PR #360 — auth submit synchronous mutation ownership |
 | Delivery branch | `fix/auth-submit-mutation-ownership` |
 | Implemented change | Ref-backed auth submit owner; accepted credential snapshot; duplicate-submit exclusion; pending field/navigation exclusion |
 | Deterministic coverage | `test/auth-submit-mutation-integrity.test.mjs` plus existing auth semantic/session coverage |
-| Canonical validation | NOT RUN on this delivery head |
+| Canonical validation | PENDING on the exact PR head created by this STATUS update |
 | Provider/data impact | None; existing authentication application boundary is reused without provider-contract changes |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -78,24 +78,24 @@ The branch `fix/auth-submit-mutation-ownership` now claims synchronous ref-backe
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3, implementing the next provider-independent interaction-integrity correction from fresh main. |
-| What is already happening? | The live login/register form now has one synchronous owner for each unresolved auth attempt. |
-| What has been validated? | The prior main baseline through PR #359 is merged; this new delivery still requires canonical validation. |
-| What is next? | Open the delivery PR, validate its exact head, repair only correlated failures, then complete lifecycle if evidence is clean. |
+| Where am I? | Stage 3, PR #360, validating the next provider-independent interaction-integrity correction. |
+| What is already happening? | The live login/register form has one synchronous owner for each unresolved auth attempt and deterministic coverage for same-tick exclusion. |
+| What has been validated? | The prior main baseline through PR #359 is merged; PR #360 canonical validation is pending on its exact head. |
+| What is next? | Inspect validation, repair only correlated failures, audit lifecycle evidence, create the post-merge-safe handoff, then complete lifecycle if final exact-head evidence is clean. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. Architecture and data-model rules prohibit inventing provider operations or local fallback persistence. This auth UI integrity correction does not alter that boundary.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. Architecture and data-model rules prohibit inventing provider operations or local fallback persistence. PR #360 is frontend authentication interaction integrity and does not alter that boundary.
 
 ## Next dependency-correct work
 
-1. open the PR for `fix/auth-submit-mutation-ownership`;
-2. run canonical Application validation on the exact head;
-3. repair any correlated validation failure on the same branch rather than starting competing work;
-4. audit review/thread state, base freshness and mergeability after validation;
-5. if clean, move through the repository lifecycle controller/finalizer;
+1. run canonical Application validation on the exact PR #360 head;
+2. repair any correlated validation failure on the same branch rather than starting competing work;
+3. audit submitted reviews, inline review threads, base freshness and mergeability after validation;
+4. when implementation-head evidence is clean, commit a post-merge-safe STATUS handoff;
+5. revalidate that exact handoff head and apply `lifecycle:implementation-complete` only when all repository gates remain satisfied;
 6. after merge, re-enter from fresh `main` and select the next provider-independent Stage 3 interaction-integrity target.
 
 ## Stage 3 exit conditions
