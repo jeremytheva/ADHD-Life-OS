@@ -28,12 +28,15 @@ test('Template Preview and Edit keep stack-aware modal ownership while pending E
 
   for (const [name, source] of [['preview', preview], ['edit', edit]]) {
     assert.match(source, /import useModalDialog from '\.\.\/\.\.\/common\/useModalDialog'/, `${name} imports shared modal ownership`)
-    assert.match(source, /const dialogRef = useModalDialog\(\{ onEscape: isApplying \? null : onClose \}\)/, `${name} keeps shared modal ownership and suppresses Escape only while applying`)
     assert.equal((source.match(/role="dialog"/g) ?? []).length, 1, `${name} exposes one dialog`)
     assert.match(source, /aria-modal="true"/)
     assert.match(source, /aria-busy=\{isApplying\}/)
     assert.match(source, /tabIndex=\{-1\}/)
   }
+
+  assert.match(preview, /const dialogRef = useModalDialog\(\{ onEscape: isApplying \? null : onClose \}\)/, 'preview suppresses Escape while parent applying state is rendered')
+  assert.match(edit, /const dialogRef = useModalDialog\(\{ onEscape: safeClose \}\)/, 'edit keeps shared modal ownership through its guarded close path')
+  assert.match(edit, /const safeClose = \(\) => \{[\s\S]*?if \(isApplying \|\| submitOwnerRef\.current\) return[\s\S]*?onClose\(\)/, 'edit suppresses Escape during rendered apply state or same-render submit ownership')
 
   assert.match(preview, /aria-label="Close template preview"/)
   assert.match(edit, /aria-label="Close template editor"/)

@@ -39,8 +39,8 @@ test('template preview locks dismissal and edit/apply actions while applying', a
 test('template editor freezes submitted state and dismissal while applying', async () => {
   const source = await read('src/components/templates/TemplateEditModal.jsx')
 
-  assert.match(source, /onEscape: isApplying \? null : onClose/)
-  assert.match(source, /if \(isApplying\) return/)
+  assert.match(source, /useModalDialog\(\{ onEscape: safeClose \}\)/)
+  assert.match(source, /if \(isApplying \|\| submitOwnerRef\.current\) return/)
   assert.match(source, /<fieldset disabled=\{isApplying\}/)
   assert.match(source, /aria-busy=\{isApplying\}/)
   assert.match(source, /Applying template…/)
