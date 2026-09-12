@@ -6,15 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Complete PR #370 lifecycle, then re-enter from fresh main and continue the next provider-independent Stage 3 target.
+  objective: Validate and complete PR #371, which prevents chore-list navigation and refresh/filter changes from racing an unresolved housework mutation.
   issue: null
-  pr: null
-  branch: main
+  pr: 371
+  branch: fix/chore-list-mutation-navigation-integrity
 next_actions:
-  - Revalidate this post-merge-safe STATUS handoff on the exact PR #370 head.
-  - Complete repository lifecycle if final validation and finalizer evidence remain clean.
-  - Re-enter from fresh authoritative main after merge.
-  - Inspect implementation, tests and repository state and select the next highest-priority provider-independent Stage 3 target.
+  - Run canonical npm run platform:validate on the exact PR #371 head.
+  - Repair any in-scope validation failures on the same PR without weakening the interaction-integrity contract.
+  - Audit reviews, review threads, mergeability, and base freshness after validation passes.
+  - Convert this STATUS handoff to post-merge-safe state before lifecycle completion.
+  - Re-enter from fresh main after merge and continue the next provider-independent Stage 3 target.
   - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
@@ -23,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: PASS
-  lint: PASS
-  typecheck: PASS
-  tests: PASS
-  build: PASS
-  ci: PASS
+  governance: PENDING
+  lint: PENDING
+  typecheck: PENDING
+  tests: PENDING
+  build: PENDING
+  ci: PENDING
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1055 passed canonical npm run platform:validate on repaired PR #370 head f2eeef464320525c24770e71a6467eba7ac35c03. Reviews and inline review threads were empty and main remained at the PR base 840f7c7111c9761c413c2a6733dd7922ae6353a8. This STATUS-only post-merge-safe handoff now requires exact-head revalidation before lifecycle completion.
-last_verified_commit: f2eeef464320525c24770e71a6467eba7ac35c03
-last_updated: 2026-09-13T00:10:00+10:00
+validation_basis: PR #370 merged at main commit 6565ce5eba77449516507d81e8474ed4e191d249 after exact-head Application validation run 1056 passed. Fresh-main inspection found a provider-independent interaction-integrity race in ChoreChecklist: refresh, filter changes, or detail navigation could still cross the synchronous complete/snooze mutation boundary before rendered pending state became authoritative. PR #371 reuses pendingActionRef as the immediate interaction owner and adds deterministic regression coverage; canonical validation is pending on the current exact head.
+last_verified_commit: 6565ce5eba77449516507d81e8474ed4e191d249
+last_updated: 2026-09-13T01:20:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,22 +45,22 @@ last_updated: 2026-09-13T00:10:00+10:00
 
 ## Current objective
 
-PR #370 — `fix: serialize Today task completion synchronously` — has passed implementation-head canonical validation and the final implementation review/base audit. This STATUS is intentionally post-merge-safe: after PR #370 merges, autonomous continuation must re-enter from fresh `main` and select the next provider-independent Stage 3 target rather than treating PR #370 as active work.
+PR #371 — `fix: lock chore list navigation during mutations` — is the sole active delivery.
 
-PR #370 closes a same-tick concurrency gap directly on the Today execution path. `TodayView.handleCompleteTask` now uses synchronous ref-backed ownership before persistence. The accepted task identifier is snapshotted before the await boundary; only the owning attempt can release the boundary; all rendered Today task-completion controls remain disabled while the shared mutation is unresolved; and the page exposes the mutation through its existing accessible `aria-busy`/live-status pattern. Recommendation policy, scheduling, provider contracts, persisted schemas, and generic execution-session behaviour remain unchanged.
+PR #370 has completed and merged into `main` at `6565ce5eba77449516507d81e8474ed4e191d249`; exact-head Application validation run 1056 passed before merge. Fresh-main inspection then identified a concrete interaction-integrity race in `src/components/housework/ChoreChecklist.jsx`.
 
-Focused deterministic coverage is in `test/today-task-completion-ownership.test.mjs`, with existing Today integrity/loading source contracts aligned to the stronger ownership and combined busy-state semantics.
+The component already owned complete/snooze persistence synchronously through `pendingActionRef`, but refresh, filter changes, and chore-detail navigation did not consult that same synchronous owner. Those interactions could therefore start while a write was unresolved, including before React rendered `pendingAction`. A filter change was particularly unsafe because the accepted mutation retained the earlier `loadTasks` closure and could later refresh using the old filter after the visible filter had changed.
 
-Application validation run 1052 previously passed dependency audit, governance, lint and typecheck before two stale Today source-contract assertions failed. Those assertions were repaired on the same PR without weakening the intended ownership contract. Application validation run 1055 then passed canonical `npm run platform:validate` on repaired implementation head `f2eeef464320525c24770e71a6467eba7ac35c03`.
+PR #371 now makes the existing mutation owner authoritative for these adjacent interactions. `retryLoad`, filter changes, and detail opening return immediately while `pendingActionRef.current` is set, and their rendered controls are disabled while `mutationPending` is visible. Complete/snooze persistence semantics, provider contracts, schemas, recommendation policy, and generic execution-session behavior are unchanged.
 
-The subsequent audit found no submitted reviews or inline review threads, PR #370 remained mergeable, and `main` remained at the PR base `840f7c7111c9761c413c2a6733dd7922ae6353a8`.
+Focused deterministic coverage is in `test/chore-list-mutation-navigation-integrity.test.mjs`.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — exact-head validation of post-merge-safe PR #370 handoff |
-| Gate state | Implementation-head validation PASS; handoff exact-head validation pending |
+| Current gate | INTEGRATION — canonical validation of PR #371 exact head |
+| Gate state | Implementation committed; canonical validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -67,15 +68,15 @@ The subsequent audit found no submitted reviews or inline review threads, PR #37
 
 | State | Current value |
 | --- | --- |
-| Latest repository delivery on main | PR #369 — Routine Progress synchronous initialization/action ownership; merged at `840f7c7111c9761c413c2a6733dd7922ae6353a8` |
-| Delivery completing | PR #370 — Today task-completion synchronous ownership |
-| Delivery branch | `fix/today-task-completion-ownership` |
-| Implemented change | Ref-backed synchronous ownership around Today task completion with stable accepted task identity and shared rendered pending state |
-| Deterministic coverage | `test/today-task-completion-ownership.test.mjs`; existing Today integrity/loading contracts aligned to the stronger behavior |
-| Canonical validation | Run 1055 PASS on implementation head `f2eeef464320525c24770e71a6467eba7ac35c03`; STATUS-only handoff exact-head rerun required |
-| Review/thread audit | Clean after run 1055: no submitted reviews and no inline review threads |
-| Base freshness | `main` remained at PR base `840f7c7111c9761c413c2a6733dd7922ae6353a8` after run 1055 |
-| Provider/data impact | None; provider contracts, schemas and durable execution boundaries unchanged |
+| Latest repository delivery on main | PR #370 — Today task-completion synchronous ownership; merged at `6565ce5eba77449516507d81e8474ed4e191d249` |
+| Active delivery | PR #371 — ChoreChecklist mutation-adjacent interaction lock |
+| Delivery branch | `fix/chore-list-mutation-navigation-integrity` |
+| Implemented change | Refresh, filter and detail-open actions now consult the same synchronous mutation owner as complete/snooze writes and expose the rendered lock through disabled controls |
+| Deterministic coverage | `test/chore-list-mutation-navigation-integrity.test.mjs` |
+| Canonical validation | PENDING on current PR #371 head |
+| Review/thread audit | PENDING after validation |
+| Base freshness | Branch created from fresh `main` commit `6565ce5eba77449516507d81e8474ed4e191d249` |
+| Provider/data impact | None; provider contracts, schemas and persistence semantics unchanged |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
 
@@ -83,25 +84,26 @@ The subsequent audit found no submitted reviews or inline review threads, PR #37
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #370 is completing lifecycle; this handoff points future execution to fresh `main`. |
-| What is already happening? | Today task completion now owns persistence synchronously before rendered state can lag. |
-| What has been validated? | Canonical run 1055 passed on implementation head `f2eeef464320525c24770e71a6467eba7ac35c03`; reviews/threads are clean and the branch base remains current. |
-| What is next? | Revalidate this STATUS-only handoff head, complete PR #370 lifecycle, then re-enter fresh main and select the next provider-independent Stage 3 target. |
+| Where am I? | Stage 3 with PR #371 as the sole active delivery. |
+| What is already happening? | Housework complete/snooze mutations now also own refresh/filter/detail navigation synchronously until persistence/reconciliation settles. |
+| What has been validated? | PR #370 exact-head run 1056 passed and that delivery merged. PR #371 canonical validation is pending. |
+| What is next? | Validate PR #371, repair any in-scope failures, complete review/base/lifecycle evidence, then re-enter fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #370 hardens the existing frontend interaction/data-integrity boundary without changing that provider constraint.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #371 is independent of that provider dependency.
 
 ## Next dependency-correct work
 
-1. revalidate this post-merge-safe STATUS handoff on the exact PR #370 head;
-2. complete repository lifecycle and confirm merge on `main` if finalizer evidence remains clean;
-3. re-enter from fresh authoritative `main`;
-4. inspect current implementation/tests and select the next provider-independent Stage 3 integrity target;
-5. continue successive safe work under the WIP-one rule;
-6. leave generic durable execution deferred until the real provider contract is certified.
+1. run canonical `npm run platform:validate` on the exact PR #371 head;
+2. repair any in-scope validation findings on the same PR;
+3. audit submitted reviews, inline review threads, mergeability and base freshness after validation passes;
+4. update this file to a post-merge-safe handoff and revalidate that exact head before lifecycle completion;
+5. merge through the repository lifecycle when all gates are satisfied;
+6. re-enter from fresh authoritative `main` and continue the next provider-independent Stage 3 integrity target;
+7. leave generic durable execution deferred until the real provider contract is certified.
 
 ## Stage 3 exit conditions
 
