@@ -7,14 +7,16 @@ const source = await readFile(new URL('../src/components/inbox/BrainInbox.jsx', 
 
 test('brain inbox blocks duplicate capture submissions while a save is pending', () => {
   assert.match(source, /const \[capturePending, setCapturePending\] = useState\(false\)/)
+  assert.match(source, /const captureOwnerRef = useRef\(null\)/)
   assert.match(source, /const submittedContent = currentInput\.trim\(\)/)
-  assert.match(source, /if \(!submittedContent \|\| capturePending\) return/)
-  assert.match(source, /setCapturePending\(true\)[\s\S]*await inboxService\.createInboxItem/)
-  assert.match(source, /finally \{\s*setCapturePending\(false\)\s*\}/)
+  assert.match(source, /if \(!submittedContent \|\| captureOwnerRef\.current !== null\) return/)
+  assert.match(source, /captureOwnerRef\.current = captureOwner\s*setCapturePending\(true\)[\s\S]*await inboxService\.createInboxItem/)
+  assert.match(source, /finally \{\s*if \(captureOwnerRef\.current === captureOwner\) \{\s*captureOwnerRef\.current = null\s*setCapturePending\(false\)\s*\}\s*\}/)
 })
 
 test('capture input stays stable until the current save resolves', () => {
   assert.match(source, /content: submittedContent/)
+  assert.match(source, /if \(captureOwnerRef\.current === null\) setCurrentInput\(e\.target\.value\)/)
   assert.match(source, /disabled=\{capturePending\}/)
   assert.match(source, /disabled=\{capturePending \|\| !currentInput\.trim\(\)\}/)
   assert.match(source, /aria-busy=\{capturePending\}/)
