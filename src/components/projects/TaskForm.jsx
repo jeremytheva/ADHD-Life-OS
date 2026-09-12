@@ -15,26 +15,39 @@ const TaskForm = ({ projectId, task = null, onSave, onCancel }) => {
   })
   const [saving, setSaving] = useState(false)
   const titleInputRef = useRef(null)
+  const submitOwnerRef = useRef(null)
+
+  const handleCancel = () => {
+    if (submitOwnerRef.current !== null) return
+    onCancel()
+  }
+
   const dialogRef = useModalDialog({
-    onEscape: saving ? null : onCancel,
+    onEscape: handleCancel,
     initialFocusRef: titleInputRef
   })
   const titleId = `project-task-title-${projectId}`
 
   const handleChange = (field, value) => {
-    if (saving) return
+    if (submitOwnerRef.current !== null) return
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (saving) return
+    if (submitOwnerRef.current !== null) return
 
+    const submitOwner = {}
+    submitOwnerRef.current = submitOwner
+    const acceptedFormData = { ...formData }
     setSaving(true)
     try {
-      await onSave(formData)
+      await onSave(acceptedFormData)
     } finally {
-      setSaving(false)
+      if (submitOwnerRef.current === submitOwner) {
+        submitOwnerRef.current = null
+        setSaving(false)
+      }
     }
   }
 
@@ -56,7 +69,7 @@ const TaskForm = ({ projectId, task = null, onSave, onCancel }) => {
           </h3>
           <button
             type="button"
-            onClick={onCancel}
+            onClick={handleCancel}
             disabled={saving}
             aria-label="Close task form"
             className="p-2 text-slate-400 hover:text-slate-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
@@ -131,7 +144,7 @@ const TaskForm = ({ projectId, task = null, onSave, onCancel }) => {
           <div className="flex gap-3 pt-4">
             <button
               type="button"
-              onClick={onCancel}
+              onClick={handleCancel}
               disabled={saving}
               className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
