@@ -53,6 +53,7 @@ const TaskList = () => {
   const [analysis, setAnalysis] = useState(null)
   const [recommendedTasks, setRecommendedTasks] = useState([])
   const latestTaskRequestRef = useRef(0)
+  const mutationOwnerRef = useRef(null)
 
   const modePrefs = getModePreferences(currentMode.id)
   const mutationPending = Boolean(pendingAction)
@@ -140,7 +141,10 @@ const TaskList = () => {
   }
 
   const handleCreateTask = async (taskData) => {
-    if (pendingAction) return
+    if (mutationOwnerRef.current !== null) return
+
+    const mutationOwner = { type: 'create' }
+    mutationOwnerRef.current = mutationOwner
     setOperationError(null)
     setPendingAction('create')
 
@@ -161,13 +165,18 @@ const TaskList = () => {
       console.error('Error creating task:', error)
       setOperationError('We couldn’t create that task. The task form is still open and your entries have not been discarded.')
     } finally {
-      setPendingAction(null)
+      if (mutationOwnerRef.current === mutationOwner) {
+        mutationOwnerRef.current = null
+        setPendingAction(null)
+      }
     }
   }
 
   const handleApplyTemplate = async (template, type) => {
-    if (type !== 'task' || pendingAction) return
+    if (type !== 'task' || mutationOwnerRef.current !== null) return
 
+    const mutationOwner = { type: 'template' }
+    mutationOwnerRef.current = mutationOwner
     setOperationError(null)
     setPendingAction('template')
     try {
@@ -189,13 +198,18 @@ const TaskList = () => {
       console.error('Error applying template:', error)
       setOperationError('We couldn’t create a task from that template. The template library is still open so you can try again.')
     } finally {
-      setPendingAction(null)
+      if (mutationOwnerRef.current === mutationOwner) {
+        mutationOwnerRef.current = null
+        setPendingAction(null)
+      }
     }
   }
 
   const handleCompleteTask = async (id) => {
-    if (pendingAction) return
+    if (mutationOwnerRef.current !== null) return
 
+    const mutationOwner = { type: 'complete', id }
+    mutationOwnerRef.current = mutationOwner
     setOperationError(null)
     setPendingAction(`complete:${id}`)
     try {
@@ -208,14 +222,19 @@ const TaskList = () => {
       console.error('Error completing task:', error)
       setOperationError('We couldn’t complete that task. It has not been confirmed as completed and remains safe to retry.')
     } finally {
-      setPendingAction(null)
+      if (mutationOwnerRef.current === mutationOwner) {
+        mutationOwnerRef.current = null
+        setPendingAction(null)
+      }
     }
   }
 
   const handleDeleteTask = async (id) => {
-    if (pendingAction) return
+    if (mutationOwnerRef.current !== null) return
     if (!window.confirm('Delete this task? This action cannot be undone.')) return
 
+    const mutationOwner = { type: 'delete', id }
+    mutationOwnerRef.current = mutationOwner
     setOperationError(null)
     setPendingAction(`delete:${id}`)
     try {
@@ -228,7 +247,10 @@ const TaskList = () => {
       console.error('Error deleting task:', error)
       setOperationError('We couldn’t delete that task. It has not been confirmed as deleted and remains in your task data.')
     } finally {
-      setPendingAction(null)
+      if (mutationOwnerRef.current === mutationOwner) {
+        mutationOwnerRef.current = null
+        setPendingAction(null)
+      }
     }
   }
 
@@ -446,14 +468,20 @@ const TaskList = () => {
         {showForm && (
           <TaskForm
             onSave={handleCreateTask}
-            onCancel={() => setShowForm(false)}
+            onCancel={() => {
+              if (mutationOwnerRef.current !== null) return
+              setShowForm(false)
+            }}
             saving={pendingAction === 'create'}
           />
         )}
         {showTemplates && (
           <TemplateLibrary
             onApplyTemplate={handleApplyTemplate}
-            onClose={() => setShowTemplates(false)}
+            onClose={() => {
+              if (mutationOwnerRef.current !== null) return
+              setShowTemplates(false)
+            }}
           />
         )}
       </AnimatePresence>
