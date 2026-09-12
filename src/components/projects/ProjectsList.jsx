@@ -38,6 +38,7 @@ const ProjectsList = () => {
   const [showTemplates, setShowTemplates] = useState(false)
   const [editingProject, setEditingProject] = useState(null)
   const latestProjectsRequestRef = useRef(0)
+  const mutationOwnerRef = useRef(null)
 
   getModePreferences(currentMode.id)
   const mutationPending = Boolean(pendingAction)
@@ -82,8 +83,11 @@ const ProjectsList = () => {
   }, [loadProjects])
 
   const handleQuickCapture = async (items) => {
-    if (pendingAction) return { savedCount: 0, remainingItems: items }
+    if (mutationOwnerRef.current !== null) return { savedCount: 0, remainingItems: items }
 
+    const mutationOwner = { type: 'quick-capture' }
+    mutationOwnerRef.current = mutationOwner
+    const acceptedItems = [...items]
     setOperationError(null)
     setPendingAction('quick-capture')
     let projectId = projects.find((project) => project.title === '📥 Quick Capture')?.id || quickCaptureProjectId
@@ -103,7 +107,7 @@ const ProjectsList = () => {
         setQuickCaptureProjectId(projectId)
       }
 
-      for (const item of items) {
+      for (const item of acceptedItems) {
         await projectService.createTask(projectId, {
           title: item,
           description: '',
@@ -114,12 +118,12 @@ const ProjectsList = () => {
       }
     } catch (error) {
       console.error('Error in quick capture:', error)
-      const remainingItems = items.slice(savedCount)
+      const remainingItems = acceptedItems.slice(savedCount)
       await loadProjects()
 
       if (projectId) {
         setOperationError(
-          `${savedCount} of ${items.length} quick-capture tasks were saved before the interruption. Only the unsaved tasks remain in the capture window, so retrying will not duplicate the saved tasks.`
+          `${savedCount} of ${acceptedItems.length} quick-capture tasks were saved before the interruption. Only the unsaved tasks remain in the capture window, so retrying will not duplicate the saved tasks.`
         )
       } else {
         setOperationError('We couldn’t create the Quick Capture project. None of these tasks were saved, and your list is still available to retry.')
@@ -127,13 +131,16 @@ const ProjectsList = () => {
 
       return { savedCount, remainingItems }
     } finally {
-      setPendingAction(null)
+      if (mutationOwnerRef.current === mutationOwner) {
+        mutationOwnerRef.current = null
+        setPendingAction(null)
+      }
     }
 
     setShowQuickCapture(false)
     const refreshed = await loadProjects()
     if (!refreshed) {
-      setOperationError(`All ${items.length} quick-capture tasks were saved, but the project list could not refresh. Reload Projects before adding the same tasks again.`)
+      setOperationError(`All ${acceptedItems.length} quick-capture tasks were saved, but the project list could not refresh. Reload Projects before adding the same tasks again.`)
       return { savedCount, remainingItems: [] }
     }
 
@@ -142,20 +149,23 @@ const ProjectsList = () => {
       setSelectedProject(updatedProject)
     } catch (refreshError) {
       console.error('Error opening completed quick capture:', refreshError)
-      setOperationError(`All ${items.length} quick-capture tasks were saved, but the project view could not open. Reload Projects before adding the same tasks again.`)
+      setOperationError(`All ${acceptedItems.length} quick-capture tasks were saved, but the project view could not open. Reload Projects before adding the same tasks again.`)
     }
 
     return { savedCount, remainingItems: [] }
   }
 
   const handleCreateProject = async (projectData) => {
-    if (pendingAction) return
+    if (mutationOwnerRef.current !== null) return
 
+    const mutationOwner = { type: 'create' }
+    mutationOwnerRef.current = mutationOwner
+    const acceptedProjectData = { ...projectData }
     setOperationError(null)
     setPendingAction('create')
     try {
       await projectService.createProject({
-        ...projectData,
+        ...acceptedProjectData,
         mode: currentMode.id !== 'all' ? currentMode.id : null
       })
       setShowForm(false)
@@ -168,17 +178,24 @@ const ProjectsList = () => {
       console.error('Error creating project:', error)
       setOperationError('We couldn’t create that project. The project form is still open and your entries have not been discarded.')
     } finally {
-      setPendingAction(null)
+      if (mutationOwnerRef.current === mutationOwner) {
+        mutationOwnerRef.current = null
+        setPendingAction(null)
+      }
     }
   }
 
   const handleUpdateProject = async (projectData) => {
-    if (pendingAction || !editingProject) return
+    if (mutationOwnerRef.current !== null || !editingProject) return
 
+    const projectId = editingProject.id
+    const mutationOwner = { type: 'update', id: projectId }
+    mutationOwnerRef.current = mutationOwner
+    const acceptedProjectData = { ...projectData }
     setOperationError(null)
-    setPendingAction(`update:${editingProject.id}`)
+    setPendingAction(`update:${projectId}`)
     try {
-      await projectService.updateProject(editingProject.id, projectData)
+      await projectService.updateProject(projectId, acceptedProjectData)
       setShowForm(false)
       setEditingProject(null)
       const refreshed = await loadProjects()
@@ -189,14 +206,19 @@ const ProjectsList = () => {
       console.error('Error updating project:', error)
       setOperationError('We couldn’t save those project changes. The project form is still open so you can try again.')
     } finally {
-      setPendingAction(null)
+      if (mutationOwnerRef.current === mutationOwner) {
+        mutationOwnerRef.current = null
+        setPendingAction(null)
+      }
     }
   }
 
   const handleDeleteProject = async (projectId) => {
-    if (pendingAction) return
+    if (mutationOwnerRef.current !== null) return
     if (!window.confirm('Are you sure you want to delete this project? All tasks and subtasks will be deleted.')) return
 
+    const mutationOwner = { type: 'delete', id: projectId }
+    mutationOwnerRef.current = mutationOwner
     setOperationError(null)
     setPendingAction(`delete:${projectId}`)
     try {
@@ -209,13 +231,18 @@ const ProjectsList = () => {
       console.error('Error deleting project:', error)
       setOperationError('We couldn’t delete that project. It has not been removed from your project list.')
     } finally {
-      setPendingAction(null)
+      if (mutationOwnerRef.current === mutationOwner) {
+        mutationOwnerRef.current = null
+        setPendingAction(null)
+      }
     }
   }
 
   const handleArchiveProject = async (projectId) => {
-    if (pendingAction) return
+    if (mutationOwnerRef.current !== null) return
 
+    const mutationOwner = { type: 'archive', id: projectId }
+    mutationOwnerRef.current = mutationOwner
     setOperationError(null)
     setPendingAction(`archive:${projectId}`)
     try {
@@ -228,20 +255,25 @@ const ProjectsList = () => {
       console.error('Error archiving project:', error)
       setOperationError('We couldn’t archive that project. It is still active and has not been removed from this list.')
     } finally {
-      setPendingAction(null)
+      if (mutationOwnerRef.current === mutationOwner) {
+        mutationOwnerRef.current = null
+        setPendingAction(null)
+      }
     }
   }
 
   const handleEditProject = (project) => {
-    if (pendingAction) return
+    if (mutationOwnerRef.current !== null) return
     setOperationError(null)
     setEditingProject(project)
     setShowForm(true)
   }
 
   const handleApplyTemplate = async (template, type) => {
-    if (type !== 'project' || pendingAction) return
+    if (type !== 'project' || mutationOwnerRef.current !== null) return
 
+    const mutationOwner = { type: 'template' }
+    mutationOwnerRef.current = mutationOwner
     setOperationError(null)
     setPendingAction('template')
     let newProject = null
@@ -309,7 +341,10 @@ const ProjectsList = () => {
       )
       return
     } finally {
-      setPendingAction(null)
+      if (mutationOwnerRef.current === mutationOwner) {
+        mutationOwnerRef.current = null
+        setPendingAction(null)
+      }
     }
 
     setShowTemplates(false)
@@ -400,13 +435,13 @@ const ProjectsList = () => {
           <p className="text-slate-600 mt-1">Organize your goals into manageable steps</p>
         </div>
         <div className="flex items-center gap-2">
-          <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50">
+          <button disabled={mutationPending} onClick={() => { if (mutationOwnerRef.current !== null) return; setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50">
             <SafeIcon icon={FiZap} className="w-4 h-4" /> Quick Capture
           </button>
-          <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowTemplates(true) }} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50">
+          <button disabled={mutationPending} onClick={() => { if (mutationOwnerRef.current !== null) return; setOperationError(null); setShowTemplates(true) }} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50">
             <SafeIcon icon={FiBookOpen} className="w-4 h-4" /> Templates
           </button>
-          <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowForm(true) }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50">
+          <button disabled={mutationPending} onClick={() => { if (mutationOwnerRef.current !== null) return; setOperationError(null); setShowForm(true) }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50">
             <SafeIcon icon={FiPlus} className="w-4 h-4" /> New Project
           </button>
         </div>
@@ -428,7 +463,7 @@ const ProjectsList = () => {
             <div className="flex-1">
               <h3 className="text-lg font-bold text-green-900 mb-2">🧠 Brain Dump First, Organize Later!</h3>
               <p className="text-green-800 mb-4">Feeling overwhelmed? Use <strong>Quick Capture</strong> to dump all your tasks out of your head first. Don't worry about organizing - just get everything written down!</p>
-              <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"><SafeIcon icon={FiZap} className="w-4 h-4" /> Start Brain Dump</button>
+              <button disabled={mutationPending} onClick={() => { if (mutationOwnerRef.current !== null) return; setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"><SafeIcon icon={FiZap} className="w-4 h-4" /> Start Brain Dump</button>
             </div>
           </div>
         </motion.div>
@@ -460,7 +495,7 @@ const ProjectsList = () => {
         <div role="list" aria-label="Projects" className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'space-y-3'}>
           {projects.map((project, index) => (
             <motion.div role="listitem" key={project.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}>
-              <ProjectCard project={project} stats={projectStats[project.id]} onClick={() => setSelectedProject(project)} onEdit={() => handleEditProject(project)} onDelete={() => handleDeleteProject(project.id)} onArchive={() => handleArchiveProject(project.id)} pending={mutationPending} />
+              <ProjectCard project={project} stats={projectStats[project.id]} onClick={() => { if (mutationOwnerRef.current === null) setSelectedProject(project) }} onEdit={() => handleEditProject(project)} onDelete={() => handleDeleteProject(project.id)} onArchive={() => handleArchiveProject(project.id)} pending={mutationPending} />
             </motion.div>
           ))}
         </div>
@@ -470,18 +505,18 @@ const ProjectsList = () => {
           <h3 className="text-lg font-medium text-slate-900 mb-2">{currentMode.id !== 'all' ? `No ${currentMode.label.toLowerCase()} projects yet` : 'No projects yet'}</h3>
           <p className="text-slate-600 mb-4">Break down overwhelming tasks into manageable projects</p>
           <div className="flex gap-3 justify-center">
-            <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"><SafeIcon icon={FiZap} className="w-4 h-4" /> Quick Brain Dump</button>
-            <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowForm(true) }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50">Create Project</button>
-            <button disabled={mutationPending} onClick={() => { setOperationError(null); setShowTemplates(true) }} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50">Browse Templates</button>
+            <button disabled={mutationPending} onClick={() => { if (mutationOwnerRef.current !== null) return; setOperationError(null); setShowQuickCapture(true) }} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"><SafeIcon icon={FiZap} className="w-4 h-4" /> Quick Brain Dump</button>
+            <button disabled={mutationPending} onClick={() => { if (mutationOwnerRef.current !== null) return; setOperationError(null); setShowForm(true) }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50">Create Project</button>
+            <button disabled={mutationPending} onClick={() => { if (mutationOwnerRef.current !== null) return; setOperationError(null); setShowTemplates(true) }} className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50">Browse Templates</button>
           </div>
         </div>
       )}
 
       <AnimatePresence>
-        {showQuickCapture && <QuickCaptureModal onSave={handleQuickCapture} onCancel={() => { if (!mutationPending) setShowQuickCapture(false) }} />}
-        {showForm && <ProjectForm project={editingProject} onSave={editingProject ? handleUpdateProject : handleCreateProject} onCancel={() => { if (!mutationPending) { setShowForm(false); setEditingProject(null) } }} />}
-        {selectedProject && <ProjectDetailView project={selectedProject} onClose={() => setSelectedProject(null)} onUpdate={loadProjects} />}
-        {showTemplates && <TemplateLibrary onApplyTemplate={handleApplyTemplate} onClose={() => { if (!mutationPending) setShowTemplates(false) }} />}
+        {showQuickCapture && <QuickCaptureModal onSave={handleQuickCapture} onCancel={() => { if (mutationOwnerRef.current !== null) return; setShowQuickCapture(false) }} />}
+        {showForm && <ProjectForm project={editingProject} onSave={editingProject ? handleUpdateProject : handleCreateProject} onCancel={() => { if (mutationOwnerRef.current !== null) return; setShowForm(false); setEditingProject(null) }} />}
+        {selectedProject && <ProjectDetailView project={selectedProject} onClose={() => { if (mutationOwnerRef.current !== null) return; setSelectedProject(null) }} onUpdate={loadProjects} />}
+        {showTemplates && <TemplateLibrary onApplyTemplate={handleApplyTemplate} onClose={() => { if (mutationOwnerRef.current !== null) return; setShowTemplates(false) }} />}
       </AnimatePresence>
     </div>
   )
