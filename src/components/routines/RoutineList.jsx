@@ -75,6 +75,25 @@ const RoutineList = () => {
     loadRoutines()
   }, [loadRoutines])
 
+  const retryLoad = () => {
+    if (pendingActionRef.current) return
+    setOperationError('')
+    loadRoutines()
+  }
+
+  const handleOpenCreate = () => {
+    if (pendingActionRef.current) return
+    setOperationError('')
+    setEditingRoutine(null)
+    setShowForm(true)
+  }
+
+  const handleOpenTemplates = () => {
+    if (pendingActionRef.current) return
+    setOperationError('')
+    setShowTemplates(true)
+  }
+
   const handleCreateRoutine = async (routineData) => {
     if (!claimMutation('create')) return
 
@@ -175,10 +194,14 @@ const RoutineList = () => {
   }
 
   const handleStartRoutine = (routine) => {
+    if (pendingActionRef.current) return
+    setOperationError('')
     setActiveRoutine(routine)
   }
 
   const handleViewStats = (routine) => {
+    if (pendingActionRef.current) return
+    setOperationError('')
     setStatsRoutine(routine)
   }
 
@@ -214,7 +237,7 @@ const RoutineList = () => {
         <LoadErrorState
           title="We couldn’t load your routines"
           message="Your routines have not been removed. Check your connection and try again."
-          onRetry={loadRoutines}
+          onRetry={retryLoad}
         />
       </div>
     )
@@ -237,7 +260,7 @@ const RoutineList = () => {
         <LoadErrorState
           title="We couldn’t refresh your routines"
           message="Your current routine list is still shown and may be out of date. Check your connection and try again."
-          onRetry={loadRoutines}
+          onRetry={retryLoad}
         />
       )}
 
@@ -269,7 +292,7 @@ const RoutineList = () => {
         <div className="flex gap-2">
           <button
             disabled={mutationPending}
-            onClick={() => { setOperationError(''); setShowTemplates(true) }}
+            onClick={handleOpenTemplates}
             className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 flex items-center space-x-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiBookOpen} className="w-4 h-4" />
@@ -277,7 +300,7 @@ const RoutineList = () => {
           </button>
           <button
             disabled={mutationPending}
-            onClick={() => { setOperationError(''); setShowForm(true) }}
+            onClick={handleOpenCreate}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <SafeIcon icon={FiPlus} className="w-4 h-4" />
@@ -298,7 +321,7 @@ const RoutineList = () => {
             <div className="flex gap-3 justify-center">
               <button
                 disabled={mutationPending}
-                onClick={() => { setOperationError(''); setShowForm(true) }}
+                onClick={handleOpenCreate}
                 className="text-blue-600 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Create your first routine
@@ -306,7 +329,7 @@ const RoutineList = () => {
               <span className="text-slate-400">or</span>
               <button
                 disabled={mutationPending}
-                onClick={() => { setOperationError(''); setShowTemplates(true) }}
+                onClick={handleOpenTemplates}
                 className="text-purple-600 hover:text-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Browse templates
