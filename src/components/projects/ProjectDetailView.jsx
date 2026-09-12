@@ -33,8 +33,34 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
   const [showCelebration, setShowCelebration] = useState(false)
   const [celebrationMessage, setCelebrationMessage] = useState('')
   const latestDetailRequestRef = useRef(0)
+  const mutationOwnerRef = useRef(null)
   const mutationPending = Boolean(pendingAction)
-  const detailDialogRef = useModalDialog({ onEscape: mutationPending ? null : onClose })
+
+  const claimMutation = (action) => {
+    if (mutationOwnerRef.current) return null
+    mutationOwnerRef.current = action
+    setPendingAction(action)
+    return action
+  }
+
+  const releaseMutation = (owner) => {
+    if (mutationOwnerRef.current !== owner) return
+    mutationOwnerRef.current = null
+    setPendingAction(null)
+  }
+
+  const closeProject = () => {
+    if (mutationOwnerRef.current) return
+    onClose()
+  }
+
+  const openTaskForm = () => {
+    if (mutationOwnerRef.current) return
+    setOperationError('')
+    setShowTaskForm(true)
+  }
+
+  const detailDialogRef = useModalDialog({ onEscape: closeProject })
 
   const loadProjectDetails = useCallback(async () => {
     const requestId = latestDetailRequestRef.current + 1
@@ -81,12 +107,13 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
   }
 
   const handleAddTask = async (taskData) => {
-    if (pendingAction) return
+    const owner = claimMutation('add-task')
+    if (!owner) return
+    const acceptedTaskData = { ...taskData }
 
     setOperationError('')
-    setPendingAction('add-task')
     try {
-      await projectService.createTask(project.id, taskData)
+      await projectService.createTask(project.id, acceptedTaskData)
       setShowTaskForm(false)
       await refreshAfterWrite(
         'The task was saved, but the latest project details could not be reloaded. Try refreshing the project before making another change.'
@@ -95,17 +122,18 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
       console.error('Error adding task:', error)
       setOperationError('We couldn’t add this task. Your task form is still open so you can review it and try again.')
     } finally {
-      setPendingAction(null)
+      releaseMutation(owner)
     }
   }
 
   const handleUpdateTask = async (taskId, updates) => {
-    if (pendingAction) return
+    const owner = claimMutation(`update-task:${taskId}`)
+    if (!owner) return
+    const acceptedUpdates = { ...updates }
 
     setOperationError('')
-    setPendingAction(`update-task:${taskId}`)
     try {
-      await projectService.updateTask(taskId, updates)
+      await projectService.updateTask(taskId, acceptedUpdates)
       await refreshAfterWrite(
         'The task update was saved, but the latest project details could not be reloaded. Refresh the project before making another change.'
       )
@@ -113,15 +141,15 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
       console.error('Error updating task:', error)
       setOperationError('We couldn’t update this task. The previous saved task data is still in place.')
     } finally {
-      setPendingAction(null)
+      releaseMutation(owner)
     }
   }
 
   const handleCompleteTask = async (taskId) => {
-    if (pendingAction) return
+    const owner = claimMutation(`complete-task:${taskId}`)
+    if (!owner) return
 
     setOperationError('')
-    setPendingAction(`complete-task:${taskId}`)
     try {
       await projectService.completeTask(taskId)
       const refreshed = await refreshAfterWrite(
@@ -136,16 +164,17 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
       console.error('Error completing task:', error)
       setOperationError('We couldn’t complete this task. It has not been confirmed as completed.')
     } finally {
-      setPendingAction(null)
+      releaseMutation(owner)
     }
   }
 
   const handleDeleteTask = async (taskId) => {
-    if (pendingAction) return
+    if (mutationOwnerRef.current) return
     if (!window.confirm('Delete this task and all its subtasks?')) return
+    const owner = claimMutation(`delete-task:${taskId}`)
+    if (!owner) return
 
     setOperationError('')
-    setPendingAction(`delete-task:${taskId}`)
     try {
       await projectService.deleteTask(taskId)
       await refreshAfterWrite(
@@ -155,15 +184,15 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
       console.error('Error deleting task:', error)
       setOperationError('We couldn’t delete this task. It remains in the project.')
     } finally {
-      setPendingAction(null)
+      releaseMutation(owner)
     }
   }
 
   const handleAddSubtask = async (taskId, title) => {
-    if (pendingAction) return false
+    const owner = claimMutation(`add-subtask:${taskId}`)
+    if (!owner) return false
 
     setOperationError('')
-    setPendingAction(`add-subtask:${taskId}`)
     try {
       await projectService.createSubtask(taskId, { title })
       await refreshAfterWrite(
@@ -174,15 +203,15 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
       console.error('Error adding subtask:', error)
       return false
     } finally {
-      setPendingAction(null)
+      releaseMutation(owner)
     }
   }
 
   const handleDeleteSubtask = async (subtaskId) => {
-    if (pendingAction) return false
+    const owner = claimMutation(`delete-subtask:${subtaskId}`)
+    if (!owner) return false
 
     setOperationError('')
-    setPendingAction(`delete-subtask:${subtaskId}`)
     try {
       await projectService.deleteSubtask(subtaskId)
       await refreshAfterWrite(
@@ -193,21 +222,22 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
       console.error('Error deleting subtask:', error)
       return false
     } finally {
-      setPendingAction(null)
+      releaseMutation(owner)
     }
   }
 
   const handleToggleSubtask = async (subtask) => {
-    if (pendingAction) return false
-
     const completing = !subtask.is_completed
+    const owner = claimMutation(`${completing ? 'complete' : 'uncomplete'}-subtask:${subtask.id}`)
+    if (!owner) return false
+    const acceptedSubtaskId = subtask.id
+
     setOperationError('')
-    setPendingAction(`${completing ? 'complete' : 'uncomplete'}-subtask:${subtask.id}`)
     try {
       if (completing) {
-        await projectService.completeSubtask(subtask.id)
+        await projectService.completeSubtask(acceptedSubtaskId)
       } else {
-        await projectService.uncompleteSubtask(subtask.id)
+        await projectService.uncompleteSubtask(acceptedSubtaskId)
       }
 
       const refreshed = await refreshAfterWrite(
@@ -227,7 +257,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
       console.error('Error toggling subtask:', error)
       return false
     } finally {
-      setPendingAction(null)
+      releaseMutation(owner)
     }
   }
 
@@ -284,7 +314,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
             </div>
             <button
               type="button"
-              onClick={onClose}
+              onClick={closeProject}
               disabled={mutationPending}
               aria-label="Close project details"
               className="p-2 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors disabled:cursor-not-allowed disabled:opacity-50"
@@ -390,10 +420,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
             <button
               type="button"
               disabled={mutationPending}
-              onClick={() => {
-                setOperationError('')
-                setShowTaskForm(true)
-              }}
+              onClick={openTaskForm}
               className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <SafeIcon icon={FiPlus} className="w-5 h-5" aria-hidden="true" />
@@ -464,7 +491,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
               <button
                 type="button"
                 disabled={mutationPending}
-                onClick={() => setShowTaskForm(true)}
+                onClick={openTaskForm}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Add Your First Task
@@ -481,7 +508,7 @@ const ProjectDetailView = ({ project: initialProject, onClose, onUpdate }) => {
             task={editingTask}
             onSave={handleAddTask}
             onCancel={() => {
-              if (mutationPending) return
+              if (mutationOwnerRef.current) return
               setShowTaskForm(false)
               setEditingTask(null)
             }}
