@@ -63,7 +63,8 @@ test('subtask completion has one persistence owner and reconciles through Projec
 })
 
 test('SubtaskList delegates writes and retains failed add input for retry', () => {
-  assert.match(subtaskSource, /const saved = await onAddSubtask\(taskId, newSubtaskTitle\.trim\(\)\)/)
+  assert.match(subtaskSource, /const acceptedTitle = newSubtaskTitle\.trim\(\)/)
+  assert.match(subtaskSource, /const saved = await onAddSubtask\(taskId, acceptedTitle\)/)
   assert.match(subtaskSource, /if \(!saved\) \{[\s\S]*?Your subtask title is still here/)
   assert.match(subtaskSource, /setNewSubtaskTitle\(''\)/)
   assert.match(subtaskSource, /const deleted = await onDeleteSubtask\(subtaskId\)/)
