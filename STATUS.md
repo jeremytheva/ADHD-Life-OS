@@ -24,15 +24,15 @@ owner_decision:
   recommendation: null
 validation:
   governance: PASS
-  lint: FAIL
-  typecheck: NOT_RUN
-  tests: NOT_RUN
+  lint: PASS
+  typecheck: PASS
+  tests: FAIL
   build: NOT_RUN
   ci: PENDING
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1130 on head 2f07b1b5f8890f2833d6cd0f6ef4c34054d832e5 passed dependency audit and governance, then failed lint because the new subtask-list mutation-ownership regression test used URL without importing it. The missing node:url import has been added. The earlier stale Add Another Subtask source contract remains aligned to the stronger guarded handleShowInput path. Exact-head canonical revalidation is pending.
+validation_basis: Application validation run 1132 on head 21bfae1c7f0bd006139a4ed62a76425001f1c53e passed dependency audit, governance, lint and typecheck, then reached 487/488 passing Node tests. Its sole failure was a stale project-detail source contract expecting onAddSubtask to receive newSubtaskTitle.trim() directly. The implementation intentionally snapshots acceptedTitle before claiming asynchronous persistence ownership, so that assertion has been aligned to require the accepted-title snapshot and callback. Exact-head canonical revalidation is pending.
 last_verified_commit: 2cfdfc0117601b6ef4a185a9739579aa95e1a7d5
-last_updated: 2026-09-13T08:34:00+10:00
+last_updated: 2026-09-13T08:38:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -46,16 +46,16 @@ last_updated: 2026-09-13T08:34:00+10:00
 
 PR #382 — `fix: serialize project task form submission synchronously` — completed its lifecycle and merged into `main` at `2cfdfc0117601b6ef4a185a9739579aa95e1a7d5`.
 
-PR #383 — `fix: serialize subtask list mutations synchronously` — is the sole active delivery. `SubtaskList` now claims a local synchronous owner before add/delete/toggle callbacks, snapshots the accepted add title, permits only the owning operation to release local pending state, and routes title mutation plus Add Another Subtask entry through that ownership boundary. `ProjectDetailView` remains the authoritative persistence owner; schemas and provider contracts are unchanged.
+PR #383 — `fix: serialize subtask list mutations synchronously` — is the sole active delivery. `SubtaskList` claims a local synchronous owner before add/delete/toggle callbacks, snapshots the accepted add title, permits only the owning operation to release local pending state, and routes title mutation plus Add Another Subtask entry through that ownership boundary. `ProjectDetailView` remains the authoritative persistence owner; schemas and provider contracts are unchanged.
 
-Focused deterministic coverage exists in `test/subtask-list-mutation-ownership.test.mjs`. The pre-existing Add Another Subtask source contract has been aligned to the guarded `handleShowInput` path. Canonical run 1130 then exposed a test-file lint defect: the new regression test used `URL` without importing it. That import is repaired and exact-head revalidation is pending.
+Focused deterministic coverage exists in `test/subtask-list-mutation-ownership.test.mjs`. The pre-existing Add Another Subtask source contract has been aligned to guarded `handleShowInput`, and the new regression test now imports `URL` correctly. Run 1132 passed through typecheck and reached 487/488 Node tests; its sole remaining failure was an older project-detail contract that expected the unsnapshotted title expression. That contract is now aligned to the stronger accepted-title snapshot.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
 | Current gate | CHANGE — canonical revalidation of repaired PR #383 |
-| Gate state | Run 1130 passed audit/governance and failed lint on a missing test import; repaired on the same delivery |
+| Gate state | Run 1132 passed audit/governance/lint/typecheck and found one stale accepted-title source contract; repaired on the same delivery |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -67,8 +67,8 @@ Focused deterministic coverage exists in `test/subtask-list-mutation-ownership.t
 | Active delivery | PR #383 — SubtaskList synchronous mutation ownership |
 | Delivery branch | `fix/subtask-list-mutation-ownership` |
 | Implemented change | Subtask add/delete/toggle and mutation-adjacent title/input controls synchronously share a local owner before parent persistence callbacks |
-| Deterministic coverage | `test/subtask-list-mutation-ownership.test.mjs`, aligned `test/subtask-add-another-interaction.test.mjs` |
-| Canonical validation | Run 1130: audit/governance PASS; lint FAIL on missing `node:url` import in new test; repaired; typecheck/tests/build not reached; revalidation pending |
+| Deterministic coverage | `test/subtask-list-mutation-ownership.test.mjs`, aligned `test/subtask-add-another-interaction.test.mjs`, aligned `test/project-detail-pending-mutation-integrity.test.mjs` |
+| Canonical validation | Run 1132: audit/governance/lint/typecheck PASS; 487/488 Node tests PASS; sole stale accepted-title assertion repaired; build/e2e not reached; revalidation pending |
 | Review/thread audit | Pending successful implementation-head validation |
 | Base freshness | Base created from fresh `main` at `2cfdfc0117601b6ef4a185a9739579aa95e1a7d5` |
 | Provider/data impact | None |
@@ -80,8 +80,8 @@ Focused deterministic coverage exists in `test/subtask-list-mutation-ownership.t
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3; PR #383 is the sole active delivery. |
-| What is already happening? | SubtaskList mutation ownership is implemented; stale source-contract and test-import defects are repaired. |
-| What has been validated? | Run 1130 passed dependency audit/governance and stopped at lint on the missing test import. |
+| What is already happening? | SubtaskList mutation ownership is implemented and all evidenced source-contract/test defects from runs 1130 and 1132 are repaired. |
+| What has been validated? | Run 1132 passed audit/governance/lint/typecheck and 487 of 488 Node tests before the stale accepted-title contract stopped validation. |
 | What is next? | Revalidate exact head, repair only evidenced failures, then complete review/base/merge lifecycle evidence. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
@@ -92,7 +92,7 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Relevant integrity decision
 
-Project-detail subtask persistence already uses a parent-level synchronous mutation owner and refresh/recovery semantics. SubtaskList-level synchronous ownership strengthens only the interaction boundary: accepted subtask actions cannot be followed by a same-render competing local action or have local pending state released by a non-owning attempt while the parent persistence operation remains unresolved.
+Project-detail subtask persistence already uses a parent-level synchronous mutation owner and refresh/recovery semantics. SubtaskList-level synchronous ownership strengthens only the interaction boundary: accepted subtask actions cannot be followed by a same-render competing local action or have local pending state released by a non-owning attempt while the parent persistence operation remains unresolved. Accepted add input is snapshotted before crossing the callback so the owned operation cannot observe a later local edit.
 
 ## Next dependency-correct work
 
