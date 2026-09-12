@@ -11,8 +11,8 @@ current_work:
   pr: 372
   branch: fix/routine-list-mutation-navigation-integrity
 next_actions:
-  - Run canonical npm run platform:validate on the exact PR #372 head.
-  - Repair any in-scope validation failures on the same PR without weakening the interaction-integrity contract.
+  - Rerun canonical npm run platform:validate on the repaired exact PR #372 head.
+  - Repair any further in-scope validation failures on the same PR without weakening the interaction-integrity contract.
   - Audit reviews, review threads, mergeability, and base freshness after validation passes.
   - Convert this STATUS handoff to post-merge-safe state before lifecycle completion.
   - Re-enter from fresh main after merge and continue the next provider-independent Stage 3 target.
@@ -24,16 +24,16 @@ owner_decision:
   options: []
   recommendation: null
 validation:
-  governance: NOT_RUN
-  lint: NOT_RUN
-  typecheck: NOT_RUN
-  tests: NOT_RUN
+  governance: PASS
+  lint: PASS
+  typecheck: PASS
+  tests: FAIL
   build: NOT_RUN
-  ci: NOT_RUN
+  ci: FAIL
   runtime: NOT_APPLICABLE
-validation_basis: PR #371 merged into main at 22f0d8857bbe535f1db47891509d88c610fa5b92 after implementation-head run 1062 and final handoff run 1063 passed. Fresh-main inspection found that RoutineList persistence mutations already own a synchronous pendingActionRef boundary, but retry/refresh, create/template entry, routine start, and routine statistics navigation did not all consult that owner synchronously. PR #372 routes those adjacent interactions through mutation-aware handlers and adds deterministic regression coverage. Canonical validation is pending on the current exact head.
+validation_basis: Application validation run 1065 on PR #372 head 60b8d016c5bed6bfa7eff56d26c085f0961e468e passed dependency audit, governance, lint, typecheck, and the new routine mutation-navigation regression coverage. Node tests reached 461/463 passing; the only failures were two pre-existing source-contract assertions that still required load-error recovery to call loadRoutines directly instead of the stronger mutation-aware retryLoad handler. Those stale assertions are repaired on the same PR and exact-head canonical rerun is required. Build and Playwright did not run after the Node-test stop.
 last_verified_commit: 22f0d8857bbe535f1db47891509d88c610fa5b92
-last_updated: 2026-09-13T01:35:00+10:00
+last_updated: 2026-09-13T01:38:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -47,20 +47,18 @@ last_updated: 2026-09-13T01:35:00+10:00
 
 PR #372 — `fix: lock routine navigation during mutations` — is the sole active delivery.
 
-PR #371 completed its lifecycle and merged into `main` at `22f0d8857bbe535f1db47891509d88c610fa5b92` after both canonical implementation-head validation and final post-handoff validation passed. Fresh-main inspection then identified the next provider-independent interaction-integrity gap in `src/components/routines/RoutineList.jsx`.
+PR #371 completed its lifecycle and merged into `main` at `22f0d8857bbe535f1db47891509d88c610fa5b92`. Fresh-main inspection then found that `RoutineList` already serialized create, template, update, and delete persistence through `pendingActionRef`, but retry/refresh, create/template entry, routine start, and routine statistics navigation could still cross that boundary in the same tick before React rendered `mutationPending`.
 
-`RoutineList` already serializes create, template, update, and delete persistence through `pendingActionRef`, but several adjacent interactions depended only on rendered `mutationPending`. Before React could render that state, a same-tick retry/refresh, create/template modal entry, routine start, or statistics navigation could cross the unresolved mutation boundary.
+PR #372 makes the existing synchronous owner authoritative for those adjacent actions. Retry/refresh, create entry, template entry, start, and statistics handlers now return immediately while `pendingActionRef.current` is held. Existing persistence semantics and provider/schema contracts are unchanged. Focused deterministic coverage is in `test/routine-list-mutation-navigation-integrity.test.mjs`.
 
-PR #372 now makes the existing synchronous owner authoritative for those actions. Retry/refresh, create entry, template entry, start, and statistics handlers return immediately while `pendingActionRef.current` is held. Existing rendered disabled state remains in place, persistence semantics are unchanged, and provider/schema contracts are untouched.
-
-Focused deterministic coverage is in `test/routine-list-mutation-navigation-integrity.test.mjs`.
+Application validation run 1065 passed dependency audit, governance, lint, typecheck, and the new regression coverage. Node tests reached 461/463 passing. The two failures were older source-contract tests that required `onRetry={loadRoutines}`; both have now been aligned to require `onRetry={retryLoad}` and the synchronous mutation guard, without weakening recovery semantics.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — canonical validation of PR #372 exact head |
-| Gate state | Implementation and focused regression committed; canonical validation pending |
+| Current gate | INTEGRATION — canonical revalidation of repaired PR #372 exact head |
+| Gate state | Run 1065 reached Node tests; two stale retry assertions repaired; exact-head rerun required |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -71,11 +69,11 @@ Focused deterministic coverage is in `test/routine-list-mutation-navigation-inte
 | Latest repository delivery on main | PR #371 — chore-list mutation-adjacent interaction lock; merged at `22f0d8857bbe535f1db47891509d88c610fa5b92` |
 | Active delivery | PR #372 — RoutineList mutation-adjacent interaction lock |
 | Delivery branch | `fix/routine-list-mutation-navigation-integrity` |
-| Implemented change | Retry/refresh, create/template entry, routine start, and statistics navigation now consult the same synchronous mutation owner as routine persistence writes |
-| Deterministic coverage | `test/routine-list-mutation-navigation-integrity.test.mjs` |
-| Canonical validation | NOT_RUN on current PR #372 head |
-| Review/thread audit | Pending after canonical validation |
-| Base freshness | Branch created from fresh `main` commit `22f0d8857bbe535f1db47891509d88c610fa5b92` |
+| Implemented change | Retry/refresh, create/template entry, routine start, and statistics navigation consult the same synchronous mutation owner as routine persistence writes |
+| Deterministic coverage | `test/routine-list-mutation-navigation-integrity.test.mjs`; stale routine retry source contracts aligned to guarded recovery |
+| Canonical validation | Run 1065: audit/governance/lint/typecheck PASS; 461/463 Node tests PASS; two stale retry contracts repaired; exact-head rerun required |
+| Review/thread audit | Final audit pending after canonical pass |
+| Base freshness | Branch created from fresh `main` commit `22f0d8857bbe535f1db47891509d88c610fa5b92`; final freshness audit pending |
 | Provider/data impact | None; provider contracts, schemas and routine persistence semantics unchanged |
 | Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
@@ -86,8 +84,8 @@ Focused deterministic coverage is in `test/routine-list-mutation-navigation-inte
 | --- | --- |
 | Where am I? | Stage 3 with PR #372 as the sole active delivery. |
 | What is already happening? | Routine persistence mutations now also own retry/create/template/start/stats interactions synchronously until persistence/reconciliation settles. |
-| What has been validated? | PR #371 merged after canonical runs 1062 and 1063 passed. PR #372 validation is pending. |
-| What is next? | Validate PR #372, repair any in-scope findings, complete review/base/lifecycle evidence, then re-enter fresh `main`. |
+| What has been validated? | PR #371 merged after runs 1062/1063 passed. PR #372 run 1065 passed through typecheck and reached 461/463 Node tests; its two stale retry assertions are repaired. |
+| What is next? | Revalidate the repaired exact PR #372 head, complete review/base/lifecycle evidence, then re-enter fresh `main`. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -97,8 +95,8 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. run canonical `npm run platform:validate` on the exact PR #372 head;
-2. repair any in-scope validation findings on the same PR;
+1. rerun canonical `npm run platform:validate` on the repaired exact PR #372 head;
+2. repair any further in-scope validation findings on the same PR;
 3. audit submitted reviews, inline review threads, mergeability and base freshness after validation passes;
 4. update this file to a post-merge-safe handoff and revalidate that exact head before lifecycle completion;
 5. merge through the repository lifecycle when all gates are satisfied;
