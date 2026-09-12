@@ -15,23 +15,40 @@ const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
     is_essential: task?.is_essential || false
   })
   const titleInputRef = useRef(null)
+  const submitOwnerRef = useRef(null)
+
+  const handleCancel = () => {
+    if (saving || submitOwnerRef.current) return
+    onCancel()
+  }
+
   const dialogRef = useModalDialog({
-    onEscape: saving ? null : onCancel,
+    onEscape: handleCancel,
     initialFocusRef: titleInputRef
   })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (saving) return
+    if (saving || submitOwnerRef.current) return
 
-    onSave({
+    const owner = Symbol('task-form-submit')
+    submitOwnerRef.current = owner
+    const submittedTask = {
       ...formData,
       due_date: formData.due_date || null
-    })
+    }
+
+    try {
+      await onSave(submittedTask)
+    } finally {
+      if (submitOwnerRef.current === owner) {
+        submitOwnerRef.current = null
+      }
+    }
   }
 
   const handleChange = (field, value) => {
-    if (saving) return
+    if (saving || submitOwnerRef.current) return
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
@@ -53,7 +70,7 @@ const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
           </h2>
           <button
             type="button"
-            onClick={onCancel}
+            onClick={handleCancel}
             disabled={saving}
             aria-label="Close task form"
             className="p-1 text-slate-400 hover:text-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
@@ -137,7 +154,7 @@ const TaskForm = ({ onSave, onCancel, task = null, saving = false }) => {
           <div className="flex space-x-3 pt-4">
             <button
               type="button"
-              onClick={onCancel}
+              onClick={handleCancel}
               disabled={saving}
               className="flex-1 bg-slate-100 text-slate-700 py-2 px-4 rounded-md hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
