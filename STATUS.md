@@ -6,17 +6,17 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Validate and complete PR #361, which gives Mode Switcher deterministic Escape ownership during its deferred focus-transfer window.
+  objective: Complete PR #361 from this post-merge-safe handoff, then re-enter fresh main and select the next highest-priority provider-independent Stage 3 target.
   issue: null
-  pr: 361
-  branch: fix/mode-switcher-escape-ownership
+  pr: null
+  branch: main
 next_actions:
-  - Run canonical Application validation on the repaired exact PR #361 head.
-  - Repair any implementation-correlated failure on the same branch.
-  - Re-audit submitted reviews, inline review threads, base freshness and mergeability.
-  - Complete a post-merge-safe STATUS handoff after clean implementation-head evidence.
-  - Revalidate that handoff head and apply lifecycle:implementation-complete only when all gates remain satisfied.
-  - Re-enter fresh main after merge and select the next provider-independent Stage 3 target.
+  - Run canonical Application validation on this exact post-merge-safe PR #361 head.
+  - Re-audit submitted reviews and inline review threads after exact-head validation.
+  - Confirm the final head remains current with main and conflict-free.
+  - If evidence remains clean, add lifecycle:implementation-complete and allow repository lifecycle automation to complete PR #361.
+  - Confirm merge on main, then inspect fresh authoritative state before selecting the next delivery.
+  - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -25,15 +25,15 @@ owner_decision:
   recommendation: null
 validation:
   governance: PASS
-  lint: FAIL
-  typecheck: NOT_RUN
-  tests: NOT_RUN
-  build: NOT_RUN
-  ci: FAIL
+  lint: PASS
+  typecheck: PASS
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: UNVERIFIED
-validation_basis: Runs 1003 and 1004 stopped at governance on STATUS schema defects, which are repaired. Run 1005 passed dependency audit and governance, then failed lint only because the new deterministic regression used bare URL in a test file under the repository's strict no-undef ESLint contract. The test now uses globalThis.URL; ModeSwitcher implementation code has not failed a validation gate. A new exact-head canonical run is required. PR #360 previously merged at fdbbf320dc094c0f43a9c8df758f5f0ed5232cc7 after final run 1001 passed. PR #361 addresses the repeated Mode Switcher Escape/focus failure and related mobile nested-Escape flake exposed during run 1000 by making the trigger own Escape while deferred popup focus is still transferring, while retaining popup Escape ownership after focus moves.
-last_verified_commit: fdbbf320dc094c0f43a9c8df758f5f0ed5232cc7
-last_updated: 2026-09-12T17:29:00+10:00
+validation_basis: Application validation run 1007 passed canonical npm run platform:validate on implementation head 379bf5f1e5c5cd38a404386fe2a99cee103563d9 after governance and regression-lint repairs. Submitted reviews and inline review threads were clean afterward, and the branch was 0 commits behind main at fdbbf320dc094c0f43a9c8df758f5f0ed5232cc7. This STATUS-only post-merge-safe handoff creates a new exact head and therefore requires one final canonical validation before lifecycle completion.
+last_verified_commit: 379bf5f1e5c5cd38a404386fe2a99cee103563d9
+last_updated: 2026-09-12T17:33:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -45,20 +45,22 @@ last_updated: 2026-09-12T17:29:00+10:00
 
 ## Current objective
 
-PR #361 — `fix: own mode switcher Escape during focus transfer` — is the sole active delivery from fresh `main` after PR #360 merged at `fdbbf320dc094c0f43a9c8df758f5f0ed5232cc7` and no open pull requests remained.
+PR #361 — `fix: own mode switcher Escape during focus transfer` — has passed canonical implementation-head validation. ModeSwitcher now owns Escape both during the requestAnimationFrame focus-transfer window, while the trigger can still be focused, and after focus has entered the popup. This prevents an immediate Escape from being missed on desktop or leaking to the parent mobile navigation's document-level Escape owner.
 
-Canonical validation of PR #360 exposed an interaction-integrity weakness already present in the Mode Switcher. Its menu moves focus from the trigger to the active menu item on `requestAnimationFrame`. During that focus-transfer window the trigger remains the keyboard target while `isOpen` is already true. The popup handler owned Escape, but the trigger handler did not. An immediate Escape could therefore leave the dropdown open on desktop; inside mobile navigation the same Escape could reach the parent document-level navigation handler and close the parent surface instead of only the nested menu.
+The focused deterministic regression verifies both Escape ownership paths. Canonical Application validation run 1007 passed governance, zero-warning lint, typecheck, Node tests, production build, and browser coverage on implementation head `379bf5f1e5c5cd38a404386fe2a99cee103563d9`.
 
-PR #361 makes the trigger own Escape whenever the menu is open: it prevents default handling, stops propagation, closes the menu, and uses the existing focus-restoration path. The existing popup Escape owner remains in place after focus transfers. Focused deterministic coverage asserts both ownership paths. No mode policy, provider, persistence, routing, schema, or execution-domain behavior changes.
+Submitted reviews and inline review threads were clean after the pass, and the branch was 0 commits behind `main` at `fdbbf320dc094c0f43a9c8df758f5f0ed5232cc7`.
 
-Runs 1003 and 1004 stopped before implementation validation because of STATUS schema defects introduced while recording this delivery. Run 1005 then passed governance but failed lint because the newly added regression used bare `URL`, which the repository's strict lint environment does not define. The test-only lint defect is repaired with `globalThis.URL`; the Mode Switcher implementation itself has not failed a validation gate.
+This document is intentionally post-merge-safe. Once PR #361 completes lifecycle, autonomous continuation must begin from fresh `main`, not treat the merged PR branch as active work. This STATUS-only handoff commit itself requires final exact-head canonical validation before lifecycle completion.
+
+No mode policy, persistence, provider, routing, schema, or execution-domain behavior changes are included.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — repaired exact-head canonical validation for PR #361 |
-| Gate state | Mode Switcher correction committed; governance repaired; regression lint contract repaired after run 1005 |
+| Current gate | INTEGRATION — final exact-head validation and lifecycle completion for PR #361 |
+| Gate state | Implementation head validated by run 1007; post-merge-safe STATUS committed; final exact-head evidence pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -67,12 +69,15 @@ Runs 1003 and 1004 stopped before implementation validation because of STATUS sc
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #360 — auth submit synchronous mutation ownership; merged at `fdbbf320dc094c0f43a9c8df758f5f0ed5232cc7` |
-| Active delivery | PR #361 — Mode Switcher Escape ownership during focus transfer |
+| Delivery awaiting final lifecycle completion | PR #361 — Mode Switcher Escape ownership during focus transfer |
 | Delivery branch | `fix/mode-switcher-escape-ownership` |
-| Implemented change | Trigger-level Escape owner while open; popup-level owner retained; nested Escape propagation contained |
+| Implemented change | Trigger-level Escape owner during deferred focus transfer; popup owner retained after focus transfer |
 | Deterministic coverage | `test/mode-switcher-escape-ownership.test.mjs` plus existing Mode Switcher Playwright coverage |
-| Validation history | Run 1003: governance FAIL for missing re-entry answers. Run 1004: governance FAIL for unsupported runtime value. Run 1005: governance PASS, lint FAIL on test-only bare URL; later gates NOT_RUN. All identified defects repaired on this head. |
-| Canonical validation | Required on this repaired exact head |
+| Validation history | Runs 1003/1004 stopped on STATUS governance defects; run 1005 reached lint and found a test-only bare URL defect; all were repaired. Run 1007 passed full canonical validation. |
+| Canonical implementation-head validation | PASS — Application validation run 1007 on `379bf5f1e5c5cd38a404386fe2a99cee103563d9` |
+| Review/thread audit | CLEAN after run 1007; recheck after final exact-head validation |
+| Base freshness | CURRENT — branch was 0 commits behind main before this STATUS-only handoff |
+| Final exact-head validation | Required on this post-merge-safe STATUS head |
 | Provider/data impact | None |
 | Runtime/deployment verification | UNVERIFIED |
 | Current blocker | None |
@@ -81,25 +86,25 @@ Runs 1003 and 1004 stopped before implementation validation because of STATUS sc
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #361 is the sole active delivery and is in VALIDATING after governance and test-lint repairs. |
-| What is already happening? | ModeSwitcher now owns Escape both while focus is still on its trigger and after focus transfers into the popup, preventing nested mobile navigation from receiving the first Escape. |
-| What has been validated? | Run 1005 passed dependency audit/governance and reached lint; the only failure was the new test's bare URL reference. Typecheck/tests/build/browser validation have not yet run on the repaired head. |
-| What is next? | Run canonical validation on this exact head, repair only correlated failures, audit lifecycle evidence, then complete the post-merge-safe handoff and final exact-head gate. |
+| Where am I? | Stage 3. PR #361 implementation is validated; this post-merge-safe handoff awaits final exact-head validation and lifecycle completion. |
+| What is already happening? | ModeSwitcher contains nested Escape correctly both before and after popup focus transfer. |
+| What has been validated? | Canonical run 1007 passed the implementation head; reviews/threads were clean and the branch was current with main before this STATUS-only handoff. |
+| What is next? | Validate this exact handoff head, re-audit lifecycle evidence, complete PR #361, then re-enter fresh main. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
-| Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no remaining actionable work. |
+| Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
 ## Backend / provider work — intentionally deferred
 
-Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed. No speculative provider operation or local fallback persistence is introduced by PR #361.
+Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** and fail-closed until real target-instance evidence supports the required operations and collection contract. PR #361 is provider-independent frontend interaction-integrity work and does not alter that boundary.
 
 ## Next dependency-correct work
 
-1. run canonical Application validation on the repaired exact PR #361 head;
-2. repair only implementation-correlated failures on the same branch;
-3. audit reviews, threads, base freshness and mergeability;
-4. commit a post-merge-safe STATUS handoff after clean implementation evidence;
-5. revalidate that exact handoff head and complete repository lifecycle if all gates remain satisfied;
-6. after merge, re-enter fresh `main` and continue the next provider-independent Stage 3 priority.
+1. run canonical Application validation on this exact post-merge-safe PR #361 head;
+2. re-audit submitted reviews, inline review threads, base freshness and mergeability;
+3. if all evidence remains clean, add `lifecycle:implementation-complete` and allow repository lifecycle automation to complete the PR;
+4. confirm merge on `main` and re-enter from fresh authoritative state;
+5. select the next provider-independent Stage 3 target from fresh evidence;
+6. keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 
 ## Stage 3 exit conditions
 
