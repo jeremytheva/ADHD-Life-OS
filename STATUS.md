@@ -6,16 +6,16 @@ stage: execution and next-action experience
 gate: Integration
 execution_state: VALIDATING
 current_work:
-  objective: Serialize Routine Progress initialization and session mutations before rendered loading/pending state can lag.
+  objective: Complete PR #369 lifecycle, then re-enter from fresh main and continue the next provider-independent Stage 3 target.
   issue: null
-  pr: 369
-  branch: fix/routine-progress-action-ownership
+  pr: null
+  branch: main
 next_actions:
-  - Re-run canonical Application validation on the exact repaired PR #369 head.
-  - Repair any in-scope validation or review finding on the same PR.
-  - Audit reviews, inline threads, base freshness and mergeability after validation passes.
-  - Make STATUS post-merge-safe, revalidate that exact handoff head, and complete lifecycle.
-  - Re-enter from fresh main and continue the next provider-independent Stage 3 target.
+  - Revalidate this post-merge-safe STATUS handoff on the exact PR #369 head.
+  - Complete repository lifecycle if final validation and finalizer evidence remain clean.
+  - Re-enter from fresh authoritative main after merge.
+  - Inspect implementation, tests and repository state and select the next highest-priority provider-independent Stage 3 target.
+  - Keep provider-dependent durable execution work deferred until real target-instance evidence exists.
 blockers: []
 requires_owner_decision: false
 owner_decision:
@@ -26,13 +26,13 @@ validation:
   governance: PASS
   lint: PASS
   typecheck: PASS
-  tests: FAIL
-  build: NOT_RUN
-  ci: FAIL
+  tests: PASS
+  build: PASS
+  ci: PASS
   runtime: NOT_APPLICABLE
-validation_basis: Application validation run 1046 passed dependency audit, governance, lint and typecheck, then reached 452 of 454 passing Node tests. Both failures were source-contract assertions: the new focused test over-broadly prohibited actionPending in the legitimate auto-finish effect, and an older Escape contract still required rendered actionPending instead of the stronger synchronous actionOwnerRef. Both assertions are repaired on this PR; exact-head canonical revalidation is required.
-last_verified_commit: 26293c9df3e1001e2b94888fac75f159c4484394
-last_updated: 2026-09-12T22:38:00+10:00
+validation_basis: Application validation run 1049 passed canonical npm run platform:validate on implementation head 487c7e59d46473af561d53f1474966a84d045c87. Reviews and inline review threads were empty and main remained at the PR base 26293c9df3e1001e2b94888fac75f159c4484394. This STATUS-only post-merge-safe handoff now requires exact-head revalidation before lifecycle completion.
+last_verified_commit: 487c7e59d46473af561d53f1474966a84d045c87
+last_updated: 2026-09-12T22:40:00+10:00
 ---
 
 # ADHD Life OS — Current Status
@@ -44,22 +44,22 @@ last_updated: 2026-09-12T22:38:00+10:00
 
 ## Current objective
 
-PR #369 — `fix: serialize routine progress actions synchronously` — remains the sole active delivery and is in `VALIDATING` after repairing two source-contract assertions exposed by canonical run 1046.
+PR #369 — `fix: serialize routine progress actions synchronously` — has passed implementation-head canonical validation and the final implementation review/base audit. This STATUS is intentionally post-merge-safe: after PR #369 merges, autonomous continuation must re-enter from fresh `main` and select the next provider-independent Stage 3 target rather than treating PR #369 as active work.
 
-PR #368 completed its lifecycle and merged into `main` at `26293c9df3e1001e2b94888fac75f159c4484394`. Fresh-main inspection then identified a higher-priority integrity gap directly on Stage 3’s start/continue/finish path: `RoutineProgress` used rendered `actionPending` as the handler-level guard for step completion, step skip, cancellation and final routine completion. Its load retry path could also re-enter `getActiveSession → startRoutine` before rendered loading state caught up.
+PR #369 closes same-tick concurrency gaps directly on the Stage 3 routine start/continue/finish path. `RoutineProgress` now uses a synchronous `initializationPendingRef` around routine-session discovery/start and one synchronous `actionOwnerRef` across routine completion, cancellation, step completion and step skip. Only the owning action can release the mutation boundary. Accepted session/step coordinates are snapshotted before persistence, and Escape/cancel consult synchronous ownership rather than relying on a future render. Existing `actionPending` remains the accessible visible pending signal and continues to gate the automatic finishing effect after the final step write.
 
-PR #369 adds a synchronous `initializationPendingRef` around routine-session discovery/start and one synchronous `actionOwnerRef` across routine completion, cancellation, step completion and step skip. Only the owning action can release the mutation boundary. Accepted session/step coordinates are snapshotted before persistence, and Escape/cancel consult synchronous ownership rather than relying on a future render. Existing `actionPending` remains the accessible visible pending signal and continues to gate the automatic finishing effect after the final step write.
+Focused deterministic coverage is in `test/routine-progress-action-ownership.test.mjs`, with the existing Escape contract aligned in `test/routine-session-integrity.test.mjs`. Provider interfaces, persisted schemas, routine recommendation logic and generic durable execution remain unchanged.
 
-Focused deterministic coverage is in `test/routine-progress-action-ownership.test.mjs`. Provider interfaces, persisted schemas, routine recommendation logic and generic durable execution remain unchanged.
+Application validation run 1046 previously passed dependency audit, governance, lint and typecheck before two source-contract assertions failed. Those assertions were repaired on the same PR without weakening the intended ownership contract. Application validation run 1049 then passed canonical `npm run platform:validate` on implementation head `487c7e59d46473af561d53f1474966a84d045c87`.
 
-Application validation run 1046 passed dependency audit, governance, lint and typecheck. The Node suite reached 452/454 passing tests. The two failures did not identify failed mutation behavior: the new regression test had an over-broad assertion that incorrectly rejected `actionPending` in the non-handler auto-finish effect, while `test/routine-session-integrity.test.mjs` still required the prior rendered-state Escape lock. Both tests now require the intended stronger synchronous ownership contract without prohibiting `actionPending` as UI/effect state.
+The subsequent audit found no submitted reviews or inline review threads, and `main` remained at the PR base `26293c9df3e1001e2b94888fac75f159c4484394`.
 
 ## AI execution gate
 
 | Gate field | Current value |
 | --- | --- |
-| Current gate | INTEGRATION — repaired canonical validation for PR #369 |
-| Gate state | Run 1046 test-contract failures repaired; exact-head revalidation pending |
+| Current gate | INTEGRATION — exact-head validation of post-merge-safe PR #369 handoff |
+| Gate state | Implementation-head validation PASS; handoff exact-head validation pending |
 | Execution state | VALIDATING |
 | Backend/provider state | DEFERRED / UNVERIFIED for generic durable execution |
 
@@ -68,25 +68,25 @@ Application validation run 1046 passed dependency audit, governance, lint and ty
 | State | Current value |
 | --- | --- |
 | Latest repository delivery on main | PR #368 — Project Detail synchronous mutation ownership; merged at `26293c9df3e1001e2b94888fac75f159c4484394` |
-| Active delivery | PR #369 — Routine Progress synchronous initialization/action ownership |
+| Delivery completing | PR #369 — Routine Progress synchronous initialization/action ownership |
 | Delivery branch | `fix/routine-progress-action-ownership` |
 | Implemented change | Ref-backed initialization guard plus shared synchronous action owner across routine session mutations |
 | Deterministic coverage | `test/routine-progress-action-ownership.test.mjs` plus aligned Escape contract in `test/routine-session-integrity.test.mjs` |
-| Canonical validation | Run 1046: governance/lint/typecheck PASS, 452/454 Node tests PASS, two contract assertions repaired; exact-head rerun required |
-| Review/thread audit | Pending after canonical validation passes |
-| Base freshness | Branch created directly from `main` merge commit `26293c9df3e1001e2b94888fac75f159c4484394` |
+| Canonical validation | Run 1049 PASS on implementation head `487c7e59d46473af561d53f1474966a84d045c87`; STATUS-only handoff exact-head rerun required |
+| Review/thread audit | Clean after run 1049: no submitted reviews and no inline review threads |
+| Base freshness | `main` remained at PR base `26293c9df3e1001e2b94888fac75f159c4484394` after run 1049 |
 | Provider/data impact | None; provider contracts, schemas and generic durable execution boundaries unchanged |
-| Runtime/deployment verification | Pending canonical browser suite; no provider runtime change |
+| Runtime/deployment verification | NOT_APPLICABLE for this deterministic provider-independent correction |
 | Current blocker | None |
 
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
 | --- | --- |
-| Where am I? | Stage 3. PR #369 is the sole active delivery and is validating after focused test-contract repair. |
+| Where am I? | Stage 3. PR #369 is completing lifecycle; this handoff points future execution to fresh `main`. |
 | What is already happening? | Routine Progress now owns session initialization and mutations synchronously before rendered state can lag. |
-| What has been validated? | Run 1046 passed governance, lint and typecheck and 452/454 Node tests; its two assertion failures were repaired on the same PR. |
-| What is next? | Revalidate the repaired exact head, audit lifecycle evidence, make STATUS post-merge-safe, revalidate and complete lifecycle. |
+| What has been validated? | Canonical run 1049 passed on implementation head `487c7e59d46473af561d53f1474966a84d045c87`; reviews/threads are clean and the branch base remains current. |
+| What is next? | Revalidate this STATUS-only handoff head, complete PR #369 lifecycle, then re-enter fresh main and select the next provider-independent Stage 3 target. |
 | Can I proceed autonomously? | Yes. No owner decision is required. |
 | Why should I stop? | Only for a defined escalation condition, an external dependency blocking all safe work, or no actionable work. |
 
@@ -96,12 +96,12 @@ Generic durable `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED** a
 
 ## Next dependency-correct work
 
-1. rerun canonical `npm run platform:validate` on the exact repaired PR #369 head;
-2. repair any in-scope validation finding on the same branch;
-3. confirm reviews, threads, base freshness and mergeability;
-4. make the durable STATUS handoff post-merge-safe and revalidate that exact head;
-5. complete repository lifecycle and confirm merge on `main`;
-6. re-enter from fresh authoritative `main` and continue the next provider-independent Stage 3 target.
+1. revalidate this post-merge-safe STATUS handoff on the exact PR #369 head;
+2. complete repository lifecycle and confirm merge on `main` if finalizer evidence remains clean;
+3. re-enter from fresh authoritative `main`;
+4. inspect current implementation/tests and select the next provider-independent Stage 3 integrity target;
+5. continue successive safe work under the WIP-one rule;
+6. leave generic durable execution deferred until the real provider contract is certified.
 
 ## Stage 3 exit conditions
 
