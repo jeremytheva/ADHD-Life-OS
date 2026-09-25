@@ -57,7 +57,9 @@ Use explicit evidence states such as **IMPLEMENTED**, **PROVIDER VERIFIED**, **A
 
 GitHub Actions runs `npm run platform:validate` for pull requests targeting `main`, pushes to `main`, and manual workflow dispatches. CI installs the locked dependency graph and Chromium before running the canonical command.
 
-Required CI failures should block merge until diagnosed at root cause. Do not repeatedly rerun a failure without determining whether it is code, test, configuration, environment or provider related.
+GitHub Actions is a supporting execution environment and source of diagnostic evidence, not a duplicate mandatory merge gate. Project-owned validation remains required. An Actions failure blocks merge when it reveals a substantive implementation, security, data-integrity, test, build, migration or release defect. Runner, billing, queue, permission or other CI-infrastructure failure alone does not invalidate otherwise sufficient project-owned evidence.
+
+Do not repeatedly rerun a failure without determining whether it is a substantive project defect or an execution-environment problem. Record detailed results in the PR/repository evidence; routine owner-facing chat should summarize successful validation rather than list every command.
 
 ## Coverage types
 
