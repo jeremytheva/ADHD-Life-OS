@@ -126,6 +126,7 @@ DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 - MERGEABLE requires sufficient current-head project-owned validation, no unresolved material review conversation, no merge conflict, no material blocker, and any applicable runtime/deployment evidence required by the change.
 - A merged PR proves repository integration only. Deployment/provider/runtime gates remain separate.
 - If repository automation still assumes native Draft PRs or mandatory GitHub Actions success, treat that as an implementation/configuration gap to reconcile. Do not reinterpret the owner's newer normal-PR and repository-owned-validation policy to match legacy automation.
+
 ## Cognitive load and execution continuity
 
 ### Externalise state
@@ -241,6 +242,7 @@ If one of these cannot be answered, improving durable state is itself dependency
 - Before declaring implementation complete, ensure the project-owned validation contract is satisfied and the PR explains outcome, scope, risk, validation, documentation and parked follow-up work.
 - Add `lifecycle:implementation-complete` only after the final in-scope audit. Lifecycle metadata should describe the real implementation state even when CI or workflow automation is unavailable.
 - Treat current lifecycle workflows that still enforce native Draft or GitHub-Actions-only progression as legacy automation to be reconciled, not as authority to override this policy.
+
 ## Reporting
 
 Detailed implementation state and evidence belong in the repository: `STATUS.md`, the active PR or issue, validation evidence, decisions and relevant project documentation. ChatGPT/Codex responses should reference that durable state instead of repeating it.
