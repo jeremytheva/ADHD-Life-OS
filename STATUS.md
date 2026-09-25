@@ -35,6 +35,7 @@ validation_basis: The last recorded full application baseline remains PR #384 ca
 last_verified_commit: 04193429374ece9c4256c6b095bd8db8b17afc48
 last_updated: 2026-09-25T19:24:00+10:00
 ---
+
 # ADHD Life OS — Current Status
 
 **Snapshot date:** 25 September 2026  
@@ -47,6 +48,7 @@ last_updated: 2026-09-25T19:24:00+10:00
 The repository has adopted a repository-first operating/reporting standard: detailed implementation evidence remains in GitHub and durable project documents, while routine ChatGPT/Codex responses now default to concise `Done / Next / You` reporting.
 
 The provider-dependent generic Start → Continue → Recover path remains fail-closed until real NoCodeBackend target-instance evidence is available. That blocker no longer requires the whole repository to stop: the next unblocked repository-quality task is aligning the existing lifecycle workflows with the already-adopted normal-PR and repository-owned-validation policy.
+
 ## AI execution gate
 
 | Gate field | Current value |
@@ -69,6 +71,7 @@ The provider-dependent generic Start → Continue → Recover path remains fail-
 | Generic execution-session state | PLANNED / PROVIDER UNVERIFIED / fail-closed |
 | Provider-specific blocker | Real target-instance provider provisioning/certification evidence and secure access |
 | Next unblocked repository task | Align lifecycle workflow automation with normal-PR/repository-owned-validation policy |
+
 ## Autonomous continuation entry answers
 
 | Question | Durable answer |
@@ -87,6 +90,7 @@ The provider-dependent generic Start → Continue → Recover path remains fail-
 - Routine responses use `Done / Next / You`; `You` always appears and says `Nothing required.` when owner intervention is unnecessary.
 - Add `Blocked`, `Problem`, or `Decision needed` only when materially necessary.
 - Do not surface routine file lists, command transcripts, validation matrices, PR lifecycle history or technical reasoning unless something failed or the owner requests detail.
+
 ## Provider blocker — exact evidence required
 
 The logical `execution-sessions` contract and fail-closed certification tooling already exist. Do not infer physical provider capability from application routes, fixtures, generic documentation, or another project.
