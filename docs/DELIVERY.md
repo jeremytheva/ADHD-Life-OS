@@ -27,27 +27,25 @@ Once these conditions are met, further refinement is new scope unless necessary 
 
 ## Pull-request delivery lifecycle
 
-Implementation delivery follows:
+Implementation delivery uses the lifecycle vocabulary:
 
 ```text
 DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 ```
 
-- **DRAFT:** the PR exists but is not eligible for merge.
+`DRAFT` is a logical lifecycle concept. Normal autonomous work should open as a standard reviewable PR. Use native GitHub Draft only when the change genuinely must not be reviewed or merged yet, or substantial implementation is deliberately incomplete.
+
 - **IMPLEMENTING:** in-scope work or completion audit remains.
-- **VALIDATING:** current-head canonical validation is missing, running or failed.
-- **READY:** implementation-complete evidence exists and current-head validation passed.
-- **MERGEABLE:** a separate trusted finalizer re-confirmed review/thread state, base freshness, conflict-free mergeability and exact-head validation.
-- **MERGED:** GitHub integrated the exact validated head using an expected-head guard.
+- **VALIDATING:** required project-owned evidence is missing, running or has exposed a substantive failure.
+- **READY:** implementation-complete evidence exists and sufficient current-head project-owned validation is recorded.
+- **MERGEABLE:** material review findings are resolved, mergeability/conflict state is acceptable, no material blocker remains, and any applicable release/runtime evidence is satisfied.
+- **MERGED:** the validated implementation is integrated into the intended branch.
 
-The project/implementing agent owns the semantic decision that the implementation contract is complete. It records that handoff with `lifecycle:implementation-complete` only after a criterion-by-criterion audit. GitHub then owns repository-observable progression through two trusted workflows:
+Lifecycle state should be recorded in repository/PR metadata rather than depending on the native Draft flag.
 
-- `.github/workflows/pr-lifecycle.yml` manages Draft/Implementing/Validating/Ready and dispatches merge finalization;
-- `.github/workflows/pr-merge-finalizer.yml` independently re-checks the live PR before Mergeable/Merged.
+`npm run platform:validate` remains the canonical full repository validation gate where applicable. GitHub Actions may execute that contract and provide diagnostics, but it is not a duplicate mandatory acceptance gate. An Actions failure blocks merge only when it reveals a substantive implementation, security, data-integrity, test, build, migration or release defect; runner, billing, queue, permission or other CI-infrastructure failure alone does not.
 
-Any new commit removes the implementation-complete signal and invalidates prior Ready/Mergeable evidence.
-
-The merge finalizer intentionally does not require aggregate `mergeStateStatus == CLEAN`. A running finalizer is itself a pending workflow, so making that aggregate state its own prerequisite creates a circular dependency. The finalizer instead checks each mandatory repository-observable gate explicitly and relies on GitHub to enforce any configured repository protections when the guarded merge is attempted.
+The project/implementing agent owns the semantic decision that the implementation contract is complete. Record that handoff only after criterion-by-criterion audit and current repository evidence. Current lifecycle workflows may automate transitions, but legacy automation that still forces native Draft or GitHub-Actions-only progression is an implementation gap to reconcile, not a reason to change the policy.
 
 ## Work-in-progress and scope control
 
@@ -62,7 +60,7 @@ When new work is discovered:
 
 ## Continuation and re-entry
 
-A continuation request resumes current delivery state rather than restarting planning. Prefer, in order: blocking PR/CI findings, incomplete acceptance criteria, remaining active-branch scope, lifecycle evidence required to progress an otherwise complete PR, then the next dependency-correct outcome in `STATUS.md`/`ROADMAP.md`.
+A continuation request resumes current delivery state rather than restarting planning. Prefer, in order: blocking material PR/review/validation findings, incomplete acceptance criteria, remaining active-branch scope, lifecycle evidence required to progress an otherwise complete PR, then the next dependency-correct outcome in `STATUS.md`/`ROADMAP.md`. If the highest-priority item is blocked, record/defer it and continue the next valid unblocked item unless the blocker prevents all useful progress.
 
 `STATUS.md` is the compact re-entry source. Before implementation-complete handoff it should describe the **post-merge** checkpoint that will be true if the PR merges, rather than leaving the current PR recorded as active after it closes.
 
@@ -88,15 +86,15 @@ Routine PR state transitions, validation retries, mergeability checks and reposi
 
 1. Read `PROJECT.md`, `STATUS.md` and relevant system/architecture/data context.
 2. Confirm the active implementation contract and overlap state.
-3. Create/reuse one focused Draft PR.
+3. Create/reuse one focused normal PR; use native Draft only for genuinely non-reviewable or deliberately substantially incomplete work.
 4. Implement the smallest complete correction/slice.
 5. Use narrow checks while diagnosing.
-6. Run `npm run platform:validate` before implementation-complete handoff.
+6. Run the applicable project-owned validation, including `npm run platform:validate` for the canonical full repository gate.
 7. Update only project documents whose meaning changed; make `STATUS.md` a truthful post-merge re-entry checkpoint.
 8. Audit every acceptance criterion and update PR evidence.
 9. Add `lifecycle:implementation-complete` only when no in-scope work remains.
-10. Let the readiness controller evaluate exact-head validation and READY, then let the separate merge finalizer re-check reviews, conflicts, base freshness and guarded merge.
-11. If automation blocks, correct the underlying evidence/state in the same PR.
+10. Progress READY → MERGEABLE → MERGED from current repository evidence; use GitHub lifecycle automation when it supports the policy.
+11. If a blocker affects only one path, record it and continue the next dependency-correct unblocked work.
 
 ## GitHub configuration boundary
 
@@ -106,7 +104,13 @@ Most importantly, `main` has no repository ruleset at present. Workflow automati
 
 GitHub Issues, repository auto-merge and update-branch support are also currently disabled. These are tracked as explicit configuration states rather than being inferred from repository code.
 
-When branch protection is added, require the `Validate application` check. Do not require the merge-finalizer workflow itself as a pre-merge status check, because that would make the workflow wait on its own completion.
+When branch protection is added, protect the pull-request/review path and other material repository controls. Do not make GitHub Actions status a mandatory merge condition merely to duplicate the project-owned validation contract; use it as supporting diagnostic evidence.
+
+## Owner-facing reporting
+
+The detailed delivery record belongs in the PR, `STATUS.md`, validation evidence and relevant repository documentation. Routine ChatGPT/Codex responses follow the authoritative concise response contract in `AGENTS.md`: `Done / Next / You`, with `Blocked`, `Problem`, or `Decision needed` only when materially necessary.
+
+Do not reproduce validation command lists, lifecycle history, file-by-file changes or acceptance matrices in chat when work completed normally.
 
 ## Environments and configuration
 

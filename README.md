@@ -110,7 +110,7 @@ npm run validate
 
 Read [`AGENTS.md`](AGENTS.md), [`docs/CODEX_WORKFLOW.md`](docs/CODEX_WORKFLOW.md), [`docs/GITHUB_CONFIGURATION.md`](docs/GITHUB_CONFIGURATION.md) and [`docs/TESTING.md`](docs/TESTING.md).
 
-Keep one focused implementation outcome per Draft PR, preserve project documentation/state, add regression coverage for meaningful defects and never include secrets or user data. Repository Issues are currently disabled, so the PR body is the implementation-contract fallback. Do not mark implementation complete merely because CI passes: after the criterion audit, add `lifecycle:implementation-complete` and allow the lifecycle controller to evaluate current-head validation, review state, merge conflicts and clean mergeability.
+Keep one focused implementation outcome per normal PR, preserve project documentation/state, add regression coverage for meaningful defects and never include secrets or user data. Use native GitHub Draft only when work genuinely must not be reviewed/merged yet or is deliberately substantially incomplete. Repository Issues are currently disabled, so the PR body is the implementation-contract fallback. Do not mark implementation complete merely because GitHub Actions passes: complete the criterion audit, record sufficient project-owned validation, and use lifecycle metadata to represent the real delivery state.
 
 The repository currently has no `main` branch protection/ruleset. This is an explicit external GitHub configuration gap documented in [`docs/GITHUB_CONFIGURATION.md`](docs/GITHUB_CONFIGURATION.md); workflow automation should not be treated as equivalent to branch protection.
 

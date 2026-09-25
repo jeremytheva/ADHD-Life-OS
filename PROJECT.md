@@ -2,7 +2,7 @@
 
 **Status:** Active development  
 **Repository:** `jeremytheva/ADHD-Life-OS`  
-**Last materially reviewed:** 28 August 2026
+**Last materially reviewed:** 25 September 2026
 
 ## Purpose
 
@@ -72,7 +72,7 @@ The repository stores project-specific facts, decisions, implementation state an
 
 | Provider/system | Project role | Current state source |
 | --- | --- | --- |
-| GitHub | Repository, PR lifecycle, CI and implementation history | GitHub + `docs/GITHUB_CONFIGURATION.md` + `STATUS.md` |
+| GitHub | Repository, PR lifecycle metadata, implementation history and supporting diagnostic CI | GitHub + `docs/GITHUB_CONFIGURATION.md` + `STATUS.md` |
 | NoCodeBackend | Authentication and persisted domain data | provider evidence + project contract/docs |
 | Vercel | Intended deployment platform | Vercel provider state + `STATUS.md`; no project binding currently verified |
 
@@ -80,7 +80,7 @@ The repository stores project-specific facts, decisions, implementation state an
 
 - GitHub Issues are currently disabled at repository level, so focused PR bodies remain the implementation-contract fallback until that external setting is enabled.
 - `main` branch protection/rulesets are currently disabled; `.github/workflows/pr-lifecycle.yml` manages repository-enforceable transitions but cannot prevent every administrative/direct-push bypass. This is an explicit GitHub configuration gap, not an accepted substitute for branch protection.
-- Repository auto-merge is disabled. The lifecycle controller instead performs a guarded merge mutation only after current-head validation, implementation-complete evidence, review/thread checks and clean mergeability are satisfied.
+- Repository auto-merge is disabled. Repository merge remains evidence-based: implementation-complete evidence, sufficient current-head project-owned validation, resolved material review/thread state, conflict-free mergeability and any applicable release evidence must be satisfied.
 - Update-branch support is disabled; stale branches are blocked from lifecycle merge until brought current.
 - The source tree is mixed JavaScript with TypeScript checking rather than a fully TypeScript codebase.
 - The current generic NoCodeBackend proxy contract predates certification of future generic execution sessions; new provider behaviour must not be inferred from that existing contract.
@@ -113,7 +113,7 @@ The repository stores project-specific facts, decisions, implementation state an
 | End-to-end testing | Playwright |
 | Package manager | npm with committed `package-lock.json` |
 | Canonical full validation | `npm run platform:validate` |
-| PR lifecycle | Draft + lifecycle labels + GitHub Actions controller |
+| PR lifecycle | Normal PR by default + lifecycle metadata; native Draft only for genuinely non-reviewable/substantially incomplete work |
 
 ## Source-of-truth hierarchy
 
@@ -129,7 +129,7 @@ Use the real current system rather than chat memory. For this project:
 8. `ROADMAP.md` — intended future direction;
 9. `SYSTEM_MAP.md` — compact system navigation map;
 10. `docs/DECISIONS/` — consequential accepted decisions;
-11. GitHub PRs/CI/lifecycle state — implementation contracts and detailed validation/merge evidence;
+11. GitHub PRs/lifecycle metadata/validation evidence — implementation contracts and detailed validation/merge evidence;
 12. prior chat/context — supporting context only.
 
 When sources disagree, investigate and correct the stale/incorrect source rather than silently choosing one.
@@ -138,8 +138,11 @@ When sources disagree, investigate and correct the stale/incorrect source rather
 
 Implementation follows the inherited master standards and the repository-specific workflow in `AGENTS.md`, `docs/CODEX_WORKFLOW.md`, and `docs/GITHUB_CONFIGURATION.md`.
 
-The normal unit of work is one focused outcome producing one focused Draft PR. Significant changes pass the relevant project-entry, change, integration, release and completion gates. PRs progress through `DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED`; the project/agent supplies the implementation-complete evidence and GitHub enforces the repository-observable gates it can verify. `STATUS.md` records the current material project gate when evidence remains outstanding.
+The normal unit of work is one focused outcome producing one focused normal PR. Native GitHub Draft status is reserved for work that genuinely must not be reviewed or merged yet, or is deliberately substantially incomplete. Lifecycle state is recorded in repository/PR metadata rather than relying on the Draft flag. Significant changes pass the relevant project-entry, change, integration, release and completion gates. The project-owned acceptance process remains authoritative; GitHub Actions is supporting diagnostic evidence rather than a duplicate mandatory merge gate. `STATUS.md` records the current material project gate when evidence remains outstanding.
 
+## Owner-facing operational reporting
+
+`AGENTS.md` defines the authoritative ChatGPT/Codex response contract. Detailed implementation evidence stays in the repository and GitHub; routine owner-facing responses default to concise `Done / Next / You` reporting, with `Blocked`, `Problem`, or `Decision needed` added only when materially necessary.
 ## Current delivery direction
 
 Stage 2 integrity work is complete. Stage 3 is active and aims to turn the existing recommendation/next-action foundation into a durable Start/Continue/Recover execution loop without creating competing engines or unverified provider behaviour.

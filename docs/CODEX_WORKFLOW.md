@@ -29,25 +29,23 @@ Whole-system analysis is required; speculative unrelated changes are not.
 
 ## Pull-request lifecycle
 
-The normal implementation state machine is:
+The normal implementation lifecycle is represented by repository/PR metadata:
 
 ```text
 DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 ```
 
-### DRAFT / IMPLEMENTING
+`DRAFT` is a lifecycle concept. Open a normal GitHub PR by default; use native Draft only when the work genuinely must not be reviewed or merged yet, or substantial implementation is deliberately incomplete.
 
-- Open the PR as Draft.
+### IMPLEMENTING / VALIDATING
+
 - Keep the PR body as the implementation contract while repository Issues remain disabled.
 - Continue all in-scope implementation and review corrections on the same PR.
 - Keep scope singular and park separate discoveries.
 - Do not add `lifecycle:implementation-complete` while known in-scope work remains.
-
-### VALIDATING
-
-- Every new commit invalidates prior implementation-complete evidence.
-- Run `npm run platform:validate`; GitHub `Application validation` must pass for the exact current head.
-- Failed validation is active implementation work, not a reason to weaken checks or open a replacement PR.
+- Every new commit invalidates completion/validation evidence that no longer applies.
+- Run the project-owned validation required by the change. `npm run platform:validate` is the canonical full repository gate where applicable.
+- GitHub Actions may execute the validation contract and provide useful diagnostics, but GitHub Actions success is not a separate mandatory merge condition. Infrastructure-only CI failures do not block an otherwise sufficiently validated PR; substantive failures do.
 
 ### Implementation-complete handoff
 
@@ -56,36 +54,13 @@ Only after a criterion-by-criterion audit confirms the implementation is complet
 1. update the PR body with current acceptance and validation evidence;
 2. update affected project documentation/status so it describes the post-merge re-entry state;
 3. confirm no known blocking in-scope review finding remains;
-4. add `lifecycle:implementation-complete`.
+4. add `lifecycle:implementation-complete` and the appropriate lifecycle metadata.
 
-That label authorizes repository lifecycle automation to evaluate automated progression. It is not proof by itself that the PR is mergeable.
+### READY / MERGEABLE / MERGED
 
-### READY
+A PR is READY when implementation is complete and sufficient project-owned validation covers the current head. It is MERGEABLE when material review threads are resolved, the branch is conflict-free/current enough for safe integration, no material blocker remains, and any release/runtime evidence required by the change is satisfied.
 
-`.github/workflows/pr-lifecycle.yml` owns readiness. It may:
-
-- keep a PR Draft while implementation-complete evidence is absent;
-- move a completed Draft PR to Ready only when `lifecycle:implementation-complete` exists and `Application validation` passed for the exact current head;
-- invalidate prior completion/readiness evidence after a new commit;
-- dispatch `pr-lifecycle-ready` with the PR number and exact head SHA for separate finalization.
-
-The readiness workflow stops at READY and must not call the merge API.
-
-### MERGEABLE / MERGED
-
-`.github/workflows/pr-merge-finalizer.yml` receives the trusted repository dispatch and independently re-reads the live PR. Before merge it re-confirms:
-
-- the PR is still open against `main`;
-- the dispatch head still equals the current PR head;
-- implementation-complete evidence is still present;
-- exact-head `Application validation` is successful;
-- no required review decision or unresolved review thread blocks;
-- the PR is not behind current `main`;
-- GitHub reports conflict-free mergeability.
-
-The finalizer deliberately does not require aggregate `mergeStateStatus == CLEAN`, because its own pending workflow would become part of that aggregate state and could self-block. Once the explicit gates pass, it records MERGEABLE and merges with `expectedHeadOid` so stale evidence cannot merge a changed head. It then records MERGED and attempts same-repository source-branch cleanup.
-
-Do not manually force Ready/Mergeable/Merged to bypass these gates. If automation blocks, diagnose the blocking evidence and fix the underlying state.
+Current GitHub lifecycle workflows may provide automation for these transitions. If they still require native Draft state or GitHub-Actions-only success, treat that as a repository automation gap to reconcile rather than redefining the owner's policy.
 
 Repository merge is not deployment/provider/runtime completion.
 
@@ -93,11 +68,12 @@ Repository merge is not deployment/provider/runtime completion.
 
 When asked to `Continue` or `Next`, resume in this order:
 
-1. fix blocking review or required-check failures on the active pull request;
+1. fix blocking material review or validation failures on the active pull request;
 2. satisfy remaining acceptance criteria;
 3. finish remaining in-scope branch work;
 4. if implementation is complete but the PR has not progressed, reconcile lifecycle evidence/labels/checks rather than starting new work;
-5. if no implementation is active, select the next dependency-correct outcome from `STATUS.md` and `ROADMAP.md`.
+5. if no implementation is active, select the next dependency-correct outcome from `STATUS.md` and `ROADMAP.md`;
+6. if the highest-priority item is blocked, record/defer it and continue the next valid unblocked item unless the blocker prevents all useful progress.
 
 Do not restart solved planning, reopen accepted decisions, or ask the product owner to choose routine implementation steps when repository evidence determines the answer.
 
@@ -165,19 +141,20 @@ npm run platform:validate
 
 It composes dependency audit, executable governance checks, lint, typecheck, Node tests, production build and critical Playwright coverage. Use narrower commands only for diagnosis.
 
-A passing `platform:validate` does **not** prove deployment/provider/runtime state. Before claiming deployment/production readiness, verify the applicable provider contract, environment/configuration, migration/data state, exact deployed commit, runtime readiness, smoke/end-to-end behaviour and recovery/rollback path.
+A passing `platform:validate` does **not** prove deployment/provider/runtime state. GitHub Actions may be one execution environment for this command, but its infrastructure status is supplementary diagnostic evidence rather than a duplicate merge gate. Before claiming deployment/production readiness, verify the applicable provider contract, environment/configuration, migration/data state, exact deployed commit, runtime readiness, smoke/end-to-end behaviour and recovery/rollback path.
 
 ## Completion workflow
 
 1. audit the implementation against every acceptance criterion;
 2. verify the relevant integration path rather than code presence alone;
-3. run `npm run platform:validate`;
-4. resolve blocking review/CI findings at root cause;
+3. run the applicable project-owned validation, including `npm run platform:validate` for the canonical full repository gate;
+4. resolve blocking material review/validation findings at root cause;
 5. update only project documents whose meaning changed;
 6. ensure `STATUS.md` records the truthful post-merge gate/evidence/next action;
-7. update one focused Draft PR with outcome, scope, evidence, risk, parked work and next action;
+7. update one focused normal PR with outcome, scope, evidence, risk, parked work and next action;
 8. add `lifecycle:implementation-complete` only after the in-scope audit is complete;
-9. allow readiness automation and the separate merge finalizer to evaluate Ready → Mergeable → Merged from current repository evidence;
-10. mark project/capability COMPLETE only when all applicable repository, provider, deployment and runtime evidence supports it.
+9. progress Ready → Mergeable → Merged from current repository evidence; use GitHub automation when it supports the policy, but do not treat CI infrastructure as the acceptance authority;
+10. mark project/capability COMPLETE only when all applicable repository, provider, deployment and runtime evidence supports it;
+11. return the concise owner-facing response defined in `AGENTS.md`; keep detailed engineering evidence in the repository/PR.
 
 For perceptible UI changes, include appropriate visual/manual accessibility evidence in addition to automated checks.

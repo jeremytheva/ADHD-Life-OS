@@ -41,6 +41,8 @@ Do not stop merely because one task or PR has finished. After completing a task:
 
 Continue until a valid stop/escalation condition is reached.
 
+If the highest-priority item is blocked, record the blocker and automatically continue with the next dependency-correct unblocked item. A blocker is a stop condition only when it prevents all useful progress that can safely be performed within current scope and repository guidance.
+
 ### Valid stop or escalation conditions
 
 Stop and require product-owner involvement only when:
@@ -50,7 +52,7 @@ Stop and require product-owner involvement only when:
 - an irreversible or destructive operation requires approval;
 - conflicting requirements cannot be resolved from repository evidence;
 - a security, privacy, legal or compliance decision requires owner authority;
-- an external dependency prevents further dependency-correct work;
+- an external dependency prevents all useful dependency-correct work;
 - no actionable work remains.
 
 Minor implementation choices, refactoring decisions, test repairs, documentation updates, routine PR state transitions and equivalent engineering decisions should not normally require escalation.
@@ -101,30 +103,29 @@ If a gate cannot pass, record the missing evidence/dependency, continue safe ind
 
 ## Pull-request lifecycle
 
-GitHub is the enforcement layer for implementation delivery. The repository lifecycle is:
+GitHub is the repository enforcement and collaboration layer, but repository-owned acceptance evidence and lifecycle metadata are the source of truth for autonomous delivery.
+
+The lifecycle vocabulary remains:
 
 ```text
 DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 ```
 
-Apply it as follows:
+`DRAFT` is a lifecycle concept, not the default native GitHub PR state.
 
-- Create implementation pull requests as Draft.
-- Before creating a PR, search open/draft PRs, visible branches, implementation contracts, `STATUS.md` and partially implemented code for equivalent work. Reuse or repair appropriate existing work rather than create a competing branch.
+- Create normal, reviewable PRs for autonomous project work.
+- Use a native GitHub Draft PR only when the change genuinely must not be reviewed or merged yet, or substantial implementation is deliberately incomplete.
+- Record routine lifecycle state in PR/repository metadata such as `state:implementing`, `state:validating`, `state:ready`, `state:mergeable`, `state:merged`, blocker labels and the implementation-complete signal rather than relying on the GitHub Draft flag.
+- Before creating a PR, search open PRs, visible branches, implementation contracts, `STATUS.md` and partially implemented code for equivalent work. Reuse or repair appropriate existing work rather than create a competing branch.
 - Keep one focused outcome per PR. When GitHub Issues are unavailable, the PR body is the implementation contract and must contain explicit scope, exclusions and observable acceptance criteria.
 - Continue implementation and corrective commits on the same PR while they remain in scope.
-- Any new commit invalidates prior implementation-complete evidence and returns the PR to Draft/validation.
-- `npm run platform:validate` is the mandatory repository validation gate for the current head.
+- Any new commit invalidates prior completion/validation evidence that no longer applies to the current head.
+- `npm run platform:validate` is the canonical project-owned repository validation gate where applicable. Record the actual evidence in the PR/repository.
+- GitHub Actions is supporting diagnostic evidence and an optional execution environment for the validation contract, not a duplicate mandatory acceptance gate. A GitHub Actions failure blocks merge only when it reveals a substantive implementation, test, security, data-integrity, build, migration or release defect. Runner, billing, queue, permission or other CI-infrastructure failure alone does not make an otherwise valid PR unmergeable.
 - Do not add `lifecycle:implementation-complete` until the implementation has been audited criterion by criterion, the PR evidence is current, and no known in-scope implementation work remains.
-- `.github/workflows/pr-lifecycle.yml` owns Draft/Implementing/Validating/Ready. It may move a completed Draft PR to Ready only when `lifecycle:implementation-complete` is present and `Application validation` succeeded for the exact current head.
-- The readiness workflow must stop at READY and dispatch `pr-lifecycle-ready`; it must not call the merge API directly.
-- `.github/workflows/pr-merge-finalizer.yml` independently re-reads the live PR before MERGEABLE/MERGED and re-checks the implementation-complete signal, exact-head validation, review/thread state, base freshness and conflict-free mergeability.
-- The finalizer must not depend on aggregate `mergeStateStatus == CLEAN`, because its own pending workflow can become part of that aggregate state and create a circular dependency.
-- MERGEABLE requires the current head to remain validated, no unresolved required review conversation, no changes-requested/review-required state, no merge conflict and no commits missing from current `main`.
-- The merge finalizer may merge automatically using an expected-head guard once all repository-enforceable mandatory gates are satisfied.
-- After successful same-repository merge, source-branch cleanup should be attempted where safe.
+- MERGEABLE requires sufficient current-head project-owned validation, no unresolved material review conversation, no merge conflict, no material blocker, and any applicable runtime/deployment evidence required by the change.
 - A merged PR proves repository integration only. Deployment/provider/runtime gates remain separate.
-- If repository settings such as branch protection, Issues, auto-merge or update-branch are unavailable or disabled, record that as a configuration gap; do not describe workflow automation as equivalent to controls it cannot enforce.
+- If repository automation still assumes native Draft PRs or mandatory GitHub Actions success, treat that as an implementation/configuration gap to reconcile. Do not reinterpret the owner's newer normal-PR and repository-owned-validation policy to match legacy automation.
 
 ## Cognitive load and execution continuity
 
@@ -139,7 +140,7 @@ Apply it as follows:
 
 When resuming, use this order:
 
-1. blocking review/CI findings on the active PR;
+1. blocking material review or validation findings on the active PR;
 2. unsatisfied acceptance criteria;
 3. remaining in-scope active-branch work;
 4. lifecycle evidence required to progress an otherwise complete PR;
@@ -175,7 +176,7 @@ After material changes, update it to reflect, where applicable:
 - technical debt discovered or explicitly parked;
 - provider/deployment/runtime state where relevant.
 
-Clearly distinguish `implemented`, `locally validated`, `CI validated`, `deployed`, `runtime verified`, and `production verified`. Do not populate `PASS` or `VERIFIED` without evidence; use `NOT_RUN`, `PENDING`, `UNVERIFIED` or `NOT_APPLICABLE` instead.
+Clearly distinguish `implemented`, `project validated`, optional `CI diagnostic state`, `deployed`, `runtime verified`, and `production verified`. Do not populate `PASS` or `VERIFIED` without evidence; use `NOT_RUN`, `PENDING`, `UNVERIFIED` or `NOT_APPLICABLE` instead.
 
 Chat history must never be treated as the authoritative project record.
 
@@ -212,6 +213,7 @@ If one of these cannot be answered, improving durable state is itself dependency
 - `npm run platform:validate` includes dependency audit, governance checks, lint, typecheck, Node tests, production build and critical Playwright coverage.
 - Use `npm run validate`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, or `npm run test:e2e` individually when isolating a failure.
 - Do not claim runtime/provider verification merely because `platform:validate` passes.
+- GitHub Actions may execute the canonical validation, but a green Actions badge is not itself the acceptance policy and an infrastructure-only Actions failure is not a material validation failure.
 
 ## NoCodeBackend application and provider boundaries
 
@@ -236,17 +238,71 @@ If one of these cannot be answered, improving durable state is itself dependency
 - Add focused deterministic `node:test` coverage for behaviour/contracts. Tests must not require real provider credentials or mutable production data.
 - Add/maintain Playwright coverage for critical cross-layer user journeys.
 - GitHub Issues are currently disabled at repository level. Until that setting is changed, use one focused PR body as the implementation contract; do not pretend an issue exists.
-- Before declaring implementation complete, ensure the full validation gate passes and the PR explains outcome, scope, risk, validation, documentation and parked follow-up work.
-- Add `lifecycle:implementation-complete` only after the final in-scope audit. The readiness controller and separate merge finalizer own subsequent Ready/Mergeable/Merged transitions where GitHub can enforce them.
+- Use a normal PR by default. Use native Draft only for genuinely non-reviewable or deliberately substantially incomplete work.
+- Before declaring implementation complete, ensure the project-owned validation contract is satisfied and the PR explains outcome, scope, risk, validation, documentation and parked follow-up work.
+- Add `lifecycle:implementation-complete` only after the final in-scope audit. Lifecycle metadata should describe the real implementation state even when CI or workflow automation is unavailable.
+- Treat current lifecycle workflows that still enforce native Draft or GitHub-Actions-only progression as legacy automation to be reconciled, not as authority to override this policy.
 
 ## Reporting
 
-Keep implementation reports concise. Report only:
+Detailed implementation state and evidence belong in the repository: `STATUS.md`, the active PR or issue, validation evidence, decisions and relevant project documentation. ChatGPT/Codex responses should reference that durable state instead of repeating it.
 
-- what changed;
-- actual validation evidence;
-- current project/gate state;
-- genuine blockers requiring intervention;
-- what dependency-correct work happens next.
+### Default owner-facing response
 
-Do not require the product owner to reconstruct technical state manually.
+For routine implementation, continuation, review, merge, deployment and status work, the final response should normally contain only:
+
+```text
+Done
+- <important completed outcome>
+- <important completed outcome if needed>
+
+Next
+- <single next action or next work item>
+
+You
+- Nothing required.
+```
+
+If owner action is required:
+
+```text
+Done
+- <completed outcome>
+
+Next
+- <what the project will do after the dependency is resolved>
+
+You
+- <specific action required from Jeremy>
+```
+
+If information is required:
+
+```text
+Done
+- <completed work so far>
+
+Next
+- <what can proceed once the information is available>
+
+You
+- Provide: <specific information>
+```
+
+### Response rules
+
+- **Done:** include only material outcomes, usually 1–3 bullets. Do not list every file changed, command run, reasoning step, minor refactor or routine PR metadata.
+- **Next:** state the single best next action. Choose it autonomously from repository priority/dependency information. If that item is blocked, move to the next valid unblocked item unless the blocker prevents all useful progress.
+- **You:** always include this section. Use exactly `You\n- Nothing required.` when owner intervention is unnecessary. When action is necessary, state the exact action, credential, configuration, decision or information required.
+- Add **Blocked** only for a genuine blocker, **Problem** only when work failed or a material defect was discovered, and **Decision needed** only when owner judgment is genuinely required and repository conventions cannot safely resolve it.
+- Do not routinely include executive summaries, validation tables, file-by-file change lists, command transcripts, PR histories, acceptance matrices, background explanations, large future-work lists or generic recommendations.
+- When all required validation passes, summarize it as a material outcome such as `Implementation and required validation completed.` Detailed commands/results stay in repository evidence.
+- When a PR progresses normally, summarize the outcome and next item rather than reproducing lifecycle history.
+- When asked for project status, default to the same concise `Done / Next / You` structure. Provide a full project report only when explicitly requested.
+- Surface technical detail only when something failed, there is a genuine blocker, the owner asks for detail, or a consequential decision is required.
+
+### Owner-intervention threshold
+
+Require owner involvement only when needed for credentials/secrets the agent cannot access, external account configuration, billing/subscription changes, destructive or irreversible decisions, unresolved product decisions with materially different outcomes, unavailable third-party approvals, or physical/manual verification unavailable to project tooling.
+
+Normal coding, testing, issue management, PR progression, documentation updates, dependency sequencing and routine architecture decisions should continue autonomously.
