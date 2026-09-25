@@ -16,7 +16,17 @@ Current repository evidence shows:
 
 These are external GitHub settings and must not be inferred from repository files. Workflow automation improves the normal delivery path but is not a substitute for branch protection/rulesets against administrator or direct-push bypass.
 
-## Canonical pull-request lifecycle
+## Owner policy and current automation
+
+The current owner policy is:
+
+- autonomous project work opens normal PRs by default;
+- native GitHub Draft is reserved for work that genuinely must not be reviewed/merged yet or is deliberately substantially incomplete;
+- lifecycle state is recorded in repository/PR metadata rather than using the Draft flag as the state machine;
+- project-owned validation is mandatory, while GitHub Actions is supporting diagnostic evidence rather than a duplicate mandatory merge gate.
+
+The existing lifecycle workflows still contain legacy behaviour that converts PRs to native Draft and requires successful `Application validation` before automated progression. That is a current automation-policy mismatch, not the authoritative owner policy. It should be reconciled in a focused follow-up change; until then, do not use the legacy workflow behaviour to rewrite the project guidance.
+## Current lifecycle automation
 
 Repository implementation work follows:
 
@@ -24,11 +34,11 @@ Repository implementation work follows:
 DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 ```
 
-The lifecycle combines native GitHub PR state, lifecycle labels, read-only application validation and two trusted default-branch workflows with separate responsibilities.
+The current automation combines native GitHub PR state, lifecycle labels, application validation and two trusted default-branch workflows. This section records what the workflows currently do; the owner policy above governs future alignment.
 
 | Lifecycle state | Repository evidence |
 | --- | --- |
-| DRAFT | Native GitHub draft PR. New implementation PRs are created as Draft. |
+| DRAFT | Current legacy automation uses native GitHub Draft; owner policy now reserves native Draft for genuinely non-reviewable/substantially incomplete work. |
 | IMPLEMENTING | `state:implementing`; implementation/audit is not yet declared complete. |
 | VALIDATING | `state:validating`; current-head `Application validation` is missing, running or failed. |
 | READY | `state:ready`; `lifecycle:implementation-complete` is present and validation passed for the exact current head. |
@@ -102,9 +112,9 @@ npm run platform:validate
 
 A successful CI run is repository-validation evidence only. Provider contracts, deployment configuration, exact deployed commit and runtime behaviour require separate evidence.
 
-## External GitHub settings still required
+## External GitHub settings
 
-1. **Protect `main` with branch protection or an equivalent ruleset.** Require pull requests and the `Validate application` check; prevent ordinary direct pushes/bypass except narrowly defined recovery administration. Do not make the lifecycle/finalizer workflow itself a required check because that would recreate a circular merge dependency.
+1. **Protect `main` with branch protection or an equivalent ruleset.** Require the pull-request path and appropriate review/conversation controls; prevent ordinary direct pushes/bypass except narrowly defined recovery administration. Do not require GitHub Actions merely to duplicate the project-owned acceptance process. A status check may be retained as diagnostic evidence, but CI infrastructure state alone must not become the merge authority.
 2. **Enable GitHub Issues** if issue-level implementation contracts are preferred over the current focused-PR fallback.
 3. **Enable repository auto-merge** only if native GitHub auto-merge is later preferred over the guarded finalizer mutation.
 4. **Enable update-branch support or equivalent up-to-date enforcement** if GitHub should refresh stale PR branches automatically. Until then, `blocked:base-update` prevents automated merge when a PR is behind `main`.
@@ -116,7 +126,7 @@ Branch protection/rulesets remain the highest-priority external configuration ga
 Before repository merge:
 
 - implementation-complete evidence must still match the current head;
-- canonical validation must have passed for the exact current head;
+- sufficient project-owned canonical validation must cover the current head; GitHub Actions success may support that evidence but is not independently mandatory when only CI infrastructure is failing;
 - required review findings/conversations must be resolved;
 - the head must be conflict-free and current with `main`;
 - affected project state must describe the post-merge re-entry point rather than leaving a closed PR as the active checkpoint;
