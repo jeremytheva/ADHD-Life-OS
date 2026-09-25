@@ -46,6 +46,7 @@ Lifecycle state should be recorded in repository/PR metadata rather than dependi
 `npm run platform:validate` remains the canonical full repository validation gate where applicable. GitHub Actions may execute that contract and provide diagnostics, but it is not a duplicate mandatory acceptance gate. An Actions failure blocks merge only when it reveals a substantive implementation, security, data-integrity, test, build, migration or release defect; runner, billing, queue, permission or other CI-infrastructure failure alone does not.
 
 The project/implementing agent owns the semantic decision that the implementation contract is complete. Record that handoff only after criterion-by-criterion audit and current repository evidence. Current lifecycle workflows may automate transitions, but legacy automation that still forces native Draft or GitHub-Actions-only progression is an implementation gap to reconcile, not a reason to change the policy.
+
 ## Work-in-progress and scope control
 
 Default to one primary implementation thread for this repository. Parallel implementation is appropriate only when dependency analysis shows the work is genuinely independent and will not conflict in shared architecture, state, schema, routing, provider or trust-boundary code.
@@ -110,6 +111,7 @@ When branch protection is added, protect the pull-request/review path and other 
 The detailed delivery record belongs in the PR, `STATUS.md`, validation evidence and relevant repository documentation. Routine ChatGPT/Codex responses follow the authoritative concise response contract in `AGENTS.md`: `Done / Next / You`, with `Blocked`, `Problem`, or `Decision needed` only when materially necessary.
 
 Do not reproduce validation command lists, lifecycle history, file-by-file changes or acceptance matrices in chat when work completed normally.
+
 ## Environments and configuration
 
 Browser requests use same-origin `/api/ncb/data` and `/api/ncb/auth` routes. Browser-safe overrides are `VITE_DATA_PROXY_URL` and `VITE_AUTH_PROXY_URL`.
