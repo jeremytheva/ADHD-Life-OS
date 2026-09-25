@@ -26,6 +26,7 @@ The current owner policy is:
 - project-owned validation is mandatory, while GitHub Actions is supporting diagnostic evidence rather than a duplicate mandatory merge gate.
 
 The existing lifecycle workflows still contain legacy behaviour that converts PRs to native Draft and requires successful `Application validation` before automated progression. That is a current automation-policy mismatch, not the authoritative owner policy. It should be reconciled in a focused follow-up change; until then, do not use the legacy workflow behaviour to rewrite the project guidance.
+
 ## Current lifecycle automation
 
 Repository implementation work follows:
