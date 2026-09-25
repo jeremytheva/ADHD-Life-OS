@@ -63,6 +63,7 @@ A PR is READY when implementation is complete and sufficient project-owned valid
 Current GitHub lifecycle workflows may provide automation for these transitions. If they still require native Draft state or GitHub-Actions-only success, treat that as a repository automation gap to reconcile rather than redefining the owner's policy.
 
 Repository merge is not deployment/provider/runtime completion.
+
 ## Continuation protocol
 
 When asked to `Continue` or `Next`, resume in this order:
