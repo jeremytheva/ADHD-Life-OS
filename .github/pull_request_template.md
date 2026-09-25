@@ -64,15 +64,15 @@ Record the exact current-head validation result/run:
 
 ## Lifecycle handoff
 
-This PR must remain Draft while known in-scope implementation work remains.
+Use a normal reviewable PR by default. Native GitHub Draft is reserved for work that genuinely must not be reviewed/merged yet or is deliberately substantially incomplete.
 
 Before adding `lifecycle:implementation-complete`:
 
 - [ ] Every in-scope acceptance criterion has been audited.
 - [ ] Required implementation and regression coverage are complete.
-- [ ] Current-head validation evidence is recorded.
+- [ ] Sufficient current-head project-owned validation evidence is recorded.
 - [ ] No known blocking in-scope review finding remains.
 - [ ] Documentation/project state is current.
 - [ ] Further improvements are either out of scope or separately parked.
 
-After that label is added, GitHub lifecycle automation owns the repository-observable transition through Ready → Mergeable → Merged. Any new commit invalidates the handoff.
+Lifecycle metadata should reflect the real state of the change. GitHub Actions may provide supporting validation evidence, but CI infrastructure status is not a substitute for the project-owned acceptance process. Any new commit invalidates prior handoff evidence that no longer applies.
