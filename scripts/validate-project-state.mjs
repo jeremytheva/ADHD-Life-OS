@@ -49,7 +49,7 @@ if (liveEnabled && process.env.GITHUB_REPOSITORY) {
   const headers = { Accept: 'application/vnd.github+json' }
   if (token) headers.Authorization = `Bearer ${token}`
   const api = async (url) => {
-    const response = await fetch(url, { headers })
+    const response = await globalThis.fetch(url, { headers })
     if (!response.ok) throw new Error(`GitHub API ${response.status} for ${url}`)
     return response.json()
   }
