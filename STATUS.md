@@ -37,13 +37,13 @@ validation:
   runtime: NOT_APPLICABLE
 current_main_commit: CURRENT_MAIN
 current_candidate_commit: NONE
-latest_validated_commit: a5c6a7ec6d6f89356dad22429c865eb477beaad5
+latest_validated_commit: 7bf377b2a80fa42f10c107ac239d7ee780abb764
 latest_deployed_commit: UNVERIFIED
 latest_runtime_verified_commit: UNVERIFIED
-latest_browser_verified_commit: a5c6a7ec6d6f89356dad22429c865eb477beaad5
+latest_browser_verified_commit: 7bf377b2a80fa42f10c107ac239d7ee780abb764
 validation_debt: NONE
-validation_basis: Canonical platform validation passed on the previous standards delivery at a5c6a7ec6d6f89356dad22429c865eb477beaad5. The latest standards delivery records its current-candidate validation in the PR rather than duplicating command output here. GitHub Actions is supporting execution/diagnostic infrastructure, not the sole acceptance authority.
-last_verified_commit: a5c6a7ec6d6f89356dad22429c865eb477beaad5
+validation_basis: PR #387 canonical Application validation run 1147 passed the complete platform validation on exact candidate 7bf377b2a80fa42f10c107ac239d7ee780abb764 before merge at 28a88e3a5410be8da08cf84cadff314f363be5f4. Status-only reconciliation validation remains in its PR evidence to avoid self-referential commit metadata. GitHub Actions is supporting execution/diagnostic infrastructure, not the sole acceptance authority.
+last_verified_commit: 7bf377b2a80fa42f10c107ac239d7ee780abb764
 last_updated: 2026-09-28T09:05:00+10:00
 ---
 
@@ -58,7 +58,7 @@ last_updated: 2026-09-28T09:05:00+10:00
 
 The latest master development standards have been applied to repository guidance and controls, including concise owner reporting, normal-PR lifecycle metadata, WIP/stack limits, validation fallback/provenance, productive-work limits, provider-schema evidence, migration approval packages and project-state/schema drift validation.
 
-After this standards change merges, no independent implementation target is justified by current repository evidence. Generic durable Start → Continue → Recover remains intentionally fail-closed until the real NoCodeBackend `execution-sessions` provider contract is provisioned and certified.
+No independent implementation target is justified by current repository evidence. Generic durable Start → Continue → Recover remains intentionally fail-closed until the real NoCodeBackend `execution-sessions` provider contract is provisioned and certified.
 
 ## AI execution gate
 
@@ -81,7 +81,7 @@ After this standards change merges, no independent implementation target is just
 | WIP limits | max stack 2; max ordinary open implementation PRs 3 |
 | Open GitHub issues | None found during 28 September reconciliation |
 | Productive independent work | None currently justified after standards adoption |
-| Historical branch hygiene | Historical branches remain; at least the merged PR #386 source branch is still present. Non-blocking maintenance only. |
+| Historical branch hygiene | Historical branches remain; merged PR #386 and PR #387 source branches were still present at reconciliation. Non-blocking maintenance only. |
 
 ## Evidence provenance
 
@@ -89,11 +89,11 @@ After this standards change merges, no independent implementation target is just
 | --- | --- |
 | Current main | `CURRENT_MAIN` symbolic reference; GitHub remains authoritative |
 | Current candidate | None after this change merges |
-| Latest fully validated recorded candidate | `a5c6a7ec6d6f89356dad22429c865eb477beaad5` |
+| Latest fully validated recorded candidate | `7bf377b2a80fa42f10c107ac239d7ee780abb764` |
 | Latest deployed commit | UNVERIFIED |
 | Latest runtime-verified commit | UNVERIFIED |
 | Latest browser-verified candidate | `a5c6a7ec6d6f89356dad22429c865eb477beaad5` via canonical Playwright coverage |
-| Validation debt | None expected after this standards PR is validated and merged |
+| Validation debt | NONE |
 | Deployment provider | No ADHD Life OS Vercel project is present in the connected Vercel account as of 28 September 2026 |
 
 These states are independent. Build/repository validation does not imply deployment, runtime verification, provider certification or production browser acceptance.
