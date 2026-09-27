@@ -32,4 +32,6 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run canonical platform validation
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: npm run platform:validate
