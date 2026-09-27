@@ -2,7 +2,7 @@
 
 **Status:** Active development  
 **Repository:** `jeremytheva/ADHD-Life-OS`  
-**Last materially reviewed:** 25 September 2026
+**Last materially reviewed:** 28 September 2026
 
 ## Purpose
 
@@ -133,6 +133,28 @@ Use the real current system rather than chat memory. For this project:
 12. prior chat/context — supporting context only.
 
 When sources disagree, investigate and correct the stale/incorrect source rather than silently choosing one.
+
+## Portfolio and execution-capacity model
+
+Project importance and current execution capacity are distinct. This repository may remain portfolio `ACTIVE` while its execution slot is `BUILDING`, `INTEGRATING`, `VERIFYING`, `WAITING`, or `NONE`.
+
+Default implementation WIP controls are a maximum dependent PR stack of **2** and a maximum of **3** ordinary open implementation PRs. Exceeding either limit pauses new overlapping implementation until existing work is validated, reconciled and integrated.
+
+Autonomous continuation must stop inventing work when no roadmap requirement, accepted implementation contract, defect, failed validation, review finding, security/data requirement, documented technical debt, dependency-correct release work or accepted product requirement justifies further work.
+
+## Template-library compatibility
+
+This repository should consume reusable master patterns where they fit, without copying entire master standards or prematurely sharing runtime packages. Prefer reusable repository/GitHub/validation/database/provider/feature/decision templates and stable contracts first; share runtime implementation only after the abstraction is genuinely stable across projects.
+
+## Data/provider governance
+
+ADHD Life OS uses NoCodeBackend, so the domain model and provider representation are deliberately separate:
+
+- `docs/DATA_MODEL.md` is the application/domain authority;
+- `database/provider-schema.json` is the machine-readable provider-schema evidence register;
+- `docs/NOCODEBACKEND_OPERATIONS.md` is the human-readable provider certification register;
+- `database/migrations/` holds controlled provider transition packages;
+- no SQL schema is authoritative unless the provider genuinely exposes an executable SQL schema for this project.
 
 ## Delivery model
 
