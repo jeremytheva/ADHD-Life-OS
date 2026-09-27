@@ -45,7 +45,7 @@ Lifecycle state should be recorded in repository/PR metadata rather than dependi
 
 `npm run platform:validate` remains the canonical full repository validation gate where applicable. GitHub Actions may execute that contract and provide diagnostics, but it is not a duplicate mandatory acceptance gate. An Actions failure blocks merge only when it reveals a substantive implementation, security, data-integrity, test, build, migration or release defect; runner, billing, queue, permission or other CI-infrastructure failure alone does not.
 
-The project/implementing agent owns the semantic decision that the implementation contract is complete. Record that handoff only after criterion-by-criterion audit and current repository evidence. Current lifecycle workflows may automate transitions, but legacy automation that still forces native Draft or GitHub-Actions-only progression is an implementation gap to reconcile, not a reason to change the policy.
+The project/implementing agent owns the semantic implementation decision through `lifecycle:implementation-complete`. Sufficient current-head project-owned validation is recorded through `lifecycle:validation-complete`. Canonical Actions success may add validation evidence automatically, but trusted alternate evidence can satisfy the same state when Actions infrastructure is unavailable. Any new commit invalidates both signals.
 
 ## Work-in-progress and scope control
 
@@ -101,7 +101,7 @@ Routine PR state transitions, validation retries, mergeability checks and reposi
 6. Run the applicable project-owned validation, including `npm run platform:validate` for the canonical full repository gate.
 7. Update only project documents whose meaning changed; make `STATUS.md` a truthful post-merge re-entry checkpoint.
 8. Audit every acceptance criterion and update PR evidence.
-9. Add `lifecycle:implementation-complete` only when no in-scope work remains.
+9. Add `lifecycle:implementation-complete` only when no in-scope work remains and `lifecycle:validation-complete` only when sufficient current-head validation evidence exists.
 10. Progress READY → MERGEABLE → MERGED from current repository evidence; use GitHub lifecycle automation when it supports the policy.
 11. If a blocker affects only one path, record it and continue the next dependency-correct unblocked work.
 
