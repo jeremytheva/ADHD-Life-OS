@@ -58,6 +58,15 @@ When new work is discovered:
 3. park non-required work with enough context to recover it later;
 4. return to the active outcome.
 
+## Implementation WIP limits
+
+Default delivery limits are:
+
+- maximum dependent PR stack: **2**;
+- maximum ordinary open implementation PRs: **3**.
+
+If either limit is exceeded, stop creating overlapping implementation. Validate existing work, reconcile branches, merge eligible work, update `STATUS.md`, then resume. Do not treat coding throughput as success when validation/integration capacity is falling behind.
+
 ## Continuation and re-entry
 
 A continuation request resumes current delivery state rather than restarting planning. Prefer, in order: blocking material PR/review/validation findings, incomplete acceptance criteria, remaining active-branch scope, lifecycle evidence required to progress an otherwise complete PR, then the next dependency-correct outcome in `STATUS.md`/`ROADMAP.md`. If the highest-priority item is blocked, record/defer it and continue the next valid unblocked item unless the blocker prevents all useful progress.
@@ -95,6 +104,21 @@ Routine PR state transitions, validation retries, mergeability checks and reposi
 9. Add `lifecycle:implementation-complete` only when no in-scope work remains.
 10. Progress READY → MERGEABLE → MERGED from current repository evidence; use GitHub lifecycle automation when it supports the policy.
 11. If a blocker affects only one path, record it and continue the next dependency-correct unblocked work.
+
+## Validation execution fallback
+
+Canonical project validation remains required. Execute it in this order:
+
+1. canonical repository executor;
+2. trusted alternate execution environment;
+3. exact-commit deployment/build executing equivalent required commands;
+4. if none is available, record **VALIDATION WAITING**.
+
+Never turn an unexecuted check into `PASS`. An empty/zero-step Platform Validation job is an execution/configuration condition, not evidence that application validation failed. When validation capacity is unavailable, retain explicit validation debt and avoid creating overlapping work that materially increases integration risk.
+
+## Productive-work stop rule
+
+If no roadmap/phase requirement, accepted implementation contract, defect, failed validation, review finding, security/data requirement, documented technical debt, dependency-correct release work or accepted product requirement justifies further work, stop creating speculative micro-refactors. Move the project to the truthful waiting, maintenance, blocked or complete state.
 
 ## GitHub configuration boundary
 
