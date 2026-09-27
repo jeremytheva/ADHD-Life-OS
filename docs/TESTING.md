@@ -53,6 +53,21 @@ A passing `platform:validate` means only that its declared automated checks pass
 
 Use explicit evidence states such as **IMPLEMENTED**, **PROVIDER VERIFIED**, **APPLICATION VERIFIED**, **DEPLOYED**, **RUNTIME VERIFIED**, and **COMPLETE** rather than treating them as interchangeable.
 
+## Validation execution hierarchy
+
+Use `npm run platform:validate` as the canonical project validation entry point. When its preferred execution environment is unavailable, use:
+
+```text
+A. canonical repository executor
+→ B. trusted alternate execution environment
+→ C. exact-commit deployment/build running equivalent required commands
+→ D. VALIDATION WAITING
+```
+
+Evidence must identify the exact code candidate and executor. Never record an unexecuted layer as `PASS`. A zero-step/empty validation job is not a substantive application failure; classify the missing execution evidence and use the fallback hierarchy instead.
+
+Where `STATUS.md` tracks provenance, distinguish current main/candidate from latest validated, deployed, runtime-verified and browser-verified evidence. Later evidence states must not be inferred from earlier ones.
+
 ## CI
 
 GitHub Actions runs `npm run platform:validate` for pull requests targeting `main`, pushes to `main`, and manual workflow dispatches. CI installs the locked dependency graph and Chromium before running the canonical command.
