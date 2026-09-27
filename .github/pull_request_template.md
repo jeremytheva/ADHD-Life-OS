@@ -66,7 +66,7 @@ Record the exact current-head validation result/run:
 
 Use a normal reviewable PR by default. Native GitHub Draft is reserved for work that genuinely must not be reviewed/merged yet or is deliberately substantially incomplete.
 
-Before adding `lifecycle:implementation-complete`:
+Before adding lifecycle completion evidence:
 
 - [ ] Every in-scope acceptance criterion has been audited.
 - [ ] Required implementation and regression coverage are complete.
@@ -74,5 +74,7 @@ Before adding `lifecycle:implementation-complete`:
 - [ ] No known blocking in-scope review finding remains.
 - [ ] Documentation/project state is current.
 - [ ] Further improvements are either out of scope or separately parked.
+- [ ] `lifecycle:implementation-complete` is added only after the semantic implementation audit.
+- [ ] `lifecycle:validation-complete` is present only when sufficient current-head project-owned validation evidence exists.
 
 Lifecycle metadata should reflect the real state of the change. GitHub Actions may provide supporting validation evidence, but CI infrastructure status is not a substitute for the project-owned acceptance process. Any new commit invalidates prior handoff evidence that no longer applies.
