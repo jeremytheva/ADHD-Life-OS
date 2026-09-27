@@ -169,7 +169,7 @@ for (const requiredFragment of [
 }
 
 const lifecycleWorkflow = await readFile(path.join(root, '.github/workflows/pr-lifecycle.yml'), 'utf8')
-for (const requiredFragment of ['pull_request_target', 'workflow_run', 'lifecycle:implementation-complete', 'repos/$REPO/dispatches', 'pr-lifecycle-ready', 'pull-request-validation.yml']) {
+for (const requiredFragment of ['pull_request_target', 'workflow_run', 'lifecycle:implementation-complete', 'lifecycle:validation-complete', 'repos/$REPO/dispatches', 'pr-lifecycle-ready']) {
   if (!lifecycleWorkflow.includes(requiredFragment)) failures.push(`PR lifecycle workflow is missing readiness marker ${requiredFragment}`)
 }
 if (lifecycleWorkflow.includes('mergePullRequest')) {
@@ -177,7 +177,7 @@ if (lifecycleWorkflow.includes('mergePullRequest')) {
 }
 
 const mergeFinalizer = await readFile(path.join(root, '.github/workflows/pr-merge-finalizer.yml'), 'utf8')
-for (const requiredFragment of ['repository_dispatch', 'pr-lifecycle-ready', 'lifecycle:implementation-complete', 'pull-request-validation.yml', 'reviewThreads', 'compare/main...', 'git/ref/heads/main', 'expectedHeadOid', 'mergePullRequest']) {
+for (const requiredFragment of ['repository_dispatch', 'pr-lifecycle-ready', 'lifecycle:implementation-complete', 'lifecycle:validation-complete', 'reviewThreads', 'compare/main...', 'git/ref/heads/main', 'expectedHeadOid', 'mergePullRequest']) {
   if (!mergeFinalizer.includes(requiredFragment)) failures.push(`PR merge finalizer is missing enforcement marker ${requiredFragment}`)
 }
 if (mergeFinalizer.includes('mergeStateStatus')) {
