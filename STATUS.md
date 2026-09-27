@@ -1,28 +1,32 @@
 ---
 project: ADHD Life OS
 portfolio_state: ACTIVE
+execution_slot: WAITING
 phase: Stage 3
 stage: execution and next-action experience
-gate: Change
-execution_state: READY
+gate: Integration
+execution_state: BLOCKED
 current_work:
-  objective: Align the repository PR lifecycle automation with the adopted normal-PR and repository-owned-validation policy before the next implementation delivery.
+  objective: Obtain and certify the real ADHD Life OS NoCodeBackend execution-sessions provider contract before enabling generic durable Start, Continue, and Recover.
   issue: null
   pr: null
   branch: null
 next_actions:
-  - Update the lifecycle workflows so normal PRs remain reviewable by default and native Draft is exceptional.
-  - Remove GitHub-Actions-only merge progression while preserving project-owned validation, review, conflict, security, data-integrity and release evidence requirements.
-  - Re-run canonical project validation and record the lifecycle-control evidence in the focused PR.
-  - Keep provider-dependent execution-sessions integration deferred until real target-instance evidence and secure certification access exist.
+  - Provision the execution-sessions collection in the real ADHD Life OS NoCodeBackend target instance using the documented logical contract.
+  - Capture the exact generated schema, read/create/update operations, update method, envelopes, filtering, uniqueness/concurrency and recovery capabilities.
+  - Provide secure target-instance certification access and run the repository certification sequence.
+  - Record verified provider schema and operations before enabling application persistence.
 blockers:
-  - Generic durable execution remains blocked by missing real target-instance execution-sessions structure/generated operation evidence.
-  - Generic durable execution certification still requires secure NoCodeBackend target-instance credential/access unavailable to autonomous repository execution.
+  - Real target-instance execution-sessions schema and generated operation evidence are unavailable.
+  - Secure NoCodeBackend target-instance credential/access required for connected certification is unavailable to autonomous repository execution.
 requires_owner_decision: false
+requires_owner_action: true
 owner_decision:
   question: null
   options: []
   recommendation: null
+owner_action:
+  action: Provision the documented execution-sessions collection and supply its generated API/schema evidence plus secure certification access.
 validation:
   governance: PASS
   lint: PASS
@@ -31,97 +35,98 @@ validation:
   build: PASS
   ci: PASS
   runtime: NOT_APPLICABLE
-validation_basis: The last recorded full application baseline remains PR #384 canonical Application validation run 1138 on exact final head 04193429374ece9c4256c6b095bd8db8b17afc48. The 25 September 2026 operating-guidance update adopts repository-first evidence and concise owner-facing reporting; detailed validation for that focused documentation PR belongs in its PR evidence. GitHub Actions remains supporting diagnostic evidence rather than the acceptance authority.
-last_verified_commit: 04193429374ece9c4256c6b095bd8db8b17afc48
-last_updated: 2026-09-25T19:24:00+10:00
+current_main_commit: CURRENT_MAIN
+current_candidate_commit: NONE
+latest_validated_commit: a5c6a7ec6d6f89356dad22429c865eb477beaad5
+latest_deployed_commit: UNVERIFIED
+latest_runtime_verified_commit: UNVERIFIED
+latest_browser_verified_commit: a5c6a7ec6d6f89356dad22429c865eb477beaad5
+validation_debt: NONE
+validation_basis: Canonical platform validation passed on the previous standards delivery at a5c6a7ec6d6f89356dad22429c865eb477beaad5; this latest standards upgrade must record its own current-head evidence in its PR before merge. GitHub Actions is supporting execution/diagnostic infrastructure, not the sole acceptance authority.
+last_verified_commit: a5c6a7ec6d6f89356dad22429c865eb477beaad5
+last_updated: 2026-09-28T09:05:00+10:00
 ---
 
 # ADHD Life OS — Current Status
 
-**Snapshot date:** 25 September 2026  
+**Snapshot date:** 28 September 2026  
 **Default branch:** `main`  
-**Overall status:** Active Stage 3 development; generic durable execution remains provider-blocked, but repository-quality work can continue autonomously  
+**Overall status:** Stage 3 remains open; repository governance is current and provider-dependent durable execution is waiting on target-instance evidence/access  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
-## Current objective
+## Current state
 
-The repository has adopted a repository-first operating/reporting standard: detailed implementation evidence remains in GitHub and durable project documents, while routine ChatGPT/Codex responses now default to concise `Done / Next / You` reporting.
+The latest master development standards have been applied to repository guidance and controls, including concise owner reporting, normal-PR lifecycle metadata, WIP/stack limits, validation fallback/provenance, productive-work limits, provider-schema evidence, migration approval packages and project-state/schema drift validation.
 
-The provider-dependent generic Start → Continue → Recover path remains fail-closed until real NoCodeBackend target-instance evidence is available. That blocker no longer requires the whole repository to stop: the next unblocked repository-quality task is aligning the existing lifecycle workflows with the already-adopted normal-PR and repository-owned-validation policy.
+After this standards change merges, no independent implementation target is justified by current repository evidence. Generic durable Start → Continue → Recover remains intentionally fail-closed until the real NoCodeBackend `execution-sessions` provider contract is provisioned and certified.
 
-## AI execution gate
-
-| Gate field | Current value |
-| --- | --- |
-| Current gate | Change — align lifecycle automation with adopted PR/validation policy |
-| Gate state | READY — repository-quality follow-up is unblocked |
-| Execution state | READY |
-| Backend/provider state | Generic durable execution remains PLANNED / PROVIDER UNVERIFIED / fail-closed |
-
-## Delivery checkpoint
+## Execution and WIP
 
 | State | Current value |
 | --- | --- |
-| Latest application delivery on main | PR #383 — SubtaskList synchronous mutation ownership; merged at `a5dc33d16e3fdf509fee9320cc79ced1678b8b1e` |
-| Latest state reconciliation on main | PR #384 — Stage 3 provider-gate reconciliation; merged at `264a2606130b8df04352c7e14340f1761b1dc2be` |
-| Operating guidance | Concise repository-first `Done / Next / You` response standard adopted 25 September 2026 |
-| Active implementation delivery | None after this guidance change merges |
-| Canonical validation baseline | Last recorded full baseline: run 1138 PASS on PR #384 exact final head `04193429374ece9c4256c6b095bd8db8b17afc48`; focused guidance-PR validation is recorded in its PR |
-| Open GitHub issues | None found at 25 September 2026 inspection |
-| Generic execution-session state | PLANNED / PROVIDER UNVERIFIED / fail-closed |
-| Provider-specific blocker | Real target-instance provider provisioning/certification evidence and secure access |
-| Next unblocked repository task | Align lifecycle workflow automation with normal-PR/repository-owned-validation policy |
+| Portfolio state | ACTIVE |
+| Execution slot | WAITING |
+| Execution state | BLOCKED on provider-specific Stage 3 dependency |
+| Open implementation PRs after this change | 0 |
+| Dependent PR stack after this change | 0 |
+| WIP limits | max stack 2; max ordinary open implementation PRs 3 |
+| Open GitHub issues | None found during 28 September reconciliation |
+| Productive independent work | None currently justified after standards adoption |
+| Historical branch hygiene | Historical branches remain; at least the merged PR #386 source branch is still present. Non-blocking maintenance only. |
 
-## Autonomous continuation entry answers
+## Evidence provenance
 
-| Question | Durable answer |
+| Evidence | State |
 | --- | --- |
-| Where am I? | Stage 3 remains open. Generic durable execution is provider-blocked, while repository-quality work is available. |
-| What is already happening? | The repository-first concise reporting standard is adopted in guidance; no separate implementation PR is active after this change merges. |
-| What has been validated? | The previous full application baseline passed on PR #384; validation for this focused guidance change belongs in its PR evidence. |
-| What is next? | Align `.github/workflows/pr-lifecycle.yml` and `.github/workflows/pr-merge-finalizer.yml` with normal-PR and repository-owned-validation policy. |
-| Can I proceed autonomously? | Yes. Continue the lifecycle-automation alignment without waiting for the provider dependency. |
-| Why should I stop? | Stop only if that follow-up encounters a genuine consequential decision or all remaining useful work depends on unavailable provider access. |
+| Current main | `CURRENT_MAIN` symbolic reference; GitHub remains authoritative |
+| Current candidate | None after this change merges |
+| Latest fully validated recorded candidate | `a5c6a7ec6d6f89356dad22429c865eb477beaad5` |
+| Latest deployed commit | UNVERIFIED |
+| Latest runtime-verified commit | UNVERIFIED |
+| Latest browser-verified candidate | `a5c6a7ec6d6f89356dad22429c865eb477beaad5` via canonical Playwright coverage |
+| Validation debt | None expected after this standards PR is validated and merged |
+| Deployment provider | No ADHD Life OS Vercel project is present in the connected Vercel account as of 28 September 2026 |
 
-## Adopted owner-facing response standard
+These states are independent. Build/repository validation does not imply deployment, runtime verification, provider certification or production browser acceptance.
 
-- `AGENTS.md` is authoritative for routine ChatGPT/Codex response format.
-- Detailed state, validation, PR history, blockers, deferred work and decisions remain in the repository/GitHub.
-- Routine responses use `Done / Next / You`; `You` always appears and says `Nothing required.` when owner intervention is unnecessary.
-- Add `Blocked`, `Problem`, or `Decision needed` only when materially necessary.
-- Do not surface routine file lists, command transcripts, validation matrices, PR lifecycle history or technical reasoning unless something failed or the owner requests detail.
+## Provider and data state
+
+- `docs/DATA_MODEL.md` remains the application/domain authority.
+- `database/provider-schema.json` is the machine-readable NoCodeBackend provider-schema evidence register and remains **UNVERIFIED**.
+- `docs/NOCODEBACKEND_OPERATIONS.md` remains the human-readable provider certification register.
+- `database/migrations/` contains the migration-package rules for future provider transitions.
+- No authoritative SQL schema exists for this NoCodeBackend project.
+- Generic `execution-sessions` remains **PLANNED / PROVIDER UNVERIFIED / fail-closed**.
 
 ## Provider blocker — exact evidence required
-
-The logical `execution-sessions` contract and fail-closed certification tooling already exist. Do not infer physical provider capability from application routes, fixtures, generic documentation, or another project.
 
 Before application activation, obtain and record:
 
 1. confirmation that the `execution-sessions` collection exists in the real ADHD Life OS NoCodeBackend instance;
 2. exact provider field names/types or explicit mappings to the documented logical fields;
-3. exact generated read URL;
-4. exact generated create URL;
-5. exact generated update URL/template;
-6. exact generated update method (`PUT` or `PATCH` as generated);
-7. response-envelope and filtering behaviour;
-8. uniqueness/concurrency capability classification;
-9. secure provider secret and certification user access sufficient to run the repository certification command.
+3. exact generated read/list operation;
+4. exact generated create operation;
+5. exact generated update operation and method;
+6. response envelopes and ownership/filtering behaviour;
+7. uniqueness/idempotency/concurrency capability;
+8. applicable backup/snapshot and restore/recovery capability;
+9. secure provider secret and certification user access sufficient to run the repository certification commands.
 
-Then run the existing certification path, first read-only and then full create/pause/resume/cancel certification. Record successful evidence in `docs/NOCODEBACKEND_OPERATIONS.md` before changing the production provider registry or enabling application persistence.
+Then run the existing provider certification path and update `database/provider-schema.json`, `docs/NOCODEBACKEND_OPERATIONS.md`, provider contract code and validation only from captured target-instance evidence.
 
-## Provider-dependent work after unblock
+## Next dependency-correct work after unblock
 
 Once provider certification succeeds:
 
-1. add execution-session schemas matching the certified provider contract;
-2. add `execution-sessions` to the explicit server collection allowlist/provider mapping;
-3. enforce authenticated ownership at the existing trust boundary;
-4. implement repository/runtime Start/Pause/Continue/Complete/Cancel lifecycle with compensating concurrency controls where provider atomicity is unavailable;
+1. implement schemas matching the certified provider contract;
+2. add `execution-sessions` to explicit server allowlist/provider mapping;
+3. enforce authenticated ownership;
+4. implement durable Start/Pause/Continue/Complete/Cancel lifecycle and conflict handling;
 5. integrate Today Start/Continue/Recover;
-6. preserve explicit reconciliation for execution-session versus source-domain completion;
-7. add deterministic, ownership, provider-contract and critical Playwright coverage;
-8. update architecture/data/provider-operation evidence and rerun `npm run platform:validate`.
+6. preserve explicit source-completion reconciliation;
+7. add deterministic, ownership, provider-contract and critical browser coverage;
+8. update provider/data evidence and rerun canonical validation.
 
-## Stage 3 exit conditions
+## Owner action
 
-Stage 3 remains open. Provider-independent recommendation, interaction-integrity and recovery work is substantially established, but generic durable execution cannot satisfy Stage 3 Start/Continue/Recover exit conditions until real target-instance persistence capability is certified and integrated. Production behaviour must remain fail-closed rather than substituting browser-local persistence or guessed provider operations.
+Provision the documented NoCodeBackend `execution-sessions` collection and provide its generated API/schema evidence plus secure certification access. No product-scope decision is currently required.
