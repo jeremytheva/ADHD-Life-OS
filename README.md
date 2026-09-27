@@ -92,12 +92,14 @@ The canonical full repository check is:
 npm run platform:validate
 ```
 
-It composes dependency audit, executable governance checks, lint, typecheck, Node tests, production build and the critical Playwright suite.
+It composes dependency audit, executable governance/project-state/provider-schema checks, lint, typecheck, Node tests, production build and the critical Playwright suite.
 
 Narrower commands remain available for diagnosis:
 
 ```bash
 npm run validate:governance
+npm run validate:project-state
+npm run validate:provider-schema
 npm run lint
 npm run typecheck
 npm test
