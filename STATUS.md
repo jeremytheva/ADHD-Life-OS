@@ -42,7 +42,7 @@ latest_deployed_commit: UNVERIFIED
 latest_runtime_verified_commit: UNVERIFIED
 latest_browser_verified_commit: a5c6a7ec6d6f89356dad22429c865eb477beaad5
 validation_debt: NONE
-validation_basis: Canonical platform validation passed on the previous standards delivery at a5c6a7ec6d6f89356dad22429c865eb477beaad5; this latest standards upgrade must record its own current-head evidence in its PR before merge. GitHub Actions is supporting execution/diagnostic infrastructure, not the sole acceptance authority.
+validation_basis: Canonical platform validation passed on the previous standards delivery at a5c6a7ec6d6f89356dad22429c865eb477beaad5. The latest standards delivery records its current-candidate validation in the PR rather than duplicating command output here. GitHub Actions is supporting execution/diagnostic infrastructure, not the sole acceptance authority.
 last_verified_commit: a5c6a7ec6d6f89356dad22429c865eb477beaad5
 last_updated: 2026-09-28T09:05:00+10:00
 ---
@@ -59,6 +59,15 @@ last_updated: 2026-09-28T09:05:00+10:00
 The latest master development standards have been applied to repository guidance and controls, including concise owner reporting, normal-PR lifecycle metadata, WIP/stack limits, validation fallback/provenance, productive-work limits, provider-schema evidence, migration approval packages and project-state/schema drift validation.
 
 After this standards change merges, no independent implementation target is justified by current repository evidence. Generic durable Start → Continue → Recover remains intentionally fail-closed until the real NoCodeBackend `execution-sessions` provider contract is provisioned and certified.
+
+## AI execution gate
+
+| Gate field | Current value |
+| --- | --- |
+| Current gate | Integration — target NoCodeBackend provider certification for generic durable execution |
+| Gate state | BLOCKED on target-instance schema/operation evidence and secure certification access |
+| Execution state | WAITING / BLOCKED |
+| Independent work | None currently justified after repository standards adoption |
 
 ## Execution and WIP
 
@@ -88,6 +97,17 @@ After this standards change merges, no independent implementation target is just
 | Deployment provider | No ADHD Life OS Vercel project is present in the connected Vercel account as of 28 September 2026 |
 
 These states are independent. Build/repository validation does not imply deployment, runtime verification, provider certification or production browser acceptance.
+
+## Autonomous continuation entry answers
+
+| Question | Durable answer |
+| --- | --- |
+| Where am I? | Stage 3, waiting at the real-provider integration gate for generic durable execution. |
+| What is active? | No implementation PR/issue should remain after this standards change merges. |
+| What is validated? | Repository validation provenance is recorded above and detailed current-candidate evidence belongs in the PR. |
+| What is next? | Provision and certify the target NoCodeBackend `execution-sessions` schema/operations. |
+| Can autonomous work continue? | Only if a new evidence-backed independent requirement appears; do not invent speculative work. |
+| Why stop? | The remaining dependency-correct Stage 3 work requires external provider structure/evidence/access. |
 
 ## Provider and data state
 
