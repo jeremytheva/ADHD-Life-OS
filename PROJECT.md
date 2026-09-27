@@ -2,7 +2,7 @@
 
 **Status:** Active development  
 **Repository:** `jeremytheva/ADHD-Life-OS`  
-**Last materially reviewed:** 25 September 2026
+**Last materially reviewed:** 28 September 2026
 
 ## Purpose
 
@@ -134,6 +134,28 @@ Use the real current system rather than chat memory. For this project:
 
 When sources disagree, investigate and correct the stale/incorrect source rather than silently choosing one.
 
+## Portfolio and execution-capacity model
+
+Project importance and current execution capacity are distinct. This repository may remain portfolio `ACTIVE` while its execution slot is `BUILDING`, `INTEGRATING`, `VERIFYING`, `WAITING`, or `NONE`.
+
+Default implementation WIP controls are a maximum dependent PR stack of **2** and a maximum of **3** ordinary open implementation PRs. Exceeding either limit pauses new overlapping implementation until existing work is validated, reconciled and integrated.
+
+Autonomous continuation must stop inventing work when no roadmap requirement, accepted implementation contract, defect, failed validation, review finding, security/data requirement, documented technical debt, dependency-correct release work or accepted product requirement justifies further work.
+
+## Template-library compatibility
+
+This repository should consume reusable master patterns where they fit, without copying entire master standards or prematurely sharing runtime packages. Prefer reusable repository/GitHub/validation/database/provider/feature/decision templates and stable contracts first; share runtime implementation only after the abstraction is genuinely stable across projects.
+
+## Data/provider governance
+
+ADHD Life OS uses NoCodeBackend, so the domain model and provider representation are deliberately separate:
+
+- `docs/DATA_MODEL.md` is the application/domain authority;
+- `database/provider-schema.json` is the machine-readable provider-schema evidence register;
+- `docs/NOCODEBACKEND_OPERATIONS.md` is the human-readable provider certification register;
+- `database/migrations/` holds controlled provider transition packages;
+- no SQL schema is authoritative unless the provider genuinely exposes an executable SQL schema for this project.
+
 ## Delivery model
 
 Implementation follows the inherited master standards and the repository-specific workflow in `AGENTS.md`, `docs/CODEX_WORKFLOW.md`, and `docs/GITHUB_CONFIGURATION.md`.
@@ -143,6 +165,7 @@ The normal unit of work is one focused outcome producing one focused normal PR. 
 ## Owner-facing operational reporting
 
 `AGENTS.md` defines the authoritative ChatGPT/Codex response contract. Detailed implementation evidence stays in the repository and GitHub; routine owner-facing responses default to concise `Done / Next / You` reporting, with `Blocked`, `Problem`, or `Decision needed` added only when materially necessary.
+
 ## Current delivery direction
 
 Stage 2 integrity work is complete. Stage 3 is active and aims to turn the existing recommendation/next-action foundation into a durable Start/Continue/Recover execution loop without creating competing engines or unverified provider behaviour.
@@ -159,6 +182,9 @@ The live delivery snapshot and immediate dependency-correct work are maintained 
 - [`docs/PRODUCT.md`](docs/PRODUCT.md) — product boundary.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — system architecture.
 - [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) — data model.
+- [`database/README.md`](database/README.md) — provider-schema and migration evidence roles.
+- [`database/provider-schema.json`](database/provider-schema.json) — machine-readable provider schema verification state.
+- [`database/migrations/README.md`](database/migrations/README.md) — provider migration approval-package contract.
 - [`docs/SECURITY.md`](docs/SECURITY.md) — project-specific security boundary.
 - [`docs/TESTING.md`](docs/TESTING.md) — project validation strategy.
 - [`docs/DELIVERY.md`](docs/DELIVERY.md) — project delivery/release details.

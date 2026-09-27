@@ -25,7 +25,7 @@ The current owner policy is:
 - lifecycle state is recorded in repository/PR metadata rather than using the Draft flag as the state machine;
 - project-owned validation is mandatory, while GitHub Actions is supporting diagnostic evidence rather than a duplicate mandatory merge gate.
 
-The existing lifecycle workflows still contain legacy behaviour that converts PRs to native Draft and requires successful `Application validation` before automated progression. That is a current automation-policy mismatch, not the authoritative owner policy. It should be reconciled in a focused follow-up change; until then, do not use the legacy workflow behaviour to rewrite the project guidance.
+The lifecycle workflows are aligned with this policy. They do not force normal PRs into native Draft. They use `lifecycle:implementation-complete` for semantic implementation completion and `lifecycle:validation-complete` for sufficient current-head project-owned validation. A successful canonical Actions run may add the validation signal automatically, while trusted alternate validation may supply it from explicit PR evidence when Actions infrastructure is unavailable.
 
 ## Current lifecycle automation
 
@@ -35,14 +35,14 @@ Repository implementation work follows:
 DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 ```
 
-The current automation combines native GitHub PR state, lifecycle labels, application validation and two trusted default-branch workflows. This section records what the workflows currently do; the owner policy above governs future alignment.
+The current automation combines normal GitHub PRs, lifecycle labels, optional canonical Actions evidence and two trusted default-branch workflows. Native Draft remains exceptional rather than the lifecycle state carrier.
 
 | Lifecycle state | Repository evidence |
 | --- | --- |
-| DRAFT | Current legacy automation uses native GitHub Draft; owner policy now reserves native Draft for genuinely non-reviewable/substantially incomplete work. |
+| DRAFT | Native Draft is exceptional and used only for genuinely non-reviewable/substantially incomplete work. |
 | IMPLEMENTING | `state:implementing`; implementation/audit is not yet declared complete. |
-| VALIDATING | `state:validating`; current-head `Application validation` is missing, running or failed. |
-| READY | `state:ready`; `lifecycle:implementation-complete` is present and validation passed for the exact current head. |
+| VALIDATING | `state:validating`; sufficient project-owned current-head validation evidence is not yet recorded. |
+| READY | `state:ready`; both `lifecycle:implementation-complete` and `lifecycle:validation-complete` are present. |
 | MERGEABLE | `state:mergeable`; the finalizer re-confirmed exact-head validation, review/thread state, base freshness and GitHub conflict-free mergeability. |
 | MERGED | PR merged using an expected-head guard; `state:merged` records the terminal repository state. |
 
@@ -55,7 +55,9 @@ The current automation combines native GitHub PR state, lifecycle labels, applic
 3. updated PR evidence and affected project state;
 4. confirmed there is no known in-scope implementation work remaining.
 
-Any new commit removes this signal automatically. Passing CI alone must never promote incomplete work.
+Any new commit removes implementation and validation completion signals automatically. Passing CI alone must never promote incomplete work.
+
+`lifecycle:validation-complete` records sufficient project-owned validation for the exact current head. Successful canonical Actions validation can add it automatically. When Actions infrastructure is unavailable or non-substantively failing, a trusted alternate executor may justify the same signal with exact-candidate command/results evidence in the PR.
 
 ## Readiness controller
 
@@ -63,11 +65,11 @@ Any new commit removes this signal automatically. Passing CI alone must never pr
 
 It owns:
 
-- enforcing Draft status for newly opened/reopened implementation PRs;
-- invalidating `lifecycle:implementation-complete` after any new commit;
-- preventing manual Ready transitions from bypassing implementation-complete evidence;
-- requiring successful `Application validation` for the exact current head;
-- moving a qualifying PR to `state:ready`;
+- leaving normal newly opened/reopened PRs reviewable while setting lifecycle metadata;
+- invalidating `lifecycle:implementation-complete` and `lifecycle:validation-complete` after any new commit;
+- treating successful exact-head `Application validation` as one valid source of the validation-complete signal;
+- allowing trusted alternate validation evidence to supply `lifecycle:validation-complete` without requiring Actions success;
+- moving a qualifying PR to `state:ready` only when implementation and validation signals are both current;
 - dispatching `pr-lifecycle-ready` with the PR number and exact head SHA for separate merge finalization.
 
 It deliberately stops at READY. It does not call the merge API and therefore does not make its own pending workflow check a prerequisite for completion.
@@ -81,7 +83,7 @@ Before MERGEABLE/MERGED it must re-confirm:
 - the PR is still open against `main`;
 - the dispatch head still equals the current PR head;
 - `lifecycle:implementation-complete` is still present;
-- `Application validation` succeeded for that exact head;
+- `lifecycle:validation-complete` is still present;
 - no required review decision or unresolved review thread blocks merge;
 - the PR branch is not behind current `main`;
 - GitHub reports the head as conflict-free/mergeable.
@@ -109,7 +111,7 @@ If Issues are enabled later, issues should become the normal implementation cont
 npm run platform:validate
 ```
 
-`platform:validate` includes dependency audit, executable governance validation, zero-warning lint, typecheck, Node tests, production build and critical Playwright coverage.
+`platform:validate` includes dependency audit, executable governance/project-state/provider-schema validation, zero-warning lint, typecheck, Node tests, production build and critical Playwright coverage.
 
 A successful CI run is repository-validation evidence only. Provider contracts, deployment configuration, exact deployed commit and runtime behaviour require separate evidence.
 
@@ -127,7 +129,7 @@ Branch protection/rulesets remain the highest-priority external configuration ga
 Before repository merge:
 
 - implementation-complete evidence must still match the current head;
-- sufficient project-owned canonical validation must cover the current head; GitHub Actions success may support that evidence but is not independently mandatory when only CI infrastructure is failing;
+- `lifecycle:validation-complete` must reflect sufficient project-owned canonical validation for the current head; GitHub Actions success may supply that evidence but is not independently mandatory when only CI infrastructure is failing;
 - required review findings/conversations must be resolved;
 - the head must be conflict-free and current with `main`;
 - affected project state must describe the post-merge re-entry point rather than leaving a closed PR as the active checkpoint;

@@ -3,7 +3,7 @@
 **Status:** Current logical persisted-data baseline  
 **Intended persistence provider:** NoCodeBackend  
 **Physical provider operations:** Target-instance unverified  
-**Last materially reviewed:** 26 August 2026
+**Last materially reviewed:** 28 September 2026
 
 ## 1. Purpose
 
@@ -143,7 +143,19 @@ form/input
 
 UI validation improves interaction but does not replace trusted-boundary validation. Test fixtures can prove mapping/validation logic but do not make the target physical operation VERIFIED.
 
-## 10. Migration lifecycle
+## 10. Physical provider-schema authority
+
+This is a NoCodeBackend project, not a conventional SQL-schema project.
+
+- This document is the canonical application/domain model.
+- `database/provider-schema.json` is the machine-readable target-provider schema evidence register. It remains explicitly `UNVERIFIED` until target-instance evidence is captured.
+- `docs/NOCODEBACKEND_OPERATIONS.md` records verified physical operation evidence.
+- `database/migrations/` records controlled provider transition packages.
+- Do not create or treat `database/schema.sql` as authoritative unless NoCodeBackend genuinely exposes an executable SQL schema for this project. A reference/export SQL file, if ever added, must be labelled non-authoritative.
+
+Application code, domain documentation and provider evidence must not silently diverge. Schema/provider drift validation should fail closed when verified evidence contradicts repository expectations.
+
+## 11. Migration lifecycle
 
 Use the inherited migration lifecycle where a physical/provider schema changes:
 
@@ -165,29 +177,49 @@ The provider-boundary correction is an application integration hardening change:
 
 `execution-sessions` remains at **PLANNED / pre-EXPAND provider creation**. No destructive migration or backfill is currently justified because no generic execution-session records are established.
 
-## 11. User preferences
+## 12. User preferences
 
 `user-preferences` stores durable onboarding/module/accessibility/day-setup configuration at the logical application level. New optional preference fields should normally resolve to safe defaults for older records rather than forcing destructive migration.
 
 Physical provider read/write behaviour for this collection remains subject to the provider-operation register.
 
-## 12. Inbox multi-write behaviour
+## 13. Inbox multi-write behaviour
 
 Processing an `inbox-item` into another domain object must preserve explicit partial-success/retry semantics so a failed second operation does not silently lose or duplicate the captured source item.
 
 Do not describe this persistence flow as connected-provider verified until both required physical writes are certified.
 
-## 13. Retention and deletion
+## 14. Retention and deletion
 
 No comprehensive product-wide retention/deletion schedule is currently established. Do not invent one in implementation. Features requiring permanent deletion, archival, recovery windows or regulatory retention require an explicit policy decision before being treated as settled data behaviour.
 
 Provider delete support is additionally unverified until the target generated operation is certified.
 
-## 14. Future integrations
+## 15. Future integrations
 
 External calendar/event data and remote AI-derived data are not current persisted domains. Before adding them establish source-of-truth ownership, sync direction, external identifiers, conflicts, deletion propagation, retry/offline behaviour, privacy/consent, minimisation/retention and provider failure semantics.
 
-## 15. Persisted-change protocol
+## 16. Migration approval package
+
+For an irreversible or production-impacting provider/schema transition, create a package under `database/migrations/<migration-name>/` before requesting approval. It must record:
+
+- change and affected tables/resources;
+- existing-data scope;
+- current and proposed schema/provider shape;
+- constraint/uniqueness changes;
+- backup/snapshot evidence;
+- restore/recovery evidence;
+- backfill algorithm;
+- duplicate/conflict handling;
+- dry-run result where possible;
+- rollback or roll-forward path;
+- post-migration verification;
+- exact irreversible operation;
+- owner approval requirement.
+
+Complete reversible preparation and evidence gathering before escalation.
+
+## 17. Persisted-change protocol
 
 When evolving a persisted record or adding a collection:
 

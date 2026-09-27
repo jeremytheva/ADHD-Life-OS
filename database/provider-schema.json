@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "provider": "NoCodeBackend",
+  "project": "ADHD Life OS",
+  "verification_state": "UNVERIFIED",
+  "target_instance": "UNVERIFIED",
+  "verified_at": null,
+  "evidence_source": null,
+  "application_model": "docs/DATA_MODEL.md",
+  "operation_register": "docs/NOCODEBACKEND_OPERATIONS.md",
+  "collections": {}
+}

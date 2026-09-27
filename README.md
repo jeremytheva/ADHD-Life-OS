@@ -9,7 +9,7 @@ ADHD Life-OS is a React and Vite life-management platform designed for supportiv
 - **Personalisation:** onboarding roles/modules plus accessibility preferences including font size, contrast, reduced motion, focus mode, dyslexic font and line spacing.
 - **Execution direction:** one unified execution/recommendation policy feeds the Today next-action experience. Durable generic Start/Continue/Recover remains provider-blocked until the real NoCodeBackend execution-session contract is certified.
 - **Provider boundary:** browser requests use stable same-origin auth/data application routes. Physical NoCodeBackend data operations are isolated server-side and currently fail closed until the target ADHD Life OS generated API is certified; deterministic tests do not count as provider evidence.
-- **Delivery control:** implementation PRs are Draft-first and progress through repository-managed implementation, validation, Ready, Mergeable and Merged gates. A new commit invalidates prior completion evidence.
+- **Delivery control:** normal reviewable PRs are the default; lifecycle state is carried in repository/PR metadata, with Draft reserved for genuinely non-reviewable or substantially incomplete work. WIP limits prevent implementation from outpacing validation and integration.
 
 ## Planned integrations and limits
 
@@ -24,6 +24,8 @@ External calendar/event synchronisation, background synchronisation, remote AI/L
 - [Product overview](docs/PRODUCT.md) — current product behaviour and boundaries.
 - [Architecture](docs/ARCHITECTURE.md) — current system/trust/provider structure.
 - [Data model](docs/DATA_MODEL.md) — canonical entities, relationships and migration rules.
+- [Provider schema register](database/provider-schema.json) — machine-readable NoCodeBackend schema evidence state.
+- [Provider migration controls](database/migrations/README.md) — structured production/provider transition packages.
 - [NoCodeBackend operations](docs/NOCODEBACKEND_OPERATIONS.md) — stable application operations versus target physical provider certification state.
 - [Execution-session provider contract](docs/NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md) — Stage 3 durable execution provider requirements.
 - [Security guide](docs/SECURITY.md) — project-specific trusted boundary and secret handling.
@@ -90,12 +92,14 @@ The canonical full repository check is:
 npm run platform:validate
 ```
 
-It composes dependency audit, executable governance checks, lint, typecheck, Node tests, production build and the critical Playwright suite.
+It composes dependency audit, executable governance/project-state/provider-schema checks, lint, typecheck, Node tests, production build and the critical Playwright suite.
 
 Narrower commands remain available for diagnosis:
 
 ```bash
 npm run validate:governance
+npm run validate:project-state
+npm run validate:provider-schema
 npm run lint
 npm run typecheck
 npm test

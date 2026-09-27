@@ -13,6 +13,8 @@ It composes the repository's declared checks:
 ```text
 dependency audit
   → executable governance validation
+  → project-state / WIP drift validation
+  → provider-schema / migration-package validation
   → lint
   → typecheck
   → Node unit/behaviour/contract tests
@@ -20,12 +22,14 @@ dependency audit
   → critical-path Playwright tests
 ```
 
-The governance check verifies high-value mechanical rules including required project documents, canonical NoCodeBackend environment names, removal of deprecated provider aliases, current execution-gate fields in `STATUS.md`, and obvious browser exposure of the server-only secret name.
+The governance/state/schema checks verify high-value mechanical rules including required project documents, canonical NoCodeBackend environment names, current execution/evidence fields in `STATUS.md`, open-PR WIP/stack limits when live GitHub state is available, fail-closed provider-schema evidence, migration-package completeness, removal of deprecated provider aliases, and obvious browser exposure of the server-only secret name.
 
 Use narrower commands when diagnosing or certifying a specific boundary:
 
 ```bash
 npm run validate:governance
+npm run validate:project-state
+npm run validate:provider-schema
 npm run lint
 npm run typecheck
 npm test
@@ -52,6 +56,21 @@ A passing `platform:validate` means only that its declared automated checks pass
 - a user journey works against production providers.
 
 Use explicit evidence states such as **IMPLEMENTED**, **PROVIDER VERIFIED**, **APPLICATION VERIFIED**, **DEPLOYED**, **RUNTIME VERIFIED**, and **COMPLETE** rather than treating them as interchangeable.
+
+## Validation execution hierarchy
+
+Use `npm run platform:validate` as the canonical project validation entry point. When its preferred execution environment is unavailable, use:
+
+```text
+A. canonical repository executor
+→ B. trusted alternate execution environment
+→ C. exact-commit deployment/build running equivalent required commands
+→ D. VALIDATION WAITING
+```
+
+Evidence must identify the exact code candidate and executor. Never record an unexecuted layer as `PASS`. A zero-step/empty validation job is not a substantive application failure; classify the missing execution evidence and use the fallback hierarchy instead.
+
+Where `STATUS.md` tracks provenance, distinguish current main/candidate from latest validated, deployed, runtime-verified and browser-verified evidence. Later evidence states must not be inferred from earlier ones.
 
 ## CI
 

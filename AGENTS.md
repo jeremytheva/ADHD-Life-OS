@@ -49,7 +49,7 @@ Stop and require product-owner involvement only when:
 
 - a genuine product or business decision is required;
 - required credentials or external access are unavailable;
-- an irreversible or destructive operation requires approval;
+- an irreversible or destructive operation requires approval, including irreversible production database/provider migrations;
 - conflicting requirements cannot be resolved from repository evidence;
 - a security, privacy, legal or compliance decision requires owner authority;
 - an external dependency prevents all useful dependency-correct work;
@@ -123,6 +123,7 @@ DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 - `npm run platform:validate` is the canonical project-owned repository validation gate where applicable. Record the actual evidence in the PR/repository.
 - GitHub Actions is supporting diagnostic evidence and an optional execution environment for the validation contract, not a duplicate mandatory acceptance gate. A GitHub Actions failure blocks merge only when it reveals a substantive implementation, test, security, data-integrity, build, migration or release defect. Runner, billing, queue, permission or other CI-infrastructure failure alone does not make an otherwise valid PR unmergeable.
 - Do not add `lifecycle:implementation-complete` until the implementation has been audited criterion by criterion, the PR evidence is current, and no known in-scope implementation work remains.
+- `lifecycle:validation-complete` records sufficient project-owned validation for the current head. A successful canonical Actions run may add it automatically; a trusted alternate executor may justify it when the PR evidence identifies the exact candidate, commands and results. Any new commit removes it.
 - MERGEABLE requires sufficient current-head project-owned validation, no unresolved material review conversation, no merge conflict, no material blocker, and any applicable runtime/deployment evidence required by the change.
 - A merged PR proves repository integration only. Deployment/provider/runtime gates remain separate.
 - If repository automation still assumes native Draft PRs or mandatory GitHub Actions success, treat that as an implementation/configuration gap to reconcile. Do not reinterpret the owner's newer normal-PR and repository-owned-validation policy to match legacy automation.
@@ -152,16 +153,32 @@ Do not restart solved planning, reopen accepted decisions, or ask the product ow
 
 Proceed autonomously for low-risk, reversible, technically clear choices consistent with accepted architecture/standards. Escalate only genuinely unresolved decisions that materially affect product behaviour/scope, future-constraining architecture, destructive/irreversible data, privacy/security/permissions, external cost/commitment, or another consequential boundary.
 
-### Work-in-progress and scope parking
+### Work-in-progress, integration throughput and scope parking
+
+Default implementation limits are:
+
+- maximum dependent PR stack: **2**;
+- maximum ordinary open implementation PRs: **3**.
+
+If either limit is exceeded, stop creating overlapping implementation work. Validate and reconcile existing work, merge eligible PRs, update `STATUS.md`, then resume implementation.
 
 - Default to one primary implementation thread for this repository.
 - Parallelise only genuinely independent, explicitly parallel-safe work.
+- Do not extend a deep PR stack merely because additional slices can be coded; integration throughput is part of delivery capacity.
 - Park useful out-of-scope discoveries instead of following them immediately.
 - Once acceptance criteria, required validation, safety and documentation are satisfied, further improvement is new scope unless needed for the root-cause correction.
+
+### Productive-work threshold
+
+Autonomous continuation does not justify inventing work. New work should be supported by at least one of: a roadmap/phase requirement, accepted implementation contract, known defect, failed validation, review finding, security/data requirement, documented technical debt, dependency-correct release work, or accepted product requirement.
+
+If none exists, do not manufacture speculative micro-refactors or indefinite hardening work. Move the project to the truthful waiting, maintenance, blocked or complete state.
 
 ## State maintenance
 
 `STATUS.md` is the durable execution handoff and must remain machine-readable and human-readable.
+
+Where meaningful, distinguish portfolio importance from current execution capacity. Portfolio state may use `PLANNED`, `READY`, `ACTIVE`, `VALIDATING`, `BLOCKED`, `MAINTENANCE`, or `COMPLETE`. Execution capacity should use an explicit slot such as `BUILDING`, `INTEGRATING`, `VERIFYING`, `WAITING`, or `NONE`; a project should not occupy `BUILDING`/`INTEGRATING` merely because it remains important.
 
 After material changes, update it to reflect, where applicable:
 
@@ -170,7 +187,7 @@ After material changes, update it to reflect, where applicable:
 - completed work and known partial work;
 - concrete next actions in dependency order;
 - PR/issue/branch references when they remain useful after merge;
-- validation state and last verified commit;
+- validation state and evidence provenance, including current main/candidate and latest validated/deployed/runtime/browser-verified commits where applicable;
 - blockers and deferred dependencies;
 - owner decisions genuinely required;
 - technical debt discovered or explicitly parked;
@@ -210,10 +227,29 @@ If one of these cannot be answered, improving durable state is itself dependency
 - The committed `package-lock.json` is authoritative. Use `npm ci` for reproducible installs; change dependencies only deliberately and commit the generated lockfile.
 - Do not hand-edit `package-lock.json`.
 - The canonical full repository check is `npm run platform:validate`.
-- `npm run platform:validate` includes dependency audit, governance checks, lint, typecheck, Node tests, production build and critical Playwright coverage.
+- `npm run platform:validate` includes dependency audit, governance/state/schema checks, lint, typecheck, Node tests, production build and critical Playwright coverage.
 - Use `npm run validate`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, or `npm run test:e2e` individually when isolating a failure.
+- Validation execution hierarchy: **A)** canonical repository executor; **B)** trusted alternate execution environment; **C)** exact-commit deployment/build executing equivalent required commands; **D)** explicit `VALIDATION WAITING`.
+- Never represent an unexecuted check as `PASS`. Record validation debt explicitly when capacity is unavailable and do not grow overlapping implementation faster than it can be integrated.
+- Do not treat an empty/zero-step Platform Validation job as an application validation failure.
 - Do not claim runtime/provider verification merely because `platform:validate` passes.
 - GitHub Actions may execute the canonical validation, but a green Actions badge is not itself the acceptance policy and an infrastructure-only Actions failure is not a material validation failure.
+
+## Template-library and data-governance compatibility
+
+Prefer reusable master templates and stable contracts before shared runtime implementation. Repository/template categories may include repository, GitHub, validation, database, provider, feature and decision patterns. Reuse the pattern first; do not introduce a shared package merely because another project has similar code.
+
+For persisted data:
+
+- `docs/DATA_MODEL.md` is the application/domain authority.
+- For NoCodeBackend, a verified machine-readable provider representation belongs under `database/provider-schema.json`; it must remain explicitly `UNVERIFIED` until target-instance evidence exists.
+- `docs/NOCODEBACKEND_OPERATIONS.md` remains the human-readable provider operation/certification register.
+- `database/migrations/` contains controlled provider transition packages. Do not invent authoritative SQL for NoCodeBackend.
+- `schema.sql` must not be added or treated as authoritative unless a provider-backed executable SQL schema genuinely exists.
+- When data requirements change, update the domain model, provider/schema representation, migration package where required, provider contract/validation, and material project status together.
+- Drift checks should detect obvious mismatches such as missing/extra expected fields, wrong verification state, incomplete migration evidence, or a provider contract that contradicts repository expectations.
+
+For irreversible or production-impacting provider/schema changes, prepare a migration approval package before owner escalation. It must cover affected resources/data scope, current/proposed schema, constraints, backup/snapshot and restore evidence, backfill/conflict handling, dry-run evidence where possible, rollback/roll-forward path, post-migration verification, the exact irreversible operation and the approval required.
 
 ## NoCodeBackend application and provider boundaries
 

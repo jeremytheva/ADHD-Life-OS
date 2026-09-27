@@ -1,7 +1,7 @@
 # ADHD Life OS — NoCodeBackend Operations
 
 **Status:** Current provider-operation register  
-**Last materially reviewed:** 26 August 2026  
+**Last materially reviewed:** 28 September 2026  
 **Application boundary:** `/api/ncb/{auth,data}`  
 **Physical data-provider contract:** **UNVERIFIED for the target ADHD Life OS instance**
 
@@ -198,7 +198,37 @@ IMPLEMENTED
 
 A generated specification produces candidate evidence. A successful connected read certification can establish **PROVIDER VERIFIED** for the exact exercised read/list operation. Neither establishes later states by itself.
 
-## 11. Execution-session dependency
+## 11. Provider certification baseline
+
+Certification is capability-specific. Use the existing stronger project harness where available and extend it only from target-instance evidence.
+
+Relevant capabilities include:
+
+- configuration and authentication;
+- server-only credential handling;
+- CRUD operations actually required by the application;
+- ownership/isolation and filtering;
+- pagination where used;
+- error semantics;
+- idempotency and uniqueness;
+- optimistic concurrency or equivalent conflict behaviour;
+- transaction/atomic behaviour where safety depends on it;
+- schema contract;
+- migration capability;
+- backup/snapshot capability;
+- restore/recovery capability.
+
+Do not claim a capability from generic provider documentation when application safety depends on target-instance behaviour. Keep the evidence states distinct: `IMPLEMENTED`, `PROVIDER VERIFIED`, and `APPLICATION VERIFIED`.
+
+The machine-readable provider schema register is `database/provider-schema.json`. It must remain `UNVERIFIED` until target-instance schema evidence is captured, and it must not be populated from application assumptions merely to satisfy validation.
+
+## 12. Provider migration governance
+
+Production-impacting schema/provider transitions use a package under `database/migrations/<migration-name>/`. The package records before/after provider schema evidence, migration/backfill plan, backup/restore evidence, conflict handling, dry-run evidence where practical, rollback/roll-forward path and post-migration verification.
+
+Irreversible production operations require explicit owner approval only after reversible preparation and evidence gathering are complete.
+
+## 13. Execution-session dependency
 
 The future `execution-sessions` collection follows the same boundary. Its logical model and dedicated certification harness are defined in `NOCODEBACKEND_EXECUTION_SESSION_CONTRACT.md`.
 

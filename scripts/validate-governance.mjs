@@ -20,6 +20,11 @@ const requiredFiles = [
   'docs/CODEX_WORKFLOW.md',
   'docs/NOCODEBACKEND_OPERATIONS.md',
   'docs/DECISIONS/README.md',
+  'database/README.md',
+  'database/provider-schema.json',
+  'database/migrations/README.md',
+  'scripts/validate-project-state.mjs',
+  'scripts/validate-provider-schema.mjs',
   '.github/workflows/pull-request-validation.yml',
   '.github/workflows/pr-lifecycle.yml',
   '.github/workflows/pr-merge-finalizer.yml',
@@ -95,7 +100,8 @@ const statusFrontMatter = frontMatterEnd >= 0 ? status.slice(4, frontMatterEnd) 
 
 const requiredStatusPatterns = [
   [/^project:\s*\S.+$/m, 'project'],
-  [/^portfolio_state:\s*ACTIVE$/m, 'portfolio_state: ACTIVE'],
+  [/^portfolio_state:\s*(PLANNED|READY|ACTIVE|VALIDATING|BLOCKED|MAINTENANCE|COMPLETE)$/m, 'portfolio_state'],
+  [/^execution_slot:\s*(BUILDING|INTEGRATING|VERIFYING|WAITING|NONE)$/m, 'execution_slot'],
   [/^phase:\s*\S.+$/m, 'phase'],
   [/^stage:\s*\S.+$/m, 'stage'],
   [/^gate:\s*(Project Entry|Change|Integration|Release|Completion)$/m, 'canonical gate'],
@@ -117,6 +123,13 @@ const requiredStatusPatterns = [
   /^\s{2}build:\s*(PASS|FAIL|NOT_RUN|NOT_APPLICABLE)$/m,
   /^\s{2}ci:\s*(PASS|FAIL|PENDING|NOT_RUN|NOT_APPLICABLE)$/m,
   /^\s{2}runtime:\s*(VERIFIED|UNVERIFIED|NOT_APPLICABLE)$/m,
+  [/^current_main_commit:\s*\S.+$/m, 'current_main_commit'],
+  [/^current_candidate_commit:\s*\S.+$/m, 'current_candidate_commit'],
+  [/^latest_validated_commit:\s*\S.+$/m, 'latest_validated_commit'],
+  [/^latest_deployed_commit:\s*\S.+$/m, 'latest_deployed_commit'],
+  [/^latest_runtime_verified_commit:\s*\S.+$/m, 'latest_runtime_verified_commit'],
+  [/^latest_browser_verified_commit:\s*\S.+$/m, 'latest_browser_verified_commit'],
+  [/^validation_debt:\s*\S.+$/m, 'validation_debt'],
   [/^last_verified_commit:\s*(null|[0-9a-f]{7,40})$/m, 'last_verified_commit'],
   [/^last_updated:\s*\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$/m, 'ISO-8601 last_updated']
 ]
@@ -146,13 +159,17 @@ for (const requiredFragment of [
   'MERGED',
   'lifecycle:implementation-complete',
   'State maintenance',
-  'Scheduled supervisory entry'
+  'Scheduled supervisory entry',
+  'maximum dependent PR stack',
+  'Productive-work threshold',
+  'Validation execution hierarchy',
+  'database/provider-schema.json'
 ]) {
   if (!agentGuidance.includes(requiredFragment)) failures.push(`AGENTS.md must document autonomous/delivery control: ${requiredFragment}`)
 }
 
 const lifecycleWorkflow = await readFile(path.join(root, '.github/workflows/pr-lifecycle.yml'), 'utf8')
-for (const requiredFragment of ['pull_request_target', 'workflow_run', 'lifecycle:implementation-complete', 'repos/$REPO/dispatches', 'pr-lifecycle-ready', 'pull-request-validation.yml']) {
+for (const requiredFragment of ['pull_request_target', 'workflow_run', 'lifecycle:implementation-complete', 'lifecycle:validation-complete', 'repos/$REPO/dispatches', 'pr-lifecycle-ready']) {
   if (!lifecycleWorkflow.includes(requiredFragment)) failures.push(`PR lifecycle workflow is missing readiness marker ${requiredFragment}`)
 }
 if (lifecycleWorkflow.includes('mergePullRequest')) {
@@ -160,7 +177,7 @@ if (lifecycleWorkflow.includes('mergePullRequest')) {
 }
 
 const mergeFinalizer = await readFile(path.join(root, '.github/workflows/pr-merge-finalizer.yml'), 'utf8')
-for (const requiredFragment of ['repository_dispatch', 'pr-lifecycle-ready', 'lifecycle:implementation-complete', 'pull-request-validation.yml', 'reviewThreads', 'compare/main...', 'git/ref/heads/main', 'expectedHeadOid', 'mergePullRequest']) {
+for (const requiredFragment of ['repository_dispatch', 'pr-lifecycle-ready', 'lifecycle:implementation-complete', 'lifecycle:validation-complete', 'reviewThreads', 'compare/main...', 'git/ref/heads/main', 'expectedHeadOid', 'mergePullRequest']) {
   if (!mergeFinalizer.includes(requiredFragment)) failures.push(`PR merge finalizer is missing enforcement marker ${requiredFragment}`)
 }
 if (mergeFinalizer.includes('mergeStateStatus')) {
@@ -179,7 +196,7 @@ if (!providerContract.includes("UNVERIFIED: 'UNVERIFIED'")) {
 
 const packageJson = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'))
 const platformValidate = packageJson.scripts?.['platform:validate'] ?? ''
-for (const requiredFragment of ['npm audit', 'validate:governance', 'npm run validate', 'test:e2e']) {
+for (const requiredFragment of ['npm audit', 'validate:governance', 'validate:project-state', 'validate:provider-schema', 'npm run validate', 'test:e2e']) {
   if (!platformValidate.includes(requiredFragment)) failures.push(`platform:validate must include ${requiredFragment}`)
 }
 

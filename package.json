@@ -17,7 +17,9 @@
     "certify:execution-sessions": "node scripts/certify-execution-sessions.mjs",
     "validate:governance": "node scripts/validate-governance.mjs",
     "validate": "npm run lint && npm run typecheck && npm test && npm run build",
-    "platform:validate": "npm audit --audit-level=moderate && npm run validate:governance && npm run validate && npm run test:e2e"
+    "platform:validate": "npm audit --audit-level=moderate && npm run validate:governance && npm run validate:project-state && npm run validate:provider-schema && npm run validate && npm run test:e2e",
+    "validate:project-state": "node scripts/validate-project-state.mjs",
+    "validate:provider-schema": "node scripts/validate-provider-schema.mjs"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
