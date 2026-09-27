@@ -13,6 +13,8 @@ It composes the repository's declared checks:
 ```text
 dependency audit
   → executable governance validation
+  → project-state / WIP drift validation
+  → provider-schema / migration-package validation
   → lint
   → typecheck
   → Node unit/behaviour/contract tests
@@ -20,12 +22,14 @@ dependency audit
   → critical-path Playwright tests
 ```
 
-The governance check verifies high-value mechanical rules including required project documents, canonical NoCodeBackend environment names, removal of deprecated provider aliases, current execution-gate fields in `STATUS.md`, and obvious browser exposure of the server-only secret name.
+The governance/state/schema checks verify high-value mechanical rules including required project documents, canonical NoCodeBackend environment names, current execution/evidence fields in `STATUS.md`, open-PR WIP/stack limits when live GitHub state is available, fail-closed provider-schema evidence, migration-package completeness, removal of deprecated provider aliases, and obvious browser exposure of the server-only secret name.
 
 Use narrower commands when diagnosing or certifying a specific boundary:
 
 ```bash
 npm run validate:governance
+npm run validate:project-state
+npm run validate:provider-schema
 npm run lint
 npm run typecheck
 npm test
