@@ -1,6 +1,6 @@
 # ADHD Life OS — System Map
 
-**Last materially reviewed:** 26 August 2026
+**Last materially reviewed:** 28 September 2026
 
 This file is a compact navigation map for whole-system analysis. Architectural detail belongs in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md); current delivery state belongs in [`STATUS.md`](STATUS.md).
 
@@ -92,7 +92,7 @@ User
   └─ inbox-items
 ```
 
-See [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) for invariants and logical persisted shapes. Physical provider operation mapping is separate from the domain model.
+See [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) for invariants and logical persisted shapes. `database/provider-schema.json` records machine-readable target-provider schema evidence, while physical operation mapping remains separate in the provider contract/register.
 
 ## Validation and delivery
 
@@ -101,6 +101,8 @@ Implementation
   → npm run platform:validate
       → dependency audit
       → governance checks
+      → project-state / WIP drift checks
+      → provider-schema / migration-package checks
       → lint
       → typecheck
       → Node tests
@@ -131,6 +133,7 @@ Deterministic injected provider fixtures prove adapter behaviour only; they do n
 | Physical provider data route/method | `api/ncb/dataProviderContract.js`, `api/ncb/dataProvider.js`, `docs/NOCODEBACKEND_OPERATIONS.md` |
 | Auth/session | auth context/client + `/api/ncb/auth/*` + proxy contract tests |
 | Authorization/ownership | `api/ncb/handler.js` + domain relationship rules/tests |
-| Provider certification | `docs/NOCODEBACKEND_OPERATIONS.md`, target Swagger/API evidence, provider contract tests |
+| Provider certification | `docs/NOCODEBACKEND_OPERATIONS.md`, `database/provider-schema.json`, target Swagger/API evidence, provider contract tests |
+| Provider/schema migration | `database/migrations/`, `docs/DATA_MODEL.md`, provider evidence and approval package |
 | Release/CI | `package.json`, `.github/workflows/`, `docs/TESTING.md`, `docs/DELIVERY.md` |
 | Project direction/current state | `ROADMAP.md` / `STATUS.md` |
