@@ -165,6 +165,7 @@ The normal unit of work is one focused outcome producing one focused normal PR. 
 ## Owner-facing operational reporting
 
 `AGENTS.md` defines the authoritative ChatGPT/Codex response contract. Detailed implementation evidence stays in the repository and GitHub; routine owner-facing responses default to concise `Done / Next / You` reporting, with `Blocked`, `Problem`, or `Decision needed` added only when materially necessary.
+
 ## Current delivery direction
 
 Stage 2 integrity work is complete. Stage 3 is active and aims to turn the existing recommendation/next-action foundation into a durable Start/Continue/Recover execution loop without creating competing engines or unverified provider behaviour.
@@ -181,6 +182,9 @@ The live delivery snapshot and immediate dependency-correct work are maintained 
 - [`docs/PRODUCT.md`](docs/PRODUCT.md) — product boundary.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — system architecture.
 - [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) — data model.
+- [`database/README.md`](database/README.md) — provider-schema and migration evidence roles.
+- [`database/provider-schema.json`](database/provider-schema.json) — machine-readable provider schema verification state.
+- [`database/migrations/README.md`](database/migrations/README.md) — provider migration approval-package contract.
 - [`docs/SECURITY.md`](docs/SECURITY.md) — project-specific security boundary.
 - [`docs/TESTING.md`](docs/TESTING.md) — project validation strategy.
 - [`docs/DELIVERY.md`](docs/DELIVERY.md) — project delivery/release details.
