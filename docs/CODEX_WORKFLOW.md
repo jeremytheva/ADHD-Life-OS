@@ -54,13 +54,14 @@ Only after a criterion-by-criterion audit confirms the implementation is complet
 1. update the PR body with current acceptance and validation evidence;
 2. update affected project documentation/status so it describes the post-merge re-entry state;
 3. confirm no known blocking in-scope review finding remains;
-4. add `lifecycle:implementation-complete` and the appropriate lifecycle metadata.
+4. add `lifecycle:implementation-complete` after the semantic implementation audit;
+5. add `lifecycle:validation-complete` only when sufficient current-head project-owned validation evidence is recorded. A successful canonical Actions run may add it automatically.
 
 ### READY / MERGEABLE / MERGED
 
 A PR is READY when implementation is complete and sufficient project-owned validation covers the current head. It is MERGEABLE when material review threads are resolved, the branch is conflict-free/current enough for safe integration, no material blocker remains, and any release/runtime evidence required by the change is satisfied.
 
-Current GitHub lifecycle workflows may provide automation for these transitions. If they still require native Draft state or GitHub-Actions-only success, treat that as a repository automation gap to reconcile rather than redefining the owner's policy.
+GitHub lifecycle automation uses these semantic signals directly. It leaves normal PRs reviewable, invalidates both signals after new commits, and does not require GitHub Actions as the sole validation source.
 
 Repository merge is not deployment/provider/runtime completion.
 
@@ -110,6 +111,9 @@ No required layer should remain only mocked, placeholder, disconnected or assume
 
 ## Work-in-progress and scope control
 
+- Maximum dependent PR stack: **2**.
+- Maximum ordinary open implementation PRs: **3**.
+- If either limit is exceeded, stop new overlapping implementation and integrate existing work first.
 - Maintain one primary implementation thread by default.
 - Parallel work must be genuinely independent and explicitly parallel-safe.
 - Useful discoveries that are not required for the active acceptance criteria/root-cause correction are parked as follow-up work.
@@ -147,12 +151,12 @@ A passing `platform:validate` does **not** prove deployment/provider/runtime sta
 
 1. audit the implementation against every acceptance criterion;
 2. verify the relevant integration path rather than code presence alone;
-3. run the applicable project-owned validation, including `npm run platform:validate` for the canonical full repository gate;
+3. run the applicable project-owned validation using the documented executor hierarchy; use `npm run platform:validate` for the canonical full repository gate;
 4. resolve blocking material review/validation findings at root cause;
 5. update only project documents whose meaning changed;
 6. ensure `STATUS.md` records the truthful post-merge gate/evidence/next action;
 7. update one focused normal PR with outcome, scope, evidence, risk, parked work and next action;
-8. add `lifecycle:implementation-complete` only after the in-scope audit is complete;
+8. add `lifecycle:implementation-complete` only after the in-scope audit is complete and `lifecycle:validation-complete` only after sufficient current-head validation evidence exists;
 9. progress Ready → Mergeable → Merged from current repository evidence; use GitHub automation when it supports the policy, but do not treat CI infrastructure as the acceptance authority;
 10. mark project/capability COMPLETE only when all applicable repository, provider, deployment and runtime evidence supports it;
 11. return the concise owner-facing response defined in `AGENTS.md`; keep detailed engineering evidence in the repository/PR.
