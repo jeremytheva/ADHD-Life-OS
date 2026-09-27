@@ -199,7 +199,7 @@ Provider delete support is additionally unverified until the target generated op
 
 External calendar/event data and remote AI-derived data are not current persisted domains. Before adding them establish source-of-truth ownership, sync direction, external identifiers, conflicts, deletion propagation, retry/offline behaviour, privacy/consent, minimisation/retention and provider failure semantics.
 
-## Migration approval package
+## 16. Migration approval package
 
 For an irreversible or production-impacting provider/schema transition, create a package under `database/migrations/<migration-name>/` before requesting approval. It must record:
 
@@ -219,7 +219,7 @@ For an irreversible or production-impacting provider/schema transition, create a
 
 Complete reversible preparation and evidence gathering before escalation.
 
-## 16. Persisted-change protocol
+## 17. Persisted-change protocol
 
 When evolving a persisted record or adding a collection:
 
