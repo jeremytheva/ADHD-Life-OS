@@ -76,9 +76,13 @@ NOCODEBACKEND_AUTH_BASE_URL
 NOCODEBACKEND_DATA_BASE_URL
 NOCODEBACKEND_SECRET_KEY
 NOCODEBACKEND_INSTANCE
+NOCODEBACKEND_USER_EMAIL
+NOCODEBACKEND_USER_SECRET_KEY
+NOCODEBACKEND_ADMIN_EMAIL
+NOCODEBACKEND_ADMIN_SECRET_KEY
 ```
 
-Never expose `NOCODEBACKEND_SECRET_KEY` through `VITE_*`, commit real `.env` files, or bypass the explicit handlers.
+All `NOCODEBACKEND_*` values above are server/runtime configuration. Never expose provider secrets or provider user/admin credentials through `VITE_*`, commit real `.env` files, or bypass the explicit handlers. The current application data/auth path continues to use `NOCODEBACKEND_SECRET_KEY`; the user/admin credential variables are additional configuration and must not be wired into runtime behaviour without provider evidence.
 
 The base URLs identify provider services; they do not define physical collection operations. The server-side `api/ncb/dataProviderContract.js` registry remains `UNVERIFIED` until the target generated API/Swagger is inspected and the exact paths/methods are recorded in [`docs/NOCODEBACKEND_OPERATIONS.md`](docs/NOCODEBACKEND_OPERATIONS.md).
 
