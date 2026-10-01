@@ -13,9 +13,13 @@ NOCODEBACKEND_AUTH_BASE_URL
 NOCODEBACKEND_DATA_BASE_URL
 NOCODEBACKEND_SECRET_KEY
 NOCODEBACKEND_INSTANCE
+NOCODEBACKEND_USER_EMAIL
+NOCODEBACKEND_USER_SECRET_KEY
+NOCODEBACKEND_ADMIN_EMAIL
+NOCODEBACKEND_ADMIN_SECRET_KEY
 ```
 
-`NOCODEBACKEND_SECRET_KEY` is server-only. Never prefix it with `VITE_`, commit real `.env` files, or include secret values in screenshots, logs, issues, pull requests or browser-delivered source. `VITE_*` values are bundled for the browser and must contain only browser-safe configuration such as same-origin proxy paths.
+`NOCODEBACKEND_SECRET_KEY`, `NOCODEBACKEND_USER_SECRET_KEY`, and `NOCODEBACKEND_ADMIN_SECRET_KEY` are server-only secrets. The user/admin email variables are also server-owned provider configuration. Never prefix these values with `VITE_`, commit real `.env` files, or include credentials in screenshots, logs, issues, pull requests or browser-delivered source. `VITE_*` values are bundled for the browser and must contain only browser-safe configuration such as same-origin proxy paths.
 
 Do not create alternate short aliases for canonical provider configuration. A configured provider base URL is not proof of a physical collection route or method.
 

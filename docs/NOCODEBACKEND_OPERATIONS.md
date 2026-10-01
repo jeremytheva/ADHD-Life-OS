@@ -52,6 +52,10 @@ NOCODEBACKEND_AUTH_BASE_URL
 NOCODEBACKEND_DATA_BASE_URL
 NOCODEBACKEND_SECRET_KEY
 NOCODEBACKEND_INSTANCE
+NOCODEBACKEND_USER_EMAIL
+NOCODEBACKEND_USER_SECRET_KEY
+NOCODEBACKEND_ADMIN_EMAIL
+NOCODEBACKEND_ADMIN_SECRET_KEY
 ```
 
 The repository example uses the current canonical service bases:
@@ -61,7 +65,7 @@ NOCODEBACKEND_AUTH_BASE_URL=https://app.nocodebackend.com/api/user-auth
 NOCODEBACKEND_DATA_BASE_URL=https://api.nocodebackend.com/
 ```
 
-The instance and secret remain deployment-specific and server-only.
+The instance, provider secrets, and user/admin provider identities remain deployment-specific and server-owned. `NOCODEBACKEND_SECRET_KEY` remains the credential used by the currently implemented auth/data request path. The user/admin credential variables are available for connected provider administration/certification but are not evidence that those identities or privileges have been verified.
 
 A base URL is not evidence of an operation route. The target instance's generated API/Swagger remains authoritative for physical data paths, methods, filtering and envelopes.
 
