@@ -258,7 +258,7 @@ For irreversible or production-impacting provider/schema changes, prepare a migr
 - Physical generated-data mapping belongs only in `api/ncb/dataProviderContract.js` and `api/ncb/dataProvider.js`.
 - The production data-provider registry must remain `UNVERIFIED` until the target ADHD Life OS generated API/Swagger provides evidence for the relevant operation. Do not mark it verified from another project, a test fixture, or a generic documentation example.
 - A test may inject a clearly labelled verified fixture contract to prove translation/security behaviour. Test fixture paths/methods must never be described as provider certification.
-- Canonical server/runtime variables are `NOCODEBACKEND_AUTH_BASE_URL`, `NOCODEBACKEND_DATA_BASE_URL`, `NOCODEBACKEND_SECRET_KEY`, and `NOCODEBACKEND_INSTANCE`. Do not introduce alternate short aliases for these concepts.
+- Canonical server/runtime variables are `NOCODEBACKEND_AUTH_BASE_URL`, `NOCODEBACKEND_DATA_BASE_URL`, `NOCODEBACKEND_SECRET_KEY`, `NOCODEBACKEND_INSTANCE`, `NOCODEBACKEND_USER_EMAIL`, `NOCODEBACKEND_USER_SECRET_KEY`, `NOCODEBACKEND_ADMIN_EMAIL`, and `NOCODEBACKEND_ADMIN_SECRET_KEY`. Do not introduce alternate short aliases for these concepts. The user/admin credential variables are server-owned configuration and must not be substituted into runtime auth/data flows without provider evidence.
 - `NOCODEBACKEND_INSTANCE` and the Bearer secret are server-owned provider inputs. The browser cannot override them.
 - Browser configuration may use only browser-safe proxy-path variables such as `VITE_AUTH_PROXY_URL` and `VITE_DATA_PROXY_URL`.
 - Resolve authenticated ownership through the auth/session boundary before an enabled generated-data request.
