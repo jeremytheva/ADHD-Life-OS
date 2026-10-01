@@ -40,7 +40,11 @@ const canonicalEnvironmentNames = [
   'NOCODEBACKEND_AUTH_BASE_URL',
   'NOCODEBACKEND_DATA_BASE_URL',
   'NOCODEBACKEND_SECRET_KEY',
-  'NOCODEBACKEND_INSTANCE'
+  'NOCODEBACKEND_INSTANCE',
+  'NOCODEBACKEND_USER_EMAIL',
+  'NOCODEBACKEND_USER_SECRET_KEY',
+  'NOCODEBACKEND_ADMIN_EMAIL',
+  'NOCODEBACKEND_ADMIN_SECRET_KEY'
 ]
 const deprecatedEnvironmentNames = [
   ['NCB_', 'API_BASE_URL'].join(''),
@@ -209,8 +213,10 @@ for (const absolute of files) {
   }
 
   const browserDelivered = relative === 'index.html' || relative.startsWith('src/') || relative.startsWith('public/')
-  if (browserDelivered && content.includes('NOCODEBACKEND_SECRET_KEY')) {
-    failures.push(`Server-only NoCodeBackend secret name appears in browser-delivered source: ${relative}`)
+  if (browserDelivered) {
+    for (const name of canonicalEnvironmentNames) {
+      if (content.includes(name)) failures.push(`Server-only NoCodeBackend configuration name ${name} appears in browser-delivered source: ${relative}`)
+    }
   }
 }
 
