@@ -22,28 +22,7 @@ const scalar = (name) => {
 const nested = (group, name) => {
   const groupMatch = front.match(new RegExp(`^${group}:\\s*$([\\s\\S]*?)(?=^[A-Za-z_][A-Za-z0-9_]*:|$)`, 'm'))
   if (!groupMatch) return null
-  const match = groupMatch[1].match(new RegExp(`^\\s{2}${name}:\\s*(.+)#!/usr/bin/env node
-
-import { readFile } from 'node:fs/promises'
-import path from 'node:path'
-import process from 'node:process'
-import { fileURLToPath } from 'node:url'
-
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const statusText = await readFile(path.join(root, 'STATUS.md'), 'utf8')
-const failures = []
-
-const end = statusText.indexOf('\n---\n', 4)
-if (!statusText.startsWith('---\n') || end < 0) {
-  failures.push('STATUS.md must contain YAML front matter')
-}
-
-const front = end >= 0 ? statusText.slice(4, end) : ''
-const scalar = (name) => {
-  const match = front.match(new RegExp(`^${name}:\\s*(.+)$`, 'm'))
-  return match ? match[1].trim() : null
-}
-, 'm'))
+  const match = groupMatch[1].match(new RegExp(`^\\s{2}${name}:\\s*(.+)$`, 'm'))
   return match ? match[1].trim() : null
 }
 const listItems = (group) => {
