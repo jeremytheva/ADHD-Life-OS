@@ -1,155 +1,304 @@
-name: PR lifecycle
+name: PR lifecycle metadata
 
 on:
-  pull_request_target:
+  pull_request:
     branches: [main]
-    types: [opened, reopened, synchronize, converted_to_draft, ready_for_review, labeled, unlabeled]
+    types: [opened, reopened, synchronize, converted_to_draft, ready_for_review, labeled, unlabeled, closed]
   workflow_run:
     workflows: ["Application validation"]
     types: [completed]
 
-permissions:
-  actions: read
-  contents: write
-  pull-requests: write
-  issues: write
+permissions: {}
 
 concurrency:
   group: pr-lifecycle-${{ github.event.pull_request.number || github.event.workflow_run.head_sha || github.run_id }}
   cancel-in-progress: false
 
 jobs:
-  reconcile:
-    name: Reconcile PR lifecycle
+  pr-metadata:
+    name: Reconcile PR metadata
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    if: >-
-      github.event_name == 'pull_request_target' ||
-      (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request')
+    permissions:
+      pull-requests: read
+      issues: write
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
-      EVENT_NAME: ${{ github.event_name }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
       EVENT_ACTION: ${{ github.event.action }}
-      EVENT_PR_NUMBER: ${{ github.event.pull_request.number }}
-      WORKFLOW_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-      WORKFLOW_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+      PR_MERGED: ${{ github.event.pull_request.merged }}
     steps:
-      - name: Reconcile lifecycle state
+      - name: Reconcile advisory lifecycle labels
         shell: bash
         run: |
-          set -euo pipefail
+          set -u -o pipefail
 
-          ensure_label() {
+          warn() {
+            echo "::warning::$1"
+          }
+
+          ensure_label_best_effort() {
             local label="$1"
             local color="$2"
-            gh api --method POST "repos/$REPO/labels"               -f name="$label" -f color="$color" >/dev/null 2>&1 || true
+            gh api --method POST "repos/$REPO/labels" -f name="$label" -f color="$color" >/dev/null 2>&1 || true
           }
 
           has_label() {
-            gh api "repos/$REPO/issues/$pr_number/labels" --jq '.[].name' | grep -Fxq "$1"
+            gh api "repos/$REPO/issues/$PR_NUMBER/labels" --jq '.[].name' 2>/dev/null | grep -Fxq "$1"
           }
 
-          add_label() {
-            gh api --method POST "repos/$REPO/issues/$pr_number/labels" -f "labels[]=$1" >/dev/null
+          add_label_best_effort() {
+            local label="$1"
+            if gh api --method POST "repos/$REPO/issues/$PR_NUMBER/labels" -f "labels[]=$label" >/dev/null 2>&1; then
+              return 0
+            fi
+            warn "Lifecycle metadata could not add label $label; preserving existing metadata."
+            return 1
           }
 
-          remove_label() {
+          remove_label_best_effort() {
+            local label="$1"
+            gh api --method DELETE "repos/$REPO/issues/$PR_NUMBER/labels/$label" >/dev/null 2>&1 || true
+          }
+
+          set_state_best_effort() {
+            local target="$1"
+            # Add replacement state before removing previous metadata.
+            if ! add_label_best_effort "$target"; then
+              return 1
+            fi
+            for label in state:implementing state:validating state:ready state:mergeable state:merged; do
+              [[ "$label" == "$target" ]] || remove_label_best_effort "$label"
+            done
+            return 0
+          }
+
+          clear_blockers_best_effort() {
+            for label in blocked:review blocked:merge-conflict blocked:base-update; do
+              remove_label_best_effort "$label"
+            done
+          }
+
+          for spec in \
+            'state:implementing 8a2be2' \
+            'state:validating fbca04' \
+            'state:ready 0969da' \
+            'state:mergeable 1d76db' \
+            'state:merged 0e8a16' \
+            'lifecycle:implementation-complete 5319e7' \
+            'lifecycle:validation-complete 0e8a16' \
+            'blocked:review d93f0b' \
+            'blocked:merge-conflict b60205' \
+            'blocked:base-update d876e3'; do
+            ensure_label_best_effort $spec
+          done
+
+          if [[ "$EVENT_ACTION" == "closed" ]]; then
+            if [[ "$PR_MERGED" == "true" ]]; then
+              set_state_best_effort state:merged || true
+            fi
+            exit 0
+          fi
+
+          case "$EVENT_ACTION" in
+            opened|reopened)
+              clear_blockers_best_effort
+              set_state_best_effort state:implementing || true
+              exit 0
+              ;;
+            synchronize)
+              clear_blockers_best_effort
+              if set_state_best_effort state:implementing; then
+                remove_label_best_effort lifecycle:implementation-complete
+                remove_label_best_effort lifecycle:validation-complete
+              fi
+              exit 0
+              ;;
+            converted_to_draft)
+              set_state_best_effort state:implementing || true
+              exit 0
+              ;;
+          esac
+
+          pr_json=$(gh api "repos/$REPO/pulls/$PR_NUMBER" 2>/dev/null) || {
+            warn "Lifecycle metadata could not read PR $PR_NUMBER."
+            exit 0
+          }
+          state=$(jq -r '.state' <<<"$pr_json")
+          is_draft=$(jq -r '.draft' <<<"$pr_json")
+          [[ "$state" == "open" ]] || exit 0
+
+          if [[ "$is_draft" == "true" ]]; then
+            set_state_best_effort state:implementing || true
+            exit 0
+          fi
+
+          if has_label lifecycle:implementation-complete && has_label lifecycle:validation-complete; then
+            clear_blockers_best_effort
+            set_state_best_effort state:ready || true
+          elif has_label lifecycle:implementation-complete; then
+            set_state_best_effort state:validating || true
+          else
+            set_state_best_effort state:implementing || true
+          fi
+
+  validation-metadata:
+    name: Record canonical validation metadata
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: write
+    outputs:
+      ready: ${{ steps.reconcile.outputs.ready }}
+      pr_number: ${{ steps.reconcile.outputs.pr_number }}
+      head_sha: ${{ steps.reconcile.outputs.head_sha }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      WORKFLOW_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+      WORKFLOW_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+    steps:
+      - id: reconcile
+        name: Record advisory validation state
+        shell: bash
+        run: |
+          set -u -o pipefail
+          echo "ready=false" >> "$GITHUB_OUTPUT"
+          echo "pr_number=" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$WORKFLOW_HEAD_SHA" >> "$GITHUB_OUTPUT"
+
+          warn() {
+            echo "::warning::$1"
+          }
+
+          pr_number=$(gh api "repos/$REPO/commits/$WORKFLOW_HEAD_SHA/pulls" \
+            --jq 'map(select(.state == "open" and .base.ref == "main")) | .[0].number // empty' 2>/dev/null) || {
+              warn "Validation metadata could not resolve an open PR for $WORKFLOW_HEAD_SHA."
+              exit 0
+            }
+          [[ -n "$pr_number" ]] || exit 0
+          echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
+
+          pr_json=$(gh api "repos/$REPO/pulls/$pr_number" 2>/dev/null) || {
+            warn "Validation metadata could not read PR $pr_number."
+            exit 0
+          }
+          current_head=$(jq -r '.head.sha' <<<"$pr_json")
+          is_draft=$(jq -r '.draft' <<<"$pr_json")
+          [[ "$current_head" == "$WORKFLOW_HEAD_SHA" ]] || exit 0
+
+          has_label() {
+            gh api "repos/$REPO/issues/$pr_number/labels" --jq '.[].name' 2>/dev/null | grep -Fxq "$1"
+          }
+
+          add_label_best_effort() {
+            local label="$1"
+            if gh api --method POST "repos/$REPO/issues/$pr_number/labels" -f "labels[]=$label" >/dev/null 2>&1; then
+              return 0
+            fi
+            warn "Validation metadata could not add label $label; project acceptance remains independent."
+            return 1
+          }
+
+          remove_label_best_effort() {
             gh api --method DELETE "repos/$REPO/issues/$pr_number/labels/$1" >/dev/null 2>&1 || true
           }
 
-          set_state() {
+          set_state_best_effort() {
             local target="$1"
-            for label in state:implementing state:validating state:ready state:mergeable state:merged; do
-              remove_label "$label"
-            done
-            add_label "$target"
-          }
-
-          clear_blockers() {
-            for label in blocked:review blocked:merge-conflict blocked:base-update; do
-              remove_label "$label"
-            done
-          }
-
-          for spec in             'state:implementing 8a2be2'             'state:validating fbca04'             'state:ready 0969da'             'state:mergeable 1d76db'             'state:merged 0e8a16'             'lifecycle:implementation-complete 5319e7'             'lifecycle:validation-complete 0e8a16'             'blocked:review d93f0b'             'blocked:merge-conflict b60205'             'blocked:base-update d876e3'; do
-            ensure_label $spec
-          done
-
-          pr_number="$EVENT_PR_NUMBER"
-          if [[ "$EVENT_NAME" == "workflow_run" ]]; then
-            pr_number=$(gh api "repos/$REPO/commits/$WORKFLOW_HEAD_SHA/pulls"               --jq 'map(select(.state == "open" and .base.ref == "main")) | .[0].number // empty')
-            [[ -n "$pr_number" ]] || exit 0
-          fi
-
-          pr_json=$(gh api "repos/$REPO/pulls/$pr_number")
-          head_sha=$(jq -r '.head.sha' <<<"$pr_json")
-          is_draft=$(jq -r '.draft' <<<"$pr_json")
-          state=$(jq -r '.state' <<<"$pr_json")
-          pr_id=$(jq -r '.node_id' <<<"$pr_json")
-
-          [[ "$state" == "open" ]] || exit 0
-
-          if [[ "$EVENT_NAME" == "workflow_run" && "$head_sha" != "$WORKFLOW_HEAD_SHA" ]]; then
-            exit 0
-          fi
-
-          if [[ "$EVENT_NAME" == "pull_request_target" ]]; then
-            case "$EVENT_ACTION" in
-              opened|reopened)
-                clear_blockers
-                set_state state:implementing
-                ;;
-              synchronize)
-                remove_label lifecycle:implementation-complete
-                remove_label lifecycle:validation-complete
-                clear_blockers
-                set_state state:implementing
-                exit 0
-                ;;
-              converted_to_draft)
-                set_state state:implementing
-                exit 0
-                ;;
-            esac
-          fi
-
-          if [[ "$EVENT_NAME" == "workflow_run" ]]; then
-            if [[ "$WORKFLOW_CONCLUSION" == "success" ]]; then
-              add_label lifecycle:validation-complete
-            elif ! has_label lifecycle:validation-complete; then
-              set_state state:validating
-              exit 0
+            # Add replacement state before removing previous metadata.
+            if ! add_label_best_effort "$target"; then
+              return 1
             fi
+            for label in state:implementing state:validating state:ready state:mergeable state:merged; do
+              [[ "$label" == "$target" ]] || remove_label_best_effort "$label"
+            done
+            return 0
+          }
+
+          if [[ "$WORKFLOW_CONCLUSION" == "success" ]]; then
+            add_label_best_effort lifecycle:validation-complete || exit 0
+            if [[ "$is_draft" != "true" ]] && has_label lifecycle:implementation-complete; then
+              set_state_best_effort state:ready || true
+              echo "ready=true" >> "$GITHUB_OUTPUT"
+            fi
+          elif ! has_label lifecycle:validation-complete; then
+            set_state_best_effort state:validating || true
           fi
 
-          if ! has_label lifecycle:implementation-complete; then
-            set_state state:implementing
+  dispatch-pr-ready:
+    name: Dispatch ready PR from metadata
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action != 'closed' &&
+      github.event.pull_request.draft == false
+    needs: [pr-metadata]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Dispatch only when current semantic evidence is present
+        shell: bash
+        run: |
+          set -u -o pipefail
+          labels=$(gh api "repos/$REPO/pulls/$PR_NUMBER" --jq '[.labels[].name]' 2>/dev/null) || {
+            echo "::warning::Could not read PR lifecycle labels; no dispatch attempted."
             exit 0
-          fi
-
-          if ! has_label lifecycle:validation-complete; then
-            set_state state:validating
-            exit 0
-          fi
-
-          pr_json=$(gh api "repos/$REPO/pulls/$pr_number")
-          pr_id=$(jq -r '.node_id' <<<"$pr_json")
-          head_sha=$(jq -r '.head.sha' <<<"$pr_json")
-          is_draft=$(jq -r '.draft' <<<"$pr_json")
-
-          if [[ "$is_draft" == "true" ]]; then
-            gh api graphql               -f query='mutation($id:ID!){markPullRequestReadyForReview(input:{pullRequestId:$id}){pullRequest{isDraft}}}'               -F id="$pr_id" >/dev/null
-          fi
-
-          clear_blockers
-          set_state state:ready
-
-          gh api --method POST "repos/$REPO/dispatches" --input - >/dev/null <<JSON
+          }
+          jq -e 'index("lifecycle:implementation-complete") and index("lifecycle:validation-complete")' <<<"$labels" >/dev/null || exit 0
+          if ! gh api --method POST "repos/$REPO/dispatches" --input - >/dev/null 2>&1 <<JSON
           {
             "event_type": "pr-lifecycle-ready",
             "client_payload": {
-              "pr_number": $pr_number,
-              "head_sha": "$head_sha"
+              "pr_number": $PR_NUMBER,
+              "head_sha": "$HEAD_SHA"
             }
           }
           JSON
+          then
+            echo "::warning::Ready dispatch unavailable; direct authorised repository operations remain the primary merge path."
+          fi
+
+  dispatch-validation-ready:
+    name: Dispatch ready PR after canonical validation
+    if: >-
+      github.event_name == 'workflow_run' &&
+      needs.validation-metadata.outputs.ready == 'true'
+    needs: [validation-metadata]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      PR_NUMBER: ${{ needs.validation-metadata.outputs.pr_number }}
+      HEAD_SHA: ${{ needs.validation-metadata.outputs.head_sha }}
+    steps:
+      - name: Dispatch merge finalization best-effort
+        shell: bash
+        run: |
+          set -u -o pipefail
+          if ! gh api --method POST "repos/$REPO/dispatches" --input - >/dev/null 2>&1 <<JSON
+          {
+            "event_type": "pr-lifecycle-ready",
+            "client_payload": {
+              "pr_number": $PR_NUMBER,
+              "head_sha": "$HEAD_SHA"
+            }
+          }
+          JSON
+          then
+            echo "::warning::Ready dispatch unavailable; canonical validation remains valid project evidence."
+          fi
