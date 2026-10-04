@@ -1,136 +1,108 @@
 # GitHub Configuration
 
-## Repository capabilities
+**Last reconciled:** 5 October 2026
 
-Current repository evidence shows:
+## Evidence boundary
+
+GitHub owns live repository, pull-request, review and merge state. Repository files describe the adopted operating contract but do not establish external GitHub settings by themselves.
+
+Fresh connected evidence on 5 October 2026 confirms:
 
 - default branch: `main`;
 - pull requests: enabled;
 - GitHub Issues: disabled;
-- GitHub Projects: disabled;
-- squash, merge-commit and rebase merge methods: available;
+- merge commits, squash merges and rebase merges: enabled;
 - repository auto-merge setting: disabled;
-- `main` branch protection: not independently enforced by a repository ruleset;
-- repository rulesets: none;
-- update-branch support: disabled.
+- update-branch support: disabled;
+- the connected account has repository administrator access.
 
-These are external GitHub settings and must not be inferred from repository files. Workflow automation improves the normal delivery path but is not a substitute for branch protection/rulesets against administrator or direct-push bypass.
+The currently connected GitHub interface does **not** expose branch-protection/ruleset or repository Actions-administration settings. The latest retained administrative evidence from 28 September 2026 reported no `main` branch protection/ruleset. Treat that as dated evidence, not a fresh claim. Reverify those settings through an administrative surface when available.
 
-## Owner policy and current automation
+Connector/account authorization and a workflow run's `GITHUB_TOKEN` permissions are separate facts. A connector write failure does not prove a workflow-token restriction, and a workflow-token restriction does not prove the connected account lacks repository access.
 
-The current owner policy is:
+## Adopted pull-request policy
 
-- autonomous project work opens normal PRs by default;
-- native GitHub Draft is reserved for work that genuinely must not be reviewed/merged yet or is deliberately substantially incomplete;
-- lifecycle state is recorded in repository/PR metadata rather than using the Draft flag as the state machine;
-- project-owned validation is mandatory, while GitHub Actions is supporting diagnostic evidence rather than a duplicate mandatory merge gate.
-
-The lifecycle workflows are aligned with this policy. They do not force normal PRs into native Draft. They use `lifecycle:implementation-complete` for semantic implementation completion and `lifecycle:validation-complete` for sufficient current-head project-owned validation. A successful canonical Actions run may add the validation signal automatically, while trusted alternate validation may supply it from explicit PR evidence when Actions infrastructure is unavailable.
-
-## Current lifecycle automation
-
-Repository implementation work follows:
+Ordinary autonomous work follows:
 
 ```text
-DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
+IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 ```
 
-The current automation combines normal GitHub PRs, lifecycle labels, optional canonical Actions evidence and two trusted default-branch workflows. Native Draft remains exceptional rather than the lifecycle state carrier.
+`BLOCKED` is an overlay, not a replacement lifecycle. Native GitHub Draft is exceptional and reserved for deliberately incomplete or non-reviewable work. Pending validation alone is not a Draft reason.
 
-| Lifecycle state | Repository evidence |
-| --- | --- |
-| DRAFT | Native Draft is exceptional and used only for genuinely non-reviewable/substantially incomplete work. |
-| IMPLEMENTING | `state:implementing`; implementation/audit is not yet declared complete. |
-| VALIDATING | `state:validating`; sufficient project-owned current-head validation evidence is not yet recorded. |
-| READY | `state:ready`; both `lifecycle:implementation-complete` and `lifecycle:validation-complete` are present. |
-| MERGEABLE | `state:mergeable`; the finalizer re-confirmed exact-head validation, review/thread state, base freshness and GitHub conflict-free mergeability. |
-| MERGED | PR merged using an expected-head guard; `state:merged` records the terminal repository state. |
+Direct authorised repository operations are the primary autonomous write path. Workflow labels, readiness dispatch and merged-branch cleanup are optional supporting automation; failure to update advisory metadata must not manufacture a project failure or prevent an otherwise authorised evidence-based merge.
 
-### Implementation-complete signal
+## Semantic evidence
 
-`lifecycle:implementation-complete` is the explicit semantic handoff from implementation to repository enforcement. It may be added only after the implementing agent/project has:
+`lifecycle:implementation-complete` records that the implementation contract has been audited and no known in-scope implementation work remains. `lifecycle:validation-complete` records sufficient project-owned validation for the exact current head.
 
-1. audited each in-scope acceptance criterion;
-2. completed required implementation and regression coverage;
-3. updated PR evidence and affected project state;
-4. confirmed there is no known in-scope implementation work remaining.
+A successful canonical `Application validation` run may supply the validation-complete signal. Trusted alternate validation may also justify it when hosted CI is unavailable or failing only for infrastructure reasons. Any new commit invalidates stale completion/validation evidence.
 
-Any new commit removes implementation and validation completion signals automatically. Passing CI alone must never promote incomplete work.
+READY requires current implementation and validation evidence. MERGEABLE additionally requires resolved material findings/review conversations, a current conflict-free head, no material blocker, and any applicable provider/deployment/runtime evidence required by the change.
 
-`lifecycle:validation-complete` records sufficient project-owned validation for the exact current head. Successful canonical Actions validation can add it automatically. When Actions infrastructure is unavailable or non-substantively failing, a trusted alternate executor may justify the same signal with exact-candidate command/results evidence in the PR.
+Repository merge proves integration only. It does not imply deployed, runtime verified, provider verified, production verified or project complete.
 
-## Readiness controller
+## Application validation workflow
 
-`.github/workflows/pr-lifecycle.yml` runs from trusted default-branch workflow code using `pull_request_target` and `workflow_run`. It does not check out or execute pull-request code with its write-capable token.
+`.github/workflows/pull-request-validation.yml` runs the repository-owned `npm run platform:validate` contract for pull requests targeting `main`, pushes to `main`, and manual dispatches.
 
-It owns:
+The workflow defaults top-level permissions to none. Its validation job receives only `contents: read` and `pull-requests: read`; it checks out the candidate, installs the locked dependency graph and Chromium, and executes the canonical repository gate.
 
-- leaving normal newly opened/reopened PRs reviewable while setting lifecycle metadata;
-- invalidating `lifecycle:implementation-complete` and `lifecycle:validation-complete` after any new commit;
-- treating successful exact-head `Application validation` as one valid source of the validation-complete signal;
-- allowing trusted alternate validation evidence to supply `lifecycle:validation-complete` without requiring Actions success;
-- moving a qualifying PR to `state:ready` only when implementation and validation signals are both current;
-- dispatching `pr-lifecycle-ready` with the PR number and exact head SHA for separate merge finalization.
+Hosted CI is supporting execution/diagnostic evidence unless an active repository protection explicitly makes a check mandatory. A substantive defect found by any check still blocks acceptance. An empty/zero-step wrapper or infrastructure-only failure is unavailable execution evidence, not an application failure.
 
-It deliberately stops at READY. It does not call the merge API and therefore does not make its own pending workflow check a prerequisite for completion.
+## Lifecycle metadata workflow
+
+`.github/workflows/pr-lifecycle.yml` uses `pull_request` for ordinary PR metadata and trusted `workflow_run` events to observe canonical validation. It does not use `pull_request_target` to obtain write permissions and it does not check out or execute PR-controlled code in write-capable metadata jobs.
+
+Permissions are scoped per job. Label synchronisation is best-effort:
+
+- label creation/add/remove refusal produces a warning rather than project-validation failure;
+- replacement state is added before older state labels are removed;
+- failed replacement preserves the existing useful lifecycle state;
+- same-repository write capability may enrich metadata, while forks or Dependabot/read-only tokens are allowed to remain without optional labels;
+- validation evidence remains project-owned even when the metadata workflow cannot write it;
+- readiness dispatch failure does not block direct authorised repository operations.
 
 ## Merge finalizer
 
-`.github/workflows/pr-merge-finalizer.yml` is triggered by the trusted `pr-lifecycle-ready` repository dispatch. It independently re-reads the live PR and does not rely on dispatch payload alone.
+`.github/workflows/pr-merge-finalizer.yml` is optional supporting automation triggered by `pr-lifecycle-ready`. Responsibility and authority are separated by job:
 
-Before MERGEABLE/MERGED it must re-confirm:
+- **gate:** read-only exact-head, base-freshness, semantic-label, review-thread and mergeability checks;
+- **mark-mergeable:** advisory `state:mergeable` metadata using issue-label write permission only;
+- **merge:** exact-head guarded merge with `expectedHeadOid` and only the write permissions required to merge;
+- **mark-merged:** advisory terminal metadata;
+- **cleanup:** best-effort branch deletion after merge.
 
-- the PR is still open against `main`;
-- the dispatch head still equals the current PR head;
-- `lifecycle:implementation-complete` is still present;
-- `lifecycle:validation-complete` is still present;
-- no required review decision or unresolved review thread blocks merge;
-- the PR branch is not behind current `main`;
-- GitHub reports the head as conflict-free/mergeable.
+Branch cleanup re-reads the merged PR and only attempts deletion for a same-repository source branch that differs from both the base and default `main` branch. If cleanup cannot be performed, the branch is preserved and the workflow warns.
 
-The finalizer intentionally does **not** require aggregate `mergeStateStatus == CLEAN`. A write-capable finalizer is itself a pending workflow while it runs, so using aggregate pending-check state as its own prerequisite creates a circular dependency. Instead, mandatory evidence is checked explicitly and GitHub still enforces any configured repository protections when the guarded merge mutation is attempted.
+The finalizer intentionally does not treat aggregate `mergeStateStatus` or optional metadata jobs as independent acceptance gates. GitHub still enforces any active repository protection when the merge mutation is attempted.
 
-When all observable gates pass, the finalizer:
+## Implementation contract
 
-1. records `state:mergeable`;
-2. merges using GraphQL `expectedHeadOid` so a moved head cannot merge from stale evidence;
-3. records `state:merged`;
-4. attempts to delete a same-repository source branch after successful merge.
+GitHub Issues are currently disabled, so the focused pull-request body is the repository implementation-contract fallback. It should record one observable outcome, scope/exclusions, acceptance evidence, validation, security/data/accessibility implications, affected documentation and parked follow-up work.
 
-## Pull-request implementation contract
+If Issues are enabled later, an issue may become the primary implementation contract and the PR should link it rather than duplicate the full history.
 
-GitHub Issues are currently disabled, so `.github/pull_request_template.md` is the implementation-contract surface until that external setting changes. Each implementation PR should record one observable outcome, scope/exclusions, acceptance evidence, validation, security/data/accessibility implications, documentation changes and parked follow-up work.
+## External administration to reverify
 
-If Issues are enabled later, issues should become the normal implementation contracts and PRs should link them using `Closes #<issue-number>` rather than duplicating the full issue body.
+When an administrative surface is available, recheck:
 
-## Continuous integration
+1. `main` branch protection/rulesets and bypass policy;
+2. repository Actions permission defaults and fork/Dependabot workflow restrictions;
+3. conversation-resolution/review requirements;
+4. whether issue tracking should be enabled;
+5. whether update-branch or native auto-merge is desired.
 
-`.github/workflows/pull-request-validation.yml` runs for pull requests targeting `main`, pushes to `main`, and manual dispatches. It checks out the repository, uses Node.js 24, installs the locked dependency graph and Chromium, then runs:
-
-```bash
-npm run platform:validate
-```
-
-`platform:validate` includes dependency audit, executable governance/project-state/provider-schema validation, zero-warning lint, typecheck, Node tests, production build and critical Playwright coverage.
-
-A successful CI run is repository-validation evidence only. Provider contracts, deployment configuration, exact deployed commit and runtime behaviour require separate evidence.
-
-## External GitHub settings
-
-1. **Protect `main` with branch protection or an equivalent ruleset.** Require the pull-request path and appropriate review/conversation controls; prevent ordinary direct pushes/bypass except narrowly defined recovery administration. Do not require GitHub Actions merely to duplicate the project-owned acceptance process. A status check may be retained as diagnostic evidence, but CI infrastructure state alone must not become the merge authority.
-2. **Enable GitHub Issues** if issue-level implementation contracts are preferred over the current focused-PR fallback.
-3. **Enable repository auto-merge** only if native GitHub auto-merge is later preferred over the guarded finalizer mutation.
-4. **Enable update-branch support or equivalent up-to-date enforcement** if GitHub should refresh stale PR branches automatically. Until then, `blocked:base-update` prevents automated merge when a PR is behind `main`.
-
-Branch protection/rulesets remain the highest-priority external configuration gap because workflow automation cannot prohibit every administrator/direct-push bypass.
+Do not broaden workflow write permissions or weaken repository protection merely to make advisory labels or cleanup succeed.
 
 ## Branch/review rule
 
 Before repository merge:
 
 - implementation-complete evidence must still match the current head;
-- `lifecycle:validation-complete` must reflect sufficient project-owned canonical validation for the current head; GitHub Actions success may supply that evidence but is not independently mandatory when only CI infrastructure is failing;
-- required review findings/conversations must be resolved;
-- the head must be conflict-free and current with `main`;
-- affected project state must describe the post-merge re-entry point rather than leaving a closed PR as the active checkpoint;
-- no provider/deployment/release gate may be bypassed by describing repository integration as production completion.
+- sufficient project-owned validation must match the current head;
+- material review findings/conversations must be resolved;
+- the branch must be current with `main` and conflict-free;
+- applicable provider, migration, deployment and runtime evidence must be satisfied for the change;
+- `STATUS.md` must describe the truthful post-merge re-entry point;
+- optional lifecycle labels or branch cleanup must not be mistaken for acceptance evidence.
