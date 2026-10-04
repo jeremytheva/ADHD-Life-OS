@@ -107,7 +107,7 @@ The repository stores project-specific facts, decisions, implementation state an
 | Routing | React Router 7 |
 | Language | JavaScript + TypeScript checking |
 | Validation | Zod |
-| Styling | Tailwind/PostCSS plus application CSS |
+| Styling | Tailwind CSS 4 via `@tailwindcss/vite` plus application CSS |
 | Motion | Framer Motion |
 | Persistence | NoCodeBackend via application-owned proxy |
 | Backend-for-frontend | `api/ncb/` allowlisted handlers |
