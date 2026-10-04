@@ -6,6 +6,8 @@ This repository inherits the current Project Master AI-first platform developmen
 
 Repository-specific requirements override inherited defaults only where the difference is explicit and documented.
 
+Master source release: **2026-10-04**. `PROJECT.md` records the active edition binding and intentional project-specific exceptions; superseded master files and older operating transcripts are historical inputs, not active authority.
+
 Authoritative project state is in `PROJECT.md`, `STATUS.md`, `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, `docs/NOCODEBACKEND_OPERATIONS.md`, `ROADMAP.md`, `SYSTEM_MAP.md`, accepted decisions, current GitHub state, and current provider/deployment evidence where applicable. Chat history is supporting context, not project state.
 
 The documentation baseline deliberately uses the repository's established `docs/` structure: `docs/ARCHITECTURE.md`, `docs/DATA_MODEL.md`, and `docs/DECISIONS/` satisfy the architecture/data/decision requirements. Do not create duplicate root-level `ARCHITECTURE.md`, `DATA_MODEL.md`, or `DECISIONS/` copies merely to mirror a generic template.
@@ -105,13 +107,13 @@ If a gate cannot pass, record the missing evidence/dependency, continue safe ind
 
 GitHub is the repository enforcement and collaboration layer, but repository-owned acceptance evidence and lifecycle metadata are the source of truth for autonomous delivery.
 
-The lifecycle vocabulary remains:
+The ordinary lifecycle vocabulary is:
 
 ```text
-DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
+IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 ```
 
-`DRAFT` is a lifecycle concept, not the default native GitHub PR state.
+Native GitHub `DRAFT` is an exceptional PR state for deliberately incomplete or non-reviewable work; it is not an ordinary lifecycle step and pending validation alone does not justify Draft status.
 
 - Create normal, reviewable PRs for autonomous project work.
 - Use a native GitHub Draft PR only when the change genuinely must not be reviewed or merged yet, or substantial implementation is deliberately incomplete.
@@ -126,6 +128,15 @@ DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 - `lifecycle:validation-complete` records sufficient project-owned validation for the current head. A successful canonical Actions run may add it automatically; a trusted alternate executor may justify it when the PR evidence identifies the exact candidate, commands and results. Any new commit removes it.
 - MERGEABLE requires sufficient current-head project-owned validation, no unresolved material review conversation, no merge conflict, no material blocker, and any applicable runtime/deployment evidence required by the change.
 - A merged PR proves repository integration only. Deployment/provider/runtime gates remain separate.
+
+### Optional GitHub automation safety
+
+- Use `pull_request` for ordinary PR lifecycle metadata. Do not use `pull_request_target` merely to obtain write permissions.
+- Default workflows to no authority and grant only the permissions required by each job. Keep metadata mutation separate from any execution of PR-controlled code.
+- Treat lifecycle labels and merged-branch cleanup as advisory/best-effort. Warn on token/refusal limitations without turning metadata failure into project-validation failure.
+- Add replacement lifecycle metadata before removing the previous state so a refused write cannot erase the last useful state.
+- Preserve fork and Dependabot read-only restrictions; do not broaden tokens for untrusted contributions.
+- Direct authorised repository operations are the primary autonomous write/merge path. Workflow metadata and cleanup support that path but do not manufacture READY/MERGEABLE evidence or override project-owned acceptance.
 - If repository automation still assumes native Draft PRs or mandatory GitHub Actions success, treat that as an implementation/configuration gap to reconcile. Do not reinterpret the owner's newer normal-PR and repository-owned-validation policy to match legacy automation.
 
 ## Cognitive load and execution continuity
