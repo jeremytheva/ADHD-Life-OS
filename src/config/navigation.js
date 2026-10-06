@@ -1,4 +1,4 @@
-import { NAVIGABLE_CAPABILITIES } from './productCapabilities'
+import { NAVIGABLE_CAPABILITIES } from './productCapabilities.js'
 
 const capabilityNavigation = NAVIGABLE_CAPABILITIES.map((capability) => ({
   ...capability.navigation
