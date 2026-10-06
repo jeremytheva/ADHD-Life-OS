@@ -10,6 +10,14 @@ test('Onboarding optional modules expose one labelled stateful button group', as
 
   assert.match(source, /role="group" aria-label="Optional modules"/)
   assert.match(source, /type="button"[\s\S]*?aria-pressed=\{isEnabled\}/)
-  assert.match(source, /const isEnabled = enabledModules\.includes\(module\.id\)/)
-  assert.match(source, /onClick=\{\(\) => !module\.comingSoon && toggleModule\(module\.id\)\}/)
+  assert.match(source, /const isEnabled = enabledModules\.includes\(moduleId\)/)
+  assert.match(source, /onClick=\{\(\) => toggleModule\(moduleId\)\}/)
+})
+
+test('Onboarding no longer presents implemented or stale modules as coming soon', async () => {
+  const source = await read('src/components/onboarding/steps/ModulesStep.jsx')
+
+  assert.doesNotMatch(source, /comingSoon/)
+  assert.doesNotMatch(source, /Coming Soon/)
+  assert.match(source, /Housework and Brain Inbox are optional/)
 })
