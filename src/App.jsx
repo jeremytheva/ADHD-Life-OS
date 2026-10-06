@@ -18,6 +18,7 @@ const Settings = lazy(() => import('./components/settings/Settings'))
 const Housework = lazy(() => import('./pages/Housework'))
 const Inbox = lazy(() => import('./pages/Inbox'))
 const Projects = lazy(() => import('./pages/Projects'))
+const Features = lazy(() => import('./pages/Features'))
 
 const LoadingScreen = () => (
   <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -190,6 +191,7 @@ const AppRoutes = () => {
         <Route path="/projects" element={<LazyRoute><Projects /></LazyRoute>} />
         <Route path="/housework" element={<LazyRoute><Housework /></LazyRoute>} />
         <Route path="/inbox" element={<LazyRoute><Inbox /></LazyRoute>} />
+        <Route path="/features" element={<LazyRoute><Features /></LazyRoute>} />
         <Route path="/settings" element={<LazyRoute><Settings /></LazyRoute>} />
       </Route>
       <Route
