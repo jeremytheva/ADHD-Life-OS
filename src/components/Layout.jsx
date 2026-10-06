@@ -28,13 +28,14 @@ const {
   FiAward,
   FiShoppingCart,
   FiEye,
+  FiCompass,
   FiMenu,
   FiX
 } = FiIcons
 
 const iconByPath = {
   '/': FiCalendar, '/tasks': FiCheckSquare, '/routines': FiRepeat, '/projects': FiGrid,
-  '/housework': FiHome, '/inbox': FiInbox, '/settings': FiSettings
+  '/housework': FiHome, '/inbox': FiInbox, '/features': FiCompass, '/settings': FiSettings
 }
 
 const ModalLoadingFallback = () => (
