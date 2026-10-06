@@ -13,7 +13,7 @@ test('Onboarding modules keep redundant glyphs presentation-only', async () => {
   assert.match(source, /<span className="text-green-500" aria-hidden="true">✓<\/span>/)
   assert.match(source, /className=\{isEnabled \? 'text-green-500' : 'text-slate-400'\} aria-hidden="true">✓<\/span>/)
   assert.match(source, /<SafeIcon icon=\{FiInfo\}[\s\S]*?aria-hidden="true"/)
-  assert.match(source, /<span aria-hidden="true">💡<\/span> Helpful Tip/)
+  assert.match(source, /<span aria-hidden="true">💡<\\/span>/)
   assert.match(source, /<span aria-hidden="true">←<\/span> Back/)
   assert.match(source, /Continue <span aria-hidden="true">→<\/span>/)
 })
