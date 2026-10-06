@@ -120,7 +120,7 @@ Read [`AGENTS.md`](AGENTS.md), [`docs/CODEX_WORKFLOW.md`](docs/CODEX_WORKFLOW.md
 
 Keep one focused implementation outcome per normal PR, preserve project documentation/state, add regression coverage for meaningful defects and never include secrets or user data. Use native GitHub Draft only when work genuinely must not be reviewed/merged yet or is deliberately substantially incomplete. Repository Issues are currently disabled, so the PR body is the implementation-contract fallback. Do not mark implementation complete merely because GitHub Actions passes: complete the criterion audit, record sufficient project-owned validation, and use lifecycle metadata to represent the real delivery state.
 
-The repository currently has no `main` branch protection/ruleset. This is an explicit external GitHub configuration gap documented in [`docs/GITHUB_CONFIGURATION.md`](docs/GITHUB_CONFIGURATION.md); workflow automation should not be treated as equivalent to branch protection.
+Repository protection/ruleset state is an external GitHub fact documented in [`docs/GITHUB_CONFIGURATION.md`](docs/GITHUB_CONFIGURATION.md). The current connector cannot freshly inspect those administrative settings, so do not infer them from workflow files; workflow automation is not equivalent to branch protection.
 
 ## License and support
 

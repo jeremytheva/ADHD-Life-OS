@@ -32,10 +32,10 @@ Whole-system analysis is required; speculative unrelated changes are not.
 The normal implementation lifecycle is represented by repository/PR metadata:
 
 ```text
-DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
+IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 ```
 
-`DRAFT` is a lifecycle concept. Open a normal GitHub PR by default; use native Draft only when the work genuinely must not be reviewed or merged yet, or substantial implementation is deliberately incomplete.
+Open a normal GitHub PR by default. Native Draft is exceptional and sits outside the ordinary progression; use it only when work genuinely must not be reviewed/merged yet or substantial implementation is deliberately incomplete. Pending validation alone is not a Draft reason.
 
 ### IMPLEMENTING / VALIDATING
 

@@ -4,6 +4,16 @@ import { access, readFile, readdir } from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
+import {
+  canonicalEnvironmentNames,
+  validateBlockerOwnership,
+  validateCollectionContract,
+  validateEnvironmentContract,
+  validateLifecycleWorkflow,
+  validateMergeFinalizerWorkflow,
+  validateRouteMap,
+  validateValidationWorkflow
+} from './governance-rules.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const requiredFiles = [
@@ -23,8 +33,10 @@ const requiredFiles = [
   'database/README.md',
   'database/provider-schema.json',
   'database/migrations/README.md',
+  'scripts/governance-rules.mjs',
   'scripts/validate-project-state.mjs',
   'scripts/validate-provider-schema.mjs',
+  'test/governance-drift.test.mjs',
   '.github/workflows/pull-request-validation.yml',
   '.github/workflows/pr-lifecycle.yml',
   '.github/workflows/pr-merge-finalizer.yml',
@@ -35,16 +47,6 @@ const duplicateDocumentationPaths = [
   'ARCHITECTURE.md',
   'DATA_MODEL.md',
   'DECISIONS'
-]
-const canonicalEnvironmentNames = [
-  'NOCODEBACKEND_AUTH_BASE_URL',
-  'NOCODEBACKEND_DATA_BASE_URL',
-  'NOCODEBACKEND_SECRET_KEY',
-  'NOCODEBACKEND_INSTANCE',
-  'NOCODEBACKEND_USER_EMAIL',
-  'NOCODEBACKEND_USER_SECRET_KEY',
-  'NOCODEBACKEND_ADMIN_EMAIL',
-  'NOCODEBACKEND_ADMIN_SECRET_KEY'
 ]
 const deprecatedEnvironmentNames = [
   ['NCB_', 'API_BASE_URL'].join(''),
@@ -167,18 +169,21 @@ for (const requiredFragment of [
   'maximum dependent PR stack',
   'Productive-work threshold',
   'Validation execution hierarchy',
-  'database/provider-schema.json'
+  'database/provider-schema.json',
+  'Master source release: **2026-10-04**',
+  'Optional GitHub automation safety'
 ]) {
   if (!agentGuidance.includes(requiredFragment)) failures.push(`AGENTS.md must document autonomous/delivery control: ${requiredFragment}`)
 }
 
 const lifecycleWorkflow = await readFile(path.join(root, '.github/workflows/pr-lifecycle.yml'), 'utf8')
-for (const requiredFragment of ['pull_request_target', 'workflow_run', 'lifecycle:implementation-complete', 'lifecycle:validation-complete', 'repos/$REPO/dispatches', 'pr-lifecycle-ready']) {
+for (const requiredFragment of ['pull_request:', 'workflow_run', 'lifecycle:implementation-complete', 'lifecycle:validation-complete', 'repos/$REPO/dispatches', 'pr-lifecycle-ready']) {
   if (!lifecycleWorkflow.includes(requiredFragment)) failures.push(`PR lifecycle workflow is missing readiness marker ${requiredFragment}`)
 }
 if (lifecycleWorkflow.includes('mergePullRequest')) {
   failures.push('PR lifecycle readiness workflow must not merge directly; merge finalization must run separately.')
 }
+for (const failure of validateLifecycleWorkflow(lifecycleWorkflow)) failures.push(failure)
 
 const mergeFinalizer = await readFile(path.join(root, '.github/workflows/pr-merge-finalizer.yml'), 'utf8')
 for (const requiredFragment of ['repository_dispatch', 'pr-lifecycle-ready', 'lifecycle:implementation-complete', 'lifecycle:validation-complete', 'reviewThreads', 'compare/main...', 'git/ref/heads/main', 'expectedHeadOid', 'mergePullRequest']) {
@@ -187,11 +192,27 @@ for (const requiredFragment of ['repository_dispatch', 'pr-lifecycle-ready', 'li
 if (mergeFinalizer.includes('mergeStateStatus')) {
   failures.push('PR merge finalizer must not depend on aggregate mergeStateStatus because its own pending check can self-block finalization.')
 }
+for (const failure of validateMergeFinalizerWorkflow(mergeFinalizer)) failures.push(failure)
 
 const validationWorkflow = await readFile(path.join(root, '.github/workflows/pull-request-validation.yml'), 'utf8')
 if (!validationWorkflow.includes('npm run platform:validate')) {
   failures.push('Pull-request/main CI must invoke the canonical npm run platform:validate entry point.')
 }
+for (const failure of validateValidationWorkflow(validationWorkflow)) failures.push(failure)
+
+const providerOperations = await readFile(path.join(root, 'docs/NOCODEBACKEND_OPERATIONS.md'), 'utf8')
+for (const failure of validateEnvironmentContract({ envExample, providerOperations })) failures.push(failure)
+
+const handler = await readFile(path.join(root, 'api/ncb/handler.js'), 'utf8')
+const schemas = await readFile(path.join(root, 'src/domains/schemas.js'), 'utf8')
+const dataModel = await readFile(path.join(root, 'docs/DATA_MODEL.md'), 'utf8')
+const systemMap = await readFile(path.join(root, 'SYSTEM_MAP.md'), 'utf8')
+const project = await readFile(path.join(root, 'PROJECT.md'), 'utf8')
+const roadmap = await readFile(path.join(root, 'ROADMAP.md'), 'utf8')
+
+for (const failure of validateRouteMap({ handler, systemMap })) failures.push(failure)
+for (const failure of validateCollectionContract({ handler, schemas, dataModel })) failures.push(failure)
+for (const failure of validateBlockerOwnership({ project, roadmap, systemMap })) failures.push(failure)
 
 const providerContract = await readFile(path.join(root, 'api/ncb/dataProviderContract.js'), 'utf8')
 if (!providerContract.includes("UNVERIFIED: 'UNVERIFIED'")) {

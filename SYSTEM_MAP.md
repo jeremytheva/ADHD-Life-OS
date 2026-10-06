@@ -1,6 +1,6 @@
 # ADHD Life OS — System Map
 
-**Last materially reviewed:** 28 September 2026
+**Last materially reviewed:** 5 October 2026
 
 This file is a compact navigation map for whole-system analysis. Architectural detail belongs in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md); current delivery state belongs in [`STATUS.md`](STATUS.md).
 
@@ -34,6 +34,22 @@ UI/auth context
   → NoCodeBackend session/auth response
   → session identity returned to application
 ```
+
+### Current application route map
+
+The application-owned NoCodeBackend route surface is derived from `api/ncb/handler.js` and checked by repository governance validation.
+
+<!-- ROUTE_MAP_START -->
+- `POST /api/ncb/auth/sign-up/email`
+- `POST /api/ncb/auth/sign-in/email`
+- `POST /api/ncb/auth/sign-out`
+- `GET /api/ncb/auth/get-session`
+- `GET /api/ncb/data/<collection>`
+- `POST /api/ncb/data/<collection>`
+- `GET /api/ncb/data/<collection>/<id>`
+- `PATCH /api/ncb/data/<collection>/<id>`
+- `DELETE /api/ncb/data/<collection>/<id>`
+<!-- ROUTE_MAP_END -->
 
 ## Domain data
 

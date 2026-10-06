@@ -30,10 +30,10 @@ Once these conditions are met, further refinement is new scope unless necessary 
 Implementation delivery uses the lifecycle vocabulary:
 
 ```text
-DRAFT → IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
+IMPLEMENTING → VALIDATING → READY → MERGEABLE → MERGED
 ```
 
-`DRAFT` is a logical lifecycle concept. Normal autonomous work should open as a standard reviewable PR. Use native GitHub Draft only when the change genuinely must not be reviewed or merged yet, or substantial implementation is deliberately incomplete.
+Normal autonomous work opens as a standard reviewable PR. Native GitHub Draft is outside the ordinary sequence and is reserved for work that genuinely must not be reviewed or merged yet, or substantial implementation that is deliberately incomplete. Pending validation alone is not a Draft reason.
 
 - **IMPLEMENTING:** in-scope work or completion audit remains.
 - **VALIDATING:** required project-owned evidence is missing, running or has exposed a substantive failure.
@@ -124,7 +124,7 @@ If no roadmap/phase requirement, accepted implementation contract, defect, faile
 
 Repository workflow automation currently exists alongside external GitHub configuration gaps documented in `docs/GITHUB_CONFIGURATION.md`.
 
-Most importantly, `main` has no repository ruleset at present. Workflow automation governs its own merge path but cannot guarantee that every administrator/direct push uses that path. Branch protection or an equivalent ruleset remains the preferred independent enforcement boundary.
+Fresh `main` branch-protection/ruleset state is not exposed by the currently connected GitHub connector. The latest retained settings evidence reported no ruleset on 28 September 2026; treat that as dated evidence until an administrative surface re-verifies it. Workflow automation cannot guarantee that every administrator/direct push uses its path, so branch protection or an equivalent ruleset remains the preferred independent enforcement boundary.
 
 GitHub Issues, repository auto-merge and update-branch support are also currently disabled. These are tracked as explicit configuration states rather than being inferred from repository code.
 

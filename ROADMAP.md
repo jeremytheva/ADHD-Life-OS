@@ -1,6 +1,6 @@
 # ADHD Life OS — Roadmap
 
-**Last materially reviewed:** 27 August 2026  
+**Last materially reviewed:** 5 October 2026  
 **Current milestone:** Stage 3 — execution and next-action experience
 
 This roadmap records intended direction. Current implementation state and blockers belong in [`STATUS.md`](STATUS.md).
@@ -29,41 +29,22 @@ Objective: move from recommendation to a coherent, durable execution loop that h
 - zero-warning ESLint validation enforced by the canonical platform gate;
 - responsive authenticated application shell with tested phone-width navigation and keyboard dismissal/focus recovery.
 
-### Temporary backend deferral
+### Provider dependency sequence
 
-Provider-dependent implementation is intentionally paused from 27 August 2026 while additional NoCodeBackend information is gathered.
-
-This is a **priority deferral**, not evidence that the provider contract is complete. Existing fail-closed provider boundaries remain in place and no speculative backend routes, methods, schemas or persistence behaviour should be introduced while the deferral is active.
-
-The preserved provider-dependent sequence remains:
+Durable generic execution remains dependent on verified NoCodeBackend capability. This roadmap preserves the dependency order without using the roadmap as a live blocker or work-queue document:
 
 1. certify the real provider operations and `execution-sessions` capability;
 2. add exact durable application integration from that evidence;
 3. implement recovery and reconciliation semantics;
 4. verify the integrated durable execution loop.
 
-### Current independent work while backend is deferred
+Provider absence must remain fail-closed. Do not introduce speculative backend routes, methods, schemas or persistence behaviour to advance the roadmap.
 
-Work may continue where it does not depend on unverified provider behaviour. Current priority order is:
+### Independent-work rule
 
-1. **Frontend accessibility and interaction integrity**
-   - audit keyboard reachability, focus management, dialog semantics, labels and transient UI state;
-   - improve shared interaction patterns rather than isolated cosmetic fixes;
-   - add regression coverage for material behaviour changes.
+Work that does not depend on provider behaviour may proceed only when supported by a concrete roadmap requirement, accepted implementation contract, defect, failed validation, review finding, security/data requirement or documented technical debt. This roadmap does not maintain a standing queue of speculative accessibility, cognitive-load or cleanup tasks merely to keep the project active.
 
-2. **Client-side cognitive-load reduction**
-   - reduce unnecessary choices, visual competition and initiation friction in existing implemented workflows;
-   - prefer clearer defaults and progressive disclosure without restricting user capability;
-   - keep changes independent of provider-specific persistence.
-
-3. **Repository quality and maintainability**
-   - continue focused, evidence-backed cleanup where it reduces future implementation risk;
-   - preserve the zero-warning lint gate and canonical validation contract;
-   - avoid broad refactors without a concrete user or delivery outcome.
-
-The responsive application shell/navigation outcome is complete through PR #102 and is now part of the implemented foundation rather than active roadmap work.
-
-These independent improvements do **not** satisfy the durable execution requirements below. Stage 3 remains open until the provider-dependent execution loop can be completed and verified.
+The current objective, scoped blockers, owner actions and whether any independent work is actually justified belong in `STATUS.md`.
 
 #### Stage 3 exit conditions
 
@@ -82,7 +63,6 @@ Stage 3 should not close until the platform demonstrates:
 
 The following are intentionally deferred until the Stage 3 execution loop is stable or explicitly reprioritized:
 
-- NoCodeBackend/provider activation work while the temporary backend deferral is active;
 - external calendar/event synchronization;
 - richer analytics and longitudinal insight;
 - remote AI/LLM assistance;
@@ -96,10 +76,10 @@ No later stage is treated as committed merely because a capability appears in th
 
 ## Dependencies
 
-- Real provider-dependent execution work still requires verified NoCodeBackend evidence and is currently intentionally deferred.
-- Production-readiness claims require an actual deployment target, environment configuration and runtime verification; no ADHD Life OS Vercel project is currently linked in the connected account.
+- Real provider-dependent execution work requires verified NoCodeBackend evidence before durable activation.
+- Production-readiness claims require an actual deployment target, environment configuration and runtime verification. Live deployment state belongs in `STATUS.md`/deployment-provider evidence rather than this roadmap.
 - New external integrations require explicit architecture, privacy, ownership and failure-semantics review before activation.
 
 ## Roadmap rule
 
-Preserve planned/deferred work during cleanup, but do not let it displace the current active priority. While backend work is deferred, continue only with work that is genuinely independent of unverified provider behaviour. Update this file when intended future direction changes materially; update `STATUS.md` when actual current state changes.
+Preserve planned/deferred work during cleanup, but do not use the roadmap as a current blocker list or implementation queue. Update this file when intended future direction changes materially; update `STATUS.md` when actual current state, blockers, evidence or owner action changes.

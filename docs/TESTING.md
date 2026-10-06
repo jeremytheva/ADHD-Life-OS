@@ -84,7 +84,7 @@ Do not repeatedly rerun a failure without determining whether it is a substantiv
 
 Tests use Node's built-in `node:test` runner in `test/`, plus Playwright in `e2e/`. Automated repository tests must not require real production credentials or mutable production data.
 
-- **Static/governance coverage** protects project/document/config/architecture conventions that can be expressed mechanically.
+- **Static/governance coverage** protects project/document/config/architecture conventions that can be expressed mechanically, including canonical provider environment names, current route-map alignment, collection/schema/data-model agreement, blocker ownership, and unsafe lifecycle-workflow configuration.
 - **Unit/behavioural coverage** tests domain rules, state transitions, validation, mapping and error translation with controlled inputs.
 - **Integration/contract coverage** tests connected application boundaries such as proxy request shaping, session/ownership behaviour and provider-response validation without claiming live-provider verification.
 - **Browser end-to-end coverage** proves critical user journeys across the real application layers using controlled same-origin responses.

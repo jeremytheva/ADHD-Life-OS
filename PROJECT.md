@@ -2,7 +2,7 @@
 
 **Status:** Active development  
 **Repository:** `jeremytheva/ADHD-Life-OS`  
-**Last materially reviewed:** 28 September 2026
+**Last materially reviewed:** 5 October 2026
 
 ## Purpose
 
@@ -51,22 +51,23 @@ The platform should enable a user to:
 
 These may become future capabilities only after the relevant product, architecture, privacy, data and provider decisions are recorded.
 
-## Master standards inherited
+## Master source binding
 
-This project inherits the current master sources supplied by the product owner, including:
+Master source release: **2026-10-04**. The Project-level `MASTER_SOURCE_MANIFEST.md` is the authority for active master editions; the repository does not duplicate that manifest.
 
-- `AI_FIRST_PLATFORM_DEVELOPMENT_FRAMEWORK.md`;
-- `AI_PLATFORM_DEVELOPMENT_STANDARD.md`;
-- `PR_LIFECYCLE_STANDARD.md`;
-- `PLATFORM_ENGINEERING_STANDARD.md` where separately available;
-- `PLATFORM_DESIGN_PRINCIPLES.md` where separately available;
-- `PROJECT_DOCUMENTATION_STANDARD.md`;
-- `TESTING_VALIDATION_RELEASE_STANDARD.md`;
-- `DATA_MODELLING_AND_MIGRATION_STANDARD.md` where separately available;
-- applicable provider guides for GitHub, Vercel and NoCodeBackend;
-- the current GitHub–Codex software delivery operating standard where it does not conflict with newer master lifecycle governance.
+Active editions adopted by this repository are:
 
-The repository stores project-specific facts, decisions, implementation state and deviations rather than copying the master standards wholesale. If a project-specific rule intentionally differs from a master default, the difference must be explicit and documented before it is treated as authoritative.
+- `AI_FIRST_PLATFORM_DEVELOPMENT_FRAMEWORK.md` 3.2;
+- `AI_PLATFORM_DEVELOPMENT_STANDARD.md` 1.5;
+- `PROJECT_DOCUMENTATION_STANDARD.md` 1.5;
+- `PR_LIFECYCLE_STANDARD.md` 1.1;
+- `GITHUB_REFERENCE_GUIDE.md` 1.2;
+- `TESTING_VALIDATION_RELEASE_STANDARD.md` 1.2;
+- the manifest-designated current editions of `PLATFORM_ENGINEERING_STANDARD.md`, `PLATFORM_DESIGN_PRINCIPLES.md`, `DATA_MODELLING_AND_MIGRATION_STANDARD.md`, `SECURITY_AUTHORIZATION_STANDARD.md`, `OBSERVABILITY_DIAGNOSTICS_STANDARD.md`, `NOCODEBACKEND_REFERENCE_GUIDE.md`, and `VERCEL_REFERENCE_GUIDE.md`.
+
+The older GitHub–Codex software delivery operating standard and prior draft-default/mandatory-hosted-CI editions are historical/superseded inputs, not active project authority.
+
+The repository stores project-specific facts, decisions, implementation state and explicit deviations rather than copying master standards wholesale. If a project-specific rule intentionally differs from a master default, the difference must be recorded here or in an accepted decision before it is treated as authoritative.
 
 ## Providers / external systems
 
@@ -79,11 +80,12 @@ The repository stores project-specific facts, decisions, implementation state an
 ## Project-specific exceptions and configuration gaps
 
 - GitHub Issues are currently disabled at repository level, so focused PR bodies remain the implementation-contract fallback until that external setting is enabled.
-- `main` branch protection/rulesets are currently disabled; `.github/workflows/pr-lifecycle.yml` manages repository-enforceable transitions but cannot prevent every administrative/direct-push bypass. This is an explicit GitHub configuration gap, not an accepted substitute for branch protection.
+- Fresh branch-protection/ruleset administration state is not exposed by the currently connected GitHub connector. The latest retained settings evidence (28 September 2026) reported no `main` protection/ruleset. Treat that as dated evidence until reverified through an administrative surface; workflow automation is not a substitute for repository protection.
 - Repository auto-merge is disabled. Repository merge remains evidence-based: implementation-complete evidence, sufficient current-head project-owned validation, resolved material review/thread state, conflict-free mergeability and any applicable release evidence must be satisfied.
 - Update-branch support is disabled; stale branches are blocked from lifecycle merge until brought current.
 - The source tree is mixed JavaScript with TypeScript checking rather than a fully TypeScript codebase.
 - The current generic NoCodeBackend proxy contract predates certification of future generic execution sessions; new provider behaviour must not be inferred from that existing contract.
+- Project-specific NoCodeBackend configuration intentionally extends the master provider baseline with `NOCODEBACKEND_USER_EMAIL`, `NOCODEBACKEND_USER_SECRET_KEY`, `NOCODEBACKEND_ADMIN_EMAIL`, and `NOCODEBACKEND_ADMIN_SECRET_KEY`. These are server-owned provider administration/certification inputs requested for this project; they do not change runtime credential precedence or prove user/admin provider capability. The implemented auth/data path continues to use `NOCODEBACKEND_SECRET_KEY` unless target-provider evidence supports a contract change.
 
 ## Important constraints
 
@@ -105,7 +107,7 @@ The repository stores project-specific facts, decisions, implementation state an
 | Routing | React Router 7 |
 | Language | JavaScript + TypeScript checking |
 | Validation | Zod |
-| Styling | Tailwind/PostCSS plus application CSS |
+| Styling | Tailwind CSS 4 via `@tailwindcss/vite` plus application CSS |
 | Motion | Framer Motion |
 | Persistence | NoCodeBackend via application-owned proxy |
 | Backend-for-frontend | `api/ncb/` allowlisted handlers |
@@ -115,24 +117,25 @@ The repository stores project-specific facts, decisions, implementation state an
 | Canonical full validation | `npm run platform:validate` |
 | PR lifecycle | Normal PR by default + lifecycle metadata; native Draft only for genuinely non-reviewable/substantially incomplete work |
 
-## Source-of-truth hierarchy
+## Authority by fact
 
-Use the real current system rather than chat memory. For this project:
+Use the source that owns the fact rather than a single global ranking:
 
-1. repository code/configuration — implemented behaviour;
-2. provider/deployment/GitHub configuration state where the fact is external;
-3. `AGENTS.md` — persistent repository implementation rules;
-4. `PROJECT.md` — project identity, scope, inheritance and constraints;
-5. `STATUS.md` — actual current delivery state, active gate and next action;
-6. `docs/ARCHITECTURE.md` — intended current architecture;
-7. `docs/DATA_MODEL.md` — canonical data model and physical mapping constraints;
-8. `ROADMAP.md` — intended future direction;
-9. `SYSTEM_MAP.md` — compact system navigation map;
-10. `docs/DECISIONS/` — consequential accepted decisions;
-11. GitHub PRs/lifecycle metadata/validation evidence — implementation contracts and detailed validation/merge evidence;
-12. prior chat/context — supporting context only.
+| Fact | Authority |
+| --- | --- |
+| Implemented application behaviour, routes and configuration | repository code/configuration |
+| Intended domain meaning, invariants and accepted architecture | contracts, `docs/DATA_MODEL.md`, architecture and accepted decisions |
+| Live issue/PR/review/merge state | GitHub |
+| Deployed NoCodeBackend schema/operations | verified provider evidence |
+| Deployed version/runtime identity | deployment platform evidence |
+| Stable project identity, scope, inheritance and intentional exceptions | `PROJECT.md` |
+| Current objective, active work, scoped blockers, evidence, owner action and next work | `STATUS.md` |
+| Future direction/dependencies | `ROADMAP.md` |
+| Current implementation/navigation relationships | `SYSTEM_MAP.md` |
 
-When sources disagree, investigate and correct the stale/incorrect source rather than silently choosing one.
+`AGENTS.md` defines repository-specific execution behaviour for agents. Prior chat/context is supporting context only.
+
+When sources disagree, investigate the owning fact and correct the stale or regressed source. An accidental code regression does not amend the intended data model or accepted contract.
 
 ## Portfolio and execution-capacity model
 
