@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // Runs only from the trusted default-branch repository_dispatch workflow.
 import { fileURLToPath } from 'node:url'
+import process from 'node:process'
+import { setTimeout as delay } from 'node:timers/promises'
 import path from 'node:path'
 
 export class GitHubOperationError extends Error {
@@ -29,7 +31,7 @@ export async function mergeWithRecovery({
   performMerge,
   expectedHead,
   expectedBase,
-  sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+  sleep = (ms) => delay(ms),
   random = Math.random,
   maxAttempts = 3
 }) {
@@ -88,7 +90,7 @@ async function runCli() {
   const request = async (url, body) => {
     let response
     try {
-      response = await fetch(url, {
+      response = await globalThis.fetch(url, {
         method: body ? 'POST' : 'GET',
         headers: body ? { ...headers, 'Content-Type': 'application/json' } : headers,
         body: body ? JSON.stringify(body) : undefined
