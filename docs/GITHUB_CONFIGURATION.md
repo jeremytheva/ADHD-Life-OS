@@ -1,12 +1,12 @@
 # GitHub Configuration
 
-**Last reconciled:** 5 October 2026
+**Last reconciled:** 15 October 2026
 
 ## Evidence boundary
 
 GitHub owns live repository, pull-request, review and merge state. Repository files describe the adopted operating contract but do not establish external GitHub settings by themselves.
 
-Fresh connected evidence on 5 October 2026 confirms:
+Fresh connected evidence on 15 October 2026 confirms:
 
 - default branch: `main`;
 - pull requests: enabled;
@@ -16,7 +16,7 @@ Fresh connected evidence on 5 October 2026 confirms:
 - update-branch support: disabled;
 - the connected account has repository administrator access.
 
-The currently connected GitHub interface does **not** expose branch-protection/ruleset or repository Actions-administration settings. The latest retained administrative evidence from 28 September 2026 reported no `main` branch protection/ruleset. Treat that as dated evidence, not a fresh claim. Reverify those settings through an administrative surface when available.
+The connected GitHub API returned **zero repository rulesets** on 15 October 2026. A separate direct `main` branch-protection read returned HTTP **403** (`Resource not accessible by integration`); this is a read/connector authority boundary, not proof of a missing protection rule and not evidence that repository writes are denied. Repository Actions-administration state also remains unverified. Do not weaken protection or expand token permissions to bypass the read restriction.
 
 Connector/account authorization and a workflow run's `GITHUB_TOKEN` permissions are separate facts. A connector write failure does not prove a workflow-token restriction, and a workflow-token restriction does not prove the connected account lacks repository access.
 
@@ -69,9 +69,11 @@ Permissions are scoped per job. Label synchronisation is best-effort:
 
 - **gate:** read-only exact-head, base-freshness, semantic-label, review-thread and mergeability checks;
 - **mark-mergeable:** advisory `state:mergeable` metadata using issue-label write permission only;
-- **merge:** exact-head guarded merge with `expectedHeadOid` and only the write permissions required to merge;
+- **merge:** trusted default-branch recovery code checks both current PR head and current `main` base, uses `expectedHeadOid`, inspects ambiguous mutation outcomes before bounded retry, and retains only the write permissions required to merge;
 - **mark-merged:** advisory terminal metadata;
 - **cleanup:** best-effort branch deletion after merge.
+
+All merge-finalizer runs, even for different PRs, use one non-cancelling repository-wide concurrency group. This protects workflow-level integration ordering; it is not a lock on independent ChatGPT scheduled tasks, manually invoked commands, or other GitHub clients. The exact operation/lease and retry boundaries are in `docs/DELIVERY.md` and `scripts/github-merge-recovery.mjs`.
 
 Branch cleanup re-reads the merged PR and only attempts deletion for a same-repository source branch that differs from both the base and default `main` branch. If cleanup cannot be performed, the branch is preserved and the workflow warns.
 
