@@ -28,7 +28,7 @@ test('resumed onboarding clamps a negative or non-numeric saved step to the firs
 test('navigation retains core routes and hides optional modules that are not enabled', () => {
   const labels = getVisibleNavigationItems(['tasks', 'routines'], 'all').map(({ label }) => label)
 
-  assert.deepEqual(labels, ['Today', 'Tasks', 'Routines', 'Projects', 'Settings'])
+  assert.deepEqual(labels, ['Today', 'Tasks', 'Routines', 'Projects', 'Features', 'Settings'])
   assert.ok(!labels.includes('Housework'))
   assert.ok(!labels.includes('Brain Inbox'))
 })
@@ -36,5 +36,5 @@ test('navigation retains core routes and hides optional modules that are not ena
 test('navigation keeps core routes available when every optional module is disabled', () => {
   const labels = getVisibleNavigationItems([], 'all').map(({ label }) => label)
 
-  assert.deepEqual(labels, ['Today', 'Projects', 'Settings'])
+  assert.deepEqual(labels, ['Today', 'Projects', 'Features', 'Settings'])
 })

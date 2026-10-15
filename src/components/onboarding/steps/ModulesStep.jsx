@@ -1,271 +1,215 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import * as FiIcons from 'react-icons/fi'
 import SafeIcon from '../../../common/SafeIcon'
+import {
+  CORE_ONBOARDING_CAPABILITIES,
+  OPTIONAL_ONBOARDING_CAPABILITIES
+} from '../../../config/productCapabilities'
 
-const { 
-  FiCheckSquare, 
-  FiRefreshCw, 
-  FiHome, 
-  FiCalendar, 
-  FiTrendingUp,
+const {
+  FiCalendar,
+  FiCheckSquare,
+  FiGrid,
+  FiHome,
   FiInbox,
-  FiToggleLeft,
-  FiToggleRight,
-  FiInfo
+  FiInfo,
+  FiRepeat
 } = FiIcons
 
-const MODULES = [
-  {
-    id: 'tasks',
-    name: 'Tasks',
-    description: 'Manage your to-dos with ADHD-friendly prioritization',
-    icon: FiCheckSquare,
-    benefits: [
-      'Smart task recommendations',
-      'Dopamine path suggestions',
-      'No-shame overdue handling'
-    ],
-    isCore: true,
-    color: 'green'
+const iconByKey = {
+  calendar: FiCalendar,
+  tasks: FiCheckSquare,
+  projects: FiGrid,
+  home: FiHome,
+  inbox: FiInbox,
+  repeat: FiRepeat
+}
+
+const styleByCapability = {
+  today: {
+    enabled: 'border-emerald-300 bg-emerald-50',
+    icon: 'bg-emerald-600'
   },
-  {
-    id: 'routines',
-    name: 'Routines',
-    description: 'Build consistent daily and weekly routines',
-    icon: FiRefreshCw,
-    benefits: [
-      'Step-by-step guidance',
-      'Progress tracking',
-      'Flexible scheduling'
-    ],
-    isCore: true,
-    color: 'purple'
+  tasks: {
+    enabled: 'border-green-300 bg-green-50',
+    icon: 'bg-green-600'
   },
-  {
-    id: 'housework',
-    name: 'Housework',
-    description: 'Keep your space tidy without overwhelm',
-    icon: FiHome,
-    benefits: [
-      'Pre-built task templates',
-      'Balanced weekly load',
-      'Celebration feedback'
-    ],
-    isCore: false,
-    color: 'blue'
+  routines: {
+    enabled: 'border-purple-300 bg-purple-50',
+    icon: 'bg-purple-600'
   },
-  {
-    id: 'timeline',
-    name: 'Timeline',
-    description: 'Visual daily schedule with time blocking',
-    icon: FiCalendar,
-    benefits: [
-      'Auto-scheduled tasks',
-      'Color-coded blocks',
-      'Buffer time included'
-    ],
-    isCore: false,
-    color: 'indigo'
+  projects: {
+    enabled: 'border-indigo-300 bg-indigo-50',
+    icon: 'bg-indigo-600'
   },
-  {
-    id: 'habits',
-    name: 'Habit Tracking',
-    description: 'Build positive habits one day at a time',
-    icon: FiTrendingUp,
-    benefits: [
-      'Streak tracking',
-      'Visual progress',
-      'Gentle reminders'
-    ],
-    isCore: false,
-    color: 'amber',
-    comingSoon: true
+  housework: {
+    enabled: 'border-blue-300 bg-blue-50',
+    icon: 'bg-blue-600'
   },
-  {
-    id: 'inbox',
-    name: 'Brain Inbox',
-    description: 'Capture thoughts and ideas before they disappear',
-    icon: FiInbox,
-    benefits: [
-      'Quick capture',
-      'Process later',
-      'Reduce mental load'
-    ],
-    isCore: false,
-    color: 'pink',
-    comingSoon: true
+  inbox: {
+    enabled: 'border-pink-300 bg-pink-50',
+    icon: 'bg-pink-600'
   }
+}
+
+const withIcon = (capability) => ({
+  ...capability,
+  icon: iconByKey[capability.iconKey]
+})
+
+const CORE_MODULES = CORE_ONBOARDING_CAPABILITIES.map(withIcon)
+const OPTIONAL_MODULES = OPTIONAL_ONBOARDING_CAPABILITIES.map(withIcon)
+
+const REQUIRED_MODULE_IDS = CORE_MODULES
+  .map((module) => module.navigation?.module)
+  .filter(Boolean)
+
+const OPTIONAL_MODULE_IDS = OPTIONAL_MODULES
+  .map((module) => module.navigation?.module)
+  .filter(Boolean)
+
+const normalizeEnabledModules = (enabledModules = []) => [
+  ...new Set([
+    ...REQUIRED_MODULE_IDS,
+    ...enabledModules.filter((moduleId) => OPTIONAL_MODULE_IDS.includes(moduleId))
+  ])
 ]
 
 const ModulesStep = ({ onNext, onBack, currentData }) => {
   const [enabledModules, setEnabledModules] = useState(
-    currentData.enabledModules || ['tasks', 'routines']
+    normalizeEnabledModules(currentData.enabledModules)
+  )
+
+  const enabledOptionalCount = useMemo(
+    () => OPTIONAL_MODULE_IDS.filter((moduleId) => enabledModules.includes(moduleId)).length,
+    [enabledModules]
   )
 
   const toggleModule = (moduleId) => {
-    const module = MODULES.find(m => m.id === moduleId)
-    
-    // Can't disable core modules
-    if (module.isCore) return
-    
-    setEnabledModules(prev =>
-      prev.includes(moduleId)
-        ? prev.filter(id => id !== moduleId)
-        : [...prev, moduleId]
-    )
+    if (!OPTIONAL_MODULE_IDS.includes(moduleId)) return
+
+    setEnabledModules((current) => (
+      current.includes(moduleId)
+        ? current.filter((id) => id !== moduleId)
+        : [...current, moduleId]
+    ))
   }
 
   const handleNext = () => {
-    onNext({ enabledModules })
-  }
-
-  const getColorClasses = (color, isEnabled) => {
-    const colors = {
-      green: isEnabled ? 'border-green-400 bg-green-50' : 'border-slate-200 bg-white',
-      purple: isEnabled ? 'border-purple-400 bg-purple-50' : 'border-slate-200 bg-white',
-      blue: isEnabled ? 'border-blue-400 bg-blue-50' : 'border-slate-200 bg-white',
-      indigo: isEnabled ? 'border-indigo-400 bg-indigo-50' : 'border-slate-200 bg-white',
-      amber: isEnabled ? 'border-amber-400 bg-amber-50' : 'border-slate-200 bg-white',
-      pink: isEnabled ? 'border-pink-400 bg-pink-50' : 'border-slate-200 bg-white'
-    }
-    return colors[color] || colors.green
+    onNext({ enabledModules: normalizeEnabledModules(enabledModules) })
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-slate-900 mb-3">
+    <div className="mx-auto max-w-3xl space-y-7">
+      <div className="text-center">
+        <h2 className="mb-3 text-3xl font-bold text-slate-900">
           Choose your tools <span aria-hidden="true">🛠️</span>
         </h2>
         <p className="text-lg text-slate-600">
-          Enable the modules that fit your needs. Don't worry—
-          <span className="font-medium text-purple-600"> you can always change this later!</span>
+          Core tools stay available. Add only the optional areas that feel useful right now.
         </p>
       </div>
 
-      {/* Core Modules (Always Enabled) */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-lg font-bold text-slate-900">Core Modules</h3>
-          <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-            Always Enabled
+      <section aria-labelledby="core-tools-title">
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <h3 id="core-tools-title" className="text-lg font-bold text-slate-900">Core tools</h3>
+          <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-800">
+            Available by default
           </span>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {MODULES.filter(m => m.isCore).map((module, index) => (
-            <motion.div
-              key={module.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className={`
-                p-6 rounded-xl border-2 transition-all
-                ${getColorClasses(module.color, true)}
-                shadow-md
-              `}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className={`w-12 h-12 bg-${module.color}-500 rounded-lg flex items-center justify-center`}>
-                    <SafeIcon icon={module.icon} className="w-6 h-6 text-white" aria-hidden="true" />
+
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {CORE_MODULES.map((module, index) => {
+            const styles = styleByCapability[module.id]
+            return (
+              <motion.li
+                key={module.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className={`rounded-xl border-2 p-5 shadow-sm ${styles.enabled}`}
+              >
+                <div className="mb-3 flex items-start gap-3">
+                  <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${styles.icon}`}>
+                    <SafeIcon icon={module.icon} className="h-5 w-5 text-white" aria-hidden="true" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-bold text-slate-900">{module.name}</h4>
+                    <h4 className="font-bold text-slate-900">{module.name}</h4>
+                    <p className="mt-1 text-sm text-slate-700">{module.summary}</p>
                   </div>
                 </div>
-                <div className="w-12 h-6 bg-green-500 rounded-full flex items-center justify-end px-1">
-                  <div className="w-5 h-5 bg-white rounded-full"></div>
-                </div>
-              </div>
-              
-              <p className="text-slate-700 mb-3">{module.description}</p>
-              
-              <ul className="space-y-1">
-                {module.benefits.map((benefit, i) => (
-                  <li key={i} className="text-sm text-slate-600 flex items-center gap-2">
-                    <span className="text-green-500" aria-hidden="true">✓</span>
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+                <ul className="space-y-1">
+                  {module.benefits.map((benefit) => (
+                    <li key={benefit} className="flex items-center gap-2 text-sm text-slate-600">
+                      <span className="text-green-500" aria-hidden="true">✓</span>
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
+              </motion.li>
+            )
+          })}
+        </ul>
+      </section>
 
-      {/* Optional Modules */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-lg font-bold text-slate-900">Optional Modules</h3>
-          <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-            Toggle On/Off
-          </span>
+      <section aria-labelledby="optional-tools-title">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <h3 id="optional-tools-title" className="text-lg font-bold text-slate-900">Optional tools</h3>
+            <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
+              {enabledOptionalCount} selected
+            </span>
+          </div>
+          <span className="text-sm text-slate-500">You can keep this small.</span>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4" role="group" aria-label="Optional modules">
-          {MODULES.filter(m => !m.isCore).map((module, index) => {
-            const isEnabled = enabledModules.includes(module.id)
-            
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2" role="group" aria-label="Optional modules">
+          {OPTIONAL_MODULES.map((module, index) => {
+            const moduleId = module.navigation.module
+            const isEnabled = enabledModules.includes(moduleId)
+            const styles = styleByCapability[module.id]
+
             return (
               <motion.button
                 type="button"
                 key={module.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: (index + 2) * 0.1 }}
-                onClick={() => !module.comingSoon && toggleModule(module.id)}
-                disabled={module.comingSoon}
+                transition={{ delay: (index + CORE_MODULES.length) * 0.05 }}
+                onClick={() => toggleModule(moduleId)}
                 aria-pressed={isEnabled}
-                className={`
-                  p-6 rounded-xl border-2 transition-all text-left
-                  ${getColorClasses(module.color, isEnabled)}
-                  ${module.comingSoon ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg cursor-pointer'}
-                  ${isEnabled ? 'shadow-md' : 'hover:border-purple-300'}
-                `}
+                className={`rounded-xl border-2 p-5 text-left transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                  isEnabled
+                    ? `${styles.enabled} shadow-sm`
+                    : 'border-slate-200 bg-white hover:border-slate-300'
+                }`}
               >
-                {module.comingSoon && (
-                  <div className="absolute top-2 right-2">
-                    <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
-                      Coming Soon
-                    </span>
-                  </div>
-                )}
-
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-12 h-12 bg-${module.color}-500 rounded-lg flex items-center justify-center`}>
-                      <SafeIcon icon={module.icon} className="w-6 h-6 text-white" aria-hidden="true" />
+                <div className="mb-3 flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${styles.icon}`}>
+                      <SafeIcon icon={module.icon} className="h-5 w-5 text-white" aria-hidden="true" />
                     </div>
                     <div>
-                      <h4 className="text-lg font-bold text-slate-900">{module.name}</h4>
+                      <h4 className="font-bold text-slate-900">{module.name}</h4>
+                      <p className="mt-1 text-sm text-slate-700">{module.summary}</p>
                     </div>
                   </div>
-                  
-                  {!module.comingSoon && (
-                    <motion.div
-                      animate={{
-                        backgroundColor: isEnabled ? '#10b981' : '#cbd5e1'
-                      }}
-                      className="w-12 h-6 rounded-full flex items-center px-1"
-                    >
-                      <motion.div
-                        animate={{
-                          x: isEnabled ? 20 : 0
-                        }}
-                        className="w-5 h-5 bg-white rounded-full shadow-sm"
-                      />
-                    </motion.div>
-                  )}
+                  <span
+                    aria-hidden="true"
+                    className={`relative mt-1 h-6 w-11 shrink-0 rounded-full transition-colors ${
+                      isEnabled ? 'bg-emerald-500' : 'bg-slate-300'
+                    }`}
+                  >
+                    <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${
+                      isEnabled ? 'translate-x-5' : 'translate-x-0.5'
+                    }`} />
+                  </span>
                 </div>
-                
-                <p className="text-slate-700 mb-3">{module.description}</p>
-                
+
                 <ul className="space-y-1">
-                  {module.benefits.map((benefit, i) => (
-                    <li key={i} className="text-sm text-slate-600 flex items-center gap-2">
+                  {module.benefits.map((benefit) => (
+                    <li key={benefit} className="flex items-center gap-2 text-sm text-slate-600">
                       <span className={isEnabled ? 'text-green-500' : 'text-slate-400'} aria-hidden="true">✓</span>
                       {benefit}
                     </li>
@@ -275,33 +219,31 @@ const ModulesStep = ({ onNext, onBack, currentData }) => {
             )
           })}
         </div>
-      </div>
+      </section>
 
-      {/* Info Box */}
-      <div className="bg-blue-50 rounded-xl p-4 border border-blue-200 flex items-start gap-3">
-        <SafeIcon icon={FiInfo} className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
-        <div className="text-sm text-blue-800">
-          <p className="font-medium mb-1"><span aria-hidden="true">💡</span> Helpful Tip</p>
+      <div className="flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
+        <SafeIcon icon={FiInfo} className="mt-0.5 h-5 w-5 shrink-0 text-blue-600" aria-hidden="true" />
+        <div className="text-sm text-blue-900">
+          <p className="mb-1 font-medium"><span aria-hidden="true">💡</span> Keep setup light</p>
           <p>
-            Start with just a few modules and add more as you get comfortable. 
-            Less is often more when you're building new habits!
+            Today, Tasks, Routines and Projects are already available. Housework and Brain Inbox are optional,
+            so you only need to add them if they reduce effort for you.
           </p>
         </div>
       </div>
 
-      {/* Navigation */}
-      <div className="flex gap-3 pt-6">
+      <div className="flex gap-3 pt-2">
         <button
           type="button"
           onClick={onBack}
-          className="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-colors"
+          className="flex-1 rounded-xl border-2 border-slate-300 px-6 py-3 text-slate-700 transition-colors hover:bg-slate-50"
         >
           <span aria-hidden="true">←</span> Back
         </button>
         <button
           type="button"
           onClick={handleNext}
-          className="flex-1 px-6 py-3 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors"
+          className="flex-1 rounded-xl bg-purple-600 px-6 py-3 text-white transition-colors hover:bg-purple-700"
         >
           Continue <span aria-hidden="true">→</span>
         </button>
