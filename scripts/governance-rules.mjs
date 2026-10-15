@@ -64,7 +64,7 @@ export const validateMergeFinalizerWorkflow = (content) => {
   if (!content.includes('"$head_repo" != "$REPO"') || !content.includes('"$head_ref" == "$base_ref"') || !content.includes('branch preserved')) {
     failures.push('PR branch cleanup must be limited to safely merged same-repository non-default branches and preserve the branch on cleanup failure.')
   }
-  if (!/group: pr-merge-finalizer-\\$\\{\\{ github\\.repository \\}\\}/.test(content) || !content.includes('cancel-in-progress: false')) {
+  if (!content.includes('group: pr-merge-finalizer-${{ github.repository }}') || !content.includes('cancel-in-progress: false')) {
     failures.push('Repository merge finalizer must serialize all integration runs across PRs without cancelling work.')
   }
   if (!content.includes('node scripts/github-merge-recovery.mjs') || !content.includes('BASE_SHA:') ||
