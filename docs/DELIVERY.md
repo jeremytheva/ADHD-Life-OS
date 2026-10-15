@@ -58,6 +58,29 @@ When new work is discovered:
 3. park non-required work with enough context to recover it later;
 4. return to the active outcome.
 
+### Coordination across execution environments
+
+A single ADHD Life OS continuation coordinator owns integration, merge decisions and shared `STATUS.md` changes. Re-enter by reading live `main`, open PRs, issue/branch identities and current status before claiming work. A PR/head branch is the stable implementation identity; do not create an equivalent branch or PR for the same outcome. Existing implementation PRs take priority over new work. Ordinary WIP and stack limits still apply.
+
+GitHub Actions workflow concurrency protects **GitHub workflow executions only**. The merge finalizer uses a repository-wide, non-cancelling concurrency group, serializing finalizer runs from different PRs. It then checks the exact expected head **and main base**, uses `expectedHeadOid`, and confirms the GitHub result after uncertainty. This narrows stale-base and duplicate merge risk but cannot lock independent ChatGPT scheduled tasks or human activity. Future independent scheduled implementers must have explicit non-overlapping ownership; where shared surfaces are required, one coordinator must serialize the work. No external lease service or fake atomic claim is implied.
+
+### Recoverable operation sequence
+
+Use **Detect → Classify → Recover → Validate → Continue → Record**.
+
+| Class | Action |
+| --- | --- |
+| A. Confirmed transient tool/service failure | Bounded exponential retry with jitter, after read-back when a mutation's outcome is uncertain |
+| B. Authentication/authorization | Stop affected write, preserve work and record exact denied operation/permission |
+| C. Stale SHA/conflict | Refresh live PR/main and rebase or reconcile existing work; never blind force-write |
+| D. Source/test/build failure | Fix the real defect and rerun the affected project-owned validation |
+| E. Missing runtime/provider evidence | Keep the applicable certification pending and continue independent source work |
+| F. External capability unavailable | Record the scoped external dependency; do not invent provider behaviour |
+| G. Security/privacy/migration/owner approval | Preserve explicit gate, do not make destructive or unauthorised changes |
+| H. No safe actionable work | Record WAITING/COMPLETE accurately; do not manufacture work |
+
+For a lost or ambiguous GitHub write response, **inspect before retry**. If inspection is also unavailable, stop that mutation rather than risk duplication. Reuse the existing PR/branch/commit; do not restart a successful partial operation. On any shared-state write, refresh the current version/SHA and reject competing updates. Evidence must name the exact candidate and distinguish source, tests, browser, deployment, runtime, provider, cross-account and release authorization.
+
 ## Implementation WIP limits
 
 Default delivery limits are:

@@ -186,7 +186,7 @@ if (lifecycleWorkflow.includes('mergePullRequest')) {
 for (const failure of validateLifecycleWorkflow(lifecycleWorkflow)) failures.push(failure)
 
 const mergeFinalizer = await readFile(path.join(root, '.github/workflows/pr-merge-finalizer.yml'), 'utf8')
-for (const requiredFragment of ['repository_dispatch', 'pr-lifecycle-ready', 'lifecycle:implementation-complete', 'lifecycle:validation-complete', 'reviewThreads', 'compare/main...', 'git/ref/heads/main', 'expectedHeadOid', 'mergePullRequest']) {
+for (const requiredFragment of ['repository_dispatch', 'pr-lifecycle-ready', 'lifecycle:implementation-complete', 'lifecycle:validation-complete', 'reviewThreads', 'compare/main...', 'git/ref/heads/main', 'expectedHeadOid', 'scripts/github-merge-recovery.mjs']) {
   if (!mergeFinalizer.includes(requiredFragment)) failures.push(`PR merge finalizer is missing enforcement marker ${requiredFragment}`)
 }
 if (mergeFinalizer.includes('mergeStateStatus')) {
