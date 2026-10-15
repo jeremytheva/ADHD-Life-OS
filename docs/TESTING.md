@@ -92,6 +92,12 @@ Tests use Node's built-in `node:test` runner in `test/`, plus Playwright in `e2e
 
 Use the smallest useful coverage at each relevant layer rather than relying on E2E tests alone.
 
+## Autonomous merge recovery regressions
+
+`test/github-merge-recovery.test.mjs` exercises actual retry/merge state transitions with controlled GitHub operation adapters, not just YAML wording: lost responses after successful mutations, verified transient retries with bounded backoff, stale head/base rejection, authorization refusal, exhausted retries, read-back outage and idempotent already-merged exit. `test/governance-drift.test.mjs` additionally rejects a per-PR integration concurrency configuration.
+
+The trusted `.github/workflows/pr-merge-finalizer.yml` dispatch is a separate integration/runtime evidence class. Unit tests do **not** certify GitHub token permissions, workflow scheduling, repository protection, actual write acceptance or a live uncertain-response event. Record such tests separately when safely observed.
+
 ## Regression rule
 
 When fixing a meaningful defect, add regression coverage where practical for the class of failure. A manual retest alone is insufficient for recurring or critical behaviour unless automation is genuinely impractical and the limitation is documented.
