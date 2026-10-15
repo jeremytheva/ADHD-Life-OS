@@ -7,7 +7,7 @@ on:
 permissions: {}
 
 concurrency:
-  group: pr-merge-finalizer-${{ github.event.client_payload.pr_number || github.run_id }}
+  group: pr-merge-finalizer-${{ github.repository }}
   cancel-in-progress: false
 
 jobs:
@@ -22,6 +22,7 @@ jobs:
       pr_id: ${{ steps.gate.outputs.pr_id }}
       pr_number: ${{ steps.gate.outputs.pr_number }}
       head_sha: ${{ steps.gate.outputs.head_sha }}
+      base_sha: ${{ steps.gate.outputs.base_sha }}
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
@@ -92,6 +93,7 @@ jobs:
           echo "pr_id=$pr_id" >> "$GITHUB_OUTPUT"
           echo "pr_number=$pr_number" >> "$GITHUB_OUTPUT"
           echo "head_sha=$head_sha" >> "$GITHUB_OUTPUT"
+          echo "base_sha=$base_sha" >> "$GITHUB_OUTPUT"
           echo "approved=true" >> "$GITHUB_OUTPUT"
 
   mark-mergeable:
@@ -133,16 +135,17 @@ jobs:
       PR_ID: ${{ needs.gate.outputs.pr_id }}
       PR_NUMBER: ${{ needs.gate.outputs.pr_number }}
       HEAD_SHA: ${{ needs.gate.outputs.head_sha }}
+      BASE_SHA: ${{ needs.gate.outputs.base_sha }}
     steps:
-      - name: Re-read head and merge with expectedHeadOid
-        shell: bash
-        run: |
-          set -euo pipefail
-          current_head=$(gh api "repos/$REPO/pulls/$PR_NUMBER" --jq '.head.sha')
-          [[ "$current_head" == "$HEAD_SHA" ]]
-          gh api graphql \
-            -f query='mutation($id:ID!,$head:GitObjectID!){mergePullRequest(input:{pullRequestId:$id,expectedHeadOid:$head,mergeMethod:MERGE}){pullRequest{merged state}}}' \
-            -F id="$PR_ID" -F head="$HEAD_SHA" >/dev/null
+      - name: Check out trusted default-branch recovery code
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Recheck head and base; safely merge with bounded recovery
+        # scripts/github-merge-recovery.mjs calls mergePullRequest(expectedHeadOid).
+        # A lost response triggers read-back before any possible retry.
+        run: node scripts/github-merge-recovery.mjs
 
   mark-merged:
     name: Record merged metadata best-effort
