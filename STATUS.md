@@ -35,28 +35,28 @@ validation:
   build: NOT_RUN
   ci: PENDING
   runtime: NOT_APPLICABLE
-current_main_commit: 3f6c71a6115818a55304d7de4aefc25c613408f8
+current_main_commit: bd86f86c6b20bafc7095455836699ea5fbf4ccb5
 current_candidate_commit: CURRENT_PR_HEAD
-latest_validated_commit: 73af5961ac23649d714623e2a952adb104e8ea90
+latest_validated_commit: 1ca5bd24ebd0fcdfb326942578304c2e5f767024
 latest_deployed_commit: UNVERIFIED
 latest_runtime_verified_commit: UNVERIFIED
-latest_browser_verified_commit: 73af5961ac23649d714623e2a952adb104e8ea90
-validation_debt: CURRENT_STANDARDS_CANDIDATE_PENDING
-validation_basis: PR #389 Application validation run 1153 passed the complete canonical platform gate on exact candidate 73af5961ac23649d714623e2a952adb104e8ea90 before merge at 3f6c71a6115818a55304d7de4aefc25c613408f8. The October master-standards candidate must pass its own exact-head validation before merge.
-last_verified_commit: 73af5961ac23649d714623e2a952adb104e8ea90
-last_updated: 2026-10-05T08:18:00+11:00
+latest_browser_verified_commit: 1ca5bd24ebd0fcdfb326942578304c2e5f767024
+validation_debt: AUTONOMOUS_RECOVERY_CANDIDATE_PENDING
+validation_basis: PR #391 exact head 1ca5bd24ebd0fcdfb326942578304c2e5f767024 passed full canonical validation including 31 Playwright tests in GitHub run 37397414451 and merged as bd86f86c6b20bafc7095455836699ea5fbf4ccb5. Current reliability PR exact-head validation is pending; no provider or production claim.
+last_verified_commit: 1ca5bd24ebd0fcdfb326942578304c2e5f767024
+last_updated: 2026-10-15T23:52:00+11:00
 ---
 
 # ADHD Life OS — Current Status
 
-**Snapshot date:** 5 October 2026  
+**Snapshot date:** 15 October 2026  
 **Default branch:** `main`  
-**Overall status:** Stage 3 remains open and provider-dependent durable execution is waiting on target-instance evidence/access. The 2026-10-04 master governance release is being reconciled without changing product scope or provider verification state.  
+**Overall status:** Stage 3 remains open and provider-dependent durable execution is waiting on target-instance evidence/access. The October governance release and verified UI capability alignment have merged; repository integration recovery is being hardened without changing provider certification state.  
 **Current phase/stage:** Stage 3 — execution and next-action experience
 
 ## Current state
 
-The repository is adopting master source release **2026-10-04**. The material governance corrections are limited to documentation authority, safer optional GitHub automation, exact route/data/environment drift checks, current evidence provenance and removal of stale roadmap work queues.
+Master source release **2026-10-04** is adopted in merged PR #390 (`faf9d9c`). UI capability alignment merged as PR #391 (`bd86f86`). The current reliability change addresses an evidenced cross-PR merge-serialization gap and introduces tested bounded recovery for uncertain GitHub merge mutations.
 
 The application/domain architecture remains unchanged. Generic durable Start → Continue → Recover remains intentionally fail-closed until the real NoCodeBackend `execution-sessions` provider contract is provisioned and certified.
 
@@ -67,7 +67,7 @@ The application/domain architecture remains unchanged. Generic durable Start →
 | Current gate | Integration — target NoCodeBackend provider certification for generic durable execution |
 | Gate state | BLOCKED on target-instance schema/operation evidence and secure certification access |
 | Execution state | WAITING / BLOCKED |
-| Independent work after standards reconciliation | None currently justified unless new evidence establishes a concrete requirement |
+| Independent work after standards reconciliation | Focused repository merge reliability upgrade in progress; no speculative product feature work |
 
 ## Execution and WIP
 
@@ -76,25 +76,25 @@ The application/domain architecture remains unchanged. Generic durable Start →
 | Portfolio state | ACTIVE |
 | Execution slot | WAITING |
 | Execution state | BLOCKED on provider-specific Stage 3 dependency |
-| Open implementation PRs after this standards change merges | 0 |
-| Dependent PR stack after this standards change merges | 0 |
+| Open implementation PRs after reliability change merges | 0 anticipated; re-inspect GitHub on re-entry |
+| Dependent PR stack after reliability change merges | 0 anticipated |
 | WIP limits | max stack 2; max ordinary open implementation PRs 3 |
-| Open GitHub issues | None in fresh connected GitHub evidence on 5 October 2026 |
+| Open GitHub issues | 0 found on 15 October 2026; repository Issues setting is disabled |
 | Historical branches | Historical branches remain non-blocking; branch cleanup is best-effort and not a project acceptance gate |
 
 ## Evidence provenance
 
 | Evidence | State |
 | --- | --- |
-| Main before current standards candidate | `3f6c71a6115818a55304d7de4aefc25c613408f8` |
-| Current standards candidate | Exact head is owned by the active PR; do not infer it from this document |
-| Latest fully validated recorded candidate before this change | `73af5961ac23649d714623e2a952adb104e8ea90` via PR #389 run 1153 |
+| Live main verified before reliability candidate | `bd86f86c6b20bafc7095455836699ea5fbf4ccb5` (PR #391 merge) |
+| Current reliability candidate | Exact head and acceptance belong to the active PR; refresh live before acting |
+| Latest fully validated recorded candidate before reliability change | `1ca5bd24ebd0fcdfb326942578304c2e5f767024` via PR #391 Application validation run 37397414451 |
 | Latest deployed commit | UNVERIFIED |
 | Latest runtime-verified commit | UNVERIFIED |
-| Latest browser-verified recorded candidate before this change | `73af5961ac23649d714623e2a952adb104e8ea90` via canonical Playwright coverage |
-| Validation debt | Current master-standards candidate requires exact-head canonical validation before merge |
-| Deployment provider | No ADHD Life OS Vercel project was present in the connected Vercel account when rechecked on 5 October 2026 |
-| GitHub administrative settings | Fresh branch-protection/ruleset and Actions-admin state are unavailable through the current connector; retained 28 September settings evidence is dated, not current |
+| Latest browser-verified recorded candidate before reliability change | `1ca5bd24ebd0fcdfb326942578304c2e5f767024`, 31 Playwright tests, mocked provider boundary |
+| Validation debt | Current autonomous recovery change requires exact-head canonical and focused regression validation before merge |
+| Deployment provider | No ADHD Life OS project in connected Vercel search on 15 October 2026 |
+| GitHub administrative settings | Rulesets endpoint returned 0 on 15 October; direct branch-protection read returned 403 (integration access denied). Other administration state unverified |
 
 Repository validation, merge, provider verification, deployment, runtime verification and project completion are independent evidence states.
 
@@ -103,11 +103,11 @@ Repository validation, merge, provider verification, deployment, runtime verific
 | Question | Durable answer |
 | --- | --- |
 | Where am I? | Stage 3, waiting at the real-provider integration gate for generic durable execution. |
-| What is active after standards reconciliation? | No product implementation PR/issue should remain; the next dependency-correct product work is provider certification. |
-| What is validated? | The last recorded exact validated baseline is PR #389; the current governance candidate must carry its own PR evidence. |
+| What is active after standards reconciliation? | Repository reliability PR is the sole new integration work; PR #391 is merged, and no separate ADHD implementation task is running in the accessible scheduler. |
+| What is validated? | PR #391 has exact-head full canonical pass with 31 browser tests; the current reliability candidate still needs its own pass. |
 | What is next? | Provision and certify the target NoCodeBackend `execution-sessions` schema/operations. |
-| Can autonomous product work continue? | Only if a new evidence-backed independent requirement appears; do not invent speculative work. |
-| Why stop? | The remaining dependency-correct Stage 3 work requires external provider structure/evidence/access. |
+| Can autonomous product work continue? | Complete the active reliability PR first; afterward, only evidence-backed independent requirements justify new application work. |
+| Why stop? | After this reliability change integrates, provider-dependent Stage 3 work still requires target schema/operation evidence and secure certification access. |
 
 ## Provider and data state
 
