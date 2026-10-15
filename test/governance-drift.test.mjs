@@ -80,7 +80,7 @@ test('prevents per-PR finalizer concurrency and missing trusted recovery executi
   const unsafe = `name: PR merge finalizer
 permissions: {}
 concurrency:
-  group: pr-merge-finalizer-${{ github.event.client_payload.pr_number }}
+  group: pr-merge-finalizer-pr-number
   cancel-in-progress: false
 jobs:
   gate:
