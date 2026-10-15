@@ -6,6 +6,7 @@ import {
   validateCollectionContract,
   validateEnvironmentContract,
   validateLifecycleWorkflow,
+  validateMergeFinalizerWorkflow,
   validateRouteMap
 } from '../scripts/governance-rules.mjs'
 
@@ -73,4 +74,21 @@ test('detects competing current blocker headings outside STATUS', () => {
     systemMap: '# System Map'
   })
   assert.ok(failures.some((failure) => failure.includes('PROJECT')))
+})
+
+test('prevents per-PR finalizer concurrency and missing trusted recovery execution', () => {
+  const unsafe = `name: PR merge finalizer
+permissions: {}
+concurrency:
+  group: pr-merge-finalizer-${{ github.event.client_payload.pr_number }}
+  cancel-in-progress: false
+jobs:
+  gate:
+  mark-mergeable:
+  merge:
+  cleanup:
+`
+  const failures = validateMergeFinalizerWorkflow(unsafe)
+  assert.ok(failures.some((failure) => failure.includes('serialize all integration runs')))
+  assert.ok(failures.some((failure) => failure.includes('trusted default-branch recovery')))
 })
